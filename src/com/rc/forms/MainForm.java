@@ -7,17 +7,21 @@ import com.rc.utils.FontUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseMotionAdapter;
 
 /**
  * Created by song on 17-5-28.
  */
 public class MainForm extends JFrame
 {
-    private int DEFAULT_WIDTH = 800;
-    private int DEFAULT_HEIGHT = 600;
+    private int DEFAULT_WIDTH = 900;
+    private int DEFAULT_HEIGHT = 650;
 
     private LeftPanel leftPanel;
     private RightPanel rightPanel;
+    private static Point origin = new Point();
 
     public MainForm()
     {
@@ -40,8 +44,36 @@ public class MainForm extends JFrame
         setLayout(new GridBagLayout());
         setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
+        // 隐藏标题栏
+        setUndecorated(true);
+        addListener();
+
         add(leftPanel, new GBC(0, 0).setAnchor(GBC.CENTER).setWeight(1, 1).setFill(GBC.BOTH));
         add(rightPanel, new GBC(1, 0).setAnchor(GBC.CENTER).setWeight(7, 1).setFill(GBC.BOTH));
+    }
+
+    private void addListener()
+    {
+        addMouseListener(new MouseAdapter()
+        {
+            public void mousePressed(MouseEvent e)
+            {
+                // 当鼠标按下的时候获得窗口当前的位置
+                origin.x = e.getX();
+                origin.y = e.getY();
+            }
+        });
+        addMouseMotionListener(new MouseMotionAdapter()
+        {
+            public void mouseDragged(MouseEvent e)
+            {
+                // 当鼠标拖动时获取窗口当前位置
+                Point p = MainForm.this.getLocation();
+                // 设置窗口的位置
+                MainForm.this.setLocation(p.x + e.getX() - origin.x, p.y + e.getY()
+                        - origin.y);
+            }
+        });
     }
 }
 
