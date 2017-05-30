@@ -1,9 +1,25 @@
 package com.rc.adapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by song on 17-5-30.
  */
-public abstract class BaseAdapter
+public abstract class BaseAdapter<T extends ViewHolder>
 {
-    public abstract int getCount();
+    public int getCount()
+    {
+        return 0;
+    }
+
+
+    public abstract T onCreateViewHolder(int viewType);
+
+    public int getItemViewType(int position)
+    {
+        return 0;
+    }
+
+    public abstract void onBindViewHolder(T viewHolder, int position);
 }

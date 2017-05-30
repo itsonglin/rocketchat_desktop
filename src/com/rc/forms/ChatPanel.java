@@ -1,20 +1,22 @@
 package com.rc.forms;
 
-import com.rc.entity.RoomItem;
-import com.rc.com.rc.model.RoomItemModel;
+import com.rc.adapter.RoomItemsAdapter;
 import com.rc.components.*;
-import com.rc.utils.FontUtil;
+import com.rc.entity.RoomItem;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by song on 17-5-30.
  */
 public class ChatPanel extends ParentAvailablePanel
 {
-    private RoomItemModel roomItemModel;
-    private JScrollPane scrollPane;
+    //private JScrollPane scrollPane;
+    private RCListView roomItemsListView;
+    private List<RoomItem> roomItemList;
 
     public ChatPanel(JPanel parent)
     {
@@ -25,7 +27,16 @@ public class ChatPanel extends ParentAvailablePanel
 
     private void initComponents()
     {
-        roomItemModel = new RoomItemModel();
+        roomItemsListView = new RCListView();
+
+        roomItemList = new ArrayList<>();
+        for (int i = 0 ; i < 10; i ++)
+        {
+            RoomItem item = new RoomItem();
+            roomItemList.add(item);
+        }
+        roomItemsListView.setAdapter(new RoomItemsAdapter(roomItemList));
+
         //getData();
 
         /*JTable table = new JTable();
@@ -38,11 +49,11 @@ public class ChatPanel extends ParentAvailablePanel
         table.setOpaque(true);
         table.setShowHorizontalLines(false);*/
 
-        JPanel panel = new JPanel();
-        panel.setLayout(new GridBagLayout());
-        panel.setBackground(Colors.DARK);
-        System.out.println(getParentPanel().getWidth());
-        for (int i = 0; i < 20; i++)
+        //JPanel panel = new JPanel();
+        //panel.setLayout(new GridBagLayout());
+        //panel.setBackground(Colors.DARK);
+
+        /*for (int i = 0; i < 20; i++)
         {
             JPanel panelItem = new JPanel();
             panelItem.setPreferredSize(new Dimension(100, 64));
@@ -105,31 +116,23 @@ public class ChatPanel extends ParentAvailablePanel
             panel.add(panelItem, new GBC(0, i).setFill(GBC.BOTH).setWeight(1, 1));
         }
 
-        scrollPane = new JScrollPane(panel);
+        scrollPane = new JScrollPane();
+        scrollPane.setViewportView(panel);
         scrollPane.setBorder(null);
         scrollPane.getVerticalScrollBar().setUnitIncrement(17);
+        scrollPane.setBackground(Colors.DARK);
+
         //scrollPane = new JScrollPane(table);
         //add(scrollPane, BorderLayout.CENTER);
         //scrollPane.getViewport().setBackground(Color.WHITE);
-        scrollPane.getVerticalScrollBar().setUI(new ScrollUI());
+        scrollPane.getVerticalScrollBar().setUI(new ScrollUI());*/
     }
 
     private void initView()
     {
         setLayout(new GridBagLayout());
-        add(scrollPane, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
+        add(roomItemsListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
+        //add(scrollPane, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
     }
 
-    private void getData()
-    {
-        System.out.println("getData");
-        RoomItem item = new RoomItem();
-        item.setTitle("user 1");
-        roomItemModel.addRow(item);
-        roomItemModel.addRow(item);
-        roomItemModel.addRow(item);
-        roomItemModel.addRow(item);
-        roomItemModel.addRow(item);
-        roomItemModel.addRow(item);
-    }
 }
