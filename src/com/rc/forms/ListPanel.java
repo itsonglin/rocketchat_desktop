@@ -12,7 +12,7 @@ public class ListPanel extends ParentAvailablePanel
 {
     private ChatPanel chatPanel;
     private ContactsPanel contactsPanel;
-    private JPanel collectionPanel;
+    private CollectionsPanel collectionPanel;
 
     public static final String CHAT = "CHAT";
     public static final String CONTACTS = "CONTACTS";
@@ -35,10 +35,8 @@ public class ListPanel extends ParentAvailablePanel
         chatPanel = new ChatPanel(this);
 
         contactsPanel = new ContactsPanel(this);
-        contactsPanel.setBackground(Color.GREEN);
 
-        collectionPanel = new JPanel();
-        collectionPanel.setBackground(Color.BLUE);
+        collectionPanel = new CollectionsPanel(this);
 
     }
 
