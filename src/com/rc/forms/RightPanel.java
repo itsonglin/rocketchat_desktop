@@ -11,6 +11,9 @@ import java.awt.*;
 public class RightPanel extends JPanel
 {
     private TitlePanel titlePanel;
+    private ChatPanel chatPanel;
+
+
     public RightPanel()
     {
         initComponents();
@@ -21,6 +24,7 @@ public class RightPanel extends JPanel
     private void initComponents()
     {
         titlePanel = new TitlePanel(this);
+        chatPanel = new ChatPanel(this);
     }
 
     private void initView()
@@ -28,5 +32,6 @@ public class RightPanel extends JPanel
         this.setBackground(Colors.WINDOW_BACKGROUND);
         this.setLayout(new BorderLayout());
         add(titlePanel, BorderLayout.NORTH);
+        add(chatPanel, BorderLayout.CENTER);
     }
 }

@@ -49,15 +49,21 @@ public class MainFrame extends JFrame
     private void initView()
     {
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
-        setLayout(new GridBagLayout());
         setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
         // 隐藏标题栏
         setUndecorated(true);
         addListener();
 
+        setLayout(new GridBagLayout());
         add(leftPanel, new GBC(0, 0).setAnchor(GBC.CENTER).setWeight(1, 1).setFill(GBC.BOTH));
         add(rightPanel, new GBC(1, 0).setAnchor(GBC.CENTER).setWeight(7, 1).setFill(GBC.BOTH));
+
+        /*leftPanel.setPreferredSize(new Dimension(250, DEFAULT_HEIGHT));
+        rightPanel.setPreferredSize(new Dimension(650, DEFAULT_HEIGHT));
+        setLayout(new FlowLayout(FlowLayout.LEFT, 0,0));
+        add(leftPanel);
+        add(rightPanel);*/
     }
 
     private void addListener()

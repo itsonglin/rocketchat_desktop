@@ -1,7 +1,5 @@
 package com.rc.forms;
 
-import javafx.scene.Parent;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -10,7 +8,7 @@ import java.awt.*;
  */
 public class ListPanel extends ParentAvailablePanel
 {
-    private ChatPanel chatPanel;
+    private ChatItemsPanel chatPanel;
     private ContactsPanel contactsPanel;
     private CollectionsPanel collectionPanel;
 
@@ -32,7 +30,7 @@ public class ListPanel extends ParentAvailablePanel
 
     private void initComponents()
     {
-        chatPanel = new ChatPanel(this);
+        chatPanel = new ChatItemsPanel(this);
 
         contactsPanel = new ContactsPanel(this);
 
