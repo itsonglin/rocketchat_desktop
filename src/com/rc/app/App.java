@@ -1,7 +1,6 @@
 package com.rc.app;
 
-import com.rc.forms.FontFrame;
-import com.rc.forms.MainForm;
+import com.rc.forms.MainFrame;
 
 import javax.swing.*;
 
@@ -12,12 +11,12 @@ public class App
 {
     public static void main(String[] args)
     {
-       /* JFrame frame = new MainForm();
+       /* JFrame frame = new MainFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(300,400);
         frame.setVisible(true);*/
 
-        MainForm frame = new MainForm();
+        MainFrame frame = new MainFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }

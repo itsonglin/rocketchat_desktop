@@ -1,7 +1,6 @@
 package com.rc.forms;
 
 
-import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.utils.FontUtil;
 
@@ -14,7 +13,7 @@ import java.awt.event.MouseMotionAdapter;
 /**
  * Created by song on 17-5-28.
  */
-public class MainForm extends JFrame
+public class MainFrame extends JFrame
 {
     private int DEFAULT_WIDTH = 900;
     private int DEFAULT_HEIGHT = 650;
@@ -23,11 +22,20 @@ public class MainForm extends JFrame
     private RightPanel rightPanel;
     private static Point origin = new Point();
 
-    public MainForm()
+    private static MainFrame context;
+
+    public MainFrame()
     {
+        context = this;
         initComponents();
         initView();
     }
+
+    public static MainFrame getContext()
+    {
+        return context;
+    }
+
 
     private void initComponents()
     {
@@ -68,9 +76,9 @@ public class MainForm extends JFrame
             public void mouseDragged(MouseEvent e)
             {
                 // 当鼠标拖动时获取窗口当前位置
-                Point p = MainForm.this.getLocation();
+                Point p = MainFrame.this.getLocation();
                 // 设置窗口的位置
-                MainForm.this.setLocation(p.x + e.getX() - origin.x, p.y + e.getY()
+                MainFrame.this.setLocation(p.x + e.getX() - origin.x, p.y + e.getY()
                         - origin.y);
             }
         });

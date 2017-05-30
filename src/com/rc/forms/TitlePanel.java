@@ -65,10 +65,10 @@ public class TitlePanel extends JPanel
     {
         setLayout(new GridBagLayout());
 
-        add(title, new GBC(0,0).setFill(GBC.HORIZONTAL).setWeight(30, 1));
-        add(minLabel, new GBC(1,0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setIpad(-10,-10).setInsets(2,5,5,5));
-        add(maxLabel, new GBC(2,0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setIpad(-10,-10).setInsets(2,5,5,5));
-        add(closeLabel, new GBC(3,0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setIpad(-10,-10).setInsets(2,5,5,0));
+        add(title, new GBC(0, 0).setFill(GBC.HORIZONTAL).setWeight(30, 1));
+        add(minLabel, new GBC(1, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setIpad(-10, -10).setInsets(2, 5, 5, 0));
+        add(maxLabel, new GBC(2, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setIpad(-10, -10).setInsets(2, 5, 5, 0));
+        add(closeLabel, new GBC(3, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setIpad(-10, -10).setInsets(2, 5, 5, 0));
     }
 
     private class ControlLabelMouseListener implements MouseListener
@@ -76,7 +76,16 @@ public class TitlePanel extends JPanel
         @Override
         public void mouseClicked(MouseEvent e)
         {
-
+            if (e.getComponent() == closeLabel)
+            {
+                System.exit(1);
+            } else if (e.getComponent() == maxLabel)
+            {
+                MainFrame.getContext().setExtendedState(JFrame.MAXIMIZED_BOTH);
+            } else if (e.getComponent() == minLabel)
+            {
+                MainFrame.getContext().setExtendedState(JFrame.ICONIFIED);
+            }
         }
 
         @Override
