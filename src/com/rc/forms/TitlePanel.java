@@ -2,7 +2,12 @@ package com.rc.forms;
 
 import com.rc.components.Colors;
 import com.rc.components.GBC;
+import com.rc.components.RCBorder;
+import com.rc.utils.FontUtil;
+
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -12,7 +17,10 @@ import java.awt.event.MouseListener;
  */
 public class TitlePanel extends ParentAvailablePanel
 {
-    private JLabel title;
+    private JPanel titlePanel;
+    private JLabel titleLabel;
+
+    private JPanel controlPanel;
     private JLabel closeLabel;
     private JLabel maxLabel;
     private JLabel minLabel;
@@ -27,11 +35,20 @@ public class TitlePanel extends ParentAvailablePanel
 
     private void initComponents()
     {
-        title = new JLabel();
-        //title.setText("即时通讯讨论群");
+        titlePanel = new JPanel();
+        titlePanel.setLayout(new FlowLayout(0));
+
+        titleLabel = new JLabel();
+        titleLabel.setText("即时通讯讨论群(5)");
+        titleLabel.setFont(FontUtil.getDefaultFont(16));
+        titlePanel.add(titleLabel);
+
         ControlLabelMouseListener listener = new ControlLabelMouseListener();
-        Dimension controlLabelSize = new Dimension(25, 25);
+        Dimension controlLabelSize = new Dimension(20, 20);
         Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
+
+        controlPanel = new JPanel();
+        controlPanel.setLayout(new GridBagLayout());
 
         closeLabel = new JLabel();
         closeLabel.setIcon(new ImageIcon(getClass().getResource("/image/close.png")));
@@ -58,17 +75,27 @@ public class TitlePanel extends ParentAvailablePanel
         minLabel.setPreferredSize(controlLabelSize);
         minLabel.setCursor(handCursor);
 
-
+        controlPanel.add(minLabel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setIpad(5,5));
+        controlPanel.add(maxLabel, new GBC(1, 0).setFill(GBC.BOTH).setWeight(1, 1).setIpad(5,5));
+        controlPanel.add(closeLabel, new GBC(2, 0).setFill(GBC.BOTH).setWeight(1, 1).setIpad(5,5));
     }
 
     private void initView()
     {
+        //setLayout(new BorderLayout());
         setLayout(new GridBagLayout());
 
-        add(title, new GBC(0, 0).setFill(GBC.HORIZONTAL).setWeight(30, 1));
-        add(minLabel, new GBC(1, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setIpad(-10, -10).setInsets(2, 5, 5, 0));
-        add(maxLabel, new GBC(2, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setIpad(-10, -10).setInsets(2, 5, 5, 0));
-        add(closeLabel, new GBC(3, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setIpad(-10, -10).setInsets(2, 5, 5, 0));
+       // add(titlePanel, BorderLayout.WEST);
+        //add(controlPanel, BorderLayout.EAST);
+        setBorder(null);
+        this.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.LIGHT_GRAY));
+
+        add(titlePanel, new GBC(0, 1).setFill(GBC.HORIZONTAL).setWeight(100, 1));
+        add(controlPanel, new GBC(1, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1));
+
+        //add(minLabel, new GBC(1, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(0, 5, 0, 0));
+        //add(maxLabel, new GBC(2, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(0, 5, 0, 0));
+        //add(closeLabel, new GBC(3, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(0, 5, 0, 0));
     }
 
     private class ControlLabelMouseListener implements MouseListener

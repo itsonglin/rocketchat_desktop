@@ -12,20 +12,26 @@ public class RCBorder implements Border
     public static final int BOTTOM = 1;
     public static final int LEFT = 2;
     public static final int RIGHT = 3;
-    private int orintation;
+    private int orientation;
+    private Color color;
 
     public RCBorder(int orientation)
     {
+        this(orientation, Colors.DARKER);
+    }
 
-        this.orintation = orientation;
+    public RCBorder(int orientation, Color color)
+    {
+        this.orientation = orientation;
+        this.color = color;
     }
 
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height)
     {
-        g.setColor(Colors.DARKER);
+        g.setColor(color);
 
-        switch (this.orintation)
+        switch (this.orientation)
         {
             case TOP:
             {
@@ -59,7 +65,7 @@ public class RCBorder implements Border
     @Override
     public Insets getBorderInsets(Component c)
     {
-        return new Insets(5, 5, 5, 5);
+        return new Insets(1, 5, 5, 1);
     }
 
     @Override
