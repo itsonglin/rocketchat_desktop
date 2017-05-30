@@ -20,7 +20,7 @@ public class RightPanel extends JPanel
 
     private void initComponents()
     {
-        titlePanel = new TitlePanel();
+        titlePanel = new TitlePanel(this);
     }
 
     private void initView()

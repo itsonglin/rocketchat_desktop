@@ -12,14 +12,16 @@ import java.io.IOException;
 /**
  * Created by song on 17-5-29.
  */
-public class MyInfoPanel extends JPanel
+public class MyInfoPanel extends ParentAvailablePanel
 {
     private ImagePanel avatar;
     private JLabel username;
     private JLabel menuIcon;
 
-    public MyInfoPanel()
+    public MyInfoPanel(JPanel parent)
     {
+        super(parent);
+
         initComponents();
         initView();
     }

@@ -14,10 +14,11 @@ public class LeftPanel extends JPanel
     private MyInfoPanel myInfoPanel;
     private SearchPanel searchPanel;
     private TabOperationPanel mainOperationPanel;
-    private JPanel listPanel;
+    private ListPanel listPanel;
 
     public LeftPanel()
     {
+
         initComponents();
         initView();
 
@@ -25,16 +26,15 @@ public class LeftPanel extends JPanel
 
     private void initComponents()
     {
-        myInfoPanel = new MyInfoPanel();
+        myInfoPanel = new MyInfoPanel(this);
 
-        searchPanel = new SearchPanel();
+        searchPanel = new SearchPanel(this);
 
-        mainOperationPanel = new TabOperationPanel();
+        mainOperationPanel = new TabOperationPanel(this);
         //mainOperationPanel.setBackground(Color.blue);
 
-        listPanel = new JPanel();
+        listPanel = new ListPanel(this);
         listPanel.setBackground(Colors.DARK);
-
     }
 
     private void initView()
@@ -46,5 +46,10 @@ public class LeftPanel extends JPanel
         add(searchPanel, new GBC(0, 1).setAnchor(GBC.CENTER).setFill(GBC.HORIZONTAL).setWeight(1,1));
         add(mainOperationPanel, new GBC(0, 2).setAnchor(GBC.CENTER).setFill(GBC.BOTH).setWeight(1,1));
         add(listPanel, new GBC(0, 3).setAnchor(GBC.CENTER).setFill(GBC.BOTH).setWeight(1,60));
+    }
+
+    public ListPanel getListPanel()
+    {
+        return this.listPanel;
     }
 }

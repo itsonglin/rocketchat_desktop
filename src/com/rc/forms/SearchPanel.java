@@ -12,12 +12,14 @@ import java.awt.*;
 /**
  * Created by song on 17-5-29.
  */
-public class SearchPanel extends JPanel
+public class SearchPanel extends ParentAvailablePanel
 {
     private RCTextField searchTextField;
 
-    public SearchPanel()
+    public SearchPanel(JPanel parent)
     {
+        super(parent);
+
         initComponent();
         initView();
     }

@@ -12,7 +12,7 @@ import java.awt.event.MouseListener;
 /**
  * Created by song on 17-5-29.
  */
-public class TabOperationPanel extends JPanel
+public class TabOperationPanel extends ParentAvailablePanel
 {
     private JLabel chatLabel;
     private JLabel contactsLabel;
@@ -25,8 +25,12 @@ public class TabOperationPanel extends JPanel
     private ImageIcon meIconNormal;
     private ImageIcon meIconActive;
 
-    public TabOperationPanel()
+    private LeftPanel parent;
+
+    public TabOperationPanel(JPanel parent)
     {
+        super(parent);
+
         initComponents();
         initView();
     }
@@ -62,6 +66,7 @@ public class TabOperationPanel extends JPanel
         meLable.setCursor(handCursor);
         meLable.addMouseListener(clickListener);
 
+        parent = (LeftPanel) getParentPanel();
     }
 
     private void initView()
@@ -92,18 +97,21 @@ public class TabOperationPanel extends JPanel
                 chatLabel.setIcon(chatIconActive);
                 contactsLabel.setIcon(contactIconNormal);
                 meLable.setIcon(meIconNormal);
+                parent.getListPanel().showPanel(ListPanel.CHAT);
 
             } else if (e.getComponent() == contactsLabel)
             {
                 chatLabel.setIcon(chatIconNormal);
                 contactsLabel.setIcon(contactIconActive);
                 meLable.setIcon(meIconNormal);
+                parent.getListPanel().showPanel(ListPanel.CONTACTS);
             }
             else if (e.getComponent() == meLable)
             {
                 chatLabel.setIcon(chatIconNormal);
                 contactsLabel.setIcon(contactIconNormal);
                 meLable.setIcon(meIconActive);
+                parent.getListPanel().showPanel(ListPanel.COLLECTIONS);
             }
         }
 

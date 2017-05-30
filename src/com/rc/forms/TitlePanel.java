@@ -2,9 +2,7 @@ package com.rc.forms;
 
 import com.rc.components.Colors;
 import com.rc.components.GBC;
-
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -12,15 +10,17 @@ import java.awt.event.MouseListener;
 /**
  * Created by song on 17-5-30.
  */
-public class TitlePanel extends JPanel
+public class TitlePanel extends ParentAvailablePanel
 {
     private JLabel title;
     private JLabel closeLabel;
     private JLabel maxLabel;
     private JLabel minLabel;
 
-    public TitlePanel()
+    public TitlePanel(JPanel parent)
     {
+        super(parent);
+
         initComponents();
         initView();
     }
