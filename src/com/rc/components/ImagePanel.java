@@ -37,7 +37,6 @@ public class ImagePanel extends JPanel
        // width = 50;
        // height = 50;
 
-        System.out.println(width + ", " + height);
         Image scaledImage = image.getScaledInstance(width, width, image.SCALE_SMOOTH);//设置缩放目标图片模板
 
         Graphics2D g2 = (Graphics2D) g;

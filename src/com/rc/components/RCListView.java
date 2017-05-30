@@ -1,6 +1,7 @@
 package com.rc.components;
 
 import com.rc.adapter.BaseAdapter;
+import com.rc.adapter.HeaderViewHolder;
 import com.rc.adapter.ViewHolder;
 
 import javax.swing.*;
@@ -23,12 +24,11 @@ public class RCListView extends JScrollPane
     private void initComponents()
     {
         contentPanel = new JPanel();
-        contentPanel.setLayout(new GridBagLayout());
+        contentPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, false));
+
         this.setViewportView(contentPanel);
         this.setBorder(null);
         this.getVerticalScrollBar().setUnitIncrement(17);
-        //this.setBackground(Colors.DARK);
-
         this.getVerticalScrollBar().setUI(new ScrollUI());
 
     }
@@ -38,10 +38,16 @@ public class RCListView extends JScrollPane
         for (int i = 0; i < adapter.getCount(); i++)
         {
             int viewType = adapter.getItemViewType(i);
+            HeaderViewHolder headerViewHolder = adapter.onCreateHeaderViewHolder(viewType, i);
+            if (headerViewHolder != null)
+            {
+                adapter.onBindHeaderViewHolder(headerViewHolder, i);
+                contentPanel.add(headerViewHolder);
+            }
+
             ViewHolder holder = adapter.onCreateViewHolder(viewType);
             adapter.onBindViewHolder(holder, i);
-
-            contentPanel.add(holder, new GBC(0, i).setFill(GBC.BOTH).setWeight(1, 1));
+            contentPanel.add(holder);
         }
     }
 
@@ -55,5 +61,11 @@ public class RCListView extends JScrollPane
     {
         this.adapter = adapter;
         initView();
+    }
+
+    public void setContentPanelBackground(Color color)
+    {
+        contentPanel.setOpaque(true);
+        contentPanel.setBackground(color);
     }
 }

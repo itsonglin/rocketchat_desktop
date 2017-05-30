@@ -28,7 +28,7 @@ public class TitlePanel extends ParentAvailablePanel
     private void initComponents()
     {
         title = new JLabel();
-        title.setText("即时通讯讨论群");
+        //title.setText("即时通讯讨论群");
         ControlLabelMouseListener listener = new ControlLabelMouseListener();
         Dimension controlLabelSize = new Dimension(25, 25);
         Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);

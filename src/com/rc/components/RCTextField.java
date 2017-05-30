@@ -37,7 +37,6 @@ public class RCTextField extends JTextField
             {
                 if (getText().isEmpty())
                 {
-                    System.out.println("repaint");
                     repaint();
                 }
 

@@ -2,6 +2,7 @@ package com.rc.app;
 
 import com.rc.forms.CardLayoutDemo;
 import com.rc.forms.MainFrame;
+import com.rc.utils.CharacterParser;
 
 import javax.swing.*;
 
@@ -20,6 +21,8 @@ public class App
         MainFrame frame = new MainFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
+
+        //CharacterParser parser = new CharacterParser();
 
        /* CardLayoutDemo frame = new CardLayoutDemo();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

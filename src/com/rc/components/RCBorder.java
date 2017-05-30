@@ -23,7 +23,7 @@ public class RCBorder implements Border
     @Override
     public void paintBorder(Component c, Graphics g, int x, int y, int width, int height)
     {
-        g.setColor(Colors.SEARCH_BACKGROUND);
+        g.setColor(Colors.DARKER);
 
         switch (this.orintation)
         {
@@ -52,7 +52,7 @@ public class RCBorder implements Border
         }
 
 
-        //g.setColor(Colors.SEARCH_BACKGROUND);
+        //g.setColor(Colors.DARKER);
         //g.drawLine(x, height -1 , width, height -1 );
     }
 

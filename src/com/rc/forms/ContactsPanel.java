@@ -1,10 +1,15 @@
 package com.rc.forms;
 
+import com.rc.adapter.ContactsItemsAdapter;
 import com.rc.adapter.RoomItemsAdapter;
-import com.rc.components.*;
+import com.rc.components.Colors;
+import com.rc.components.GBC;
+import com.rc.components.RCListView;
+import com.rc.entity.ContactsItem;
 import com.rc.entity.RoomItem;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -12,13 +17,12 @@ import java.util.List;
 /**
  * Created by song on 17-5-30.
  */
-public class ChatPanel extends ParentAvailablePanel
+public class ContactsPanel extends ParentAvailablePanel
 {
-    //private JScrollPane scrollPane;
-    private RCListView roomItemsListView;
-    private List<RoomItem> roomItemList;
+    private RCListView contactsListView;
+    private List<ContactsItem> contactsItemList;
 
-    public ChatPanel(JPanel parent)
+    public ContactsPanel(JPanel parent)
     {
         super(parent);
         initComponents();
@@ -27,15 +31,36 @@ public class ChatPanel extends ParentAvailablePanel
 
     private void initComponents()
     {
-        roomItemsListView = new RCListView();
+        contactsListView = new RCListView();
 
-        roomItemList = new ArrayList<>();
-        for (int i = 0 ; i < 10; i ++)
+        contactsItemList = new ArrayList<>();
+        /*for (int i = 0 ; i < 10; i ++)
         {
-            RoomItem item = new RoomItem();
-            roomItemList.add(item);
-        }
-        roomItemsListView.setAdapter(new RoomItemsAdapter(roomItemList));
+            ContactsItem item = new ContactsItem();
+            item.setName("User用户" + i);
+            contactsItemList.add(item);
+        }*/
+        ContactsItem item = new ContactsItem();
+        item.setName("阿哥");
+        contactsItemList.add(item);
+
+        ContactsItem item2 = new ContactsItem();
+        item2.setName("讨论组");
+        contactsItemList.add(item2);
+
+        ContactsItem item3 = new ContactsItem();
+        item3.setName("波哥");
+        contactsItemList.add(item3);
+
+        ContactsItem item4 = new ContactsItem();
+        item4.setName("不好");
+        contactsItemList.add(item4);
+
+        ContactsItem item5 = new ContactsItem();
+        item5.setName("123");
+        contactsItemList.add(item5);
+
+        contactsListView.setAdapter(new ContactsItemsAdapter(contactsItemList));
 
         //getData();
 
@@ -131,9 +156,8 @@ public class ChatPanel extends ParentAvailablePanel
     private void initView()
     {
         setLayout(new GridBagLayout());
-        roomItemsListView.setContentPanelBackground(Colors.DARK);
-        add(roomItemsListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
-        //add(scrollPane, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
+        contactsListView.setContentPanelBackground(Colors.DARK);
+        add(contactsListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
     }
 
 }

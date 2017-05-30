@@ -11,7 +11,7 @@ public class Colors
     public static Color WINDOW_BACKGROUND = new Color(238, 238, 238);
     public static Color FONT_WHITE = new Color(255, 255, 255);
     public static Color FONT_GRAY = new Color(152, 152, 152);
-    public static Color SEARCH_BACKGROUND = new Color(38, 41, 46);
+    public static Color DARKER = new Color(38, 41, 46);
     public static Color ITEM_SELECTED = new Color(58, 63, 69);
     public static Color LIGHT_GRAY = new Color(222, 222, 222);
 }

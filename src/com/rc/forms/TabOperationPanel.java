@@ -82,7 +82,6 @@ public class TabOperationPanel extends ParentAvailablePanel
     @Override
     protected void printBorder(Graphics g)
     {
-        System.out.println(getWidth());
         super.printBorder(g);
     }
 

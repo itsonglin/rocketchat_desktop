@@ -11,7 +11,7 @@ import java.awt.*;
 public class ListPanel extends ParentAvailablePanel
 {
     private ChatPanel chatPanel;
-    private JPanel contactsPanel;
+    private ContactsPanel contactsPanel;
     private JPanel collectionPanel;
 
     public static final String CHAT = "CHAT";
@@ -33,9 +33,8 @@ public class ListPanel extends ParentAvailablePanel
     private void initComponents()
     {
         chatPanel = new ChatPanel(this);
-        chatPanel.setBackground(Color.RED);
 
-        contactsPanel = new JPanel();
+        contactsPanel = new ContactsPanel(this);
         contactsPanel.setBackground(Color.GREEN);
 
         collectionPanel = new JPanel();

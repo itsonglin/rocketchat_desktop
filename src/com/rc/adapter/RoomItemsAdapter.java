@@ -58,7 +58,8 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
 
         // 名字
         viewHolder.roomName = new JLabel();
-        viewHolder.roomName.setText("aaa");
+        viewHolder.roomName.setText("讨论组");
+        viewHolder.roomName.setFont(FontUtil.getDefaultFont(13));
         viewHolder.roomName.setForeground(Colors.FONT_WHITE);
 
         // 消息
@@ -100,7 +101,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
 
         viewHolder.setLayout(new GridBagLayout());
         viewHolder.add(viewHolder.avatar, new GBC(0, 0).setWeight(2, 1).setFill(GBC.BOTH).setInsets(0,5,0,0));
-        viewHolder.add(viewHolder.nameBrief, new GBC(1, 0).setWeight(9, 1).setFill(GBC.BOTH));
+        viewHolder.add(viewHolder.nameBrief, new GBC(1, 0).setWeight(9, 1).setFill(GBC.BOTH).setInsets(5,0,0,0));
         viewHolder.add(viewHolder.timeUnread, new GBC(2, 0).setWeight(1, 1).setFill(GBC.BOTH));
 
 
@@ -109,6 +110,8 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
             @Override
             public void mouseClicked(MouseEvent e)
             {
+                setBackground(viewHolder, Colors.ITEM_SELECTED);
+
                 for (RoomItemViewHolder holder : viewHolders)
                 {
                     if (holder != viewHolder)
@@ -116,7 +119,6 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
                         setBackground(holder, Colors.DARK);
                     }
                 }
-                setBackground(viewHolder, Colors.ITEM_SELECTED);
             }
 
             @Override
