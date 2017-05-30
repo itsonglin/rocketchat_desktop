@@ -3,6 +3,7 @@ package com.rc.forms;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.ImagePanel;
+import com.rc.utils.FontUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -35,19 +36,23 @@ public class MyInfoPanel extends ParentAvailablePanel
         {
             avatar = new ImagePanel(ImageIO.read(getClass().getResourceAsStream("/image/avatar.jpg")));
             avatar.setPreferredSize(new Dimension(50,50));
+            avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
         } catch (IOException e)
         {
             e.printStackTrace();
         }
 
         username = new JLabel();
-        username.setText("Song");
+        username.setText("松");
+        username.setFont(FontUtil.getDefaultFont(16));
         username.setForeground(Colors.FONT_WHITE);
 
 
         menuIcon = new JLabel();
-        menuIcon.setText("+");
+        menuIcon.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
         menuIcon.setForeground(Colors.FONT_WHITE);
+        menuIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
     }
 
     private void initView()

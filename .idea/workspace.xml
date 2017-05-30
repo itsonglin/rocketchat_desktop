@@ -5,13 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e590464b-be4c-4fc3-9f76-54a97cd19c6d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/rc/forms/CollectionsPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/artifacts/rocketchat_desktop_jar/rocketchat_desktop.jar" afterPath="$PROJECT_DIR$/out/artifacts/rocketchat_desktop_jar/rocketchat_desktop.jar" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/ContactsPanel.class" afterPath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/ContactsPanel.class" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/ListPanel.class" afterPath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/ListPanel.class" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/ContactsPanel.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/ContactsPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/ListPanel.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/ListPanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/MyInfoPanel.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/MyInfoPanel.java" />
     </list>
     <ignored path="rocketchat_desktop.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -48,11 +43,23 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CollectionsPanel.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="CollectionsPanel.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/rc/forms/CollectionsPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="341">
-              <caret line="32" column="20" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
+            <state relative-caret-position="211">
+              <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MyInfoPanel.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/forms/MyInfoPanel.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="182">
+              <caret line="48" column="50" selection-start-line="48" selection-start-column="50" selection-end-line="48" selection-end-column="50" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -107,7 +114,6 @@
         <option value="$PROJECT_DIR$/src/com/rc/adapter/ViewHolder.java" />
         <option value="$PROJECT_DIR$/src/com/rc/adapter/RoomItemViewHolder.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/ImagePanel.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/forms/MyInfoPanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/LeftPanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/adapter/ContactsItemViewHolder.java" />
@@ -126,6 +132,7 @@
         <option value="$PROJECT_DIR$/src/com/rc/forms/ContactsPanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/ListPanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/CollectionsPanel.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/forms/MyInfoPanel.java" />
       </list>
     </option>
   </component>
@@ -831,12 +838,12 @@
       <workItem from="1496074279441" duration="3380000" />
       <workItem from="1496111554372" duration="7070000" />
       <workItem from="1496122432222" duration="13816000" />
-      <workItem from="1496141059192" duration="8162000" />
+      <workItem from="1496141059192" duration="8476000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55402000" />
+    <option name="totallyTimeSpent" value="55716000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="45" y="24" width="1321" height="744" extended-state="6" />
@@ -1077,16 +1084,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/MyInfoPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="182">
-          <caret line="14" column="19" selection-start-line="14" selection-start-column="19" selection-end-line="14" selection-end-column="19" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="347">
@@ -1294,8 +1291,18 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/rc/forms/CollectionsPanel.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="341">
-          <caret line="32" column="20" selection-start-line="32" selection-start-column="20" selection-end-line="32" selection-end-column="20" />
+        <state relative-caret-position="211">
+          <caret line="21" column="0" selection-start-line="21" selection-start-column="0" selection-end-line="21" selection-end-column="0" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/MyInfoPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="182">
+          <caret line="48" column="50" selection-start-line="48" selection-start-column="50" selection-end-line="48" selection-end-column="50" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
