@@ -2,6 +2,7 @@ package com.rc.forms;
 
 import com.rc.components.Colors;
 import com.rc.components.GBC;
+import com.rc.components.JIMSendTextPane;
 import com.rc.components.RCButton;
 import com.rc.utils.FontUtil;
 
@@ -16,7 +17,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
     private JPanel controlLabel;
     private JLabel fileLabel;
     private JScrollPane textScrollPane;
-    private JTextPane textEditor;
+    private JIMSendTextPane textEditor;
     private JPanel sendPanel;
     private RCButton sendButton;
 
@@ -41,7 +42,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
         fileLabel.setToolTipText("上传附件");
         controlLabel.add(fileLabel);
 
-        textEditor = new JTextPane();
+        textEditor = new JIMSendTextPane();
         textEditor.setBackground(Colors.WINDOW_BACKGROUND);
         textEditor.setFont(FontUtil.getDefaultFont(16));
         textEditor.setMargin(new Insets(0,15,0,0));

@@ -7,6 +7,7 @@ import java.awt.*;
  */
 public class Colors
 {
+    public static final Color RED = new Color(228, 74, 47);
     public static Color DARK = new Color(46, 50, 56);
     public static Color WINDOW_BACKGROUND = new Color(238, 238, 238);
     public static Color FONT_WHITE = new Color(255, 255, 255);

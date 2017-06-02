@@ -14,9 +14,18 @@ public class RCListView extends JScrollPane
 {
     private BaseAdapter adapter;
     private JPanel contentPanel;
+    private int vGap;
+    private int hGap;
 
     public RCListView()
     {
+        this(0, 0);
+    }
+
+    public RCListView(int hGap, int vGap)
+    {
+        this.vGap = vGap;
+        this.hGap = hGap;
         initComponents();
         //initView();
     }
@@ -24,7 +33,7 @@ public class RCListView extends JScrollPane
     private void initComponents()
     {
         contentPanel = new JPanel();
-        contentPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, true, false));
+        contentPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, hGap, vGap, true, false));
 
         this.setViewportView(contentPanel);
         this.setBorder(null);

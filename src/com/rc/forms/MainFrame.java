@@ -6,9 +6,7 @@ import com.rc.utils.FontUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 
 /**
  * Created by song on 17-5-28.
@@ -17,6 +15,9 @@ public class MainFrame extends JFrame
 {
     private int DEFAULT_WIDTH = 900;
     private int DEFAULT_HEIGHT = 650;
+
+    public int currentWindowWidth = DEFAULT_WIDTH;
+    public int currentWindowHeight = DEFAULT_HEIGHT;
 
     private LeftPanel leftPanel;
     private RightPanel rightPanel;
@@ -56,8 +57,8 @@ public class MainFrame extends JFrame
         addListener();
 
         setLayout(new GridBagLayout());
-        add(leftPanel, new GBC(0, 0).setAnchor(GBC.CENTER).setWeight(1, 1).setFill(GBC.BOTH));
-        add(rightPanel, new GBC(1, 0).setAnchor(GBC.CENTER).setWeight(7, 1).setFill(GBC.BOTH));
+        add(leftPanel, new GBC(0, 0).setAnchor(GBC.CENTER).setWeight(2, 1).setFill(GBC.BOTH));
+        add(rightPanel, new GBC(1, 0).setAnchor(GBC.CENTER).setWeight(8, 1).setFill(GBC.BOTH));
 
         /*leftPanel.setPreferredSize(new Dimension(250, DEFAULT_HEIGHT));
         rightPanel.setPreferredSize(new Dimension(650, DEFAULT_HEIGHT));
@@ -88,6 +89,18 @@ public class MainFrame extends JFrame
                         - origin.y);
             }
         });
+
+       addComponentListener(new ComponentAdapter()
+       {
+           @Override
+           public void componentResized(ComponentEvent e)
+           {
+               currentWindowWidth = (int) e.getComponent().getBounds().getWidth();
+               currentWindowHeight = (int) e.getComponent().getBounds().getHeight();
+           }
+       });
     }
+
+
 }
 

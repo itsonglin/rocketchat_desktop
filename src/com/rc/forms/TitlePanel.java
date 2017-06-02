@@ -44,7 +44,7 @@ public class TitlePanel extends ParentAvailablePanel
         titlePanel.add(titleLabel);
 
         ControlLabelMouseListener listener = new ControlLabelMouseListener();
-        Dimension controlLabelSize = new Dimension(20, 20);
+        Dimension controlLabelSize = new Dimension(30,30);
         Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
 
         controlPanel = new JPanel();
@@ -130,7 +130,7 @@ public class TitlePanel extends ParentAvailablePanel
         @Override
         public void mouseEntered(MouseEvent e)
         {
-            e.getComponent().setBackground(Colors.LIGHT_GRAY);
+                e.getComponent().setBackground(Colors.LIGHT_GRAY);
         }
 
         @Override
