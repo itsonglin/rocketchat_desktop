@@ -2,7 +2,7 @@ package com.rc.forms;
 
 import com.rc.components.Colors;
 import com.rc.components.GBC;
-import com.rc.components.JIMSendTextPane;
+import com.rc.components.message.JIMSendTextPane;
 import com.rc.components.RCButton;
 import com.rc.utils.FontUtil;
 

@@ -34,6 +34,9 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
             case MessageItem.RIGHT_TEXT:{
                 return new MessageRightTextViewHolder();
             }
+            case MessageItem.LEFT_TEXT:{
+                return new MessageLeftTextViewHolder();
+            }
         }
 
         return null;
@@ -53,6 +56,10 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         if (viewHolder instanceof MessageRightTextViewHolder)
         {
             processRightTextMessage(viewHolder, item);
+        }
+        if (viewHolder instanceof MessageLeftTextViewHolder)
+        {
+            processLeftTextMessage(viewHolder, item);
         }
     }
 
@@ -96,5 +103,19 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
                 //holder.messageSendingProgressBar.setVisibility(View.GONE);
             }
         }
+    }
+
+    /**
+     * 处理 对方 发送的文本消息
+     *
+     * @param viewHolder
+     * @param item
+     */
+    private void processLeftTextMessage(ViewHolder viewHolder, final MessageItem item)
+    {
+        MessageLeftTextViewHolder holder = (MessageLeftTextViewHolder) viewHolder;
+        holder.text.setText(item.getMessageContent());
+        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        holder.sender.setText("Song");
     }
 }

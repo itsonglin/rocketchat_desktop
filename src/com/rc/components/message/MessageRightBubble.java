@@ -1,6 +1,5 @@
-package com.rc.components;
+package com.rc.components.message;
 
-import javax.swing.*;
 import java.awt.*;
 
 /**

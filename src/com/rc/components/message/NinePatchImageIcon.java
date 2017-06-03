@@ -1,4 +1,4 @@
-package com.rc.components;
+package com.rc.components.message;
 
 
 import com.android.ninepatch.NinePatch;

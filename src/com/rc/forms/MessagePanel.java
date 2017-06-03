@@ -69,7 +69,7 @@ public class MessagePanel extends ParentAvailablePanel
         item.setTimestamp(System.currentTimeMillis());
 
         MessageItem item2 = new MessageItem();
-        item2.setMessageType(MessageItem.RIGHT_TEXT);
+        item2.setMessageType(MessageItem.LEFT_TEXT);
         item2.setMessageContent("http://www.baidu.com");
         item2.setTimestamp(System.currentTimeMillis());
 
@@ -78,9 +78,15 @@ public class MessagePanel extends ParentAvailablePanel
         item3.setMessageContent("addComponentListener(new ComponentAdapter()");
         item3.setTimestamp(System.currentTimeMillis());
 
+        MessageItem item4 = new MessageItem();
+        item4.setMessageType(MessageItem.LEFT_TEXT);
+        item4.setMessageContent("一、不得利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会集体的和公民的合法权益，不得利用本站制作、复制和传播不法有害信息！");
+        item4.setTimestamp(System.currentTimeMillis());
+
         messageItems = new ArrayList<>();
         messageItems.add(item);
         messageItems.add(item2);
         messageItems.add(item3);
+        messageItems.add(item4);
     }
 }

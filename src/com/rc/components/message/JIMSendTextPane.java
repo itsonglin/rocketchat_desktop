@@ -1,4 +1,4 @@
-package com.rc.components;
+package com.rc.components.message;
 
 /**
  * Created by song on 17-6-2.
