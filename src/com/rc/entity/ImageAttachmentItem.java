@@ -18,6 +18,11 @@ public class ImageAttachmentItem
     {
     }
 
+    public ImageAttachmentItem(String imageUrl)
+    {
+        this.imageUrl = imageUrl;
+    }
+
    /* public ImageAttachmentItem(ImageAttachment ia)
     {
         this.id = ia.getId();

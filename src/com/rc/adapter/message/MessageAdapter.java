@@ -6,6 +6,8 @@ import com.rc.entity.MessageItem;
 import com.rc.forms.MainFrame;
 import com.rc.utils.TimeUtil;
 
+import javax.swing.*;
+import java.awt.*;
 import java.util.List;
 
 /**
@@ -79,6 +81,21 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     {
         MessageRightImageViewHolder holder = (MessageRightImageViewHolder) viewHolder;
         holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource(item.getImageAttachments().get(0).getImageUrl()));
+        int width = imageIcon.getIconWidth();
+        int height = imageIcon.getIconHeight();
+        float scale = width / height * 1.0F;
+
+        // 限制图片显示大小
+        int maxImageWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.2);
+        if (width > maxImageWidth)
+        {
+            width = maxImageWidth;
+            height = (int) (width / scale);
+        }
+        imageIcon.setImage(imageIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
+        holder.image.setIcon(imageIcon);
     }
 
     @Override

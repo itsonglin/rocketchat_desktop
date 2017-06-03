@@ -88,7 +88,7 @@ public class MessagePanel extends ParentAvailablePanel
         item5.setMessageType(MessageItem.RIGHT_IMAGE);
         item5.setMessageContent("图片");
         item5.setTimestamp(System.currentTimeMillis());
-        item5.getImageAttachments().add(0,new ImageAttachmentItem());
+        item5.getImageAttachments().add(0,new ImageAttachmentItem("/image/pdf.png"));
 
 
         messageItems = new ArrayList<>();

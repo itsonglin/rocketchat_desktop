@@ -4,7 +4,9 @@ import com.rc.adapter.ViewHolder;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.message.RCRightImageMessageBubble;
+import com.rc.forms.MainFrame;
 import com.rc.utils.FontUtil;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -13,13 +15,13 @@ import java.awt.*;
  */
 public class MessageRightImageViewHolder extends ViewHolder
 {
-    private RCRightImageMessageBubble imageBubble = new RCRightImageMessageBubble();
-    private JLabel image = new JLabel();
+    public JLabel image = new JLabel();
     public JLabel avatar = new JLabel();
     public JLabel time = new JLabel();
     public JLabel resend = new JLabel(); // 重发按钮
     public JLabel sendingProgress = new JLabel(); // 正在发送
 
+    private RCRightImageMessageBubble imageBubble = new RCRightImageMessageBubble();
     private JPanel timePanel = new JPanel();
     private JPanel messageAvatarPanel = new JPanel();
 
@@ -31,9 +33,20 @@ public class MessageRightImageViewHolder extends ViewHolder
 
     private void initComponents()
     {
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        imageIcon.setImage(imageIcon.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-        image.setIcon(imageIcon);
+/*        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
+        int width = imageIcon.getIconWidth();
+        int height = imageIcon.getIconHeight();
+        float scale = width / height * 1.0F;
+
+        // 限制图片显示大小
+        int maxImageWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.2);
+        if (width > maxImageWidth)
+        {
+            width = maxImageWidth;
+            height = (int) (width / scale);
+        }
+        imageIcon.setImage(imageIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
+        image.setIcon(imageIcon);*/
         imageBubble.add(image);
 
 
