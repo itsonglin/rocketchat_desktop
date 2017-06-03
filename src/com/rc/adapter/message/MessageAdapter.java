@@ -37,6 +37,9 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
             case MessageItem.LEFT_TEXT:{
                 return new MessageLeftTextViewHolder();
             }
+            case MessageItem.RIGHT_IMAGE:{
+                return new MessageRightImageViewHolder();
+            }
         }
 
         return null;
@@ -61,6 +64,20 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         {
             processLeftTextMessage(viewHolder, item);
         }
+        if (viewHolder instanceof MessageRightImageViewHolder)
+        {
+            processRightImageMessage(viewHolder, item);
+        }
+    }
+
+    /**
+     * 我发送的图片
+     * @param viewHolder
+     * @param item
+     */
+    private void processRightImageMessage(ViewHolder viewHolder, MessageItem item)
+    {
+
     }
 
     @Override

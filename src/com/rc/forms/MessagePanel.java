@@ -2,6 +2,7 @@ package com.rc.forms;
 
 import com.rc.adapter.message.MessageAdapter;
 import com.rc.components.RCListView;
+import com.rc.entity.ImageAttachmentItem;
 import com.rc.entity.MessageItem;
 
 import javax.swing.*;
@@ -83,10 +84,20 @@ public class MessagePanel extends ParentAvailablePanel
         item4.setMessageContent("一、不得利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会集体的和公民的合法权益，不得利用本站制作、复制和传播不法有害信息！");
         item4.setTimestamp(System.currentTimeMillis());
 
+        MessageItem item5 = new MessageItem();
+        item5.setMessageType(MessageItem.RIGHT_IMAGE);
+        item5.setMessageContent("图片");
+        item5.setTimestamp(System.currentTimeMillis());
+        item5.getImageAttachments().add(0,new ImageAttachmentItem());
+
+
         messageItems = new ArrayList<>();
+        messageItems.add(item);
+        messageItems.add(item);
         messageItems.add(item);
         messageItems.add(item2);
         messageItems.add(item3);
-        messageItems.add(item4);
+        messageItems.add(item5);
+        //messageItems.add(item4);
     }
 }

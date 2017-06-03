@@ -34,6 +34,7 @@ public class RCListView extends JScrollPane
     {
         contentPanel = new JPanel();
         contentPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, hGap, vGap, true, false));
+        //contentPanel.setLayout(new GridLayout(4, 1));
 
         this.setViewportView(contentPanel);
         this.setBorder(null);
@@ -56,6 +57,7 @@ public class RCListView extends JScrollPane
 
             ViewHolder holder = adapter.onCreateViewHolder(viewType);
             adapter.onBindViewHolder(holder, i);
+            // contentPanel.add(holder);
             contentPanel.add(holder);
         }
     }

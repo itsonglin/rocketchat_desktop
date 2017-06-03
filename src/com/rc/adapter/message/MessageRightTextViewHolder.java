@@ -56,9 +56,12 @@ public class MessageRightTextViewHolder extends ViewHolder
         ImageIcon resendIcon = new ImageIcon(getClass().getResource("/image/resend.png"));
         resendIcon.setImage(resendIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         resend.setIcon(resendIcon);
+        resend.setVisible(false);
 
         ImageIcon sendingIcon = new ImageIcon(getClass().getResource("/image/sending.gif"));
         sendingProgress.setIcon(sendingIcon);
+        sendingProgress.setVisible(false);
+
     }
 
     private void initView()

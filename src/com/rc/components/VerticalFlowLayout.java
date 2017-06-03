@@ -117,8 +117,8 @@ public class VerticalFlowLayout extends FlowLayout {
             }
         }
         Insets insets = target.getInsets();
-        tarsiz.width += insets.left + insets.right + hgap * 2;
-        tarsiz.height += insets.top + insets.bottom + vgap * 2;
+        tarsiz.width += insets.left + insets.right + hgap * target.getComponentCount();
+        tarsiz.height += insets.top + insets.bottom + vgap * target.getComponentCount();
         return tarsiz;
     }
 
