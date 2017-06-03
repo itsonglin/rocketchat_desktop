@@ -23,6 +23,9 @@ public class MessageRightTextViewHolder extends ViewHolder
     public JLabel avatar = new JLabel();
     public JLabel time = new JLabel();
     public RCRightTextMessageBubble text = new RCRightTextMessageBubble();
+    public JLabel resend = new JLabel(); // 重发按钮
+    public JLabel sendingProgress = new JLabel(); // 正在发送
+
     private JPanel timePanel = new JPanel();
     private JPanel messageAvatarPanel = new JPanel();
 
@@ -49,6 +52,13 @@ public class MessageRightTextViewHolder extends ViewHolder
 
         time.setForeground(Colors.FONT_GRAY);
         time.setFont(FontUtil.getDefaultFont(12));
+
+        ImageIcon resendIcon = new ImageIcon(getClass().getResource("/image/resend.png"));
+        resendIcon.setImage(resendIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+        resend.setIcon(resendIcon);
+
+        ImageIcon sendingIcon = new ImageIcon(getClass().getResource("/image/sending.gif"));
+        sendingProgress.setIcon(sendingIcon);
     }
 
     private void initView()
@@ -56,13 +66,14 @@ public class MessageRightTextViewHolder extends ViewHolder
         setLayout(new BorderLayout());
         timePanel.add(time);
 
-        messageAvatarPanel.setLayout(new GridBagLayout());
-        messageAvatarPanel.add(text, new GBC(1, 0)
-                .setWeight(1000, 1)
-                .setAnchor(GBC.EAST)
-                .setInsets(0,0,0,5));
-        messageAvatarPanel.add(avatar, new GBC(2, 0).setWeight(1, 1).setAnchor(GBC.NORTH));
+        JPanel resendTextPanel = new JPanel();
+        resendTextPanel.add(resend, BorderLayout.WEST);
+        resendTextPanel.add(sendingProgress, BorderLayout.WEST);
+        resendTextPanel.add(text, BorderLayout.CENTER);
 
+        messageAvatarPanel.setLayout(new GridBagLayout());
+        messageAvatarPanel.add(resendTextPanel, new GBC(1, 0).setWeight(1000, 1).setAnchor(GBC.EAST).setInsets(0,0,0,5));
+        messageAvatarPanel.add(avatar, new GBC(2, 0).setWeight(1, 1).setAnchor(GBC.NORTH));
 
         add(timePanel, BorderLayout.NORTH);
         add(messageAvatarPanel, BorderLayout.CENTER);
