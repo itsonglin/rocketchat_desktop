@@ -33,20 +33,6 @@ public class MessageRightImageViewHolder extends ViewHolder
 
     private void initComponents()
     {
-/*        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        int width = imageIcon.getIconWidth();
-        int height = imageIcon.getIconHeight();
-        float scale = width / height * 1.0F;
-
-        // 限制图片显示大小
-        int maxImageWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.2);
-        if (width > maxImageWidth)
-        {
-            width = maxImageWidth;
-            height = (int) (width / scale);
-        }
-        imageIcon.setImage(imageIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
-        image.setIcon(imageIcon);*/
         imageBubble.add(image);
 
 

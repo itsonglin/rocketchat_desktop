@@ -54,7 +54,6 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
             {
                 String ch = positionMap.get(pos);
 
-                //System.out.println("第" + pos + " == " + ch);
                 return new ContactsHeaderViewHolder(ch.toUpperCase());
             }
         }
@@ -173,7 +172,5 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
 
             index++;
         }
-
-        System.out.println(positionMap);
     }
 }
