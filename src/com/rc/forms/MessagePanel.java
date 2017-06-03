@@ -75,7 +75,7 @@ public class MessagePanel extends ParentAvailablePanel
 
         MessageItem item3 = new MessageItem();
         item3.setMessageType(MessageItem.RIGHT_TEXT);
-        item3.setMessageContent("a老用户1介23绍新AAD,/");
+        item3.setMessageContent("addComponentListener(new ComponentAdapter()");
         item3.setTimestamp(System.currentTimeMillis());
 
         messageItems = new ArrayList<>();

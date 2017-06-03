@@ -27,6 +27,8 @@ public class RCMessageBubble extends JTextArea
 {
 
     private static final long serialVersionUID = 1L;
+    private  NinePatchImageIcon backgroundNormal;
+    private  NinePatchImageIcon backgroundActive;
 
     private Icon mBgIcon;
     private String[] lineArr;
@@ -40,6 +42,49 @@ public class RCMessageBubble extends JTextArea
         setWrapStyleWord(false);
         this.setFont(FontUtil.getDefaultFont(14));
         setEditable(false);
+
+        backgroundNormal = new NinePatchImageIcon(this.getClass().getResource("/image/right.9.png"));
+        backgroundActive = new NinePatchImageIcon(this.getClass().getResource("/image/right_active.9.png"));
+        setBackgroundIcon(backgroundNormal);
+
+        setListener();
+    }
+
+    private void setListener()
+    {
+        addMouseListener(new MouseListener()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                RCMessageBubble.this.setBackgroundIcon(backgroundActive);
+                repaint();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                setBackgroundIcon(backgroundNormal);
+                repaint();
+            }
+        });
     }
 
 

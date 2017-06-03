@@ -32,8 +32,6 @@ public class MessageRightTextViewHolder extends ViewHolder
 
     private void initComponents()
     {
-        messageImageIcon = new NinePatchImageIcon(this.getClass().getResource("/image/right.9.png"));
-        text.setBackgroundIcon(messageImageIcon);
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
         imageIcon.setImage(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
         avatar.setIcon(imageIcon);
