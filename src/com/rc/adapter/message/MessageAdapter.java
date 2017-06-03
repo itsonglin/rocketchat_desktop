@@ -77,7 +77,8 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
      */
     private void processRightImageMessage(ViewHolder viewHolder, MessageItem item)
     {
-
+        MessageRightImageViewHolder holder = (MessageRightImageViewHolder) viewHolder;
+        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
     }
 
     @Override
