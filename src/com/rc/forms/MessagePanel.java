@@ -85,11 +85,18 @@ public class MessagePanel extends ParentAvailablePanel
         item4.setTimestamp(System.currentTimeMillis());
 
         MessageItem item5 = new MessageItem();
-        item5.setMessageType(MessageItem.RIGHT_IMAGE);
+        item5.setMessageType(MessageItem.LEFT_IMAGE);
         item5.setMessageContent("图片");
+        item5.setSenderUsername("Songlin");
         item5.setTimestamp(System.currentTimeMillis());
         item5.getImageAttachments().add(0,new ImageAttachmentItem("/image/pdf.png"));
 
+        MessageItem item6 = new MessageItem();
+        item6.setMessageType(MessageItem.RIGHT_IMAGE);
+        item6.setMessageContent("图片");
+        item6.setSenderUsername("Songlin");
+        item6.setTimestamp(System.currentTimeMillis());
+        item6.getImageAttachments().add(0,new ImageAttachmentItem("/image/avatar.jpg"));
 
         messageItems = new ArrayList<>();
         messageItems.add(item);
@@ -98,6 +105,7 @@ public class MessagePanel extends ParentAvailablePanel
         messageItems.add(item2);
         messageItems.add(item3);
         messageItems.add(item5);
+        messageItems.add(item6);
         //messageItems.add(item4);
     }
 }

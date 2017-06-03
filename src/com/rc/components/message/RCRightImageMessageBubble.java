@@ -1,5 +1,7 @@
 package com.rc.components.message;
 
+import java.awt.*;
+
 /**
  * 右侧文本聊天气泡
  */
@@ -12,5 +14,11 @@ public class RCRightImageMessageBubble extends RCAttachmentMessageBubble
         setBackgroundNormalIcon(backgroundNormal);
         setBackgroundActiveIcon(backgroundActive);
         setBackgroundIcon(backgroundNormal);
+    }
+
+    @Override
+    public Insets getInsets()
+    {
+        return new Insets(2, 2, 2, 8);
     }
 }

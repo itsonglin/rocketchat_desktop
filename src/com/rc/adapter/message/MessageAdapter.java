@@ -42,6 +42,9 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
             case MessageItem.RIGHT_IMAGE:{
                 return new MessageRightImageViewHolder();
             }
+            case MessageItem.LEFT_IMAGE:{
+                return new MessageLeftImageViewHolder();
+            }
         }
 
         return null;
@@ -70,6 +73,26 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         {
             processRightImageMessage(viewHolder, item);
         }
+        if (viewHolder instanceof MessageLeftImageViewHolder)
+        {
+            processLeftImageMessage(viewHolder, item);
+        }
+    }
+
+    /**
+     * 对方发送的图片
+     * @param viewHolder
+     * @param item
+     */
+    private void processLeftImageMessage(ViewHolder viewHolder, MessageItem item)
+    {
+        MessageLeftImageViewHolder holder = (MessageLeftImageViewHolder) viewHolder;
+        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        holder.sender.setText(item.getSenderUsername());
+
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource(item.getImageAttachments().get(0).getImageUrl()));
+        preferredImageSize(imageIcon);
+        holder.image.setIcon(imageIcon);
     }
 
     /**
@@ -83,6 +106,17 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         holder.time.setText(TimeUtil.diff(item.getTimestamp()));
 
         ImageIcon imageIcon = new ImageIcon(getClass().getResource(item.getImageAttachments().get(0).getImageUrl()));
+        preferredImageSize(imageIcon);
+        holder.image.setIcon(imageIcon);
+    }
+
+    /**
+     * 根据图片尺寸大小调整图片显示的大小
+     * @param imageIcon
+     * @return
+     */
+    public ImageIcon preferredImageSize(ImageIcon imageIcon)
+    {
         int width = imageIcon.getIconWidth();
         int height = imageIcon.getIconHeight();
         float scale = width / height * 1.0F;
@@ -95,13 +129,8 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
             height = (int) (width / scale);
         }
         imageIcon.setImage(imageIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
-        holder.image.setIcon(imageIcon);
-    }
 
-    @Override
-    public int getCount()
-    {
-        return messageItems.size();
+        return imageIcon;
     }
 
     /**
@@ -152,5 +181,11 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         holder.text.setText(item.getMessageContent());
         holder.time.setText(TimeUtil.diff(item.getTimestamp()));
         holder.sender.setText("Song");
+    }
+
+    @Override
+    public int getCount()
+    {
+        return messageItems.size();
     }
 }

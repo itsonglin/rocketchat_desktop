@@ -4,32 +4,29 @@ import com.rc.adapter.ViewHolder;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.VerticalFlowLayout;
-import com.rc.components.message.NinePatchImageIcon;
+import com.rc.components.message.RCLeftImageMessageBubble;
 import com.rc.components.message.RCLeftTextMessageBubble;
 import com.rc.utils.FontUtil;
-import javafx.scene.paint.*;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.Color;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
 /**
  * Created by song on 17-6-2.
  */
-public class MessageLeftTextViewHolder extends ViewHolder
+public class MessageLeftImageViewHolder extends ViewHolder
 {
     public JLabel sender = new JLabel();
     public JLabel avatar = new JLabel();
     public JLabel time = new JLabel();
-    public RCLeftTextMessageBubble text = new RCLeftTextMessageBubble();
+    public JLabel image = new JLabel();
+    private RCLeftImageMessageBubble imageBubble = new RCLeftImageMessageBubble();
     private JPanel timePanel = new JPanel();
     private JPanel messageAvatarPanel = new JPanel();
 
-    public MessageLeftTextViewHolder()
+    public MessageLeftImageViewHolder()
     {
         initComponents();
         initView();
@@ -37,18 +34,12 @@ public class MessageLeftTextViewHolder extends ViewHolder
 
     private void initComponents()
     {
+        imageBubble.add(image);
+
+
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
         imageIcon.setImage(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
         avatar.setIcon(imageIcon);
-
-        addComponentListener(new ComponentAdapter()
-        {
-            @Override
-            public void componentResized(ComponentEvent e)
-            {
-                text.setText(text.getText());
-            }
-        });
 
         time.setForeground(Colors.FONT_GRAY);
         time.setFont(FontUtil.getDefaultFont(12));
@@ -66,7 +57,7 @@ public class MessageLeftTextViewHolder extends ViewHolder
         JPanel senderMessagePanel = new JPanel();
         senderMessagePanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0,0,true, false));
         senderMessagePanel.add(sender);
-        senderMessagePanel.add(text);
+        senderMessagePanel.add(imageBubble);
 
         messageAvatarPanel.setLayout(new GridBagLayout());
         messageAvatarPanel.add(avatar, new GBC(1, 0).setWeight(1, 1).setAnchor(GBC.NORTH).setInsets(5, 0,0,0));

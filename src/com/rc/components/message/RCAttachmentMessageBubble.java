@@ -77,13 +77,6 @@ public class RCAttachmentMessageBubble extends JPanel
         });
     }
 
-    @Override
-    public Insets getInsets()
-    {
-        return new Insets(2, 2, 2, 8);
-    }
-
-
     public NinePatchImageIcon getBackgroundNormalIcon()
     {
         return backgroundNormalIcon;
