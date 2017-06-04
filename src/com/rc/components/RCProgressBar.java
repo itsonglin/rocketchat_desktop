@@ -26,6 +26,6 @@ public class RCProgressBar extends JProgressBar
     @Override
     public Dimension getPreferredSize()
     {
-        return new Dimension(getWidth(), 8);
+        return new Dimension(getWidth(), 6);
     }
 }

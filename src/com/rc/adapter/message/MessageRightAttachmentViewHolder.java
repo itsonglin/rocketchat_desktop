@@ -5,6 +5,7 @@ import com.rc.components.*;
 import com.rc.components.message.RCRightAttachmentMessageBubble;
 import com.rc.components.message.RCRightImageMessageBubble;
 import com.rc.forms.MainFrame;
+import com.rc.helper.AttachmentIconHelper;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
@@ -25,7 +26,7 @@ public class MessageRightAttachmentViewHolder extends ViewHolder
     private JPanel timePanel = new JPanel(); // 时间面板
     private JPanel messageAvatarPanel = new JPanel(); // 消息 + 头像组合面板
     private JPanel attachmentPanel = new JPanel(); // 附件面板
-    private JLabel attachmentIcon = new JLabel(); // 附件类型icon
+    public JLabel attachmentIcon = new JLabel(); // 附件类型icon
 
     public MessageRightAttachmentViewHolder()
     {
@@ -35,8 +36,6 @@ public class MessageRightAttachmentViewHolder extends ViewHolder
 
     private void initComponents()
     {
-        setCursor(new Cursor(Cursor.HAND_CURSOR));
-
         int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.427);
         attachmentTitle = new SizeAutoAdjustTextArea(maxWidth);
 
@@ -55,16 +54,20 @@ public class MessageRightAttachmentViewHolder extends ViewHolder
 
         attachmentPanel.setOpaque(false);
 
-        ImageIcon attachmentTypeIcon = new ImageIcon(getClass().getResource("/image/pdf.png"));
-        attachmentIcon.setIcon(attachmentTypeIcon);
+
+        //ImageIcon attachmentTypeIcon = new ImageIcon(getClass().getResource("/image/pdf.png"));
+        //attachmentIcon.setIcon(attachmentTypeIcon);
 
         //preferredAttachmentSize();
-        attachmentTitle.setPreferredSize(new Dimension(100, 100));
+        //attachmentTitle.setPreferredSize(new Dimension(100, 100));
 
         progressBar.setMaximum(100);
         progressBar.setMinimum(0);
         progressBar.setValue(100);
         progressBar.setUI(new GradientProgressBarUI());
+
+        attachmentBubble.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
     }
 
     private void initView()

@@ -90,29 +90,42 @@ public class MessagePanel extends ParentAvailablePanel
         item5.setMessageContent("图片");
         item5.setSenderUsername("Songlin");
         item5.setTimestamp(System.currentTimeMillis());
-        item5.getImageAttachments().add(0,new ImageAttachmentItem("/image/pdf.png"));
+        item5.getImageAttachments().add(0, new ImageAttachmentItem("/image/pdf.png"));
 
         MessageItem item6 = new MessageItem();
         item6.setMessageType(MessageItem.RIGHT_IMAGE);
         item6.setMessageContent("图片");
         item6.setSenderUsername("Songlin");
         item6.setTimestamp(System.currentTimeMillis());
-        item6.getImageAttachments().add(0,new ImageAttachmentItem("/image/avatar.jpg"));
+        item6.getImageAttachments().add(0, new ImageAttachmentItem("/image/avatar.jpg"));
 
         MessageItem item7 = new MessageItem();
         item7.setMessageType(MessageItem.RIGHT_ATTACHMENT);
         item7.setMessageContent("111.pdf");
         item7.setSenderUsername("Songlin");
         item7.setTimestamp(System.currentTimeMillis());
-        item7.getFileAttachments().add(0,new FileAttachmentItem("官网使用手册.pdf"));
+        FileAttachmentItem attachmentItem = new FileAttachmentItem();
+        attachmentItem.setTitle("官网使用手册.zip");
+        item7.getFileAttachments().add(0, attachmentItem);
+
+        MessageItem item8 = new MessageItem();
+        item8.setMessageType(MessageItem.LEFT_ATTACHMENT);
+        item8.setMessageContent("111.pdf");
+        item8.setSenderUsername("Songlin");
+        item8.setTimestamp(System.currentTimeMillis());
+        FileAttachmentItem attachmentItem2 = new FileAttachmentItem();
+        attachmentItem2.setTitle("官网使用手册.doc");
+        item8.getFileAttachments().add(0, attachmentItem2);
+
 
         messageItems = new ArrayList<>();
         messageItems.add(item);
-       //] messageItems.add(item2);
-       messageItems.add(item3);
+        //] messageItems.add(item2);
+        messageItems.add(item3);
 //        messageItems.add(item5);
 //        messageItems.add(item6);
         messageItems.add(item7);
+        messageItems.add(item8);
         //messageItems.add(item4);
     }
 }

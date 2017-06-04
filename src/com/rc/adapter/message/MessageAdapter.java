@@ -4,6 +4,7 @@ import com.rc.adapter.BaseAdapter;
 import com.rc.adapter.ViewHolder;
 import com.rc.entity.MessageItem;
 import com.rc.forms.MainFrame;
+import com.rc.helper.AttachmentIconHelper;
 import com.rc.utils.TimeUtil;
 
 import javax.swing.*;
@@ -16,6 +17,7 @@ import java.util.List;
 public class MessageAdapter extends BaseAdapter<ViewHolder>
 {
     private List<MessageItem> messageItems;
+    private AttachmentIconHelper attachmentIconHelper = new AttachmentIconHelper();
 
     public MessageAdapter(List<MessageItem> messageItems)
     {
@@ -47,6 +49,9 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
             }
             case MessageItem.RIGHT_ATTACHMENT:{
                 return new MessageRightAttachmentViewHolder();
+            }
+            case MessageItem.LEFT_ATTACHMENT:{
+                return new MessageLeftAttachmentViewHolder();
             }
         }
 
@@ -84,13 +89,31 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         {
             processRightAttachmentMessage(viewHolder, item);
         }
+        else if (viewHolder instanceof MessageLeftAttachmentViewHolder)
+        {
+            processLeftAttachmentMessage(viewHolder, item);
+        }
+    }
+
+    private void processLeftAttachmentMessage(ViewHolder viewHolder, MessageItem item)
+    {
+        MessageLeftAttachmentViewHolder holder = (MessageLeftAttachmentViewHolder) viewHolder;
+        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        holder.attachmentTitle.setText(item.getFileAttachments().get(0).getTitle());
+        ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachments()
+                .get(0).getTitle());
+        holder.attachmentIcon.setIcon(attachmentTypeIcon);
+        holder.sender.setText(item.getSenderUsername());
     }
 
     private void processRightAttachmentMessage(ViewHolder viewHolder, MessageItem item)
     {
         MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
         holder.time.setText(TimeUtil.diff(item.getTimestamp()));
-        holder.attachmentTitle.setText(item.getFileAttachments().get(0).getLink());
+        holder.attachmentTitle.setText(item.getFileAttachments().get(0).getTitle());
+        ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachments()
+                .get(0).getTitle());
+        holder.attachmentIcon.setIcon(attachmentTypeIcon);
     }
 
     /**
