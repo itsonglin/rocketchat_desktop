@@ -26,8 +26,19 @@ public class RCListView extends JScrollPane
     {
         this.vGap = vGap;
         this.hGap = hGap;
+
         initComponents();
         //initView();
+    }
+
+    /**
+     * 设置滚动条的颜色，此方法必须在setAdapter()方法之前执行
+     * @param thumbColor
+     * @param trackColor
+     */
+    public void setScrollBarColor(Color thumbColor, Color trackColor)
+    {
+        this.getVerticalScrollBar().setUI(new ScrollUI(thumbColor, trackColor));
     }
 
     private void initComponents()
@@ -71,7 +82,9 @@ public class RCListView extends JScrollPane
     public void setAdapter(BaseAdapter adapter)
     {
         this.adapter = adapter;
+
         initView();
+        //scrollToPosition(0);
     }
 
     public void setContentPanelBackground(Color color)
@@ -79,4 +92,12 @@ public class RCListView extends JScrollPane
         contentPanel.setOpaque(true);
         contentPanel.setBackground(color);
     }
+
+    public void scrollToPosition(int position)
+    {
+        JScrollBar bar = getVerticalScrollBar();
+        bar.setValue(bar.getMaximum() + 500);
+        System.out.println("getMaximum : " + bar.getMaximum());
+    }
+
 }

@@ -6,13 +6,28 @@ import java.awt.*;
 
 /**
  * 自定义滚动条UI
- *
- * @author zsg
  */
-public class ScrollUI extends BasicScrollBarUI {
+public class ScrollUI extends BasicScrollBarUI
+{
+    private Color thumbColor;
+    private Color trackColor;
+
+    public ScrollUI()
+    {
+        this.thumbColor = Colors.SCROLL_BAR_THUMB;
+        this.trackColor = Colors.DARK;
+    }
+
+    public ScrollUI(Color thumbColor, Color trackColor)
+    {
+        this.thumbColor = thumbColor;
+        this.trackColor = trackColor;
+    }
+
 
     @Override
-    protected void configureScrollBarColors() {
+    protected void configureScrollBarColors()
+    {
         // 把手
         // thumbColor = Color.GRAY;
         // thumbHighlightColor = Color.BLUE;
@@ -20,7 +35,6 @@ public class ScrollUI extends BasicScrollBarUI {
         // thumbLightShadowColor = Color.YELLOW;
 
         // 滑道
-        trackColor = Color.black;
         setThumbBounds(0, 0, 3, 10);
         // trackHighlightColor = Color.GREEN;
     }
@@ -29,25 +43,32 @@ public class ScrollUI extends BasicScrollBarUI {
      * 设置滚动条的宽度
      */
     @Override
-    public Dimension getPreferredSize(JComponent c) {
+    public Dimension getPreferredSize(JComponent c)
+    {
         // TODO Auto-generated method stub
         c.setPreferredSize(new Dimension(5, 0));
         return super.getPreferredSize(c);
     }
 
     // 重绘滑块的滑动区域背景
-    public void paintTrack(Graphics g, JComponent c, Rectangle trackBounds) {
+    public void paintTrack(Graphics g, JComponent c, Rectangle trackBounds)
+    {
         Graphics2D g2 = (Graphics2D) g;
         GradientPaint gp = null;
         //判断滚动条是垂直的 还是水平的
-        if (this.scrollbar.getOrientation() == JScrollBar.VERTICAL) {
+        if (this.scrollbar.getOrientation() == JScrollBar.VERTICAL)
+        {
             //设置画笔
-            gp = new GradientPaint(0, 0, Colors.DARK,
-                    trackBounds.width, 0, Colors.DARK);
+            gp = new GradientPaint(0, 0, trackColor,
+                    trackBounds.width, 0, trackColor);
+            /*Color cc = new Color(224, 224, 224);
+            gp = new GradientPaint(0, 0, Colors.WINDOW_BACKGROUND,
+                    trackBounds.width, 0, Colors.WINDOW_BACKGROUND);*/
         }
-        if (this.scrollbar.getOrientation() == JScrollBar.HORIZONTAL) {
-            gp = new GradientPaint(0, 0, Colors.DARK,
-                    trackBounds.height, 0, Colors.DARK);
+        if (this.scrollbar.getOrientation() == JScrollBar.HORIZONTAL)
+        {
+            gp = new GradientPaint(0, 0, trackColor,
+                    trackBounds.height, 0, trackColor);
         }
 
         g2.setPaint(gp);
@@ -59,19 +80,20 @@ public class ScrollUI extends BasicScrollBarUI {
          g2.drawRect(trackBounds.x, trackBounds.y, trackBounds.width - 1,
                 trackBounds.height - 1);
                 */
-        if (trackHighlight == BasicScrollBarUI.DECREASE_HIGHLIGHT)
+/*        if (trackHighlight == BasicScrollBarUI.DECREASE_HIGHLIGHT)
             this.paintDecreaseHighlight(g);
         if (trackHighlight == BasicScrollBarUI.INCREASE_HIGHLIGHT)
-            this.paintIncreaseHighlight(g);
+            this.paintIncreaseHighlight(g);*/
     }
 
     @Override
-    protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds) {
+    protected void paintThumb(Graphics g, JComponent c, Rectangle thumbBounds)
+    {
         // 把绘制区的x，y点坐标定义为坐标系的原点
         // 这句一定一定要加上啊，不然拖动就失效了
         g.translate(thumbBounds.x, thumbBounds.y);
         // 设置把手颜色
-        g.setColor(new Color(122, 122, 122));
+        g.setColor(thumbColor);
         // 画一个圆角矩形
         // 这里面前四个参数就不多讲了，坐标和宽高
         // 后两个参数需要注意一下，是用来控制角落的圆角弧度
@@ -95,7 +117,8 @@ public class ScrollUI extends BasicScrollBarUI {
      * 创建滚动条上方的按钮
      */
     @Override
-    protected JButton createIncreaseButton(int orientation) {
+    protected JButton createIncreaseButton(int orientation)
+    {
         JButton button = new JButton();
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
@@ -107,7 +130,8 @@ public class ScrollUI extends BasicScrollBarUI {
      * 创建滚动条下方的按钮
      */
     @Override
-    protected JButton createDecreaseButton(int orientation) {
+    protected JButton createDecreaseButton(int orientation)
+    {
         JButton button = new JButton();
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
@@ -115,7 +139,6 @@ public class ScrollUI extends BasicScrollBarUI {
         button.setBorder(null);
         return button;
     }
-
 
 
 }

@@ -1,6 +1,7 @@
 package com.rc.forms;
 
 import com.rc.adapter.message.MessageAdapter;
+import com.rc.components.Colors;
 import com.rc.components.RCListView;
 import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.ImageAttachmentItem;
@@ -39,6 +40,7 @@ public class MessagePanel extends ParentAvailablePanel
         adapter = new MessageAdapter(messageItems);
         listView = new RCListView(0, 20);
         //listView.setVisible(false);
+        listView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
         listView.setAdapter(adapter);
 
     }
