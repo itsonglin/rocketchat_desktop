@@ -6,6 +6,8 @@ import com.rc.adapter.ViewHolder;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.AdjustmentEvent;
+import java.awt.event.AdjustmentListener;
 
 /**
  * Created by song on 17-5-30.
@@ -16,6 +18,7 @@ public class RCListView extends JScrollPane
     private JPanel contentPanel;
     private int vGap;
     private int hGap;
+    private int isNeedBottom;
 
     public RCListView()
     {
@@ -33,6 +36,7 @@ public class RCListView extends JScrollPane
 
     /**
      * 设置滚动条的颜色，此方法必须在setAdapter()方法之前执行
+     *
      * @param thumbColor
      * @param trackColor
      */
@@ -51,6 +55,19 @@ public class RCListView extends JScrollPane
         this.setBorder(null);
         this.getVerticalScrollBar().setUnitIncrement(17);
         this.getVerticalScrollBar().setUI(new ScrollUI());
+
+        getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener()
+        {
+            public void adjustmentValueChanged(AdjustmentEvent evt)
+            {
+                if(evt.getAdjustmentType() == AdjustmentEvent.TRACK && isNeedBottom <= 2) {
+                    getVerticalScrollBar().setValue(getVerticalScrollBar().getModel().getMaximum()
+                            - getVerticalScrollBar().getModel().getExtent());
+                    isNeedBottom++;
+
+                }
+            }
+        });
 
     }
 
@@ -84,7 +101,7 @@ public class RCListView extends JScrollPane
         this.adapter = adapter;
 
         initView();
-        //scrollToPosition(0);
+        scrollToPosition(0);
     }
 
     public void setContentPanelBackground(Color color)
