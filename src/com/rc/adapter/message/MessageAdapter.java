@@ -45,6 +45,9 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
             case MessageItem.LEFT_IMAGE:{
                 return new MessageLeftImageViewHolder();
             }
+            case MessageItem.RIGHT_ATTACHMENT:{
+                return new MessageRightAttachmentViewHolder();
+            }
         }
 
         return null;
@@ -65,18 +68,29 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         {
             processRightTextMessage(viewHolder, item);
         }
-        if (viewHolder instanceof MessageLeftTextViewHolder)
+        else if (viewHolder instanceof MessageLeftTextViewHolder)
         {
             processLeftTextMessage(viewHolder, item);
         }
-        if (viewHolder instanceof MessageRightImageViewHolder)
+        else if (viewHolder instanceof MessageRightImageViewHolder)
         {
             processRightImageMessage(viewHolder, item);
         }
-        if (viewHolder instanceof MessageLeftImageViewHolder)
+        else if (viewHolder instanceof MessageLeftImageViewHolder)
         {
             processLeftImageMessage(viewHolder, item);
         }
+        else if (viewHolder instanceof MessageRightAttachmentViewHolder)
+        {
+            processRightAttachmentMessage(viewHolder, item);
+        }
+    }
+
+    private void processRightAttachmentMessage(ViewHolder viewHolder, MessageItem item)
+    {
+        MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
+        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        holder.attachmentTitle.setText(item.getFileAttachments().get(0).getLink());
     }
 
     /**

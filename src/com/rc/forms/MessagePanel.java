@@ -2,6 +2,7 @@ package com.rc.forms;
 
 import com.rc.adapter.message.MessageAdapter;
 import com.rc.components.RCListView;
+import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.ImageAttachmentItem;
 import com.rc.entity.MessageItem;
 
@@ -66,7 +67,7 @@ public class MessagePanel extends ParentAvailablePanel
     {
         MessageItem item = new MessageItem();
         item.setMessageType(MessageItem.RIGHT_TEXT);
-        item.setMessageContent("尊敬的用户您好s        网络时长尊敬的用户您好：本公sd sdad wbe    jj司对规划   监控安装，介绍有福利和返佣.网络维修和介绍请致电18928914412 或微信kuandaikefu10000");
+        item.setMessageContent("尊敬、大厅dsad124567890-=12fsdbnmvb qiofqeseOjojoihiu返佣.网络维修和介绍请致电18928914412 或微信kuandaikefu10000");
         item.setTimestamp(System.currentTimeMillis());
 
         MessageItem item2 = new MessageItem();
@@ -76,12 +77,12 @@ public class MessagePanel extends ParentAvailablePanel
 
         MessageItem item3 = new MessageItem();
         item3.setMessageType(MessageItem.RIGHT_TEXT);
-        item3.setMessageContent("addComponentListener(new ComponentAdapter()");
+        item3.setMessageContent("addComponentListener(new Cpter()你好你好啊，。/");
         item3.setTimestamp(System.currentTimeMillis());
 
         MessageItem item4 = new MessageItem();
         item4.setMessageType(MessageItem.LEFT_TEXT);
-        item4.setMessageContent("一、不得利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会集体的和公民的合法权益，不得利用本站制作、复制和传播不法有害信息！");
+        item4.setMessageContent("一、不得利用本站危害国家安全、泄露国家秘密，利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会不得侵犯国家社会集体的和公民的合法权益，不得利用本站制作、复制和传播不法有害信息！");
         item4.setTimestamp(System.currentTimeMillis());
 
         MessageItem item5 = new MessageItem();
@@ -98,14 +99,20 @@ public class MessagePanel extends ParentAvailablePanel
         item6.setTimestamp(System.currentTimeMillis());
         item6.getImageAttachments().add(0,new ImageAttachmentItem("/image/avatar.jpg"));
 
+        MessageItem item7 = new MessageItem();
+        item7.setMessageType(MessageItem.RIGHT_ATTACHMENT);
+        item7.setMessageContent("111.pdf");
+        item7.setSenderUsername("Songlin");
+        item7.setTimestamp(System.currentTimeMillis());
+        item7.getFileAttachments().add(0,new FileAttachmentItem("官网使用手册.pdf"));
+
         messageItems = new ArrayList<>();
         messageItems.add(item);
-        messageItems.add(item);
-        messageItems.add(item);
-        messageItems.add(item2);
-        messageItems.add(item3);
-        messageItems.add(item5);
-        messageItems.add(item6);
+       //] messageItems.add(item2);
+       messageItems.add(item3);
+//        messageItems.add(item5);
+//        messageItems.add(item6);
+        messageItems.add(item7);
         //messageItems.add(item4);
     }
 }

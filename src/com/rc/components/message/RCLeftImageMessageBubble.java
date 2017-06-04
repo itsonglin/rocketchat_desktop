@@ -19,6 +19,7 @@ public class RCLeftImageMessageBubble extends RCAttachmentMessageBubble
     @Override
     public Insets getInsets()
     {
-        return new Insets(2,9,2,2);
+        return new Insets(2, 9, 3, 2);
+        //return new Insets(9,9,9,9);
     }
 }

@@ -84,6 +84,7 @@ public class RCTextMessageBubble extends JTextArea
         });
     }
 
+    @Override
     public void setText(String t)
     {
         if (t == null)

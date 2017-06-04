@@ -15,6 +15,11 @@ public class FileAttachmentItem
     {
 
     }
+    public FileAttachmentItem(String link)
+    {
+
+        this.link = link;
+    }
 
     /*public FileAttachmentItem(FileAttachment fa)
     {

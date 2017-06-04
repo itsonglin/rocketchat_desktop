@@ -15,4 +15,6 @@ public class Colors
     public static Color DARKER = new Color(38, 41, 46);
     public static Color ITEM_SELECTED = new Color(58, 63, 69);
     public static Color LIGHT_GRAY = new Color(222, 222, 222);
+    public static Color MAIN_COLOR = new Color(178, 226, 129);
+    public static Color MAIN_COLOR_DARKER = new Color(133, 194, 97);
 }

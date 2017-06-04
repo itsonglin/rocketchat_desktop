@@ -5,13 +5,10 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.VerticalFlowLayout;
 import com.rc.components.message.RCLeftImageMessageBubble;
-import com.rc.components.message.RCLeftTextMessageBubble;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 /**
  * Created by song on 17-6-2.

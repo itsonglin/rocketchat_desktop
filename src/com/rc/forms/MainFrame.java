@@ -42,6 +42,7 @@ public class MainFrame extends JFrame
     {
         UIManager.put("Label.font", FontUtil.getDefaultFont());
         UIManager.put("Panel.font", FontUtil.getDefaultFont());
+        UIManager.put("TextArea.font", FontUtil.getDefaultFont());
 
         leftPanel = new LeftPanel();
         rightPanel = new RightPanel();
