@@ -88,7 +88,7 @@ public class MessageLeftAttachmentViewHolder extends ViewHolder
         messageAvatarPanel.add(senderMessagePanel, new GBC(2, 0)
                 .setWeight(1000, 1)
                 .setAnchor(GBC.WEST)
-                .setInsets(0,5,0,0));
+                .setInsets(0,5,5,0));
 
         add(timePanel, BorderLayout.NORTH);
         add(messageAvatarPanel, BorderLayout.CENTER);
