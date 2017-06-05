@@ -8,6 +8,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.AdjustmentEvent;
 import java.awt.event.AdjustmentListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 
 /**
  * Created by song on 17-5-30.
@@ -18,7 +21,8 @@ public class RCListView extends JScrollPane
     private JPanel contentPanel;
     private int vGap;
     private int hGap;
-    private int isNeedBottom;
+    private java.util.List<Rectangle> rectangleList = new ArrayList<>();
+    boolean scrollToButtom = true;
 
     public RCListView()
     {
@@ -56,16 +60,50 @@ public class RCListView extends JScrollPane
         this.getVerticalScrollBar().setUnitIncrement(17);
         this.getVerticalScrollBar().setUI(new ScrollUI());
 
+
         getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener()
         {
             public void adjustmentValueChanged(AdjustmentEvent evt)
             {
-                if(evt.getAdjustmentType() == AdjustmentEvent.TRACK && isNeedBottom <= 2) {
+                //int lastVisibleCount = getLastVisibleItemCount();
+
+                //System.out.println(contentPanel.getComponent(0));
+                //int max = contentPanel.getComponentCount() * 2 + ((contentPanel.getComponentCount() - (7 + (getLastVisibleItemCount() - 4) * 2)) * 2);
+
+                System.out.println(getLastVisibleItemCount());
+                //System.out.println(contentPanel.getComponentCount() + ", " + max  + ", " + isNeedBottom);
+                /*if (evt.getAdjustmentType() == AdjustmentEvent.TRACK && (isNeedBottom < max))
+                {
                     getVerticalScrollBar().setValue(getVerticalScrollBar().getModel().getMaximum()
                             - getVerticalScrollBar().getModel().getExtent());
                     isNeedBottom++;
+                    //System.out.println(isNeedBottom + ", val = " + (getVerticalScrollBar().getModel().getMaximum() - getVerticalScrollBar().getModel().getExtent()) + ", max = " + getVerticalScrollBar().getModel().getMaximum());
+                    //System.out.println("max = " + max + ", isNeeded = " + isNeedBottom);
+                }
+                else
+                {
+
+                }*/
+
+                if (evt.getAdjustmentType() == AdjustmentEvent.TRACK && scrollToButtom)
+                {
+                    getVerticalScrollBar().setValue(getVerticalScrollBar().getModel().getMaximum()
+                            - getVerticalScrollBar().getModel().getExtent());
+                }
+                else
+                {
 
                 }
+            }
+        });
+
+        addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                scrollToButtom = false;
+                super.mouseEntered(e);
             }
         });
 
@@ -81,6 +119,7 @@ public class RCListView extends JScrollPane
             {
                 adapter.onBindHeaderViewHolder(headerViewHolder, i);
                 contentPanel.add(headerViewHolder);
+                rectangleList.add(headerViewHolder.getBounds());
             }
 
             ViewHolder holder = adapter.onCreateViewHolder(viewType);
@@ -88,6 +127,18 @@ public class RCListView extends JScrollPane
             // contentPanel.add(holder);
             contentPanel.add(holder);
         }
+
+
+       /* for (int i = 0; i < 5; i++)
+        {
+            JPanel panel = new MessageRightTextViewHolder();
+            panel.setPreferredSize(new Dimension(500, 100));
+            panel.setBackground(new Color(30 * i, 50 * i, 15 * i));
+            panel.setBorder(new LineBorder(Colors.RED));
+            contentPanel.add(panel);
+
+        }*/
+
     }
 
 
@@ -112,9 +163,29 @@ public class RCListView extends JScrollPane
 
     public void scrollToPosition(int position)
     {
-        JScrollBar bar = getVerticalScrollBar();
-        bar.setValue(bar.getMaximum() + 500);
-        System.out.println("getMaximum : " + bar.getMaximum());
     }
 
+    /**
+     * 获取滚动条在底部时显示的条目数
+     */
+    private int getLastVisibleItemCount()
+    {
+        int height = getHeight();
+
+        int elemHeight = 0;
+        int count = 0;
+        for (int i = contentPanel.getComponentCount() - 1; i >= 0; i--)
+        {
+            count++;
+            int h = contentPanel.getComponent(i).getHeight() + 20;
+            elemHeight += h;
+
+            if (elemHeight >= height)
+            {
+                break;
+            }
+        }
+
+        return count;
+    }
 }

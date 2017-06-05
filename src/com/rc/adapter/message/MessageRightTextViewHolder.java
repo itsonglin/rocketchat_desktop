@@ -9,6 +9,7 @@ import com.rc.forms.MainFrame;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -39,6 +40,7 @@ public class MessageRightTextViewHolder extends ViewHolder
     {
         int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.5);
         text = new SizeAutoAdjustTextArea(maxWidth);
+        text.setBorder(new LineBorder(Color.red));
 
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
         imageIcon.setImage(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
@@ -65,6 +67,10 @@ public class MessageRightTextViewHolder extends ViewHolder
         sendingProgress.setIcon(sendingIcon);
         sendingProgress.setVisible(false);
 
+
+        text.setCaretPosition(text.getDocument().getLength());
+
+
     }
 
     private void initView()
@@ -72,13 +78,12 @@ public class MessageRightTextViewHolder extends ViewHolder
         setLayout(new BorderLayout());
         timePanel.add(time);
 
-        messageBubble.add(text);
+        messageBubble.add(text, BorderLayout.CENTER);
 
         JPanel resendTextPanel = new JPanel();
         resendTextPanel.add(resend, BorderLayout.WEST);
         resendTextPanel.add(sendingProgress, BorderLayout.WEST);
         resendTextPanel.add(messageBubble, BorderLayout.CENTER);
-        // resendTextPanel.add(text, BorderLayout.CENTER);
 
         messageAvatarPanel.setLayout(new GridBagLayout());
         messageAvatarPanel.add(resendTextPanel, new GBC(1, 0).setWeight(1000, 1).setAnchor(GBC.EAST));
