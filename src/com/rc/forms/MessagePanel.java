@@ -38,7 +38,7 @@ public class MessagePanel extends ParentAvailablePanel
         getData();
 
         adapter = new MessageAdapter(messageItems);
-        listView = new RCListView(0, 20);
+        listView = new RCListView(0, 15);
         //listView.setVisible(false);
         listView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
         listView.setAdapter(adapter);
@@ -144,6 +144,6 @@ public class MessagePanel extends ParentAvailablePanel
         messageItems.add(item6);
         messageItems.add(item7);
         messageItems.add(item8);
-        messageItems.add(item4);
+        messageItems.add(item);
     }
 }

@@ -4,6 +4,7 @@ import com.rc.adapter.ViewHolder;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.SizeAutoAdjustTextArea;
+import com.rc.components.message.MessagePopupMenu;
 import com.rc.components.message.RCRightImageMessageBubble;
 import com.rc.forms.MainFrame;
 import com.rc.utils.FontUtil;
@@ -31,6 +32,8 @@ public class MessageRightTextViewHolder extends ViewHolder
 
     private JPanel timePanel = new JPanel();
     private JPanel messageAvatarPanel = new JPanel();
+
+    private MessagePopupMenu popupMenu = new MessagePopupMenu();
 
     public MessageRightTextViewHolder()
     {
@@ -85,7 +88,17 @@ public class MessageRightTextViewHolder extends ViewHolder
                 messageBubble.setBackgroundIcon(messageBubble.getBackgroundActiveIcon());
                 super.mouseEntered(e);
             }
+
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON3)
+                {
+                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                }
+            }
         });
+
 
     }
 
