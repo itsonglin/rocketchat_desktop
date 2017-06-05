@@ -4,6 +4,7 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.utils.FontUtil;
+import com.rc.utils.OSUtil;
 
 import javax.swing.*;
 import javax.swing.border.Border;
@@ -90,8 +91,16 @@ public class TitlePanel extends ParentAvailablePanel
         setBorder(null);
         this.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.LIGHT_GRAY));
 
-        add(titlePanel, new GBC(0, 1).setFill(GBC.HORIZONTAL).setWeight(100, 1));
-        add(controlPanel, new GBC(1, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1));
+
+        if (OSUtil.getOsType() != OSUtil.Mac_OS)
+        {
+            add(titlePanel, new GBC(0, 1).setFill(GBC.HORIZONTAL).setWeight(100, 1));
+            add(controlPanel, new GBC(1, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1));
+        }
+        else
+        {
+            add(titlePanel, new GBC(0, 1).setFill(GBC.HORIZONTAL).setWeight(100, 1).setInsets(10,0,0,0));
+        }
 
         //add(minLabel, new GBC(1, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(0, 5, 0, 0));
         //add(maxLabel, new GBC(2, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(0, 5, 0, 0));

@@ -3,6 +3,7 @@ package com.rc.forms;
 
 import com.rc.components.GBC;
 import com.rc.utils.FontUtil;
+import com.rc.utils.OSUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -53,8 +54,12 @@ public class MainFrame extends JFrame
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
-        // 隐藏标题栏
-        setUndecorated(true);
+        if (OSUtil.getOsType() != OSUtil.Mac_OS)
+        {
+            // 隐藏标题栏
+            setUndecorated(true);
+        }
+
         addListener();
 
         setLayout(new GridBagLayout());
@@ -70,26 +75,32 @@ public class MainFrame extends JFrame
 
     private void addListener()
     {
-        addMouseListener(new MouseAdapter()
+        // MAC OS 下拖动JFrame会出现抖动！
+        if (OSUtil.getOsType() != OSUtil.Mac_OS)
         {
-            public void mousePressed(MouseEvent e)
+            addMouseListener(new MouseAdapter()
             {
-                // 当鼠标按下的时候获得窗口当前的位置
-                origin.x = e.getX();
-                origin.y = e.getY();
-            }
-        });
-        addMouseMotionListener(new MouseMotionAdapter()
-        {
-            public void mouseDragged(MouseEvent e)
+                public void mousePressed(MouseEvent e)
+                {
+                    // 当鼠标按下的时候获得窗口当前的位置
+                    origin.x = e.getX();
+                    origin.y = e.getY();
+                }
+            });
+
+            addMouseMotionListener(new MouseMotionAdapter()
             {
-                // 当鼠标拖动时获取窗口当前位置
-                Point p = MainFrame.this.getLocation();
-                // 设置窗口的位置
-                MainFrame.this.setLocation(p.x + e.getX() - origin.x, p.y + e.getY()
-                        - origin.y);
-            }
-        });
+                public void mouseDragged(MouseEvent e)
+                {
+                    // 当鼠标拖动时获取窗口当前位置
+                    Point p = MainFrame.this.getLocation();
+                    // 设置窗口的位置
+                    MainFrame.this.setLocation(p.x + e.getX() - origin.x, p.y + e.getY()
+                            - origin.y);
+                }
+            });
+        }
+
 
        addComponentListener(new ComponentAdapter()
        {
