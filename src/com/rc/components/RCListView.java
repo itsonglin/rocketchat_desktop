@@ -60,7 +60,10 @@ public class RCListView extends JScrollPane
         this.getVerticalScrollBar().setUnitIncrement(17);
         this.getVerticalScrollBar().setUI(new ScrollUI());
 
+    }
 
+    public void setAutoScrollToButtom()
+    {
         getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener()
         {
             public void adjustmentValueChanged(AdjustmentEvent evt)
@@ -105,7 +108,6 @@ public class RCListView extends JScrollPane
                 super.mouseEntered(e);
             }
         });
-
     }
 
     public void initView()

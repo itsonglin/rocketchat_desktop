@@ -40,7 +40,7 @@ public class TitlePanel extends ParentAvailablePanel
         titlePanel.setLayout(new FlowLayout(0));
 
         titleLabel = new JLabel();
-        titleLabel.setText("即时通讯讨论群(5)");
+        titleLabel.setText("小学生(5)");
         titleLabel.setFont(FontUtil.getDefaultFont(16));
         titlePanel.add(titleLabel);
 

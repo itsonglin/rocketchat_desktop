@@ -41,6 +41,7 @@ public class MessagePanel extends ParentAvailablePanel
         listView = new RCListView(0, 15);
         //listView.setVisible(false);
         listView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
+        listView.setAutoScrollToButtom();
         listView.setAdapter(adapter);
 
     }
