@@ -6,6 +6,8 @@ import com.rc.components.RCBorder;
 import com.rc.components.VerticalFlowLayout;
 import com.rc.utils.FontUtil;
 import com.rc.utils.OSUtil;
+import com.sun.awt.AWTUtilities;
+import com.sun.javaws.Main;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,17 +33,95 @@ public class TitlePanel extends ParentAvailablePanel
         super(parent);
 
         initComponents();
+        addListeners();
         initView();
+    }
+
+    private void addListeners()
+    {
+        roomInfoButton.addMouseListener(new MouseListener()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                //((RightPanel)getParentPanel()).getRoomMembersPanel().setVisible(true);
+
+                JFrame frame = new JFrame();
+                frame.setMinimumSize(new Dimension(MainFrame.getContext().currentWindowWidth, MainFrame.getContext().currentWindowHeight));
+                frame.setUndecorated(true);
+                frame.setBounds(MainFrame.getContext().getBounds());
+                frame.add(new JLabel("adadsad"));
+                AWTUtilities.setWindowOpacity(frame, 0);
+                frame.addMouseListener(new MouseListener()
+                {
+                    @Override
+                    public void mouseClicked(MouseEvent e)
+                    {
+                    }
+
+                    @Override
+                    public void mousePressed(MouseEvent e)
+                    {
+                        frame.setVisible(false);
+                    }
+
+                    @Override
+                    public void mouseReleased(MouseEvent e)
+                    {
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent e)
+                    {
+
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e)
+                    {
+
+                    }
+                });
+                frame.setVisible(true);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+
+            }
+        });
     }
 
     private void initComponents()
     {
+        Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
+
         titlePanel = new JPanel();
         titlePanel.setLayout(new GridBagLayout());
 
         roomInfoButton = new JLabel();
         roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
         roomInfoButton.setHorizontalAlignment(JLabel.CENTER);
+        roomInfoButton.setCursor(handCursor);
 
         titleLabel = new JLabel();
         titleLabel.setText("小学生(5)");
@@ -51,7 +131,6 @@ public class TitlePanel extends ParentAvailablePanel
 
         ControlLabelMouseListener listener = new ControlLabelMouseListener();
         Dimension controlLabelSize = new Dimension(30, 30);
-        Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
 
         controlPanel = new JPanel();
         controlPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
@@ -79,7 +158,6 @@ public class TitlePanel extends ParentAvailablePanel
         minLabel.addMouseListener(listener);
         minLabel.setPreferredSize(controlLabelSize);
         minLabel.setCursor(handCursor);
-
     }
 
     private void initView()
@@ -112,7 +190,6 @@ public class TitlePanel extends ParentAvailablePanel
 
         //add(controlPanel);
         //add(titlePanel);
-
 
     }
 

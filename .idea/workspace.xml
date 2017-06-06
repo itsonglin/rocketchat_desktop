@@ -5,8 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e590464b-be4c-4fc3-9f76-54a97cd19c6d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/MainFrame.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/MainFrame.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/RightPanel.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/RightPanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java" />
     </list>
     <ignored path="rocketchat_desktop.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -41,42 +43,45 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="MessagePanel.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rc/forms/MessagePanel.java">
+      <file leaf-file-name="TitlePanel.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3068">
-              <caret line="130" column="5" selection-start-line="130" selection-start-column="5" selection-end-line="130" selection-end-column="5" />
-              <folding />
+            <state relative-caret-position="295">
+              <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+              <folding>
+                <element signature="e#1868#1869#0" expanded="true" />
+                <element signature="class#ControlLabelMouseListener#0;class#TitlePanel#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RCListView.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rc/components/RCListView.java">
+      <file leaf-file-name="RightPanel.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/forms/RightPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="277">
-              <caret line="45" column="5" selection-start-line="45" selection-start-column="5" selection-end-line="45" selection-end-column="5" />
-              <folding />
+            <state relative-caret-position="130">
+              <caret line="9" column="30" selection-start-line="9" selection-start-column="30" selection-end-line="9" selection-end-column="30" />
+              <folding>
+                <element signature="e#1042#1043#0" expanded="true" />
+                <element signature="e#1081#1082#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/.gitignore">
+      <file leaf-file-name="MainFrame.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/forms/MainFrame.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="26">
-              <caret line="1" column="5" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MessageAdapter.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/message/MessageAdapter.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5434">
-              <caret line="227" column="0" selection-start-line="227" selection-start-column="0" selection-end-line="227" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="229">
+              <caret line="131" column="18" selection-start-line="131" selection-start-column="18" selection-end-line="131" selection-end-column="18" />
+              <folding>
+                <element signature="e#765#766#0" expanded="true" />
+                <element signature="e#795#796#0" expanded="true" />
+                <element signature="e#2858#3179#0" expanded="true" />
+                <element signature="e#3178#3179#0" expanded="true" />
+                <element signature="e#3903#3904#0" expanded="true" />
+                <element signature="e#3969#3970#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -105,10 +110,8 @@
         <option value="$PROJECT_DIR$/src/com/rc/forms/CollectionsPanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/MyInfoPanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/RCBorder.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/forms/RightPanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/RCButton.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/ChatPanel.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/adapter/RightTextViewHolder.java" />
         <option value="$PROJECT_DIR$/src/com/rc/entity/MessageItem.java" />
         <option value="$PROJECT_DIR$/src/com/rc/adapter/MessageAdapter.java" />
@@ -134,7 +137,6 @@
         <option value="$PROJECT_DIR$/src/com/rc/adapter/message/MessageRightImageViewHolder.java" />
         <option value="$PROJECT_DIR$/src/com/rc/entity/FileAttachmentItem.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/message/RCRightAttachmentMessageBubble.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/forms/MainFrame.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/message/RCTextMessageBubble.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/message/RCRightImageMessageBubble.java" />
         <option value="$PROJECT_DIR$/src/com/rc/adapter/message/MessageLeftImageViewHolder.java" />
@@ -153,6 +155,9 @@
         <option value="$PROJECT_DIR$/src/com/rc/components/RCListView.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/MessagePanel.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/src/com/rc/forms/RightPanel.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/forms/MainFrame.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java" />
       </list>
     </option>
   </component>
@@ -735,12 +740,12 @@
       <workItem from="1496583535429" duration="89000" />
       <workItem from="1496587034439" duration="441000" />
       <workItem from="1496753294613" duration="10000" />
-      <workItem from="1496753451605" duration="103000" />
+      <workItem from="1496753451605" duration="3179000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="120982000" />
+    <option name="totallyTimeSpent" value="124058000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="45" y="24" width="1321" height="744" extended-state="6" />
@@ -753,13 +758,14 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299293" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.012519562" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3568075" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286385" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24509034" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12568735" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299293" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286385" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24980362" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -771,7 +777,6 @@
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Coverage" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32991317" sideWeight="0.5" order="4" side_tool="true" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3286385" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="Vcs.Log.UiProperties">
@@ -796,22 +801,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/res/image/right_white_active.9.png">
-      <provider selected="true" editor-type-id="ninepatcheditor">
-        <state />
-      </provider>
-      <provider editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/image/left_active.9.png">
-      <provider selected="true" editor-type-id="ninepatcheditor">
-        <state />
-      </provider>
-      <provider editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/res/image/right.9.png">
       <provider selected="true" editor-type-id="ninepatcheditor">
         <state />
@@ -936,14 +925,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="182">
           <caret line="7" column="43" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="43" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/MainFrame.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="173">
-          <caret line="42" column="63" selection-start-line="42" selection-start-column="63" selection-end-line="42" selection-end-column="63" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1100,27 +1081,64 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/message/MessageAdapter.java">
+    <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5434">
-          <caret line="227" column="0" selection-start-line="227" selection-start-column="0" selection-end-line="227" selection-end-column="0" />
+        <state relative-caret-position="26">
+          <caret line="1" column="5" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/rc/components/RCListView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="277">
-          <caret line="45" column="5" selection-start-line="45" selection-start-column="5" selection-end-line="45" selection-end-column="5" />
+        <state relative-caret-position="225">
+          <caret line="43" column="24" selection-start-line="43" selection-start-column="24" selection-end-line="43" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore">
+    <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/message/MessageAdapter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="26">
-          <caret line="1" column="5" selection-start-line="1" selection-start-column="5" selection-end-line="1" selection-end-column="5" />
+        <state relative-caret-position="515">
+          <caret line="227" column="0" selection-start-line="227" selection-start-column="0" selection-end-line="227" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/RightPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="130">
+          <caret line="9" column="30" selection-start-line="9" selection-start-column="30" selection-end-line="9" selection-end-column="30" />
+          <folding>
+            <element signature="e#1042#1043#0" expanded="true" />
+            <element signature="e#1081#1082#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/MainFrame.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="229">
+          <caret line="131" column="18" selection-start-line="131" selection-start-column="18" selection-end-line="131" selection-end-column="18" />
+          <folding>
+            <element signature="e#765#766#0" expanded="true" />
+            <element signature="e#795#796#0" expanded="true" />
+            <element signature="e#2858#3179#0" expanded="true" />
+            <element signature="e#3178#3179#0" expanded="true" />
+            <element signature="e#3903#3904#0" expanded="true" />
+            <element signature="e#3969#3970#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="295">
+          <caret line="65" column="0" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
+          <folding>
+            <element signature="e#1868#1869#0" expanded="true" />
+            <element signature="class#ControlLabelMouseListener#0;class#TitlePanel#0" expanded="false" />
+          </folding>
         </state>
       </provider>
     </entry>

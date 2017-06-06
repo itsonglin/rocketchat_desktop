@@ -122,6 +122,45 @@ public class MainFrame extends JFrame
                 currentWindowHeight = (int) e.getComponent().getBounds().getHeight();
             }
         });
+
+        addMouseListener(new MouseListener()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                //System.out.println("click");
+                //hideRoomMembersPanel();
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+
+            }
+        });
+    }
+
+    private void hideRoomMembersPanel()
+    {
+        rightPanel.getRoomMembersPanel().setVisible(false);
     }
 
 
