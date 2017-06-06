@@ -31,6 +31,10 @@ public class MainFrame extends JFrame
         context = this;
         initComponents();
         initView();
+
+
+        test();
+
     }
 
     public static MainFrame getContext()
@@ -47,6 +51,13 @@ public class MainFrame extends JFrame
 
         leftPanel = new LeftPanel();
         rightPanel = new RightPanel();
+
+    }
+
+    private void test()
+    {
+
+
     }
 
     private void initView()
@@ -102,15 +113,15 @@ public class MainFrame extends JFrame
         }
 
 
-       addComponentListener(new ComponentAdapter()
-       {
-           @Override
-           public void componentResized(ComponentEvent e)
-           {
-               currentWindowWidth = (int) e.getComponent().getBounds().getWidth();
-               currentWindowHeight = (int) e.getComponent().getBounds().getHeight();
-           }
-       });
+        addComponentListener(new ComponentAdapter()
+        {
+            @Override
+            public void componentResized(ComponentEvent e)
+            {
+                currentWindowWidth = (int) e.getComponent().getBounds().getWidth();
+                currentWindowHeight = (int) e.getComponent().getBounds().getHeight();
+            }
+        });
     }
 
 
