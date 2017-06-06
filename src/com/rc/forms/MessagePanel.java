@@ -38,7 +38,7 @@ public class MessagePanel extends ParentAvailablePanel
         getData();
 
         adapter = new MessageAdapter(messageItems);
-        listView = new RCListView(0, 20);
+        listView = new RCListView(0, 15);
         //listView.setVisible(false);
         listView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
         listView.setAdapter(adapter);
@@ -84,7 +84,7 @@ public class MessagePanel extends ParentAvailablePanel
 
         MessageItem item4 = new MessageItem();
         item4.setMessageType(MessageItem.LEFT_TEXT);
-        item4.setMessageContent("一、不得利用本站危害国家安全、泄露国家秘密，利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会利用本站危害国家安全、泄露国家秘密，不得侵犯国家社会不得侵犯国家社会集体的和公民的合法权益，不得利用本站制作、复制和传播不法有害信息！");
+        item4.setMessageContent("一、不得利用本站危秘密，不得侵犯国家社会利泄露国家秘密！");
         item4.setTimestamp(System.currentTimeMillis());
 
         MessageItem item5 = new MessageItem();
@@ -133,16 +133,17 @@ public class MessagePanel extends ParentAvailablePanel
                 messageItems.add(item5);
             }*/
 
-            messageItems.add(item);
+            //messageItems.add(item);
 
         }
 
         //] messageItems.add(item2);
-       // messageItems.add(item3);
-//        messageItems.add(item5);
-//        messageItems.add(item6);
-        //messageItems.add(item7);
-        //messageItems.add(item8);
-        //messageItems.add(item4);
+        messageItems.add(item3);
+        messageItems.add(item3);
+        messageItems.add(item5);
+        messageItems.add(item6);
+        messageItems.add(item7);
+        messageItems.add(item8);
+        messageItems.add(item);
     }
 }

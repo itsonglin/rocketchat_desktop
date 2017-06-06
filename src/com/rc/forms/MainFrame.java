@@ -15,7 +15,7 @@ import java.awt.event.*;
 public class MainFrame extends JFrame
 {
     private int DEFAULT_WIDTH = 900;
-    private int DEFAULT_HEIGHT = 701;
+    private int DEFAULT_HEIGHT = 650;
 
     public int currentWindowWidth = DEFAULT_WIDTH;
     public int currentWindowHeight = DEFAULT_HEIGHT;

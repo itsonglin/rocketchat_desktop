@@ -70,7 +70,7 @@ public class RCListView extends JScrollPane
                 //System.out.println(contentPanel.getComponent(0));
                 //int max = contentPanel.getComponentCount() * 2 + ((contentPanel.getComponentCount() - (7 + (getLastVisibleItemCount() - 4) * 2)) * 2);
 
-                System.out.println(getLastVisibleItemCount());
+                //System.out.println(getLastVisibleItemCount());
                 //System.out.println(contentPanel.getComponentCount() + ", " + max  + ", " + isNeedBottom);
                 /*if (evt.getAdjustmentType() == AdjustmentEvent.TRACK && (isNeedBottom < max))
                 {
@@ -89,8 +89,7 @@ public class RCListView extends JScrollPane
                 {
                     getVerticalScrollBar().setValue(getVerticalScrollBar().getModel().getMaximum()
                             - getVerticalScrollBar().getModel().getExtent());
-                }
-                else
+                } else
                 {
 
                 }

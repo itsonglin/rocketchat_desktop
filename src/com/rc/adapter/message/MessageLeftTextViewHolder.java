@@ -12,6 +12,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by song on 17-6-2.
@@ -58,7 +60,23 @@ public class MessageLeftTextViewHolder extends ViewHolder
 
         sender.setFont(FontUtil.getDefaultFont(12));
         sender.setForeground(Colors.FONT_GRAY);
-        //sender.setVisible(false);
+
+        text.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                messageBubble.setBackgroundIcon(messageBubble.getBackgroundActiveIcon());
+                super.mouseEntered(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                messageBubble.setBackgroundIcon(messageBubble.getBackgroundNormalIcon());
+                super.mouseReleased(e);
+            }
+        });
     }
 
     private void initView()
@@ -78,7 +96,7 @@ public class MessageLeftTextViewHolder extends ViewHolder
         messageAvatarPanel.add(senderMessagePanel, new GBC(2, 0)
                 .setWeight(1000, 1)
                 .setAnchor(GBC.WEST)
-                .setInsets(0,5,0,0));
+                .setInsets(0,5,5,0));
 
         add(timePanel, BorderLayout.NORTH);
         add(messageAvatarPanel, BorderLayout.CENTER);
