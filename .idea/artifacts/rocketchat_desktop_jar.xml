@@ -1,11 +1,9 @@
 <component name="ArtifactManager">
-  <artifact build-on-make="true" name="rocketchat_desktop:jar">
+  <artifact type="jar" build-on-make="true" name="rocketchat_desktop:jar">
     <output-path>$PROJECT_DIR$/out/artifacts/rocketchat_desktop_jar</output-path>
-    <root id="root">
-      <element id="archive" name="rocketchat_desktop.jar">
-        <element id="module-output" name="rocketchat_desktop" />
-      </element>
-      <element id="library" level="project" name="android.ninepatch" />
+    <root id="archive" name="rocketchat_desktop.jar">
+      <element id="module-output" name="rocketchat_desktop" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/lib/android.ninepatch.jar" path-in-jar="/" />
     </root>
   </artifact>
 </component>

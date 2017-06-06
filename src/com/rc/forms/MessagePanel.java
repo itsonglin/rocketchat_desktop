@@ -122,20 +122,11 @@ public class MessagePanel extends ParentAvailablePanel
 
         messageItems = new ArrayList<>();
         messageItems.add(item);
-        messageItems.add(item);
-        messageItems.add(item);
-        messageItems.add(item);
-        messageItems.add(item);
-        messageItems.add(item);
-        messageItems.add(item);
-        messageItems.add(item);
-        messageItems.add(item);
-        //] messageItems.add(item2);
-       // messageItems.add(item3);
-//        messageItems.add(item5);
-//        messageItems.add(item6);
-        //messageItems.add(item7);
-        //messageItems.add(item8);
-        //messageItems.add(item4);
+        messageItems.add(item2);
+        messageItems.add(item3);
+        messageItems.add(item5);
+        messageItems.add(item6);
+        messageItems.add(item7);
+        messageItems.add(item8);
     }
 }
