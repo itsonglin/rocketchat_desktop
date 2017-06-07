@@ -27,12 +27,12 @@ public class UserInfoPopup extends JPopupMenu
 
     private void initComponents()
     {
-        setBackground(Colors.WINDOW_BACKGROUND);
-        setBorder(null);
+        setBackground(Colors.WINDOW_BACKGROUND_LIGHT);
 
 
         contentPanel = new JPanel();
         contentPanel.setPreferredSize(new Dimension(200, 200));
+        contentPanel.setBackground(Colors.WINDOW_BACKGROUND_LIGHT);
 
         avatar = new JLabel();
         ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
@@ -54,6 +54,8 @@ public class UserInfoPopup extends JPopupMenu
         contentPanel.setLayout(new GridBagLayout());
 
         JPanel avatarUsernamePanel = new JPanel();
+        avatarUsernamePanel.setBackground(Colors.WINDOW_BACKGROUND_LIGHT);
+
         avatarUsernamePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
         avatarUsernamePanel.add(avatar);
         avatarUsernamePanel.add(username);
@@ -61,6 +63,7 @@ public class UserInfoPopup extends JPopupMenu
 
 
         JPanel sendButtonPanel = new JPanel();
+        sendButtonPanel.setBackground(Colors.WINDOW_BACKGROUND_LIGHT);
         sendButtonPanel.add(sendButton);
 
         contentPanel.add(avatarUsernamePanel, new GBC(0,0).setWeight(1,1));

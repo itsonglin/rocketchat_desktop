@@ -4,11 +4,14 @@ import com.rc.adapter.BaseAdapter;
 import com.rc.adapter.ViewHolder;
 import com.rc.entity.MessageItem;
 import com.rc.forms.MainFrame;
+import com.rc.forms.UserInfoPopup;
 import com.rc.helper.AttachmentIconHelper;
+import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.TimeUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.List;
 
 /**
@@ -104,6 +107,11 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
                 .get(0).getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
         holder.sender.setText(item.getSenderUsername());
+
+        ImageIcon avatarIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
+        avatarIcon.setImage(avatarIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        holder.avatar.setIcon(avatarIcon);
+        bindAvatarAction(holder.avatar);
     }
 
     private void processRightAttachmentMessage(ViewHolder viewHolder, MessageItem item)
@@ -126,6 +134,12 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         MessageLeftImageViewHolder holder = (MessageLeftImageViewHolder) viewHolder;
         holder.time.setText(TimeUtil.diff(item.getTimestamp()));
         holder.sender.setText(item.getSenderUsername());
+
+        ImageIcon avatarIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
+        avatarIcon.setImage(avatarIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        holder.avatar.setIcon(avatarIcon);
+        bindAvatarAction(holder.avatar);
+
 
         ImageIcon imageIcon = new ImageIcon(getClass().getResource(item.getImageAttachments().get(0).getImageUrl()));
         preferredImageSize(imageIcon);
@@ -215,9 +229,28 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     private void processLeftTextMessage(ViewHolder viewHolder, final MessageItem item)
     {
         MessageLeftTextViewHolder holder = (MessageLeftTextViewHolder) viewHolder;
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
+        imageIcon.setImage(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+        holder.avatar.setIcon(imageIcon);
+        bindAvatarAction(holder.avatar);
+
         holder.text.setText(item.getMessageContent());
         holder.time.setText(TimeUtil.diff(item.getTimestamp()));
         holder.sender.setText("Song");
+    }
+
+    private void bindAvatarAction(JLabel avatarLabel)
+    {
+        avatarLabel.addMouseListener(new AbstractMouseListener(){
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                UserInfoPopup popup = new UserInfoPopup();
+                popup.show(e.getComponent(), e.getX(), e.getY());
+
+                super.mouseClicked(e);
+            }
+        });
     }
 
     @Override

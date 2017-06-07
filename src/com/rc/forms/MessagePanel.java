@@ -145,6 +145,9 @@ public class MessagePanel extends ParentAvailablePanel
             messageItems.add(item3);
         }
         messageItems.add(item7);
+        messageItems.add(item4);
+        messageItems.add(item8);
+        messageItems.add(item5);
 
     }
 }

@@ -42,9 +42,6 @@ public class MessageLeftTextViewHolder extends ViewHolder
         int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.5);
         text = new SizeAutoAdjustTextArea(maxWidth);
 
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        imageIcon.setImage(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        avatar.setIcon(imageIcon);
 
         addComponentListener(new ComponentAdapter()
         {
@@ -87,12 +84,12 @@ public class MessageLeftTextViewHolder extends ViewHolder
         messageBubble.add(text);
 
         JPanel senderMessagePanel = new JPanel();
-        senderMessagePanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0,0,true, false));
+        senderMessagePanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0,2,true, false));
         senderMessagePanel.add(sender);
         senderMessagePanel.add(messageBubble);
 
         messageAvatarPanel.setLayout(new GridBagLayout());
-        messageAvatarPanel.add(avatar, new GBC(1, 0).setWeight(1, 1).setAnchor(GBC.NORTH).setInsets(5, 0,0,0));
+        messageAvatarPanel.add(avatar, new GBC(1, 0).setWeight(1, 1).setAnchor(GBC.NORTH).setInsets(4,0,0,0));
         messageAvatarPanel.add(senderMessagePanel, new GBC(2, 0)
                 .setWeight(1000, 1)
                 .setAnchor(GBC.WEST)
