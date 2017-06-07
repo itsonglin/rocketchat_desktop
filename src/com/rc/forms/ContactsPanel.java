@@ -60,6 +60,13 @@ public class ContactsPanel extends ParentAvailablePanel
         item5.setName("123");
         contactsItemList.add(item5);
 
+        for (int i = 0 ;i < 10; i++)
+        {
+            ContactsItem contactsItem = new ContactsItem();
+            contactsItem.setName("User " + i);
+            contactsItemList.add(contactsItem);
+        }
+
         contactsListView.setAdapter(new ContactsItemsAdapter(contactsItemList));
     }
 

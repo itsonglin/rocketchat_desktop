@@ -3,6 +3,7 @@ package com.rc.forms;
 import com.rc.components.Colors;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
@@ -12,7 +13,7 @@ public class RightPanel extends JPanel
 {
     private TitlePanel titlePanel;
     private ChatPanel chatPanel;
-
+    private RoomMembersPanel roomMembersPanel;
 
     public RightPanel()
     {
@@ -25,6 +26,7 @@ public class RightPanel extends JPanel
     {
         titlePanel = new TitlePanel(this);
         chatPanel = new ChatPanel(this);
+        roomMembersPanel = new RoomMembersPanel(this);
     }
 
     private void initView()
@@ -33,5 +35,11 @@ public class RightPanel extends JPanel
         this.setLayout(new BorderLayout());
         add(titlePanel, BorderLayout.NORTH);
         add(chatPanel, BorderLayout.CENTER);
+        add(roomMembersPanel, BorderLayout.EAST);
+    }
+
+    public JPanel getRoomMembersPanel()
+    {
+        return roomMembersPanel;
     }
 }

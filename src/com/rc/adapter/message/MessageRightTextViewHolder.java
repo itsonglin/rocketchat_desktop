@@ -55,7 +55,7 @@ public class MessageRightTextViewHolder extends ViewHolder
             @Override
             public void componentResized(ComponentEvent e)
             {
-                text.setText(text.getText());
+               // text.setText(text.getText());
             }
         });
 
@@ -78,7 +78,13 @@ public class MessageRightTextViewHolder extends ViewHolder
             @Override
             public void mouseReleased(MouseEvent e)
             {
-                messageBubble.setBackgroundIcon(messageBubble.getBackgroundNormalIcon());
+                /*System.out.println(e);
+                System.out.println(e.getX() + ", " + e.getY() + ", " + text.getWidth() + ", " + text.getHeight());
+
+                if (e.getX() > text.getWidth() || e.getY() > text.getHeight())
+                {
+                    messageBubble.setBackgroundIcon(messageBubble.getBackgroundNormalIcon());
+                }*/
                 super.mouseReleased(e);
             }
 
@@ -107,6 +113,8 @@ public class MessageRightTextViewHolder extends ViewHolder
         setLayout(new BorderLayout());
         timePanel.add(time);
 
+        messageBubble.add(text, BorderLayout.CENTER);
+        //JTextArea text = new JTextArea("addComponentListener(new Cpter()你好你好啊，。/");
         messageBubble.add(text, BorderLayout.CENTER);
 
         JPanel resendTextPanel = new JPanel();

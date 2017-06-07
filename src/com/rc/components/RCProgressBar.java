@@ -3,7 +3,6 @@ package com.rc.components;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
 
 /**
  * Created by song on 17-6-4.
@@ -12,9 +11,9 @@ public class RCProgressBar extends JProgressBar
 {
     public RCProgressBar()
     {
-        setForeground(Colors.MAIN_COLOR);
+        setForeground(Colors.PROGRESS_BAR_START);
 
-        setBorder(new LineBorder(Colors.MAIN_COLOR_DARKER));
+        setBorder(new LineBorder(Colors.PROGRESS_BAR_END));
     }
 
     @Override

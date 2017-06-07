@@ -3,13 +3,15 @@ package com.rc.forms;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
+import com.rc.components.VerticalFlowLayout;
 import com.rc.utils.FontUtil;
 import com.rc.utils.OSUtil;
+import com.sun.awt.AWTUtilities;
+import com.sun.javaws.Main;
 
 import javax.swing.*;
-import javax.swing.border.Border;
-import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.AWTEventListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -25,31 +27,85 @@ public class TitlePanel extends ParentAvailablePanel
     private JLabel closeLabel;
     private JLabel maxLabel;
     private JLabel minLabel;
+    private JLabel roomInfoButton;
 
     public TitlePanel(JPanel parent)
     {
         super(parent);
 
         initComponents();
+        addListeners();
         initView();
+    }
+
+    private void addListeners()
+    {
+        roomInfoButton.addMouseListener(new MouseListener()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                JPanel roomMemberPanel = ((RightPanel) getParentPanel()).getRoomMembersPanel();
+                if (roomMemberPanel.isVisible())
+                {
+                    roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
+                    roomMemberPanel.setVisible(false);
+                }
+                else
+                {
+                    roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options_restore.png")));
+                    roomMemberPanel.setVisible(true);
+                }
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+
+            }
+        });
     }
 
     private void initComponents()
     {
-        titlePanel = new JPanel();
-        titlePanel.setLayout(new FlowLayout(0));
-
-        titleLabel = new JLabel();
-        titleLabel.setText("即时通讯讨论群(5)");
-        titleLabel.setFont(FontUtil.getDefaultFont(16));
-        titlePanel.add(titleLabel);
-
-        ControlLabelMouseListener listener = new ControlLabelMouseListener();
-        Dimension controlLabelSize = new Dimension(30,30);
         Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
 
+        titlePanel = new JPanel();
+        titlePanel.setLayout(new GridBagLayout());
+
+        roomInfoButton = new JLabel();
+        roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
+        roomInfoButton.setHorizontalAlignment(JLabel.CENTER);
+        roomInfoButton.setCursor(handCursor);
+
+        titleLabel = new JLabel();
+        titleLabel.setText("小学生(5)");
+        titleLabel.setFont(FontUtil.getDefaultFont(16));
+
+
+        ControlLabelMouseListener listener = new ControlLabelMouseListener();
+        Dimension controlLabelSize = new Dimension(30, 30);
+
         controlPanel = new JPanel();
-        controlPanel.setLayout(new GridBagLayout());
+        controlPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
 
         closeLabel = new JLabel();
         closeLabel.setIcon(new ImageIcon(getClass().getResource("/image/close.png")));
@@ -67,7 +123,6 @@ public class TitlePanel extends ParentAvailablePanel
         maxLabel.setPreferredSize(controlLabelSize);
         maxLabel.setCursor(handCursor);
 
-
         minLabel = new JLabel();
         minLabel.setIcon(new ImageIcon(getClass().getResource("/image/window_min.png")));
         minLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -75,36 +130,39 @@ public class TitlePanel extends ParentAvailablePanel
         minLabel.addMouseListener(listener);
         minLabel.setPreferredSize(controlLabelSize);
         minLabel.setCursor(handCursor);
-
-        controlPanel.add(minLabel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setIpad(5,5));
-        controlPanel.add(maxLabel, new GBC(1, 0).setFill(GBC.BOTH).setWeight(1, 1).setIpad(5,5));
-        controlPanel.add(closeLabel, new GBC(2, 0).setFill(GBC.BOTH).setWeight(1, 1).setIpad(5,5));
     }
 
     private void initView()
     {
-        //setLayout(new BorderLayout());
-        setLayout(new GridBagLayout());
+        setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, true));
 
-       // add(titlePanel, BorderLayout.WEST);
-        //add(controlPanel, BorderLayout.EAST);
         setBorder(null);
         this.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.LIGHT_GRAY));
 
 
+        controlPanel.add(minLabel);
+        controlPanel.add(maxLabel);
+        controlPanel.add(closeLabel);
+
+        int margin;
         if (OSUtil.getOsType() != OSUtil.Mac_OS)
         {
-            add(titlePanel, new GBC(0, 1).setFill(GBC.HORIZONTAL).setWeight(100, 1));
-            add(controlPanel, new GBC(1, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1));
+            add(controlPanel);
+            add(titlePanel);
+            margin = 5;
         }
         else
         {
-            add(titlePanel, new GBC(0, 1).setFill(GBC.HORIZONTAL).setWeight(100, 1).setInsets(10,0,0,0));
+            add(titlePanel);
+            margin = 15;
         }
 
-        //add(minLabel, new GBC(1, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(0, 5, 0, 0));
-        //add(maxLabel, new GBC(2, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(0, 5, 0, 0));
-        //add(closeLabel, new GBC(3, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(0, 5, 0, 0));
+        titlePanel.add(titleLabel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(100, 1).setInsets(margin, margin, 0, 0));
+        titlePanel.add(roomInfoButton, new GBC(1, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(margin, 0, 0, margin));
+
+        //add(controlPanel);
+        //add(titlePanel);
+
     }
 
     private class ControlLabelMouseListener implements MouseListener
@@ -115,10 +173,12 @@ public class TitlePanel extends ParentAvailablePanel
             if (e.getComponent() == closeLabel)
             {
                 System.exit(1);
-            } else if (e.getComponent() == maxLabel)
+            }
+            else if (e.getComponent() == maxLabel)
             {
                 MainFrame.getContext().setExtendedState(JFrame.MAXIMIZED_BOTH);
-            } else if (e.getComponent() == minLabel)
+            }
+            else if (e.getComponent() == minLabel)
             {
                 MainFrame.getContext().setExtendedState(JFrame.ICONIFIED);
             }
@@ -139,7 +199,7 @@ public class TitlePanel extends ParentAvailablePanel
         @Override
         public void mouseEntered(MouseEvent e)
         {
-                e.getComponent().setBackground(Colors.LIGHT_GRAY);
+            e.getComponent().setBackground(Colors.LIGHT_GRAY);
         }
 
         @Override

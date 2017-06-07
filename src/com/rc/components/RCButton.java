@@ -9,11 +9,27 @@ import java.awt.geom.RoundRectangle2D;
 public class RCButton extends JButton
 {
     private static final long serialVersionUID = 39082560987930759L;
-    public static final Color BUTTON_COLOR1 = new Color(236, 236, 236);
-    public static final Color BUTTON_COLOR2 = new Color(228, 228, 228);
-    public static final Color BUTTON_COLOR3 = new Color(216, 216, 216);
+    private Color BUTTON_COLOR1 = new Color(236, 236, 236);
+    private Color BUTTON_COLOR2 = new Color(228, 228, 228);
+    private Color BUTTON_COLOR3 = new Color(216, 216, 216);
+    private Color borderColor = new Color(193, 193, 193);
+
     public static final Color BUTTON_FOREGROUND_COLOR = Color.WHITE;
     private boolean hover;
+
+    public RCButton()
+    {
+        this("");
+    }
+
+    public RCButton(String title, Color normal, Color hover, Color press)
+    {
+        this(title);
+        this.BUTTON_COLOR1 = normal;
+        this.BUTTON_COLOR2 = hover;
+        this.BUTTON_COLOR3 = press;
+        this.borderColor = press;
+    }
 
     public RCButton(String name)
     {
@@ -58,7 +74,8 @@ public class RCButton extends JButton
         {
             gp = new GradientPaint(0.0F, 0.0F, BUTTON_COLOR3, 0.0F,
                     h, BUTTON_COLOR3, true);
-        } else
+        }
+        else
         {
             if (hover)
             {
@@ -85,9 +102,9 @@ public class RCButton extends JButton
         g2d.setClip(clip);
 
 
-        g2d.setColor(new Color(193, 193, 193));
+        g2d.setColor(borderColor);
         g2d.drawRoundRect(0, 0, w - 2, h - 2, 5, 5);
-       // g2d.drawRoundRect(1, 1, w - 4, h - 4, 3, 3);
+        // g2d.drawRoundRect(1, 1, w - 4, h - 4, 3, 3);
         g2d.dispose();
         super.paintComponent(g);
     }

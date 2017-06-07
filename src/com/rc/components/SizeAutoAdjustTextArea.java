@@ -64,7 +64,7 @@ public class SizeAutoAdjustTextArea extends JTextArea
             targetHeight = lineHeight * totalLine;
         }
 
-        this.setPreferredSize(new Dimension(targetWidth, targetHeight));
+        this.setPreferredSize(new Dimension(targetWidth, targetHeight + 2));
 
         super.setText(t);
     }

@@ -9,17 +9,17 @@ import java.awt.*;
 /**
  * Created by song on 2017/6/5.
  */
-public class RCMenuItemUI extends BasicMenuItemUI
+public class RCMainOperationMenuItemUI extends BasicMenuItemUI
 {
     @Override
     public void installUI(JComponent c)
     {
         super.installUI(c);
 
-        c.setPreferredSize(new Dimension(70, 30));
+        c.setPreferredSize(new Dimension(150, 40));
         c.setBackground(Colors.FONT_WHITE);
-        c.setFont(FontUtil.getDefaultFont(12));
-        c.setBorder(null);
+        c.setFont(FontUtil.getDefaultFont(13));
+        c.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.LIGHT_GRAY));
         selectionForeground = Colors.FONT_BLACK;
         selectionBackground = Colors.SCROLL_BAR_TRACK_LIGHT;
 
@@ -32,7 +32,7 @@ public class RCMenuItemUI extends BasicMenuItemUI
         int x = (int) ((menuItem.getSize().getWidth() - textRect.width) / 2);
 
         g.setColor(Colors.FONT_BLACK);
-        Rectangle newRect =  new Rectangle(x, textRect.y, textRect.width, textRect.height);
+        Rectangle newRect =  new Rectangle(x, textRect.y - 1 , textRect.width, textRect.height);
         super.paintText(g, menuItem, newRect, text);
     }
 

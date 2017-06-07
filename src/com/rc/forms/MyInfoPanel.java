@@ -3,11 +3,14 @@ package com.rc.forms;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.ImagePanel;
+import com.rc.components.message.MainOperationPopupMenu;
+import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.FontUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 /**
@@ -19,13 +22,18 @@ public class MyInfoPanel extends ParentAvailablePanel
     private JLabel username;
     private JLabel menuIcon;
 
+    MainOperationPopupMenu mainOperationPopupMenu;
+
+
     public MyInfoPanel(JPanel parent)
     {
         super(parent);
 
         initComponents();
+        setListeners();
         initView();
     }
+
 
     private void initComponents()
     {
@@ -35,10 +43,11 @@ public class MyInfoPanel extends ParentAvailablePanel
         try
         {
             avatar = new ImagePanel(ImageIO.read(getClass().getResourceAsStream("/image/avatar.jpg")));
-            avatar.setPreferredSize(new Dimension(50,50));
+            avatar.setPreferredSize(new Dimension(50, 50));
             avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -53,6 +62,23 @@ public class MyInfoPanel extends ParentAvailablePanel
         menuIcon.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
         menuIcon.setForeground(Colors.FONT_WHITE);
         menuIcon.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+
+        mainOperationPopupMenu = new MainOperationPopupMenu();
+    }
+
+    private void setListeners()
+    {
+        menuIcon.addMouseListener(new AbstractMouseListener()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                Component component = e.getComponent();
+                mainOperationPopupMenu.show(component, -112,50);
+                super.mouseClicked(e);
+            }
+        });
     }
 
     private void initView()
@@ -62,9 +88,6 @@ public class MyInfoPanel extends ParentAvailablePanel
 
         add(avatar, new GBC(0, 0).setFill(GBC.NONE).setWeight(2, 1));
         add(username, new GBC(1, 0).setFill(GBC.BOTH).setWeight(7, 1));
-        add (menuIcon, new GBC(2, 0).setFill(GBC.BOTH).setWeight(1, 1));
+        add(menuIcon, new GBC(2, 0).setFill(GBC.BOTH).setWeight(1, 1));
     }
-
-
-
 }

@@ -14,6 +14,7 @@ public class RCBorder implements Border
     public static final int RIGHT = 3;
     private int orientation;
     private Color color;
+    private float heightScale = 1.0F;
 
     public RCBorder(int orientation)
     {
@@ -45,7 +46,7 @@ public class RCBorder implements Border
             }
             case RIGHT:
             {
-                int h = (int) (height * 0.2);
+                int h = (int) (height * heightScale);
                 g.drawLine(width - 1, y + h, width - 1, height - h);
                 break;
             }
@@ -57,9 +58,13 @@ public class RCBorder implements Border
             }
         }
 
-
         //g.setColor(Colors.DARKER);
         //g.drawLine(x, height -1 , width, height -1 );
+    }
+
+    public void setHeightScale(float scale)
+    {
+        this.heightScale = scale;
     }
 
     @Override
