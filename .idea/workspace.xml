@@ -5,164 +5,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e590464b-be4c-4fc3-9f76-54a97cd19c6d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/META-INF/MANIFEST.MF" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/rocketchat_desktop_jar/android.ninepatch.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/artifacts/rocketchat_desktop_jar/rocketchat_desktop.jar" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/BaseAdapter.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/ContactsHeaderViewHolder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/ContactsItemViewHolder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/ContactsItemsAdapter$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/ContactsItemsAdapter.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/HeaderViewHolder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/RoomItemViewHolder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/RoomItemsAdapter$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/RoomItemsAdapter.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/ViewHolder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/message/MessageAdapter.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/message/MessageLeftAttachmentViewHolder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/message/MessageLeftImageViewHolder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/message/MessageLeftTextViewHolder$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/message/MessageLeftTextViewHolder$2.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/message/MessageLeftTextViewHolder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/message/MessageRightAttachmentViewHolder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/message/MessageRightImageViewHolder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/message/MessageRightTextViewHolder$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/message/MessageRightTextViewHolder$2.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/adapter/message/MessageRightTextViewHolder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/app/App.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/Colors.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/GBC.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/GradientProgressBarUI.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/ImagePanel$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/ImagePanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/RCBorder.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/RCButton$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/RCButton.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/RCListView$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/RCListView$2.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/RCListView.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/RCMenuItemUI.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/RCProgressBar.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/RCTextField$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/RCTextField.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/ScrollUI.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/SizeAutoAdjustTextArea.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/VerticalFlowLayout.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/JIMSendTextPane$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/JIMSendTextPane$WarpColumnFactory.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/JIMSendTextPane$WarpEditorKit.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/JIMSendTextPane$WarpLabelView.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/JIMSendTextPane.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/MessagePopupMenu$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/MessagePopupMenu$2.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/MessagePopupMenu$3.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/MessagePopupMenu.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/NinePatchImageIcon.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/RCAttachmentMessageBubble$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/RCAttachmentMessageBubble.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/RCLeftImageMessageBubble.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/RCLeftTextMessageBubble.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/RCRightAttachmentMessageBubble.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/RCRightImageMessageBubble.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/RCRightTextMessageBubble.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/RCTextMessageBubble$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/components/message/RCTextMessageBubble.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/entity/ContactsItem.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/entity/FileAttachmentItem.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/entity/ImageAttachmentItem.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/entity/MessageItem.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/entity/RoomItem.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/CardLayoutDemo$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/CardLayoutDemo$2.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/CardLayoutDemo$3.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/CardLayoutDemo$4.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/CardLayoutDemo$5.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/CardLayoutDemo.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/ChatItemsPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/ChatPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/CollectionsPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/ContactsPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/LeftPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/ListPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/MainFrame$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/MainFrame$2.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/MainFrame$3.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/MainFrame.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/MessageEditorPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/MessagePanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/MyInfoPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/ParentAvailablePanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/RightPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/SearchPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/TabOperationPanel$TabItemClickListener.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/TabOperationPanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/TestForm$SmallForm.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/TestForm.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/TitlePanel$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/TitlePanel$ControlLabelMouseListener.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/TitlePanel.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/WindowClosingAnimation$1.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/WindowClosingAnimation$2.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/WindowClosingAnimation$3.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/WindowClosingAnimation$4.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/forms/WindowClosingAnimation.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/helper/AttachmentIconHelper.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/utils/CharacterParser.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/utils/FontUtil.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/utils/MimeTypeUtil.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/utils/OSUtil.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/com/rc/utils/TimeUtil.class" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/app.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/audio.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/avatar.jpg" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/chat_active.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/chat_normal.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/close.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/compress.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/contacts_active.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/contacts_normal.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/count_bg.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/error.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/fail.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/fail_dark.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/file.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/file_active.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/glass_active.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/image.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/left.9.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/left_active.9.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/me_active.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/me_normal.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/ms_excel.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/ms_powerpoint.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/ms_word.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/new_message.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/options.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/options_restore.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/pdf.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/resend.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/resend_dark.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/right.9.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/right_active.9.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/right_white.9.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/right_white_active.9.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/sending.gif" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/sending.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/text.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/unknown.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/video.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/window_max.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/window_min.png" afterPath="" />
-      <change type="DELETED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/image/window_restore.png" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/out/production/rocketchat_desktop/META-INF/MANIFEST.MF" afterPath="$PROJECT_DIR$/src/com/META-INF/MANIFEST.MF" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/artifacts/rocketchat_desktop_jar.xml" afterPath="$PROJECT_DIR$/.idea/artifacts/rocketchat_desktop_jar.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/res/image/add_member.png" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/rc/adapter/RoomMembersAdapter.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/rc/adapter/RoomMembersItemViewHolder.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/rc/forms/RoomMembersPanel.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/rc/listener/AbstractMouseListener.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/rocketchat_desktop.iml" afterPath="$PROJECT_DIR$/rocketchat_desktop.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" afterPath="$PROJECT_DIR$/src/META-INF/MANIFEST.MF" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/adapter/message/MessageRightTextViewHolder.java" afterPath="$PROJECT_DIR$/src/com/rc/adapter/message/MessageRightTextViewHolder.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/components/Colors.java" afterPath="$PROJECT_DIR$/src/com/rc/components/Colors.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/components/RCListView.java" afterPath="$PROJECT_DIR$/src/com/rc/components/RCListView.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/MainFrame.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/MainFrame.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/MessagePanel.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/MessagePanel.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/RightPanel.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/RightPanel.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java" />
@@ -200,47 +50,97 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="TitlePanel.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java">
+      <file leaf-file-name="RoomMembersPanel.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/forms/RoomMembersPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="35" column="25" selection-start-line="35" selection-start-column="25" selection-end-line="35" selection-end-column="25" />
+            <state relative-caret-position="309">
+              <caret line="16" column="24" selection-start-line="16" selection-start-column="24" selection-end-line="16" selection-end-column="24" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="class#ControlLabelMouseListener#0;class#TitlePanel#0" expanded="false" />
+                <element signature="e#1909#1910#0" expanded="true" />
+                <element signature="e#1948#1949#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="RCListView.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/com/rc/components/RCListView.java">
+      <file leaf-file-name="ParentAvailablePanel.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/forms/ParentAvailablePanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="327">
-              <caret line="79" column="67" selection-start-line="79" selection-start-column="67" selection-end-line="79" selection-end-column="67" />
-              <folding>
-                <element signature="e#2539#2757#0" expanded="true" />
-                <element signature="e#2756#2757#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MessagePanel.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rc/forms/MessagePanel.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="243">
-              <caret line="42" column="33" selection-start-line="42" selection-start-column="33" selection-end-line="42" selection-end-column="33" />
+            <state relative-caret-position="147">
+              <caret line="7" column="48" selection-start-line="7" selection-start-column="48" selection-end-line="7" selection-end-column="48" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="SizeAutoAdjustTextArea.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/com/rc/components/SizeAutoAdjustTextArea.java">
+      <file leaf-file-name="RightPanel.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/forms/RightPanel.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="18" column="5" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="5" />
+            <state relative-caret-position="162">
+              <caret line="15" column="22" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RoomMembersAdapter.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/RoomMembersAdapter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-237">
+              <caret line="56" column="25" selection-start-line="56" selection-start-column="25" selection-end-line="56" selection-end-column="25" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#690#691#0" expanded="true" />
+                <element signature="e#744#745#0" expanded="true" />
+                <element signature="e#1540#1541#0" expanded="true" />
+                <element signature="e#1609#1610#0" expanded="true" />
+                <element signature="e#2377#2926#0" expanded="true" />
+                <element signature="e#2925#2926#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ChatPanel.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/forms/ChatPanel.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="141">
+              <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="AbstractMouseListener.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/listener/AbstractMouseListener.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="57">
+              <caret line="8" column="34" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="34" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Colors.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/components/Colors.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="357">
+              <caret line="17" column="61" selection-start-line="17" selection-start-column="61" selection-end-line="17" selection-end-column="61" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="MessagePanel.java" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/forms/MessagePanel.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="273">
+              <caret line="45" column="39" selection-start-line="45" selection-start-column="39" selection-end-line="45" selection-end-column="39" />
               <folding />
             </state>
           </provider>
@@ -267,15 +167,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/com/rc/forms/CollectionsPanel.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/forms/MyInfoPanel.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/components/RCBorder.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/components/RCButton.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/forms/ChatPanel.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/adapter/RightTextViewHolder.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/entity/MessageItem.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/adapter/MessageAdapter.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/adapter/message/RightTextViewHolder.java" />
         <option value="$PROJECT_DIR$/src/com/rc/utils/AvatarUtil.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/MessageEditorPanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/MessageRightBubble.java" />
@@ -308,16 +199,25 @@
         <option value="$PROJECT_DIR$/src/com/rc/adapter/message/MessageRightAttachmentViewHolder.java" />
         <option value="$PROJECT_DIR$/src/com/rc/adapter/message/MessageLeftAttachmentViewHolder.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/ScrollUI.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/components/Colors.java" />
         <option value="$PROJECT_DIR$/src/com/rc/adapter/message/MessageAdapter.java" />
         <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/src/com/rc/forms/RightPanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/MainFrame.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/adapter/message/MessageRightTextViewHolder.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/SizeAutoAdjustTextArea.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/forms/MessagePanel.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/forms/RightPanel.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/adapter/RoomMemberItemViewHolder.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/RCListView.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/adapter/RoomMembersItemViewHolder.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/components/Colors.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/listener/MouseClickListener.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/listener/AbstractMouseClickListener.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/listener/AbstractMouseListener.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/adapter/RoomMembersAdapter.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/forms/ParentAvailablePanel.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/forms/ContextAvailablePanel.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/forms/RoomMembersPanel.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/forms/MessagePanel.java" />
       </list>
     </option>
   </component>
@@ -444,7 +344,7 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="adapter" />
+              <option name="myItemId" value="listener" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -466,7 +366,43 @@
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
             <PATH_ELEMENT>
-              <option name="myItemId" value="META-INF" />
+              <option name="myItemId" value="rc" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="forms" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rocketchat_desktop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rocketchat_desktop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="com" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rocketchat_desktop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="rocketchat_desktop" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="res" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
             </PATH_ELEMENT>
           </PATH>
@@ -489,8 +425,8 @@
     <property name="js-jscs-nodeInterpreter" value="/usr/local/bin/node" />
   </component>
   <component name="RecentsManager">
-    <key name="CreateClassDialog.RecentsKey">
-      <recent name="com.rc.components" />
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/res/image" />
     </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/res/image" />
@@ -506,8 +442,8 @@
       <recent name="com.rc.adapter" />
       <recent name="com.rc.forms" />
     </key>
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/res/image" />
+    <key name="CreateClassDialog.RecentsKey">
+      <recent name="com.rc.components" />
     </key>
   </component>
   <component name="RunManager" selected="Application.App">
@@ -985,12 +921,12 @@
       <workItem from="1496587034439" duration="441000" />
       <workItem from="1496753294613" duration="10000" />
       <workItem from="1496753451605" duration="3179000" />
-      <workItem from="1496797469491" duration="3430000" />
+      <workItem from="1496797469491" duration="11650000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="127488000" />
+    <option name="totallyTimeSpent" value="135708000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1002" extended-state="0" />
@@ -1003,12 +939,12 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299293" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.13846155" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12967034" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32857144" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.12526652" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2185501" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Database" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299293" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32857144" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.24980362" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
@@ -1046,51 +982,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/res/image/left.9.png">
-      <provider editor-type-id="images">
-        <state />
-      </provider>
-      <provider selected="true" editor-type-id="ninepatcheditor">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/components/message/JIMSendTextPane.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="19" column="18" selection-start-line="19" selection-start-column="18" selection-end-line="19" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/image/resend_dark.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/res/image/resend.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/aaa.html" />
-    <entry file="file://$PROJECT_DIR$/res/image/sending.gif">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/components/VerticalFlowLayout.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="125">
-          <caret line="114" column="17" selection-start-line="114" selection-start-column="17" selection-end-line="114" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/components/message/MessageRightBubble.java" />
-    <entry file="jar:///usr/lib/jdk_1.8/src.zip!/javax/swing/JPanel.java" />
-    <entry file="jar:///usr/lib/jdk_1.8/src.zip!/javax/swing/JTextArea.java" />
-    <entry file="jar:///usr/lib/jdk_1.8/src.zip!/javax/swing/text/JTextComponent.java" />
-    <entry file="file://$PROJECT_DIR$/src/com/rc/components/message/BubbleContainer.java" />
-    <entry file="file://$PROJECT_DIR$/src/com/rc/components/message/RCMessageBubble.java" />
     <entry file="file://$PROJECT_DIR$/src/com/rc/entity/ImageAttachmentItem.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
@@ -1230,13 +1121,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/components/Colors.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="237">
-          <caret line="15" column="55" selection-start-line="15" selection-start-column="55" selection-end-line="15" selection-end-column="55" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/rc/helper/AttachmentIconHelper.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="147">
@@ -1263,33 +1147,6 @@
         <state relative-caret-position="515">
           <caret line="227" column="0" selection-start-line="227" selection-start-column="0" selection-end-line="227" selection-end-column="0" />
           <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/ContactsHeaderViewHolder.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="147">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/RightPanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-168">
-          <caret line="2" column="24" selection-start-line="2" selection-start-column="24" selection-end-line="2" selection-end-column="24" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="35" column="25" selection-start-line="35" selection-start-column="25" selection-end-line="35" selection-end-column="25" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="class#ControlLabelMouseListener#0;class#TitlePanel#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -1322,8 +1179,8 @@
         <state relative-caret-position="453">
           <caret line="56" column="13" selection-start-line="56" selection-start-column="13" selection-end-line="56" selection-end-column="13" />
           <folding>
-            <element signature="e#1760#1959#0" expanded="true" />
-            <element signature="e#1958#1959#0" expanded="true" />
+            <element signature="e#1760#1959#0" expanded="false" />
+            <element signature="e#1958#1959#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -1338,28 +1195,188 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/rc/components/SizeAutoAdjustTextArea.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="18" column="5" selection-start-line="18" selection-start-column="5" selection-end-line="18" selection-end-column="5" />
+        <state relative-caret-position="231">
+          <caret line="24" column="27" selection-start-line="24" selection-start-column="27" selection-end-line="24" selection-end-column="27" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/MessagePanel.java">
+    <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/ContactsHeaderViewHolder.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="243">
-          <caret line="42" column="33" selection-start-line="42" selection-start-column="33" selection-end-line="42" selection-end-column="33" />
+        <state relative-caret-position="147">
+          <caret line="7" column="29" selection-start-line="7" selection-start-column="29" selection-end-line="7" selection-end-column="29" />
+          <folding>
+            <element signature="e#262#263#0" expanded="false" />
+            <element signature="e#294#295#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/RoomItemsAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="18" column="13" selection-start-line="18" selection-start-column="13" selection-end-line="18" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/entity/ContactsItem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="189">
+          <caret line="9" column="20" selection-start-line="9" selection-start-column="20" selection-end-line="9" selection-end-column="20" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/TitlePanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="540">
+          <caret line="47" column="82" selection-start-line="47" selection-start-column="82" selection-end-line="47" selection-end-column="82" />
+          <folding>
+            <element signature="imports" expanded="false" />
+            <element signature="class#ControlLabelMouseListener#0;class#TitlePanel#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/LeftPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="11" column="13" selection-start-line="11" selection-start-column="13" selection-end-line="11" selection-end-column="13" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/ContactsPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1002">
+          <caret line="69" column="0" selection-start-line="69" selection-start-column="0" selection-end-line="70" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/ContactsItemViewHolder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="7" column="24" selection-start-line="7" selection-start-column="24" selection-end-line="7" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/ContactsItemsAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="254">
+          <caret line="152" column="17" selection-start-line="152" selection-start-column="17" selection-end-line="152" selection-end-column="17" />
+          <folding>
+            <element signature="e#4434#4435#0" expanded="true" />
+            <element signature="e#4477#4478#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/components/Colors.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="357">
+          <caret line="17" column="61" selection-start-line="17" selection-start-column="61" selection-end-line="17" selection-end-column="61" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/rc/components/RCListView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="327">
-          <caret line="79" column="67" selection-start-line="79" selection-start-column="67" selection-end-line="79" selection-end-column="67" />
+        <state relative-caret-position="851">
+          <caret line="172" column="18" selection-start-line="172" selection-start-column="18" selection-end-line="172" selection-end-column="18" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/RoomMembersItemViewHolder.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="15" column="3" selection-start-line="15" selection-start-column="3" selection-end-line="15" selection-end-column="3" />
           <folding>
-            <element signature="e#2539#2757#0" expanded="true" />
-            <element signature="e#2756#2757#0" expanded="true" />
+            <element signature="imports" expanded="false" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/ParentAvailablePanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="7" column="48" selection-start-line="7" selection-start-column="48" selection-end-line="7" selection-end-column="48" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/ContextAvailablePanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="147">
+          <caret line="7" column="12" selection-start-line="7" selection-start-column="7" selection-end-line="7" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/ChatPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="141">
+          <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/RightPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="162">
+          <caret line="15" column="22" selection-start-line="15" selection-start-column="22" selection-end-line="15" selection-end-column="22" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/RoomMembersAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-237">
+          <caret line="56" column="25" selection-start-line="56" selection-start-column="25" selection-end-line="56" selection-end-column="25" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#690#691#0" expanded="true" />
+            <element signature="e#744#745#0" expanded="true" />
+            <element signature="e#1540#1541#0" expanded="true" />
+            <element signature="e#1609#1610#0" expanded="true" />
+            <element signature="e#2377#2926#0" expanded="true" />
+            <element signature="e#2925#2926#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/listener/AbstractMouseListener.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="57">
+          <caret line="8" column="34" selection-start-line="8" selection-start-column="13" selection-end-line="8" selection-end-column="34" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/RoomMembersPanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="309">
+          <caret line="16" column="24" selection-start-line="16" selection-start-column="24" selection-end-line="16" selection-end-column="24" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#1909#1910#0" expanded="true" />
+            <element signature="e#1948#1949#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/forms/MessagePanel.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="273">
+          <caret line="45" column="39" selection-start-line="45" selection-start-column="39" selection-end-line="45" selection-end-column="39" />
+          <folding />
         </state>
       </provider>
     </entry>

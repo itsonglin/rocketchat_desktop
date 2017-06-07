@@ -13,7 +13,7 @@ public class RightPanel extends JPanel
 {
     private TitlePanel titlePanel;
     private ChatPanel chatPanel;
-    private JPanel roomMembersPanel;
+    private RoomMembersPanel roomMembersPanel;
 
     public RightPanel()
     {
@@ -26,10 +26,7 @@ public class RightPanel extends JPanel
     {
         titlePanel = new TitlePanel(this);
         chatPanel = new ChatPanel(this);
-        roomMembersPanel = new JPanel();
-        roomMembersPanel.setPreferredSize(new Dimension(150, 500));
-        roomMembersPanel.setBorder(new LineBorder(Colors.LIGHT_GRAY));
-
+        roomMembersPanel = new RoomMembersPanel(this);
     }
 
     private void initView()

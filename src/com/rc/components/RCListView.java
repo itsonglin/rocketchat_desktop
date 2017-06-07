@@ -36,7 +36,7 @@ public class RCListView extends JScrollPane
         this.hGap = hGap;
 
         initComponents();
-        //initView();
+        //fillComponents();
     }
 
     /**
@@ -95,8 +95,13 @@ public class RCListView extends JScrollPane
         });
     }
 
-    public void initView()
+    public void fillComponents()
     {
+        if (adapter == null)
+        {
+            return;
+        }
+
         for (int i = 0; i < adapter.getCount(); i++)
         {
             int viewType = adapter.getItemViewType(i);
@@ -111,22 +116,7 @@ public class RCListView extends JScrollPane
             ViewHolder holder = adapter.onCreateViewHolder(viewType);
             adapter.onBindViewHolder(holder, i);
             contentPanel.add(holder);
-
-            //contentPanel.add(new JLabel("qwwwwwwwwwwww"));
-
         }
-
-
-       /* for (int i = 0; i < 5; i++)
-        {
-            JPanel panel = new MessageRightTextViewHolder();
-            panel.setPreferredSize(new Dimension(500, 100));
-            panel.setBackground(new Color(30 * i, 50 * i, 15 * i));
-            panel.setBorder(new LineBorder(Colors.RED));
-            contentPanel.add(panel);
-
-        }*/
-
     }
 
 
@@ -139,7 +129,7 @@ public class RCListView extends JScrollPane
     {
         this.adapter = adapter;
 
-        initView();
+        fillComponents();
         scrollToPosition(0);
     }
 
@@ -175,5 +165,11 @@ public class RCListView extends JScrollPane
         }
 
         return count;
+    }
+
+    public void notifyDataSetChange()
+    {
+        contentPanel.removeAll();
+        fillComponents();
     }
 }

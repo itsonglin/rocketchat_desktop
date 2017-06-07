@@ -6,9 +6,11 @@ import com.rc.components.RCListView;
 import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.ImageAttachmentItem;
 import com.rc.entity.MessageItem;
+import com.rc.listener.AbstractMouseListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,6 +29,7 @@ public class MessagePanel extends ParentAvailablePanel
         super(parent);
 
         initComponents();
+        setListeners();
         initView();
     }
 
@@ -45,6 +48,19 @@ public class MessagePanel extends ParentAvailablePanel
         listView.setHorizontalScrollBarPolicy(
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
+    }
+
+    private void setListeners()
+    {
+        /*listView.addMouseListener(new AbstractMouseListener(){
+
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                RoomMembersPanel.getContext().setVisible(false);
+                super.mouseClicked(e);
+            }
+        });*/
     }
 
     private void initView()

@@ -48,10 +48,12 @@ public class TitlePanel extends ParentAvailablePanel
                 JPanel roomMemberPanel = ((RightPanel) getParentPanel()).getRoomMembersPanel();
                 if (roomMemberPanel.isVisible())
                 {
+                    roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
                     roomMemberPanel.setVisible(false);
                 }
                 else
                 {
+                    roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options_restore.png")));
                     roomMemberPanel.setVisible(true);
                 }
             }
