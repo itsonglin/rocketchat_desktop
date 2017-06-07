@@ -22,7 +22,8 @@ public class RCListView extends JScrollPane
     private int vGap;
     private int hGap;
     private java.util.List<Rectangle> rectangleList = new ArrayList<>();
-    boolean scrollToButtom = true;
+    boolean scrollToBottom = true;
+    private AdjustmentListener adjustmentListener;
 
     public RCListView()
     {
@@ -62,49 +63,33 @@ public class RCListView extends JScrollPane
 
     }
 
-    public void setAutoScrollToButtom()
+    public void setAutoScrollToBottom()
     {
-        getVerticalScrollBar().addAdjustmentListener(new AdjustmentListener()
+        adjustmentListener = new AdjustmentListener()
         {
             public void adjustmentValueChanged(AdjustmentEvent evt)
             {
-                //int lastVisibleCount = getLastVisibleItemCount();
-
-                //System.out.println(contentPanel.getComponent(0));
-                //int max = contentPanel.getComponentCount() * 2 + ((contentPanel.getComponentCount() - (7 + (getLastVisibleItemCount() - 4) * 2)) * 2);
-
-                //System.out.println(getLastVisibleItemCount());
-                //System.out.println(contentPanel.getComponentCount() + ", " + max  + ", " + isNeedBottom);
-                /*if (evt.getAdjustmentType() == AdjustmentEvent.TRACK && (isNeedBottom < max))
+                if (evt.getAdjustmentType() == AdjustmentEvent.TRACK && scrollToBottom)
                 {
                     getVerticalScrollBar().setValue(getVerticalScrollBar().getModel().getMaximum()
                             - getVerticalScrollBar().getModel().getExtent());
-                    isNeedBottom++;
-                    //System.out.println(isNeedBottom + ", val = " + (getVerticalScrollBar().getModel().getMaximum() - getVerticalScrollBar().getModel().getExtent()) + ", max = " + getVerticalScrollBar().getModel().getMaximum());
-                    //System.out.println("max = " + max + ", isNeeded = " + isNeedBottom);
                 }
                 else
                 {
-
-                }*/
-
-                if (evt.getAdjustmentType() == AdjustmentEvent.TRACK && scrollToButtom)
-                {
-                    getVerticalScrollBar().setValue(getVerticalScrollBar().getModel().getMaximum()
-                            - getVerticalScrollBar().getModel().getExtent());
-                } else
-                {
-
+                    getVerticalScrollBar().removeAdjustmentListener(adjustmentListener);
                 }
             }
-        });
+        };
+
+        getVerticalScrollBar().addAdjustmentListener(adjustmentListener);
+
 
         addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseEntered(MouseEvent e)
             {
-                scrollToButtom = false;
+                scrollToBottom = false;
                 super.mouseEntered(e);
             }
         });
@@ -125,8 +110,10 @@ public class RCListView extends JScrollPane
 
             ViewHolder holder = adapter.onCreateViewHolder(viewType);
             adapter.onBindViewHolder(holder, i);
-            // contentPanel.add(holder);
             contentPanel.add(holder);
+
+            //contentPanel.add(new JLabel("qwwwwwwwwwwww"));
+
         }
 
 

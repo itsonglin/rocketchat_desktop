@@ -55,7 +55,7 @@ public class MessageRightTextViewHolder extends ViewHolder
             @Override
             public void componentResized(ComponentEvent e)
             {
-                text.setText(text.getText());
+               // text.setText(text.getText());
             }
         });
 
@@ -113,6 +113,8 @@ public class MessageRightTextViewHolder extends ViewHolder
         setLayout(new BorderLayout());
         timePanel.add(time);
 
+        messageBubble.add(text, BorderLayout.CENTER);
+        //JTextArea text = new JTextArea("addComponentListener(new Cpter()你好你好啊，。/");
         messageBubble.add(text, BorderLayout.CENTER);
 
         JPanel resendTextPanel = new JPanel();

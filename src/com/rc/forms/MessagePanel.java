@@ -9,8 +9,6 @@ import com.rc.entity.MessageItem;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +39,8 @@ public class MessagePanel extends ParentAvailablePanel
         listView = new RCListView(0, 15);
         //listView.setVisible(false);
         listView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
-        listView.setAutoScrollToButtom();
+
+        listView.setAutoScrollToBottom();
         listView.setAdapter(adapter);
         listView.setHorizontalScrollBarPolicy(
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -72,7 +71,7 @@ public class MessagePanel extends ParentAvailablePanel
     {
         MessageItem item = new MessageItem();
         item.setMessageType(MessageItem.RIGHT_TEXT);
-        item.setMessageContent("尊敬、大厅dsad124567890-=12fsdbnmvb qiofqeseOjojoihiu返佣.网络维修和介绍请致电18928914412 或微信kuandaikefu10000");
+        item.setMessageContent("尊敬、大厅dsad12456789dbnmvb qiofqeseOjojoihiu返佣.网络维修和介绍请致电1892dbnmvb qiofqeseOjojoihiu返佣.网络维修和介绍请致电18920-=12fsdbnmvb qiofqeseOjojoihiu返佣.网络维修和介绍请致电18928914412 或微信kuandaikefu10000");
         item.setTimestamp(System.currentTimeMillis());
 
         MessageItem item2 = new MessageItem();
@@ -125,28 +124,9 @@ public class MessagePanel extends ParentAvailablePanel
 
         messageItems = new ArrayList<>();
 
-        for (int i = 0; i < 12 ; i++)
+        for (int i = 0; i < 20; i++)
         {
-/*            if (i % 2 == 0)
-            {
-                messageItems.add(item);
-            }
-            else
-            {
-                messageItems.add(item5);
-            }*/
-
-            //messageItems.add(item);
-
+            messageItems.add(item3);
         }
-
-        //] messageItems.add(item2);
-        messageItems.add(item3);
-        messageItems.add(item3);
-        messageItems.add(item5);
-        messageItems.add(item6);
-        messageItems.add(item7);
-        messageItems.add(item8);
-        messageItems.add(item);
     }
 }

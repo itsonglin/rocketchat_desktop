@@ -1,6 +1,5 @@
 package com.rc.forms;
 
-import com.rc.adapter.message.MessageRightTextViewHolder;
 import com.rc.components.Colors;
 
 import javax.swing.*;
@@ -14,7 +13,7 @@ public class RightPanel extends JPanel
 {
     private TitlePanel titlePanel;
     private ChatPanel chatPanel;
-    private JPanel chatRoomInfoPanel;
+    private JPanel roomMembersPanel;
 
     public RightPanel()
     {
@@ -27,9 +26,10 @@ public class RightPanel extends JPanel
     {
         titlePanel = new TitlePanel(this);
         chatPanel = new ChatPanel(this);
-        chatRoomInfoPanel = new JPanel();
-        chatRoomInfoPanel.setPreferredSize(new Dimension(150, 500));
-        chatRoomInfoPanel.setBorder(new LineBorder(Color.red));
+        roomMembersPanel = new JPanel();
+        roomMembersPanel.setPreferredSize(new Dimension(150, 500));
+        roomMembersPanel.setBorder(new LineBorder(Colors.LIGHT_GRAY));
+
     }
 
     private void initView()
@@ -38,6 +38,11 @@ public class RightPanel extends JPanel
         this.setLayout(new BorderLayout());
         add(titlePanel, BorderLayout.NORTH);
         add(chatPanel, BorderLayout.CENTER);
-        add(chatRoomInfoPanel, BorderLayout.EAST);
+        add(roomMembersPanel, BorderLayout.EAST);
+    }
+
+    public JPanel getRoomMembersPanel()
+    {
+        return roomMembersPanel;
     }
 }

@@ -122,8 +122,8 @@ public class MainFrame extends JFrame
                 currentWindowHeight = (int) e.getComponent().getBounds().getHeight();
             }
         });
+
+
     }
-
-
 }
 
