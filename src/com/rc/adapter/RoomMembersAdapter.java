@@ -1,9 +1,13 @@
 package com.rc.adapter;
 
 import com.rc.components.Colors;
+import com.rc.components.message.MessagePopupMenu;
+import com.rc.forms.UserInfoPopup;
 import com.rc.listener.AbstractMouseListener;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
+import javax.swing.plaf.basic.BasicPopupMenuUI;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -75,6 +79,8 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
             imageIcon.setImage(imageIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
             viewHolder.avatar.setIcon(imageIcon);
 
+            UserInfoPopup userInfoPopup = new UserInfoPopup();
+
 
             viewHolder.addMouseListener(new AbstractMouseListener()
             {
@@ -82,6 +88,13 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
                 public void mouseClicked(MouseEvent e)
                 {
                     viewHolder.setBackground(Colors.ITEM_SELECTED_LIGHT);
+
+                    // 弹出用户信息面板
+                    if (e.getButton() == MouseEvent.BUTTON1)
+                    {
+                        userInfoPopup.show(e.getComponent(), e.getX(), e.getY());
+                    }
+
 
                     for (RoomMembersItemViewHolder holder : viewHolders)
                     {
