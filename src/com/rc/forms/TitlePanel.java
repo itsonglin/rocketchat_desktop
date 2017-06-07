@@ -4,6 +4,7 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.components.VerticalFlowLayout;
+import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.FontUtil;
 import com.rc.utils.OSUtil;
 import com.sun.awt.AWTUtilities;
@@ -11,9 +12,7 @@ import com.sun.javaws.Main;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.AWTEventListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
+import java.awt.event.*;
 
 /**
  * Created by song on 17-5-30.
@@ -29,6 +28,13 @@ public class TitlePanel extends ParentAvailablePanel
     private JLabel minLabel;
     private JLabel roomInfoButton;
 
+    private ImageIcon maxIcon;
+    private ImageIcon restoreIcon;
+    private boolean windowMax; // 当前窗口是否已最大化
+    private Rectangle desktopBounds; // 去除任务栏后窗口的大小
+    private Rectangle normalBounds;
+
+
     public TitlePanel(JPanel parent)
     {
         super(parent);
@@ -36,11 +42,32 @@ public class TitlePanel extends ParentAvailablePanel
         initComponents();
         addListeners();
         initView();
+        initBounds();
+    }
+
+    private void initBounds()
+    {
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        Dimension screenSize = tk.getScreenSize();
+        //上面这种方式获取的是整个显示屏幕的大小，包含了任务栏的高度。
+        Insets screenInsets = Toolkit.getDefaultToolkit()
+                .getScreenInsets(MainFrame.getContext().getGraphicsConfiguration());
+        desktopBounds = new Rectangle(
+                screenInsets.left, screenInsets.top,
+                screenSize.width - screenInsets.left - screenInsets.right,
+                screenSize.height - screenInsets.top - screenInsets.bottom);
+
+        normalBounds = new Rectangle(
+                (screenSize.width - MainFrame.DEFAULT_WIDTH) / 2 ,
+                (screenSize.height - MainFrame.DEFAULT_HEIGHT) / 2,
+                MainFrame.DEFAULT_WIDTH,
+                MainFrame.DEFAULT_HEIGHT );
+
     }
 
     private void addListeners()
     {
-        roomInfoButton.addMouseListener(new MouseListener()
+        roomInfoButton.addMouseListener(new AbstractMouseListener()
         {
             @Override
             public void mouseClicked(MouseEvent e)
@@ -50,43 +77,35 @@ public class TitlePanel extends ParentAvailablePanel
                 {
                     roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
                     roomMemberPanel.setVisible(false);
-                }
-                else
+                } else
                 {
                     roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options_restore.png")));
                     roomMemberPanel.setVisible(true);
                 }
             }
-
-            @Override
-            public void mousePressed(MouseEvent e)
-            {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e)
-            {
-
-            }
-
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-
-            }
         });
+
+        /*MainFrame.getContext().addWindowStateListener(new WindowStateListener()
+        {
+            @Override
+            public void windowStateChanged(WindowEvent e)
+            {
+                if (e.getNewState() == Frame.MAXIMIZED_BOTH)
+                {
+                    maxLabel.setIcon(restoreIcon);
+                } else if (e.getNewState() == Frame.NORMAL)
+                {
+                    maxLabel.setIcon(maxIcon);
+                }
+            }
+        });*/
     }
 
     private void initComponents()
     {
         Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
+        maxIcon = new ImageIcon(getClass().getResource("/image/window_max.png"));
+        restoreIcon = new ImageIcon(getClass().getResource("/image/window_restore.png"));
 
         titlePanel = new JPanel();
         titlePanel.setLayout(new GridBagLayout());
@@ -116,7 +135,7 @@ public class TitlePanel extends ParentAvailablePanel
         closeLabel.setCursor(handCursor);
 
         maxLabel = new JLabel();
-        maxLabel.setIcon(new ImageIcon(getClass().getResource("/image/window_max.png")));
+        maxLabel.setIcon(maxIcon);
         maxLabel.setHorizontalAlignment(JLabel.CENTER);
         maxLabel.setOpaque(true);
         maxLabel.addMouseListener(listener);
@@ -150,8 +169,7 @@ public class TitlePanel extends ParentAvailablePanel
             add(controlPanel);
             add(titlePanel);
             margin = 5;
-        }
-        else
+        } else
         {
             add(titlePanel);
             margin = 15;
@@ -165,7 +183,7 @@ public class TitlePanel extends ParentAvailablePanel
 
     }
 
-    private class ControlLabelMouseListener implements MouseListener
+    private class ControlLabelMouseListener extends AbstractMouseListener
     {
         @Override
         public void mouseClicked(MouseEvent e)
@@ -173,39 +191,32 @@ public class TitlePanel extends ParentAvailablePanel
             if (e.getComponent() == closeLabel)
             {
                 System.exit(1);
-            }
-            else if (e.getComponent() == maxLabel)
+            } else if (e.getComponent() == maxLabel)
             {
-                MainFrame.getContext().setExtendedState(JFrame.MAXIMIZED_BOTH);
-            }
-            else if (e.getComponent() == minLabel)
+                /*if (maxLabel.getIcon() == maxIcon)
+                {
+                    MainFrame.getContext().setExtendedState(JFrame.MAXIMIZED_BOTH);
+                }else
+                {
+                    MainFrame.getContext().setExtendedState(JFrame.NORMAL);
+                }*/
+                if (windowMax)
+                {
+                    MainFrame.getContext().setBounds(normalBounds);
+                    maxLabel.setIcon(maxIcon);
+                    windowMax = false;
+                }
+                else
+                {
+                    MainFrame.getContext().setBounds(desktopBounds);
+                    maxLabel.setIcon(restoreIcon);
+                    windowMax = true;
+                }
+
+            } else if (e.getComponent() == minLabel)
             {
                 MainFrame.getContext().setExtendedState(JFrame.ICONIFIED);
             }
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e)
-        {
-
-        }
-
-        @Override
-        public void mouseReleased(MouseEvent e)
-        {
-
-        }
-
-        @Override
-        public void mouseEntered(MouseEvent e)
-        {
-            e.getComponent().setBackground(Colors.LIGHT_GRAY);
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e)
-        {
-            e.getComponent().setBackground(null);
         }
     }
 }

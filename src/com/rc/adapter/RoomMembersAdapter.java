@@ -42,7 +42,7 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
         String name = members.get(position);
         viewHolder.roomName.setText(name);
 
-        if (name.equals("添加成员") || name.equals("删除成员"))
+        if (name.equals("添加成员"))
         {
             viewHolder.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -72,8 +72,37 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
 
                 }
             });
-        }
-        else
+        } else if (name.equals("删除成员"))
+        {
+            viewHolder.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+            ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/delete_member.png"));
+            imageIcon.setImage(imageIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+            viewHolder.avatar.setIcon(imageIcon);
+
+            viewHolder.addMouseListener(new AbstractMouseListener()
+            {
+                @Override
+                public void mouseEntered(MouseEvent e)
+                {
+                    viewHolder.setBackground(Colors.ITEM_SELECTED_LIGHT);
+                    super.mouseEntered(e);
+                }
+
+                @Override
+                public void mouseExited(MouseEvent e)
+                {
+                    viewHolder.setBackground(Colors.WINDOW_BACKGROUND_LIGHT);
+
+                }
+
+                @Override
+                public void mouseClicked(MouseEvent e)
+                {
+                    System.out.println("添加/刪除用戶");
+                }
+            });
+        } else
         {
             ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
             imageIcon.setImage(imageIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
