@@ -37,6 +37,8 @@ public class RoomMembersPanel extends ParentAvailablePanel
 
     private void initComponents()
     {
+        setBorder(new LineBorder(Colors.LIGHT_GRAY));
+
         setPreferredSize(new Dimension(ROOM_MEMBER_PANEL_WIDTH, MainFrame.getContext().currentWindowHeight));
         setVisible(false);
         listView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
@@ -55,7 +57,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
 
         setLayout(new GridBagLayout());
         add(listView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 70));
-        add(operationPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1));
+        add(operationPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(5,0,0,0));
 
         listView.setAdapter(new RoomMembersAdapter(members));
     }
