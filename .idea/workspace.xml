@@ -5,18 +5,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="e590464b-be4c-4fc3-9f76-54a97cd19c6d" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/rc/adapter/SelectUserItemViewHolder.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/rc/adapter/SelectUserItemsAdapter.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/rc/entity/SelectUserItem.java" />
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/rc/forms/CreateGroupDialog.java" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/com/rc/adapter/SelectedUserItemsAdapter.java" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/components/Colors.java" afterPath="$PROJECT_DIR$/src/com/rc/components/Colors.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/components/RCBorder.java" afterPath="$PROJECT_DIR$/src/com/rc/components/RCBorder.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/components/message/MainOperationPopupMenu.java" afterPath="$PROJECT_DIR$/src/com/rc/components/message/MainOperationPopupMenu.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/ContactsPanel.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/ContactsPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/MainFrame.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/MainFrame.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/MyInfoPanel.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/MyInfoPanel.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/TabOperationPanel.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/TabOperationPanel.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/components/GradientProgressBarUI.java" afterPath="$PROJECT_DIR$/src/com/rc/components/GradientProgressBarUI.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/components/RCButton.java" afterPath="$PROJECT_DIR$/src/com/rc/components/RCButton.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/components/RCProgressBar.java" afterPath="$PROJECT_DIR$/src/com/rc/components/RCProgressBar.java" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/com/rc/forms/CreateGroupDialog.java" afterPath="$PROJECT_DIR$/src/com/rc/forms/CreateGroupDialog.java" />
     </list>
     <ignored path="rocketchat_desktop.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -54,12 +49,26 @@
       <file leaf-file-name="CreateGroupDialog.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/rc/forms/CreateGroupDialog.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="556">
-              <caret line="77" column="5" selection-start-line="77" selection-start-column="5" selection-end-line="77" selection-end-column="5" />
+            <state relative-caret-position="537">
+              <caret line="125" column="92" selection-start-line="125" selection-start-column="92" selection-end-line="125" selection-end-column="92" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#2057#2351#0" expanded="true" />
-                <element signature="e#2350#2351#0" expanded="true" />
+                <element signature="e#2199#2493#0" expanded="true" />
+                <element signature="e#2492#2493#0" expanded="true" />
+                <element signature="e#3451#3665#0" expanded="true" />
+                <element signature="e#3664#3665#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="RCButton.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/components/RCButton.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="330">
+              <caret line="20" column="5" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
+              <folding>
+                <element signature="e#674#675#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -100,11 +109,21 @@
           </provider>
         </entry>
       </file>
+      <file leaf-file-name="SelectedUserItemsAdapter.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/SelectedUserItemsAdapter.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="390">
+              <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="Colors.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/rc/components/Colors.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="346">
-              <caret line="18" column="34" selection-start-line="18" selection-start-column="34" selection-end-line="18" selection-end-column="34" />
+            <state relative-caret-position="451">
+              <caret line="25" column="34" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="34" />
               <folding />
             </state>
           </provider>
@@ -131,7 +150,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/com/rc/adapter/aaa.html" />
         <option value="$PROJECT_DIR$/src/com/rc/components/VerticalFlowLayout.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/message/BubbleContainer.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/message/RCMessageBubble.java" />
@@ -168,7 +186,6 @@
         <option value="$PROJECT_DIR$/src/com/rc/adapter/message/MessageAdapter.java" />
         <option value="$PROJECT_DIR$/src/com/rc/adapter/message/MessageLeftAttachmentViewHolder.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/UserInfoPopup.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/components/RCButton.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/RoomMembersPanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/components/RCMainOperationMenuItemUI.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/MyInfoPanel.java" />
@@ -177,10 +194,12 @@
         <option value="$PROJECT_DIR$/src/com/rc/components/RCBorder.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/TabOperationPanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/entity/SelectUserItem.java" />
-        <option value="$PROJECT_DIR$/src/com/rc/components/Colors.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/ContactsPanel.java" />
         <option value="$PROJECT_DIR$/src/com/rc/adapter/SelectUserItemViewHolder.java" />
         <option value="$PROJECT_DIR$/src/com/rc/adapter/SelectUserItemsAdapter.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/adapter/SelectedUserItemsAdapter.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/components/RCButton.java" />
+        <option value="$PROJECT_DIR$/src/com/rc/components/Colors.java" />
         <option value="$PROJECT_DIR$/src/com/rc/forms/CreateGroupDialog.java" />
       </list>
     </option>
@@ -386,8 +405,8 @@
       <recent name="$PROJECT_DIR$/src/com/rc/com/rc/entity" />
     </key>
     <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.rc.entity" />
       <recent name="com.rc.adapter" />
+      <recent name="com.rc.entity" />
       <recent name="com.rc.components" />
       <recent name="com.rc.components.message" />
       <recent name="com.rc.adapter.message" />
@@ -871,12 +890,12 @@
       <workItem from="1496587034439" duration="441000" />
       <workItem from="1496753294613" duration="10000" />
       <workItem from="1496753451605" duration="3179000" />
-      <workItem from="1496797469491" duration="27174000" />
+      <workItem from="1496797469491" duration="29047000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="151232000" />
+    <option name="totallyTimeSpent" value="153105000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="23" width="1920" height="1002" extended-state="0" />
@@ -889,7 +908,7 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3299293" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21318682" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.21318682" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.189011" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
@@ -932,11 +951,6 @@
     <option name="FILTER_TARGETS" value="false" />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/res/image/audio.png">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/res/image/ms_word.png">
       <provider selected="true" editor-type-id="images">
         <state />
@@ -1158,17 +1172,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/components/RCButton.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="315">
-          <caret line="19" column="17" selection-start-line="19" selection-start-column="17" selection-end-line="19" selection-end-column="17" />
-          <folding>
-            <element signature="e#627#628#0" expanded="false" />
-            <element signature="e#651#652#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/rc/forms/RoomMembersPanel.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="241">
@@ -1299,14 +1302,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/rc/components/Colors.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="346">
-          <caret line="18" column="34" selection-start-line="18" selection-start-column="34" selection-end-line="18" selection-end-column="34" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/ContactsItemViewHolder.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="147">
@@ -1370,14 +1365,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/components/RCButton.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="330">
+          <caret line="20" column="5" selection-start-line="20" selection-start-column="5" selection-end-line="20" selection-end-column="5" />
+          <folding>
+            <element signature="e#674#675#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/components/Colors.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="451">
+          <caret line="25" column="34" selection-start-line="25" selection-start-column="24" selection-end-line="25" selection-end-column="34" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/rc/adapter/SelectedUserItemsAdapter.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="390">
+          <caret line="50" column="0" selection-start-line="50" selection-start-column="0" selection-end-line="50" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/com/rc/forms/CreateGroupDialog.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="556">
-          <caret line="77" column="5" selection-start-line="77" selection-start-column="5" selection-end-line="77" selection-end-column="5" />
+        <state relative-caret-position="537">
+          <caret line="125" column="92" selection-start-line="125" selection-start-column="92" selection-end-line="125" selection-end-column="92" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#2057#2351#0" expanded="true" />
-            <element signature="e#2350#2351#0" expanded="true" />
+            <element signature="e#2199#2493#0" expanded="true" />
+            <element signature="e#2492#2493#0" expanded="true" />
+            <element signature="e#3451#3665#0" expanded="true" />
+            <element signature="e#3664#3665#0" expanded="true" />
           </folding>
         </state>
       </provider>

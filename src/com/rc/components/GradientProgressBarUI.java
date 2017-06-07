@@ -40,7 +40,7 @@ public class GradientProgressBarUI extends BasicProgressBarUI
         //这里设置的终止点是当前已经完成的进度的那个点
 
         GradientPaint gradientPaint = new GradientPaint(
-                start, Colors.MAIN_COLOR, end, Colors.MAIN_COLOR_DARKER);
+                start, Colors.PROGRESS_BAR_START, end, Colors.PROGRESS_BAR_END);
 
         graphics2d.setPaint(gradientPaint);
 
