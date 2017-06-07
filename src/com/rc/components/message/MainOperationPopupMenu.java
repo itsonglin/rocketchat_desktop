@@ -3,6 +3,8 @@ package com.rc.components.message;
 import com.rc.components.Colors;
 import com.rc.components.RCMainOperationMenuItemUI;
 import com.rc.components.RCMenuItemUI;
+import com.rc.forms.CreateGroupDialog;
+import com.rc.forms.MainFrame;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -30,6 +32,7 @@ public class MainOperationPopupMenu extends JPopupMenu
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                showCreateGroupDialog();
                 System.out.println("创建群聊");
             }
         });
@@ -59,5 +62,14 @@ public class MainOperationPopupMenu extends JPopupMenu
 
         setBorder(new LineBorder(Colors.SCROLL_BAR_TRACK_LIGHT));
         setBackground(Colors.FONT_WHITE);
+    }
+
+    /**
+     * 弹出创建群聊窗口
+     */
+    private void showCreateGroupDialog()
+    {
+        CreateGroupDialog dialog = new CreateGroupDialog(MainFrame.getContext(), true);
+        dialog.setVisible(true);
     }
 }

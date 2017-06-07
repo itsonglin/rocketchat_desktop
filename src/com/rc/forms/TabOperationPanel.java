@@ -3,6 +3,7 @@ package com.rc.forms;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
+import com.rc.components.RCButton;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,12 +40,14 @@ public class TabOperationPanel extends ParentAvailablePanel
     {
         Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
         clickListener = new TabItemClickListener();
+        RCBorder rcBorder = new RCBorder(RCBorder.RIGHT);
+        rcBorder.setHeightScale(0.2F);
 
         chatIconActive = new ImageIcon(getClass().getResource("/image/chat_active.png"));
         chatIconNormal = new ImageIcon(getClass().getResource("/image/chat_normal.png"));
         chatLabel = new JLabel();
         chatLabel.setIcon(chatIconActive);
-        chatLabel.setBorder(new RCBorder(RCBorder.RIGHT));
+        chatLabel.setBorder(rcBorder);
         chatLabel.setHorizontalAlignment(JLabel.CENTER);
         chatLabel.setCursor(handCursor);
         chatLabel.addMouseListener(clickListener);
@@ -53,7 +56,7 @@ public class TabOperationPanel extends ParentAvailablePanel
         contactIconActive = new ImageIcon(getClass().getResource("/image/contacts_active.png"));
         contactsLabel = new JLabel();
         contactsLabel.setIcon(contactIconNormal);
-        contactsLabel.setBorder(new RCBorder(RCBorder.RIGHT));
+        contactsLabel.setBorder(rcBorder);
         contactsLabel.setHorizontalAlignment(JLabel.CENTER);
         contactsLabel.setCursor(handCursor);
         contactsLabel.addMouseListener(clickListener);

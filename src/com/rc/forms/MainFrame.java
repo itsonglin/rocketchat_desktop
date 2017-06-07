@@ -31,9 +31,8 @@ public class MainFrame extends JFrame
         context = this;
         initComponents();
         initView();
-
-
         test();
+
 
     }
 
@@ -53,6 +52,7 @@ public class MainFrame extends JFrame
         leftPanel.setPreferredSize(new Dimension(250, currentWindowHeight));
 
         rightPanel = new RightPanel();
+
 
     }
 
@@ -75,18 +75,21 @@ public class MainFrame extends JFrame
 
         addListener();
 
-//        setLayout(new GridBagLayout());
-//        add(leftPanel, new GBC(0, 0).setAnchor(GBC.CENTER).setWeight(2, 1).setFill(GBC.BOTH));
-//        add(rightPanel, new GBC(1, 0).setAnchor(GBC.CENTER).setWeight(8, 1).setFill(GBC.BOTH));
-
         add(leftPanel, BorderLayout.WEST);
         add(rightPanel, BorderLayout.CENTER);
 
-        /*leftPanel.setPreferredSize(new Dimension(250, DEFAULT_HEIGHT));
-        rightPanel.setPreferredSize(new Dimension(650, DEFAULT_HEIGHT));
-        setLayout(new FlowLayout(FlowLayout.LEFT, 0,0));
-        add(leftPanel);
-        add(rightPanel);*/
+        centerScreen();
+    }
+
+
+    /**
+     * 使窗口在屏幕中央显示
+     */
+    private void centerScreen()
+    {
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        this.setLocation((tk.getScreenSize().width - currentWindowWidth)/2,
+                (tk.getScreenSize().height - currentWindowHeight)/2);
     }
 
     private void addListener()
@@ -101,18 +104,6 @@ public class MainFrame extends JFrame
                     // 当鼠标按下的时候获得窗口当前的位置
                     origin.x = e.getX();
                     origin.y = e.getY();
-                }
-            });
-
-            addMouseMotionListener(new MouseMotionAdapter()
-            {
-                public void mouseDragged(MouseEvent e)
-                {
-                    // 当鼠标拖动时获取窗口当前位置
-                    Point p = MainFrame.this.getLocation();
-                    // 设置窗口的位置
-                    MainFrame.this.setLocation(p.x + e.getX() - origin.x, p.y + e.getY()
-                            - origin.y);
                 }
             });
         }

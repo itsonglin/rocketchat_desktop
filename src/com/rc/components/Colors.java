@@ -16,6 +16,7 @@ public class Colors
     public static Color SCROLL_BAR_TRACK_LIGHT = new Color(214, 214, 214);
     public static Color FONT_WHITE = new Color(255, 255, 255);
     public static Color FONT_GRAY = new Color(152, 152, 152);
+    public static Color FONT_GRAY_DARKER = new Color(120, 120, 120);
     public static Color DARKER = new Color(38, 41, 46);
     public static Color ITEM_SELECTED = new Color(58, 63, 69);
     public static Color ITEM_SELECTED_LIGHT = new Color(228, 228, 228);

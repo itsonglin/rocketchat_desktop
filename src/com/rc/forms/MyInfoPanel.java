@@ -90,6 +90,4 @@ public class MyInfoPanel extends ParentAvailablePanel
         add(username, new GBC(1, 0).setFill(GBC.BOTH).setWeight(7, 1));
         add(menuIcon, new GBC(2, 0).setFill(GBC.BOTH).setWeight(1, 1));
     }
-
-
 }
