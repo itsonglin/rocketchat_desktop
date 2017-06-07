@@ -6,8 +6,10 @@ import com.rc.adapter.SelectedUserItemsAdapter;
 import com.rc.components.*;
 import com.rc.entity.ContactsItem;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.IconUtil;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -32,6 +34,8 @@ public class CreateGroupDialog extends JDialog
     private List<ContactsItem> contactsItemList = new ArrayList<>();
     private SelectUserItemsAdapter selectUserItemsAdapter;
     private SelectedUserItemsAdapter selectedUserItemsAdapter;
+    private ImageIcon checkIcon;
+    private ImageIcon uncheckIcon;
 
 
     public CreateGroupDialog(Frame owner, boolean modal)
@@ -42,9 +46,22 @@ public class CreateGroupDialog extends JDialog
         initView();
     }
 
+    @Override
+    public void paintComponents(Graphics g)
+    {
+        super.paintComponents(g);
+
+        System.out.println("aaa");
+        g.setColor(Color.RED);
+        g.drawRect(getX(), getY(), getWidth() - 1,getHeight() - 1);
+    }
+
 
     private void initComponents()
     {
+        checkIcon = IconUtil.getIcon(this, "/image/check.png");
+        uncheckIcon = IconUtil.getIcon(this, "/image/uncheck.png");
+
         int posX = MainFrame.getContext().getX();
         int posY = MainFrame.getContext().getY();
 
@@ -53,13 +70,14 @@ public class CreateGroupDialog extends JDialog
         setBounds(posX, posY, DIALOG_WIDTH, DIALOG_HEIGHT);
         setUndecorated(true);
 
+
         leftPanel = new JPanel();
-        leftPanel.setPreferredSize(new Dimension(DIALOG_WIDTH / 2, DIALOG_HEIGHT));
+        leftPanel.setPreferredSize(new Dimension(DIALOG_WIDTH / 2 - 1, DIALOG_HEIGHT - 13));
         leftPanel.setBorder(new RCBorder(RCBorder.RIGHT, Colors.LIGHT_GRAY));
         //leftPanel.setBorder(new LineBorder(Colors.RED));
 
         rightPanel = new JPanel();
-        rightPanel.setPreferredSize(new Dimension(DIALOG_WIDTH / 2, DIALOG_HEIGHT));
+        rightPanel.setPreferredSize(new Dimension(DIALOG_WIDTH / 2 - 1, DIALOG_HEIGHT - 13));
 
 
         // 选择用户列表
@@ -71,6 +89,18 @@ public class CreateGroupDialog extends JDialog
             public void mouseClicked(MouseEvent e)
             {
                 SelectUserItemViewHolder holder = (SelectUserItemViewHolder) e.getSource();
+
+                if (holder.active)
+                {
+                    holder.icon.setIcon(uncheckIcon);
+                    holder.active = false;
+
+                }else
+                {
+                    holder.icon.setIcon(checkIcon);
+                    holder.active = true;
+                }
+
                 System.out.println(holder.roomName.getText());
             }
         });
@@ -110,21 +140,24 @@ public class CreateGroupDialog extends JDialog
 
     private void initView()
     {
-        setLayout(new FlowLayout(FlowLayout.LEFT, 0, 10));
-        add(leftPanel);
-        add(rightPanel);
+        JPanel panel = new JPanel();
+        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 10));
+        panel.add(leftPanel);
+        panel.add(rightPanel);
+        panel.setBorder(new LineBorder(Colors.FONT_GRAY));
+        add(panel);
 
 
         leftPanel.setLayout(new GridBagLayout());
-        leftPanel.add(selectUserListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
+        leftPanel.add(selectUserListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0,0,5,0));
 
 
         buttonPanel.add(cancelButton, new GBC(0, 0).setWeight(1, 1));
         buttonPanel.add(okButton, new GBC(1, 0).setWeight(1, 1));
 
         rightPanel.setLayout(new GridBagLayout());
-        rightPanel.add(selectedUserListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 40));
-        rightPanel.add(buttonPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1));
+        rightPanel.add(selectedUserListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 60));
+        rightPanel.add(buttonPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(5, 0,0,0));
 
 
         //leftPanel.add(selectUserListView);

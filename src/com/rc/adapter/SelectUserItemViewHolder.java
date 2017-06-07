@@ -5,6 +5,7 @@ import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.forms.CreateGroupDialog;
 import com.rc.utils.FontUtil;
+import com.rc.utils.IconUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +18,7 @@ public class SelectUserItemViewHolder extends ViewHolder
     public JLabel avatar = new JLabel();
     public JLabel roomName = new JLabel();
     public JLabel icon = new JLabel();
+    public boolean active = false;
     
     public SelectUserItemViewHolder()
     {
@@ -35,7 +37,7 @@ public class SelectUserItemViewHolder extends ViewHolder
         roomName.setFont(FontUtil.getDefaultFont(13));
         roomName.setForeground(Colors.FONT_BLACK);
 
-        icon.setText("好");
+        icon.setIcon(IconUtil.getIcon(this, "/image/uncheck.png"));
 
         setLayout(new GridBagLayout());
         add(avatar, new GBC(0, 0).setWeight(1, 1).setFill(GBC.BOTH).setInsets(0,5,0,0));
