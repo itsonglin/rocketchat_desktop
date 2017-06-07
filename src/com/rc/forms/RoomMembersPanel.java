@@ -3,6 +3,7 @@ package com.rc.forms;
 import com.rc.adapter.RoomMembersAdapter;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
+import com.rc.components.RCButton;
 import com.rc.components.RCListView;
 
 import javax.swing.*;
@@ -16,10 +17,13 @@ import java.util.List;
  */
 public class RoomMembersPanel extends ParentAvailablePanel
 {
+    public static final int ROOM_MEMBER_PANEL_WIDTH = 200;
     private static RoomMembersPanel roomMembersPanel;
 
-    public static final int ROOM_MEMBER_PANEL_WIDTH = 200;
     private RCListView listView = new RCListView();
+    private JPanel operationPanel = new JPanel();
+    private JButton leaveButton = new RCButton();
+
     private List<String> members = new ArrayList<>();
 
     public RoomMembersPanel(JPanel parent)
@@ -34,16 +38,25 @@ public class RoomMembersPanel extends ParentAvailablePanel
     private void initComponents()
     {
         setPreferredSize(new Dimension(ROOM_MEMBER_PANEL_WIDTH, MainFrame.getContext().currentWindowHeight));
-        setBorder(new LineBorder(Colors.LIGHT_GRAY));
         setVisible(false);
         listView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
+
+        operationPanel.setPreferredSize(new Dimension(60, 80));
+
+        leaveButton.setText("退出群聊");
+        leaveButton.setForeground(Colors.RED);
+        leaveButton.setPreferredSize(new Dimension(180,30));
+
     }
 
     private void initView()
     {
-        //add(listView);
+        operationPanel.add(leaveButton);
+
         setLayout(new GridBagLayout());
-        add(listView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
+        add(listView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 70));
+        add(operationPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1));
+
         listView.setAdapter(new RoomMembersAdapter(members));
     }
 

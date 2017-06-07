@@ -15,6 +15,11 @@ public class RCButton extends JButton
     public static final Color BUTTON_FOREGROUND_COLOR = Color.WHITE;
     private boolean hover;
 
+    public RCButton()
+    {
+        this("");
+    }
+
     public RCButton(String name)
     {
         this.setText(name);
@@ -58,7 +63,8 @@ public class RCButton extends JButton
         {
             gp = new GradientPaint(0.0F, 0.0F, BUTTON_COLOR3, 0.0F,
                     h, BUTTON_COLOR3, true);
-        } else
+        }
+        else
         {
             if (hover)
             {
@@ -87,7 +93,7 @@ public class RCButton extends JButton
 
         g2d.setColor(new Color(193, 193, 193));
         g2d.drawRoundRect(0, 0, w - 2, h - 2, 5, 5);
-       // g2d.drawRoundRect(1, 1, w - 4, h - 4, 3, 3);
+        // g2d.drawRoundRect(1, 1, w - 4, h - 4, 3, 3);
         g2d.dispose();
         super.paintComponent(g);
     }

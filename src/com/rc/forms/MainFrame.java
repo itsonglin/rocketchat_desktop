@@ -50,6 +50,8 @@ public class MainFrame extends JFrame
         UIManager.put("TextArea.font", FontUtil.getDefaultFont());
 
         leftPanel = new LeftPanel();
+        leftPanel.setPreferredSize(new Dimension(250, currentWindowHeight));
+
         rightPanel = new RightPanel();
 
     }
@@ -73,9 +75,12 @@ public class MainFrame extends JFrame
 
         addListener();
 
-        setLayout(new GridBagLayout());
-        add(leftPanel, new GBC(0, 0).setAnchor(GBC.CENTER).setWeight(2, 1).setFill(GBC.BOTH));
-        add(rightPanel, new GBC(1, 0).setAnchor(GBC.CENTER).setWeight(8, 1).setFill(GBC.BOTH));
+//        setLayout(new GridBagLayout());
+//        add(leftPanel, new GBC(0, 0).setAnchor(GBC.CENTER).setWeight(2, 1).setFill(GBC.BOTH));
+//        add(rightPanel, new GBC(1, 0).setAnchor(GBC.CENTER).setWeight(8, 1).setFill(GBC.BOTH));
+
+        add(leftPanel, BorderLayout.WEST);
+        add(rightPanel, BorderLayout.CENTER);
 
         /*leftPanel.setPreferredSize(new Dimension(250, DEFAULT_HEIGHT));
         rightPanel.setPreferredSize(new Dimension(650, DEFAULT_HEIGHT));
