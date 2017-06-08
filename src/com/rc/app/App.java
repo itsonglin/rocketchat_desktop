@@ -1,6 +1,7 @@
 package com.rc.app;
 
 import com.rc.forms.CardLayoutDemo;
+import com.rc.forms.LoginFrame;
 import com.rc.forms.MainFrame;
 import com.rc.utils.CharacterParser;
 
@@ -13,19 +14,14 @@ public class App
 {
     public static void main(String[] args)
     {
-       /* JFrame frame = new MainFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(300,400);
-        frame.setVisible(true);*/
 
         MainFrame frame = new MainFrame();
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
-        //CharacterParser parser = new CharacterParser();
+        LoginFrame frame2 = new LoginFrame();
+        frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame2.setVisible(true);
 
-       /* CardLayoutDemo frame = new CardLayoutDemo();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);*/
     }
 }

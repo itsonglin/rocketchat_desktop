@@ -73,7 +73,7 @@ public class MainFrame extends JFrame
             setUndecorated(true);
         }
 
-        getRootPane().setWindowDecorationStyle(JRootPane.NONE );//使frame只剩下标题栏
+        //getRootPane().setWindowDecorationStyle(JRootPane.NONE );//使frame只剩下标题栏
         addListener();
 
         add(leftPanel, BorderLayout.WEST);

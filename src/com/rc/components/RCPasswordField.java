@@ -6,17 +6,16 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.geom.RoundRectangle2D;
 
 /**
  * Created by song on 17-5-29.
  */
-public class RCTextField extends JTextField
+public class RCPasswordField extends JPasswordField
 {
     private String placeholder;
 
 
-    public RCTextField()
+    public RCPasswordField()
     {
         setBackground(Colors.FONT_WHITE);
         setForeground(Colors.FONT_BLACK);
@@ -34,7 +33,7 @@ public class RCTextField extends JTextField
             @Override
             public void removeUpdate(DocumentEvent e)
             {
-                if (getText().isEmpty())
+                if (getPassword().length < 1)
                 {
                     repaint();
                 }
@@ -50,13 +49,13 @@ public class RCTextField extends JTextField
     }
 
     @Override
-    protected void paintComponent(java.awt.Graphics g)
+    protected void paintComponent(Graphics g)
     {
 
         super.paintComponent(g);
 
         Graphics2D g2 = (Graphics2D) g ;
-        if (getText().isEmpty())
+        if (getPassword().length < 1)
         {
             g2.setBackground(Color.gray);
             g2.setFont(FontUtil.getDefaultFont());

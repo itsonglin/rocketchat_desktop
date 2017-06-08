@@ -2,11 +2,10 @@ package com.rc.forms;
 
 import com.rc.components.Colors;
 import com.rc.components.GBC;
-import com.rc.components.RCTextField;
+import com.rc.components.RCSearchTextField;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
@@ -14,7 +13,7 @@ import java.awt.*;
  */
 public class SearchPanel extends ParentAvailablePanel
 {
-    private RCTextField searchTextField;
+    private RCSearchTextField searchTextField;
 
     public SearchPanel(JPanel parent)
     {
@@ -26,7 +25,7 @@ public class SearchPanel extends ParentAvailablePanel
 
     private void initComponent()
     {
-        searchTextField = new RCTextField();
+        searchTextField = new RCSearchTextField();
         searchTextField.setFont(FontUtil.getDefaultFont(14));
         searchTextField.setForeground(Colors.FONT_WHITE);
     }
