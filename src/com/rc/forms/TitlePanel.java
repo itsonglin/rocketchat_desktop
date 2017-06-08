@@ -218,5 +218,19 @@ public class TitlePanel extends ParentAvailablePanel
                 MainFrame.getContext().setExtendedState(JFrame.ICONIFIED);
             }
         }
+
+        @Override
+        public void mouseEntered(MouseEvent e)
+        {
+            ((JLabel)e.getSource()).setBackground(Colors.LIGHT_GRAY);
+            super.mouseEntered(e);
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e)
+        {
+            ((JLabel)e.getSource()).setBackground(Colors.WINDOW_BACKGROUND);
+            super.mouseExited(e);
+        }
     }
 }

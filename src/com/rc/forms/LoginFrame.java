@@ -12,6 +12,7 @@ import tasks.HttpPostTask;
 import tasks.HttpResponseListener;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -99,14 +100,16 @@ public class LoginFrame extends JFrame
 
     private void initView()
     {
-        setLayout(new GridBagLayout());
+        JPanel contentPanel = new JPanel();
+        contentPanel.setBorder(new LineBorder(Colors.LIGHT_GRAY));
+        contentPanel.setLayout(new GridBagLayout());
 
         controlPanel.add(closeLabel);
 
         if (OSUtil.getOsType() != OSUtil.Mac_OS)
         {
             setUndecorated(true);
-            add(controlPanel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(5, 0, 0, 0));
+            contentPanel.add(controlPanel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(5, 0, 0, 0));
         }
 
         JPanel titlePanel = new JPanel();
@@ -122,8 +125,9 @@ public class LoginFrame extends JFrame
         editPanel.add(buttonPanel);
 
 
-        add(titlePanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(10, 10, 0, 10));
-        add(editPanel, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 10).setInsets(10, 10, 0, 10));
+        add(contentPanel);
+        contentPanel.add(titlePanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(10, 10, 0, 10));
+        contentPanel.add(editPanel, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 10).setInsets(10, 10, 0, 10));
     }
 
     /**
@@ -141,16 +145,24 @@ public class LoginFrame extends JFrame
         closeLabel.addMouseListener(new AbstractMouseListener()
         {
             @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                super.mouseEntered(e);
-            }
-
-            @Override
             public void mouseClicked(MouseEvent e)
             {
                 System.exit(1);
                 super.mouseClicked(e);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                closeLabel.setBackground(Colors.LIGHT_GRAY);
+                super.mouseEntered(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                closeLabel.setBackground(Colors.WINDOW_BACKGROUND);
+                super.mouseExited(e);
             }
         });
 
