@@ -20,13 +20,14 @@ public class LoginFrame extends JFrame
     private static final int windowWidth = 300;
     private static final int windowHeight = 400;
 
-    private JPanel titlePanel;
+    private JPanel controlPanel;
     private JLabel closeLabel;
     private JPanel editPanel;
     private RCTextField username;
     private RCPasswordField password;
     private RCButton loginButton;
-
+    private JLabel statusLabel;
+    private JLabel titleLabel;
 
 
     private static Point origin = new Point();
@@ -43,11 +44,14 @@ public class LoginFrame extends JFrame
 
     private void initComponents()
     {
-        setBounds(0, 0, windowWidth, windowHeight);
+        Dimension windowSize = new Dimension(windowWidth, windowHeight);
+        setMinimumSize(windowSize);
+        setMaximumSize(windowSize);
 
-        titlePanel = new JPanel();
-        titlePanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 5));
-        titlePanel.setBounds(0,5, windowWidth, 30);
+
+        controlPanel = new JPanel();
+        controlPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 5));
+        //controlPanel.setBounds(0,5, windowWidth, 30);
 
         closeLabel = new JLabel();
         closeLabel.setIcon(IconUtil.getIcon(this, "/image/close.png"));
@@ -55,18 +59,21 @@ public class LoginFrame extends JFrame
         //closeLabel.setPreferredSize(new Dimension(30,30));
         closeLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        titleLabel = new JLabel();
+        titleLabel.setText("登  录");
+        titleLabel.setFont(FontUtil.getDefaultFont(16));
+
 
         editPanel = new JPanel();
-        editPanel.setBounds(10,80, windowWidth - 20, 150);
-        editPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, true));
+        editPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));
 
-        Dimension textFieldDimension = new Dimension(200, 40);
+        Dimension textFieldDimension = new Dimension(200, 35);
         username = new RCTextField();
         username.setPlaceholder("用户名");
         username.setPreferredSize(textFieldDimension);
         username.setFont(FontUtil.getDefaultFont(14));
         username.setForeground(Colors.FONT_BLACK);
-        username.setMargin(new Insets(0,15,0,0));
+        username.setMargin(new Insets(0, 15, 0, 0));
 
         password = new RCPasswordField();
         password.setPreferredSize(textFieldDimension);
@@ -74,35 +81,46 @@ public class LoginFrame extends JFrame
         //password.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.LIGHT_GRAY));
         password.setFont(FontUtil.getDefaultFont(14));
         password.setForeground(Colors.FONT_BLACK);
-        password.setMargin(new Insets(0,15,0,0));
+        password.setMargin(new Insets(0, 15, 0, 0));
 
 
         loginButton = new RCButton("登 录", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
         loginButton.setFont(FontUtil.getDefaultFont(14));
-        loginButton.setPreferredSize(textFieldDimension);
+        loginButton.setPreferredSize(new Dimension(200, 40));
+
+        statusLabel = new JLabel();
+        statusLabel.setForeground(Colors.RED);
+        statusLabel.setText("密码不正确");
+        statusLabel.setVisible(false);
     }
 
     private void initView()
     {
-        setLayout(null);
+        setLayout(new GridBagLayout());
 
-        titlePanel.add(closeLabel);
+        controlPanel.add(closeLabel);
 
         if (OSUtil.getOsType() != OSUtil.Mac_OS)
         {
             setUndecorated(true);
-            add(titlePanel);
+            add(controlPanel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(5, 0, 0, 0));
         }
+
+        JPanel titlePanel = new JPanel();
+        titlePanel.add(titleLabel);
 
         JPanel buttonPanel = new JPanel();
         buttonPanel.setLayout(new GridBagLayout());
-        buttonPanel.add(loginButton, new GBC(0,0).setFill(GBC.HORIZONTAL).setWeight(1,1).setInsets(10, 0,0,0));
+        buttonPanel.add(loginButton, new GBC(0, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(10, 0, 0, 0));
 
         editPanel.add(username);
         editPanel.add(password);
+        editPanel.add(statusLabel);
         editPanel.add(buttonPanel);
 
-        add(editPanel);
+
+        add(titlePanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(10, 10, 0, 10));
+        add(editPanel, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 10).setInsets(10, 10, 0, 10));
     }
 
     /**
