@@ -9,5 +9,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="android.ninepatch" level="project" />
+    <orderEntry type="library" name="okhttp-3.8.0" level="project" />
+    <orderEntry type="library" name="okio-1.6.0" level="project" />
+    <orderEntry type="library" name="okio-1.13.0" level="project" />
   </component>
 </module>

@@ -4,6 +4,7 @@ import com.rc.forms.CardLayoutDemo;
 import com.rc.forms.LoginFrame;
 import com.rc.forms.MainFrame;
 import com.rc.utils.CharacterParser;
+import com.rc.utils.HttpUtil;
 
 import javax.swing.*;
 
@@ -22,6 +23,5 @@ public class App
         LoginFrame frame2 = new LoginFrame();
         frame2.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame2.setVisible(true);
-
     }
 }
