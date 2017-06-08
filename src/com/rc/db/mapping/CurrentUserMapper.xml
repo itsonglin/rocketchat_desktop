@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="gbk" ?>     
+	<!DOCTYPE mapper     
+	PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"     
+	"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.rc.db.dao.CurrentUserDao">
+	<insert id="insert">
+		INSERT INTO current_user(userId,username,authToken,password,rawPassword,expireDate, realName, bcrypt, avatarOrigin)
+		VALUES (#{userId},#{username},#{authToken},#{password},#{rawPassword},#{expireDate},#{realName},#{bcrypt},#{avatarOrigin})
+	</insert>
+
+	<select id="findAll" resultType="CurrentUser">
+		SELECT * FROM current_user
+	</select>
+</mapper>
+
+
+
+
+
+
+
+
+

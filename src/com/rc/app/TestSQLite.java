@@ -1,9 +1,13 @@
 package com.rc.app;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import com.rc.db.model.CurrentUser;
+import com.rc.db.service.CurrentUserService;
+import com.rc.db.service.TableService;
+import com.rc.utils.DbUtils;
+import org.apache.ibatis.session.SqlSession;
+
+import java.awt.*;
+import java.sql.*;
 
 /**
  * Created by song on 08/06/2017.
@@ -12,7 +16,21 @@ public class TestSQLite
 {
     public static void main(String[] args)
     {
-        try
+
+
+
+        SqlSession session = DbUtils.getSqlSession();
+
+        TableService tableService = new TableService(session);
+        System.out.println("表是否存在 ：" + tableService.exist("current_user"));
+        //tableService.createCurrentUserTable();
+
+        CurrentUser currentUser = new CurrentUser("3", "3", "3", "3", "3", "3", "3", "3", "3");
+        CurrentUserService currentUserService = new CurrentUserService(session);
+        //currentUserService.insert(currentUser);
+        //System.out.println(currentUserService.findAll());
+
+        /*try
         {
             //连接SQLite的JDBC
 
@@ -24,29 +42,29 @@ public class TestSQLite
 
             Statement stat = conn.createStatement();
 
-            stat.executeUpdate("create table tbl1(name varchar(20), salary int);"); //创建一个表，两列
-            stat.executeUpdate("insert into tbl1 values('ZhangSan',8000);"); //插入数据
-            stat.executeUpdate("insert into tbl1 values('LiSi',7800);");
-            stat.executeUpdate("insert into tbl1 values('WangWu',5800);");
-            stat.executeUpdate("insert into tbl1 values('ZhaoLiu',9100);");
+            //stat.executeUpdate("create table current_user(userId varchar(20), username varchar(20), authToken varchar(64),password varchar(20),rawPassword varchar(64),expireDate varchar(20),realName varchar(20),bcrypt varchar(64),avatarOrigin varchar(1024));");
 
-            ResultSet rs = stat.executeQuery("select * from tbl1;"); //查询数据
-
-            while (rs.next())
-            { //将查询到的数据打印出来
-
-                System.out.print("name = " + rs.getString("name") + " "); //列属性一
-
-                System.out.println("salary = " + rs.getString("salary")); //列属性二
-
-            }
-            rs.close();
+            exits(conn, "current_user");
             conn.close(); //结束数据库的连接
 
         }
         catch (Exception e)
         {
             e.printStackTrace();
+        }*/
+    }
+
+    public static boolean exits(Connection conn, String table) throws SQLException
+    {
+        String sql = "select count(1) from sqlite_master where type = 'table' and name = '"+table+"'";
+        Statement stat = conn.createStatement();
+
+        ResultSet rs = stat.executeQuery(sql);
+        while (rs.next())
+        {
+            System.out.println(rs.getInt(1));
         }
+
+        return false;
     }
 }

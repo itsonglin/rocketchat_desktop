@@ -243,13 +243,13 @@ public class LoginFrame extends JFrame
 
             task.addRequestParam("username", username.getText());
             task.addRequestParam("password", new String(password.getPassword()));
-            task.execute("https://demo.rocket.chat/api/v1/login");
+            task.execute("https://rc.shls-leasing.com/api/v1/login");
         }
     }
 
     private void processLoginResult(JSONObject ret)
     {
-       /* if (ret.get("status").equals("success"))
+        if (ret.get("status").equals("success"))
         {
             MainFrame frame = new MainFrame();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -262,12 +262,8 @@ public class LoginFrame extends JFrame
         {
             showMessage("用户不存在或密码错误");
             loginButton.setEnabled(true);
-        }*/
+        }
 
-        this.dispose();
-        MainFrame frame = new MainFrame();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
     }
 
     private void showMessage(String message)
