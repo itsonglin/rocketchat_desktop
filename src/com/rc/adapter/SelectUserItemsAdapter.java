@@ -1,17 +1,13 @@
 package com.rc.adapter;
 
 import com.rc.components.Colors;
-import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.entity.ContactsItem;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.CharacterParser;
-import com.rc.utils.FontUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.*;
 import java.util.List;
 
@@ -92,7 +88,7 @@ public class SelectUserItemsAdapter extends BaseAdapter<SelectUserItemViewHolder
         viewHolder.avatar.setIcon(imageIcon);
 
         // 名字
-        viewHolder.roomName.setText(item.getName());
+        viewHolder.username.setText(item.getName());
 
         viewHolder.addMouseListener(mouseListener);
     }

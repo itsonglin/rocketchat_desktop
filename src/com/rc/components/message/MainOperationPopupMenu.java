@@ -39,7 +39,7 @@ public class MainOperationPopupMenu extends JPopupMenu
         ImageIcon icon1 = new ImageIcon(getClass().getResource("/image/chat.png"));
         icon1.setImage(icon1.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         item1.setIcon(icon1);
-        item1.setIconTextGap(10);
+        item1.setIconTextGap(5);
 
 
         item2.setUI(new RCMainOperationMenuItemUI());
@@ -54,7 +54,7 @@ public class MainOperationPopupMenu extends JPopupMenu
         ImageIcon icon2 = new ImageIcon(getClass().getResource("/image/setting.png"));
         icon2.setImage(icon2.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         item2.setIcon(icon2);
-        item2.setIconTextGap(10);
+        item2.setIconTextGap(5);
 
 
         this.add(item1);

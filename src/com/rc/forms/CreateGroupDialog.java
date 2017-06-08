@@ -10,9 +10,11 @@ import com.rc.utils.IconUtil;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.text.html.HTMLDocument;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -32,10 +34,13 @@ public class CreateGroupDialog extends JDialog
     public static final int DIALOG_HEIGHT = 500;
 
     private List<ContactsItem> contactsItemList = new ArrayList<>();
+    private List<ContactsItem> selectedUsersList = new ArrayList<>();
     private SelectUserItemsAdapter selectUserItemsAdapter;
     private SelectedUserItemsAdapter selectedUserItemsAdapter;
     private ImageIcon checkIcon;
     private ImageIcon uncheckIcon;
+    private List<SelectUserItemViewHolder> selectedHolders = new ArrayList<>();
+
 
 
     public CreateGroupDialog(Frame owner, boolean modal)
@@ -51,9 +56,8 @@ public class CreateGroupDialog extends JDialog
     {
         super.paintComponents(g);
 
-        System.out.println("aaa");
         g.setColor(Color.RED);
-        g.drawRect(getX(), getY(), getWidth() - 1,getHeight() - 1);
+        g.drawRect(getX(), getY(), getWidth() - 1, getHeight() - 1);
     }
 
 
@@ -84,24 +88,29 @@ public class CreateGroupDialog extends JDialog
         selectUserListView = new RCListView();
         getContacts();
         selectUserItemsAdapter = new SelectUserItemsAdapter(contactsItemList);
-        selectUserItemsAdapter.setMouseListener(new AbstractMouseListener(){
+        selectUserItemsAdapter.setMouseListener(new AbstractMouseListener()
+        {
             @Override
             public void mouseClicked(MouseEvent e)
             {
                 SelectUserItemViewHolder holder = (SelectUserItemViewHolder) e.getSource();
 
-                if (holder.active)
+                String username = holder.username.getText();
+                if (unSelectUser(username))
                 {
                     holder.icon.setIcon(uncheckIcon);
-                    holder.active = false;
-
-                }else
+                    selectedHolders.remove(holder);
+                }
+                else
                 {
+                    selectUser(username);
                     holder.icon.setIcon(checkIcon);
-                    holder.active = true;
+                    selectedHolders.add(holder);
                 }
 
-                System.out.println(holder.roomName.getText());
+
+
+
             }
         });
         selectUserListView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
@@ -109,12 +118,30 @@ public class CreateGroupDialog extends JDialog
 
         // 已选中用户列表
         selectedUserListView = new RCListView();
-        selectedUserItemsAdapter = new SelectedUserItemsAdapter(contactsItemList);
+        selectedUserItemsAdapter = new SelectedUserItemsAdapter(selectedUsersList);
+        selectedUserItemsAdapter.setItemRemoveListener(new SelectedUserItemsAdapter.ItemRemoveListener()
+        {
+            @Override
+            public void onRemove(String username)
+            {
+                if (unSelectUser(username))
+                {
+                    for (SelectUserItemViewHolder holder : selectedHolders)
+                    {
+                        if (holder.username.getText().equals(username))
+                        {
+                            holder.icon.setIcon(uncheckIcon);
+                            break;
+                        }
+                    }
+                }
+            }
+        });
         selectedUserListView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
         selectedUserListView.setAdapter(selectedUserItemsAdapter);
 
 
-       // 按钮组
+        // 按钮组
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
 
@@ -125,9 +152,11 @@ public class CreateGroupDialog extends JDialog
         okButton.setBackground(Colors.PROGRESS_BAR_START);
     }
 
+
     private void setListeners()
     {
-        cancelButton.addMouseListener(new AbstractMouseListener(){
+        cancelButton.addMouseListener(new AbstractMouseListener()
+        {
             @Override
             public void mouseClicked(MouseEvent e)
             {
@@ -149,7 +178,7 @@ public class CreateGroupDialog extends JDialog
 
 
         leftPanel.setLayout(new GridBagLayout());
-        leftPanel.add(selectUserListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0,0,5,0));
+        leftPanel.add(selectUserListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0, 0, 5, 0));
 
 
         buttonPanel.add(cancelButton, new GBC(0, 0).setWeight(1, 1));
@@ -157,7 +186,7 @@ public class CreateGroupDialog extends JDialog
 
         rightPanel.setLayout(new GridBagLayout());
         rightPanel.add(selectedUserListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 60));
-        rightPanel.add(buttonPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(5, 0,0,0));
+        rightPanel.add(buttonPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(5, 0, 0, 0));
 
 
         //leftPanel.add(selectUserListView);
@@ -192,5 +221,46 @@ public class CreateGroupDialog extends JDialog
             contactsItem.setName("User " + i);
             contactsItemList.add(contactsItem);
         }
+    }
+
+    /**
+     * 选择一位用户
+     *
+     * @param username
+     */
+    private void selectUser(String username)
+    {
+        for (ContactsItem item : contactsItemList)
+        {
+            if (item.getName().equals(username))
+            {
+                selectedUsersList.add(item);
+                selectedUserListView.notifyDataSetChange();
+
+            }
+        }
+    }
+
+    private boolean unSelectUser(String username)
+    {
+        Iterator<ContactsItem> itemIterator = selectedUsersList.iterator();
+        boolean dataChanged = false;
+        while (itemIterator.hasNext())
+        {
+            ContactsItem item = itemIterator.next();
+            if (item.getName().equals(username))
+            {
+                dataChanged = true;
+                itemIterator.remove();
+                break;
+            }
+        }
+
+        if (dataChanged)
+        {
+            selectedUserListView.notifyDataSetChange();
+        }
+
+        return dataChanged;
     }
 }

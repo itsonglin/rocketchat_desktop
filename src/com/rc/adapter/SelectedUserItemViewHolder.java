@@ -13,13 +13,14 @@ import java.awt.*;
 /**
  * Created by song on 17-5-30.
  */
-public class SelectUserItemViewHolder extends ViewHolder
+public class SelectedUserItemViewHolder extends ViewHolder
 {
     public JLabel avatar = new JLabel();
     public JLabel username = new JLabel();
     public JLabel icon = new JLabel();
+    public boolean active = false;
 
-    public SelectUserItemViewHolder()
+    public SelectedUserItemViewHolder()
     {
         initComponents();
         initView();
@@ -36,16 +37,16 @@ public class SelectUserItemViewHolder extends ViewHolder
         username.setFont(FontUtil.getDefaultFont(13));
         username.setForeground(Colors.FONT_BLACK);
 
-        icon.setIcon(IconUtil.getIcon(this, "/image/uncheck.png"));
+        icon.setIcon(IconUtil.getIcon(this, "/image/remove.png", 18, 18));
 
         setLayout(new GridBagLayout());
-        add(avatar, new GBC(0, 0).setWeight(1, 1).setFill(GBC.BOTH).setInsets(0,5,0,0));
+        add(avatar, new GBC(0, 0).setWeight(1, 1).setFill(GBC.BOTH).setInsets(0, 5, 0, 0));
         add(username, new GBC(1, 0).setWeight(20, 1).setFill(GBC.BOTH));
         add(icon, new GBC(2, 0).setWeight(1, 1).setFill(GBC.BOTH));
     }
 
     private void initView()
     {
-        
+
     }
 }

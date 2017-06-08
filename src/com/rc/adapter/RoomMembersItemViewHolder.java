@@ -38,7 +38,7 @@ public class RoomMembersItemViewHolder extends ViewHolder
 
         /*setLayout(new GridBagLayout());
         add(avatar, new GBC(0, 0).setWeight(1, 1).setFill(GBC.BOTH).setInsets(0,5,0,0).setAnchor(GBC.CENTER));
-        add(roomName, new GBC(1, 0).setWeight(10, 1).setFill(GBC.BOTH).setInsets(0,0,0,5));*/
+        add(username, new GBC(1, 0).setWeight(10, 1).setFill(GBC.BOTH).setInsets(0,0,0,5));*/
 
         setLayout(new FlowLayout(FlowLayout.LEFT, 10, 6));
         JPanel avatarPanel = new JPanel();

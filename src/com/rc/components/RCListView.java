@@ -170,6 +170,8 @@ public class RCListView extends JScrollPane
     public void notifyDataSetChange()
     {
         contentPanel.removeAll();
+        repaint();
         fillComponents();
+        contentPanel.revalidate();
     }
 }

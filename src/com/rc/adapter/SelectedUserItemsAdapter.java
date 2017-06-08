@@ -1,25 +1,24 @@
 package com.rc.adapter;
 
-import com.rc.components.Colors;
-import com.rc.components.RCBorder;
 import com.rc.entity.ContactsItem;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.CharacterParser;
+import com.rc.utils.IconUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseEvent;
 import java.util.*;
 import java.util.List;
 
 /**
  * Created by song on 17-5-30.
  */
-public class SelectedUserItemsAdapter extends BaseAdapter<SelectUserItemViewHolder>
+public class SelectedUserItemsAdapter extends BaseAdapter<SelectedUserItemViewHolder>
 {
     private List<ContactsItem> contactsItems;
-    private List<SelectUserItemViewHolder> viewHolders = new ArrayList<>();
     Map<Integer, String> positionMap = new HashMap<>();
-    private AbstractMouseListener mouseListener;
+    private ItemRemoveListener itemRemoveListener;
 
     public SelectedUserItemsAdapter(List<ContactsItem> contactsItems)
     {
@@ -38,15 +37,15 @@ public class SelectedUserItemsAdapter extends BaseAdapter<SelectUserItemViewHold
     }
 
     @Override
-    public SelectUserItemViewHolder onCreateViewHolder(int viewType)
+    public SelectedUserItemViewHolder onCreateViewHolder(int viewType)
     {
-        return new SelectUserItemViewHolder();
+        return new SelectedUserItemViewHolder();
     }
 
     @Override
-    public void onBindViewHolder(SelectUserItemViewHolder viewHolder, int position)
+    public void onBindViewHolder(SelectedUserItemViewHolder viewHolder, int position)
     {
-        viewHolders.add(position, viewHolder);
+
         ContactsItem item = contactsItems.get(position);
 
         // 头像
@@ -55,9 +54,23 @@ public class SelectedUserItemsAdapter extends BaseAdapter<SelectUserItemViewHold
         viewHolder.avatar.setIcon(imageIcon);
 
         // 名字
-        viewHolder.roomName.setText(item.getName());
+        viewHolder.username.setText(item.getName());
 
-        viewHolder.addMouseListener(mouseListener);
+        /*viewHolder.icon.setIcon(IconUtil.getIcon(this, "/image/remove.png", 18, 18));
+        viewHolder.icon.setToolTipText("移除");*/
+
+        viewHolder.icon.addMouseListener(new AbstractMouseListener()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                if (itemRemoveListener != null)
+                {
+                    itemRemoveListener.onRemove(viewHolder.username.getText());
+                }
+                super.mouseClicked(e);
+            }
+        });
     }
 
 
@@ -80,9 +93,15 @@ public class SelectedUserItemsAdapter extends BaseAdapter<SelectUserItemViewHold
         }
     }
 
-    public void setMouseListener(AbstractMouseListener mouseListener)
+    public void setItemRemoveListener(ItemRemoveListener itemRemoveListener)
     {
-
-        this.mouseListener = mouseListener;
+        this.itemRemoveListener = itemRemoveListener;
     }
+
+
+    public interface ItemRemoveListener
+    {
+        void onRemove(String username);
+    }
+
 }
