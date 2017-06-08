@@ -14,8 +14,8 @@ import java.awt.event.*;
  */
 public class MainFrame extends JFrame
 {
-    private int DEFAULT_WIDTH = 900;
-    private int DEFAULT_HEIGHT = 650;
+    public static int DEFAULT_WIDTH = 900;
+    public static int DEFAULT_HEIGHT = 650;
 
     public int currentWindowWidth = DEFAULT_WIDTH;
     public int currentWindowHeight = DEFAULT_HEIGHT;
@@ -73,6 +73,7 @@ public class MainFrame extends JFrame
             setUndecorated(true);
         }
 
+        getRootPane().setWindowDecorationStyle(JRootPane.NONE );//使frame只剩下标题栏
         addListener();
 
         add(leftPanel, BorderLayout.WEST);
@@ -104,6 +105,18 @@ public class MainFrame extends JFrame
                     // 当鼠标按下的时候获得窗口当前的位置
                     origin.x = e.getX();
                     origin.y = e.getY();
+                }
+            });
+
+            addMouseMotionListener(new MouseMotionAdapter()
+            {
+                public void mouseDragged(MouseEvent e)
+                {
+                    // 当鼠标拖动时获取窗口当前位置
+                    Point p = MainFrame.this.getLocation();
+                    // 设置窗口的位置
+                    MainFrame.this.setLocation(p.x + e.getX() - origin.x, p.y + e.getY()
+                            - origin.y);
                 }
             });
         }
