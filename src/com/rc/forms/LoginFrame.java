@@ -3,14 +3,17 @@ package com.rc.forms;
 import com.rc.components.*;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.FontUtil;
+import com.rc.utils.HttpUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.OSUtil;
+import org.json.JSONObject;
+import tasks.HttpGetTask;
+import tasks.HttpPostTask;
+import tasks.HttpResponseListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 
 /**
  * Created by song on 08/06/2017.
@@ -175,6 +178,105 @@ public class LoginFrame extends JFrame
                 }
             });
         }
+
+        loginButton.addMouseListener(new AbstractMouseListener()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                super.mouseClicked(e);
+                doLogin();
+            }
+        });
+
+        KeyListener keyListener = new KeyListener()
+        {
+            @Override
+            public void keyTyped(KeyEvent e)
+            {
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e)
+            {
+                if (e.getKeyCode() == KeyEvent.VK_ENTER)
+                {
+                    doLogin();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e)
+            {
+
+            }
+        };
+        username.addKeyListener(keyListener);
+        password.addKeyListener(keyListener);
     }
 
+    private void doLogin()
+    {
+        String name = username.getText();
+        String pwd = new String(password.getPassword());
+
+        if (name == null || name.isEmpty())
+        {
+            showMessage("请输入用户，注意首字母可能为大写");
+        }
+        else if (pwd == null || pwd.isEmpty())
+        {
+            showMessage("请输入密码");
+        }
+        else
+        {
+            loginButton.setEnabled(false);
+            HttpPostTask task = new HttpPostTask();
+            task.setListener(new HttpResponseListener()
+            {
+                @Override
+                public void onResult(JSONObject ret)
+                {
+                    processLoginResult(ret);
+                }
+            });
+
+            task.addRequestParam("username", username.getText());
+            task.addRequestParam("password", new String(password.getPassword()));
+            task.execute("https://demo.rocket.chat/api/v1/login");
+        }
+    }
+
+    private void processLoginResult(JSONObject ret)
+    {
+       /* if (ret.get("status").equals("success"))
+        {
+            MainFrame frame = new MainFrame();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setVisible(true);
+
+
+            this.dispose();
+        }
+        else
+        {
+            showMessage("用户不存在或密码错误");
+            loginButton.setEnabled(true);
+        }*/
+
+        this.dispose();
+        MainFrame frame = new MainFrame();
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
+    private void showMessage(String message)
+    {
+        if (!statusLabel.isVisible())
+        {
+            statusLabel.setVisible(true);
+        }
+
+        statusLabel.setText(message);
+    }
 }
