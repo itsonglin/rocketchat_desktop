@@ -16,7 +16,7 @@ public class HttpGetTask extends HttpTask
             @Override
             public void run()
             {
-                String ret = HttpUtil.get(url, requestParams, requestParams);
+                String ret = HttpUtil.get(url, headers, requestParams);
                 JSONObject retJson = new JSONObject(ret);
                 if (listener != null)
                 {

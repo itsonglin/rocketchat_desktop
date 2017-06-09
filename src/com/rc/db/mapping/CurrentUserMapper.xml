@@ -10,12 +10,16 @@
 
 
 	<select id="findById" resultType="CurrentUser">
-		SELECT * FROM current_user where userId = #{userId}
+		SELECT * FROM current_user where userId = #{id}
 	</select>
 
 	<select id="findAll" resultType="CurrentUser">
 		SELECT * FROM current_user
 	</select>
+
+    <select id="find" resultType="CurrentUser" statementType="STATEMENT" parameterType="map">
+        SELECT * FROM current_user where ${field} = ${val}
+    </select>
 
 	<select id="count" resultType="java.lang.Integer">
 		SELECT count(1) FROM current_user
@@ -46,7 +50,7 @@
 	</update>
 
 	<update id="updateIgnoreNull">
-		UPDATE tb_article
+		UPDATE current_user
 		<set>
 			<if test="userId!= null">userId=#{userId},</if>
 			<if test="username!= null">username=#{username},</if>

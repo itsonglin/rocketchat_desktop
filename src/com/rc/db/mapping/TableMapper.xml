@@ -10,6 +10,14 @@
 		avatarOrigin varchar(1024));
 	</update>
 
+	<update id="createRoomTable">
+		create table room(roomId varchar(20) PRIMARY KEY, type varchar(10),
+		name varchar(64),topic varchar(64),muted varchar(20),
+		member varchar(10240),sysMes BOOLEAN ,msgSum INTEGER,
+		lastChatAt INTEGER, creatorName varchar(64), creatorId varchar(20), jitsiTimeout varchar(20), readOnly BOOLEAN,
+		archived BOOLEAN, defaultRoom BOOLEAN, createdAt varchar(20), updatedAt varchar(20), unreadCount INTEGER, totalReadCount INTEGER, lastMessage varchar(1024));
+	</update>
+
 	<select id="tableExist" resultType="java.lang.Integer">
 		select count(1) from sqlite_master where type = 'table' and name = #{name}
 	</select>

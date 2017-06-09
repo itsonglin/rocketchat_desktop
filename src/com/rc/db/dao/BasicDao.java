@@ -4,7 +4,9 @@ import com.rc.db.model.BasicModel;
 import com.rc.db.model.CurrentUser;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by song on 08/06/2017.
@@ -33,6 +35,23 @@ public abstract  class BasicDao
         return (BasicModel) session.selectOne("findById", id);
     }
 
+    public List find(String field, Object val)
+    {
+        Map map = new HashMap();
+        map.put("field", field);
+
+        if (val instanceof String)
+        {
+            map.put("val", "'" + val + "'");
+        }
+        else
+        {
+            map.put("val", val);
+        }
+
+        return session.selectList("find", map);
+    }
+
     public int delete(String id)
     {
         return session.delete("delete", id);
@@ -58,8 +77,9 @@ public abstract  class BasicDao
         return (int) session.selectOne("count");
     }
 
-    public boolean exist(String userId)
+    public boolean exist(String id)
     {
-        return ((int)(session.selectOne("exist", userId))) > 0;
+        return ((int)(session.selectOne("exist", id))) > 0;
     }
+
 }

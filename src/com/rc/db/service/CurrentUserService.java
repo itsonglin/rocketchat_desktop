@@ -23,8 +23,6 @@ public class CurrentUserService extends BasicService<CurrentUserDao, CurrentUser
     {
         if (exist(currentUser.getUserId()))
         {
-            CurrentUser user = findById(currentUser.getUserId());
-            System.out.println(user);
             return update(currentUser);
         }else
         {

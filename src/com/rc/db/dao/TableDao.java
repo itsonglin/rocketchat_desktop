@@ -21,4 +21,9 @@ public class TableDao extends BasicDao
     {
         return ((int) session.selectOne("tableExist", name)) > 0;
     }
+
+    public void createRoomTable()
+    {
+        session.update("createRoomTable");
+    }
 }

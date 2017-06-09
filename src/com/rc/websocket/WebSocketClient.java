@@ -3,16 +3,23 @@ package com.rc.websocket;
 import com.neovisionaries.ws.client.*;
 import com.rc.app.Launcher;
 import com.rc.db.model.CurrentUser;
+import com.rc.db.model.Room;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.RoomService;
 import com.rc.websocket.handler.WebSocketListenerAdapter;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import sun.security.krb5.Realm;
+import tasks.HttpGetTask;
+import tasks.HttpResponseListener;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -370,13 +377,13 @@ public class WebSocketClient
                 String token = result.getString("token");
                 long tokenExpires = result.getJSONObject("tokenExpires").getLong("$date");
 
-                currentUser = currentUserService.findAll().get(0);
+                //currentUser = currentUserService.findAll().get(0);
                 currentUser.setAuthToken(token);
                 currentUser.setExpireDate(tokenExpires + "");
                 currentUserService.update(currentUser);
 
                 // 更新Rooms列表
-                //updateRoomList();
+                updateRoomList();
 
                 // 更新通讯录
                 //updateContacts();
@@ -390,6 +397,163 @@ public class WebSocketClient
                 e.printStackTrace();
             }
         }
+    }
+
+    private void updateRoomList()
+    {
+        getRooms("channels");
+        getRooms("groups");
+        getRooms("ims");
+    }
+
+    /**
+     * 更新Rooms列表
+     */
+    private void getRooms(final String type)
+    {
+        String api = "";
+        String roomType = "";
+        if (type.equals("channels"))
+        {
+            api = "channels.list.joined.base";
+            roomType = "c";
+        }
+        else if (type.equals("groups"))
+        {
+            api = "groups.list.base";
+            roomType = "p";
+        }
+        else if (type.equals("ims"))
+        {
+            api = "im.list.base";
+            roomType = "d";
+        }
+        else
+        {
+            throw new RuntimeException("Room 类型" + type + "不存在");
+        }
+
+        //final Realm realm = Realm.getDefaultInstance();
+        final String currentUsername = currentUser.getUsername();
+        HttpGetTask task = new HttpGetTask();
+        task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+        task.addHeader("X-User-Id", currentUser.getUserId());
+        final String finalRoomType = roomType;
+        task.setListener(new HttpResponseListener()
+        {
+            @Override
+            public void onResult(JSONObject retJson)
+            {
+                try
+                {
+                    JSONArray objArray = retJson.getJSONArray(type);
+                    List<String> newlyRoomIds = new ArrayList<>();
+                    if (objArray != null)
+                    {
+                        for (int i = 0; i < objArray.length(); i++)
+                        {
+                            JSONObject obj = objArray.getJSONObject(i);
+
+                            Room room = new Room();
+                            if (!obj.has("_id"))
+                            {
+                                continue;
+                            }
+                            newlyRoomIds.add(obj.getString("_id"));
+                            room.setRoomId(obj.getString("_id"));
+                            if (obj.has("ro"))
+                            {
+                                room.setReadOnly(obj.getBoolean("ro"));
+
+                                if (obj.has("muted"))
+                                {
+                                    JSONArray mutedUser = obj.getJSONArray("muted");
+                                    if (mutedUser.length() > 0)
+                                    {
+                                        String str = mutedUser.join(",");
+                                        room.setMuted(str);
+                                    }
+                                }
+                            }
+                            if (obj.has("name"))
+                            {
+                                room.setName(obj.getString("name"));
+                            }
+                            room.setUpdatedAt(obj.getString("_updatedAt"));
+
+                            if (obj.has("u"))
+                            {
+                                room.setCreatorId(obj.getJSONObject("u").getString("_id"));
+                                room.setCreatorName(obj.getJSONObject("u").getString("username"));
+                            }
+                            if (obj.has("usernames"))
+                            {
+                                JSONArray usernameArr = obj.getJSONArray("usernames");
+                                if (usernameArr.get(0).equals(currentUsername))
+                                {
+                                    room.setName(usernameArr.get(1).toString());
+                                }
+                                else
+                                {
+                                    room.setName(usernameArr.get(0).toString());
+                                }
+                            }
+                            room.setType(finalRoomType);
+
+                            //Realm r = Realm.getDefaultInstance();
+                            //Room oldRoom = roomService.findById(r, room.getRoomId());
+                            /*Room oldRoom = roomService.findById(room.getRoomId());
+                            if (oldRoom != null)
+                            {
+                                room.setMsgSum(oldRoom.getMsgSum());
+                                room.setUnreadCount(oldRoom.getUnreadCount());
+                                room.setMember(oldRoom.getMember());
+                                room.setCreatorName(oldRoom.getCreatorName());
+                                room.setLastChatAt(oldRoom.getLastChatAt());
+
+                                if (oldRoom.getTotalReadCount() < 0)
+                                {
+                                    System.out.println("oldRoom.getTotalReadCount()" + oldRoom.getTotalReadCount());
+                                }
+                                room.setTotalReadCount(oldRoom.getTotalReadCount());
+                            }*/
+
+                           // roomService.insertOrUpdate(room);
+                        }
+                    }
+
+                    // 删除已删除的room
+                    //Realm realm1 = Realm.getDefaultInstance();
+                    /*List<Room> dbRooms = roomService.find("type", finalRoomType);
+                    for (Room r : dbRooms)
+                    {
+                        if (!newlyRoomIds.contains(r.getRoomId()))
+                        {
+                            roomService.delete(r.getRoomId());
+                        }
+                    }*/
+
+
+                    System.out.println(roomService.findAll());
+                    // 订阅Rooms相关消息
+                    //sendSubscriptionRoomMessage(finalRoomType);
+                    // 获取每个房间的未读消息数以及最后一条消息
+                    //loadUnreadCountAndLastMessage(finalRoomType);
+
+
+                    //lastUpdateService.update(Realm.getDefaultInstance());
+                    //Log.i(TAG_NAME, "当前更新时间:" + lastUpdateService.find(Realm.getDefaultInstance()));
+                    // 通知UI更新Rooms列表
+                    //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_UPDATE_ROOM_ITEMS);
+
+                } catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        task.execute(hostname + "/api/v1/" + api);
     }
 
     // 判断新接收到的消息中是否有“error”键值

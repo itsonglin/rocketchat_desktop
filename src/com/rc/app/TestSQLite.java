@@ -27,6 +27,11 @@ public class TestSQLite
             System.out.println("创建表 current_user");
             tableService.createCurrentUserTable();
         }
+        if (!tableService.exist("room"))
+        {
+            System.out.println("创建表 room");
+            tableService.createRoomTable();
+        }
 
         //CurrentUser currentUser = new CurrentUser("3", "3", "3", "3", "3", "3", "3", "3", "3");
         //CurrentUserService currentUserService = new CurrentUserService(session);

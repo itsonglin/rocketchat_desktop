@@ -6,6 +6,7 @@ import com.rc.db.model.CurrentUser;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by song on 09/06/2017.
@@ -32,6 +33,11 @@ public class BasicService<T extends BasicDao, E extends BasicModel>
     public E findById(String id)
     {
         return (E) dao.findById(id);
+    }
+
+    public List<E> find(String field, Object val)
+    {
+        return dao.find(field, val);
     }
 
     public int delete(String id)

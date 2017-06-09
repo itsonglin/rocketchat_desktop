@@ -24,4 +24,9 @@ public class TableService
     {
         return dao.exist(name);
     }
+
+    public void createRoomTable()
+    {
+        dao.createRoomTable();
+    }
 }
