@@ -17,8 +17,8 @@ public class TableDao extends BasicDao
         session.update("createCurrentUserTable");
     }
 
-    public int exist(String name)
+    public boolean exist(String name)
     {
-        return (int) session.selectOne("tableExist", name);
+        return ((int) session.selectOne("tableExist", name)) > 0;
     }
 }

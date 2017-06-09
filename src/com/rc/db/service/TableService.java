@@ -22,6 +22,6 @@ public class TableService
 
     public boolean exist(String name)
     {
-        return dao.exist(name) > 0;
+        return dao.exist(name);
     }
 }

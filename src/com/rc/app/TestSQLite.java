@@ -22,21 +22,25 @@ public class TestSQLite
         SqlSession session = DbUtils.getSqlSession();
 
         TableService tableService = new TableService(session);
-        System.out.println("表是否存在 ：" + tableService.exist("current_user"));
-        //tableService.createCurrentUserTable();
+        if (!tableService.exist("current_user"))
+        {
+            System.out.println("创建表 current_user");
+            tableService.createCurrentUserTable();
+        }
 
-        CurrentUser currentUser = new CurrentUser("3", "3", "3", "3", "3", "3", "3", "3", "3");
-        CurrentUserService currentUserService = new CurrentUserService(session);
+        //CurrentUser currentUser = new CurrentUser("3", "3", "3", "3", "3", "3", "3", "3", "3");
+        //CurrentUserService currentUserService = new CurrentUserService(session);
         //currentUserService.insert(currentUser);
         //System.out.println(currentUserService.findAll());
+
+
+
 
         /*try
         {
             //连接SQLite的JDBC
 
             Class.forName("org.sqlite.JDBC");
-
-            //建立一个数据库名zieckey.db的连接，如果不存在就在当前目录下创建之
 
             Connection conn = DriverManager.getConnection("jdbc:sqlite:rocketchat.db");
 

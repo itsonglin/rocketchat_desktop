@@ -8,9 +8,58 @@
 		VALUES (#{userId},#{username},#{authToken},#{password},#{rawPassword},#{expireDate},#{realName},#{bcrypt},#{avatarOrigin})
 	</insert>
 
+
+	<select id="findById" resultType="CurrentUser">
+		SELECT * FROM current_user where userId = #{userId}
+	</select>
+
 	<select id="findAll" resultType="CurrentUser">
 		SELECT * FROM current_user
 	</select>
+
+	<select id="count" resultType="java.lang.Integer">
+		SELECT count(1) FROM current_user
+	</select>
+
+	<select id="exist" resultType="java.lang.Integer">
+		SELECT count(1) FROM current_user where userId = #{userId}
+	</select>
+
+	<delete id="deleteAll">
+		delete from current_user
+	</delete>
+
+	<update id="update">
+		UPDATE current_user
+		<set>
+			userId=#{userId},
+			username=#{username},
+			authToken=#{authToken},
+			password=#{password},
+			rawPassword=#{rawPassword},
+			expireDate=#{expireDate},
+			realName=#{realName},
+			bcrypt=#{bcrypt},
+			avatarOrigin=#{avatarOrigin},
+		</set>
+		WHERE userId=#{userId}
+	</update>
+
+	<update id="updateIgnoreNull">
+		UPDATE tb_article
+		<set>
+			<if test="userId!= null">userId=#{userId},</if>
+			<if test="username!= null">username=#{username},</if>
+			<if test="authToken!= null">authToken=#{authToken},</if>
+			<if test="password!= null">password=#{password},</if>
+			<if test="rawPassword!= null">rawPassword=#{rawPassword},</if>
+			<if test="expireDate!= null">expireDate=#{expireDate},</if>
+			<if test="realName!= null">realName=#{realName},</if>
+			<if test="bcrypt!= null">bcrypt=#{bcrypt},</if>
+			<if test="avatarOrigin!= null">avatarOrigin=#{avatarOrigin},</if>
+		</set>
+		WHERE userId=#{userId}
+	</update>
 </mapper>
 
 

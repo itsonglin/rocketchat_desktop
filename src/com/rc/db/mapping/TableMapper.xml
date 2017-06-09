@@ -4,7 +4,7 @@
 	"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="com.rc.db.dao.TableDao">
 	<update id="createCurrentUserTable">
-		create table current_user(userId varchar(20), username varchar(20),
+		create table current_user(userId varchar(20) PRIMARY KEY, username varchar(20),
 		authToken varchar(64),password varchar(20),rawPassword varchar(64),
 		expireDate varchar(20),realName varchar(20),bcrypt varchar(64),
 		avatarOrigin varchar(1024));

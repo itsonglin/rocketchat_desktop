@@ -11,24 +11,11 @@ import java.util.List;
 /**
  * Created by song on 08/06/2017.
  */
-public class CurrentUserService
+public class CurrentUserService extends BasicService<CurrentUserDao>
 {
-    private CurrentUserDao dao;
-
     public CurrentUserService(SqlSession session)
     {
         dao = new CurrentUserDao(session);
+        super.setDao(dao);
     }
-
-    public int insert(CurrentUser user)
-    {
-        return dao.insert(user);
-    }
-
-    public List<CurrentUser> findAll()
-    {
-        return dao.findAll();
-    }
-
-
 }

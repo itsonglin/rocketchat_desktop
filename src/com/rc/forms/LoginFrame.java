@@ -1,11 +1,11 @@
 package com.rc.forms;
 
 import com.rc.components.*;
+import com.rc.db.model.CurrentUser;
+import com.rc.db.service.CurrentUserService;
 import com.rc.listener.AbstractMouseListener;
-import com.rc.utils.FontUtil;
-import com.rc.utils.HttpUtil;
-import com.rc.utils.IconUtil;
-import com.rc.utils.OSUtil;
+import com.rc.utils.*;
+import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import tasks.HttpGetTask;
 import tasks.HttpPostTask;
@@ -33,16 +33,25 @@ public class LoginFrame extends JFrame
     private JLabel statusLabel;
     private JLabel titleLabel;
 
-
     private static Point origin = new Point();
+
+    private SqlSession sqlSession;
+    private CurrentUserService currentUserService ;
 
 
     public LoginFrame()
     {
+        initService();
         initComponents();
         initView();
         centerScreen();
         setListeners();
+    }
+
+    private void initService()
+    {
+        sqlSession = DbUtils.getSqlSession();
+        currentUserService = new CurrentUserService(sqlSession);
     }
 
 
@@ -267,8 +276,19 @@ public class LoginFrame extends JFrame
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setVisible(true);
 
+            JSONObject data = ret.getJSONObject("data");
+            String authToken = data.getString("authToken");
+            String userId = data.getString("userId");
+
+            CurrentUser currentUser = new CurrentUser();
+            currentUser.setUserId(userId);
+            currentUser.setAuthToken(authToken);
+            currentUser.setRawPassword(new String(password.getPassword()));
+            currentUser.setUsername(username.getText());
+            currentUserService.insertOrUpdate(currentUser);
 
             this.dispose();
+            sqlSession.close();
         }
         else
         {
