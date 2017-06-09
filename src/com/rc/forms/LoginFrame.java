@@ -285,13 +285,11 @@ public class LoginFrame extends JFrame
             currentUser.setUserId(userId);
             currentUser.setAuthToken(authToken);
             currentUser.setRawPassword(new String(password.getPassword()));
+            currentUser.setPassword(PasswordUtil.encryptPassword(currentUser.getRawPassword()));
             currentUser.setUsername(username.getText());
             currentUserService.insertOrUpdate(currentUser);
 
             this.dispose();
-            sqlSession.close();
-
-            WebSocketClient webSocketClient = new WebSocketClient();
         }
         else
         {

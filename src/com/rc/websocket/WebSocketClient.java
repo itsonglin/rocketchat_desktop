@@ -1,7 +1,14 @@
 package com.rc.websocket;
 
 import com.neovisionaries.ws.client.*;
+import com.rc.app.Launcher;
+import com.rc.db.model.CurrentUser;
+import com.rc.db.service.CurrentUserService;
+import com.rc.db.service.RoomService;
 import com.rc.websocket.handler.WebSocketListenerAdapter;
+import org.apache.log4j.Logger;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
@@ -14,17 +21,78 @@ import java.util.Map;
  */
 public class WebSocketClient
 {
-    String hostname = "https://rc.shls-leasing.com";
+
+    public static String ConnectionStatus = "disconnected";
+    public static long LAST_PING_PONG_TIME; // 上次发送ping或pong消息的时间
+    public static long LAST_RECONNECT_TIME; // 上次重新连接的时间
+    public static long TIMESTAMP_ONE_MINUTES = 1000 * 60;
+
+    private static final String METHOD_LOGIN_ID = "100";
+    private static final String METHOD_RESUME_LOGIN_ID = "101";
+    private int LOGIN_RETRIES = 0;
+    private static boolean sentPingMessage = false;
+
+
     private WebSocket webSocket;
-    public String ConnectionStatus;
-    private int LAST_RECONNECT_TIME;
+    private SubscriptionHelper subscriptionHelper;
+    private String hostname = "https://rc.shls-leasing.com";
+    private Logger logger;
+    private CurrentUserService currentUserService = Launcher.currentUserService;
+    private RoomService roomService = Launcher.roomService;
+    private CurrentUser currentUser;
+    private String currentUserId;
+
 
     public WebSocketClient()
     {
-        prepareWebSocket();
-        webSocket.connectAsynchronously();
+        logger = Logger.getLogger(this.getClass());
     }
 
+    public void startClient()
+    {
+        startWebSocketClient();
+    }
+
+    private void startWebSocketClient()
+    {
+        if (System.currentTimeMillis() - LAST_RECONNECT_TIME < TIMESTAMP_ONE_MINUTES / 2)
+        {
+            logger.debug("两次发送 重新连接 请求的时间间隔小于30秒，放弃连接");
+            //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_ABANDON_CONNECTION);
+            return;
+        }
+
+        if (ConnectionStatus.equals("disconnected"))
+        {
+            if (webSocket != null)
+            {
+                webSocket.disconnect();
+            }
+
+            ConnectionStatus = "connecting";
+            logger.debug("*************重新连接*****************");
+            prepareWebSocket();
+            webSocket.connectAsynchronously();
+            if (subscriptionHelper != null)
+            {
+                subscriptionHelper.setWebSocket(webSocket);
+            }
+            else
+            {
+                subscriptionHelper = new SubscriptionHelper(webSocket);
+            }
+
+            LAST_RECONNECT_TIME = System.currentTimeMillis();
+        }
+        else
+        {
+            logger.debug("*************ConnectionStatus不等于disconnected， 放弃重新连接*****************");
+        }
+    }
+
+    /**
+     * 初始化WebSocket客户端
+     */
     private void prepareWebSocket()
     {
         WebSocketFactory webSocketFactory = new WebSocketFactory();
@@ -33,7 +101,8 @@ public class WebSocketClient
         try
         {
             context = NaiveSSLContext.getInstance("TLS");
-        } catch (NoSuchAlgorithmException e)
+        }
+        catch (NoSuchAlgorithmException e)
         {
             e.printStackTrace();
         }
@@ -59,7 +128,7 @@ public class WebSocketClient
                         {
                             System.out.println("+++++++onConnected: ");
 
-                            //subscriptionHelper.sendConnectRequest();
+                            subscriptionHelper.sendConnectRequest();
                         }
 
 
@@ -105,15 +174,227 @@ public class WebSocketClient
                         @Override
                         public void onTextMessage(WebSocket websocket, String text) throws Exception
                         {
-                           // handleMessage(text);
-                            System.out.println(text);
+                            handleMessage(text);
+                            //System.out.println(text);
                         }
                     });
 
 
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 处理新消息路由
+     *
+     * @param text
+     */
+    private void handleMessage(String text)
+    {
+        //Log.d("收到消息", text);
+
+        try
+        {
+            JSONObject jsonText = new JSONObject(text);
+            if (jsonText.has("msg"))
+            {
+                String msg = jsonText.getString("msg");
+
+                // 输出
+                String id = "";
+                if (jsonText.has("id"))
+                {
+                    id = jsonText.getString("id");
+                }
+
+               /* if (!msg.equals("ping") && !msg.equals("updated") && !msg.equals("ready")
+                        && !id.startsWith("SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE"))*/
+                {
+
+                    logger.debug("收到消息  " + text);
+                }
+
+
+                if (msg.equals("ping"))
+                {
+                    subscriptionHelper.sendPongMessage();
+                    LAST_PING_PONG_TIME = System.currentTimeMillis();
+                }
+                else if (msg.equals("connected"))
+                {
+                    //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_CONNECT_SUCCESS);
+                    login();
+                }
+                else if (msg.equals("result"))
+                {
+                    processResultMessage(jsonText);
+                }
+                else if (msg.equals("ready"))
+                {
+                    //processSubscriptionResult(jsonText);
+                }
+                else if (msg.equals("changed"))
+                {
+                    //processChangedMessage(jsonText);
+                }
+                else if (msg.equals("added"))
+                {
+                    //processAddedMessage(jsonText);
+                }
+            }
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    // 发送登录信息
+    private void login()
+    {
+
+        //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_SEND_LOGIN_REQUEST);
+
+        // 获取本地存储的用户信息
+        currentUser = currentUserService.findAll().get(0);
+        if (currentUser != null)
+        {
+            currentUserId = currentUser.getUserId();
+            // 如果之前已登录，且未过期，则恢复登录
+            if (currentUser.getAuthToken() == null || currentUser.getExpireDate() == null || System.currentTimeMillis() >= Long.parseLong(currentUser.getExpireDate()))
+            {
+                subscriptionHelper.sendNewLoginMessage(currentUser.getUsername(), currentUser.getPassword());
+            }
+            else
+            {
+                subscriptionHelper.sendResumeLoginMessage(currentUser.getAuthToken());
+                //subscriptionHelper.sendNewLoginMessage(currentUser.getUsername(), currentUser.getPassword());
+
+            }
+        }
+    }
+
+    /**
+     * 处理“msg”为“result”类型的消息
+     *
+     * @param jsonText
+     */
+    private void processResultMessage(JSONObject jsonText) throws JSONException
+    {
+
+        String msgId = jsonText.getString("id");
+
+        // 登录结果
+        if (msgId.equals(METHOD_LOGIN_ID) || msgId.equals(METHOD_RESUME_LOGIN_ID))
+        {
+            processLoginResult(jsonText);
+        }
+        else if (msgId.startsWith(SubscriptionHelper.SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE))
+        {
+            //processLoadUnreadCountAndLastMessageResult(jsonText);
+        }
+        else if (msgId.equals(SubscriptionHelper.METHOD_UFSCREATE))
+        {
+            //processUsfCreate(jsonText);
+        }
+        else if (msgId.equals(SubscriptionHelper.METHOD_UFSCOMPLETE))
+        {
+            //processUsfComplete(jsonText);
+        }
+        else if (msgId.equals(SubscriptionHelper.METHOD_SEND_CHANGE_PASSWORD_MESSAGE))
+        {
+            //subscriptionHelper.sendLogoutMessage();
+        }
+        else if (msgId.equals(SubscriptionHelper.METHOD_LOGOUT))
+        {
+            /*currentUserService.delete(Realm.getDefaultInstance());
+            contactsUserService.deleteAll(Realm.getDefaultInstance(), ContactsUser.class);
+            roomService.deleteAll(Realm.getDefaultInstance(), Room.class);
+
+            sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_LOGIN);*/
+        }
+        else if (msgId.equals(SubscriptionHelper.METHOD_CHANNELS_LIST))
+        {
+            //processChannelsList(jsonText);
+        }
+    }
+
+    /**
+     * 处理登录请求的返回消息
+     *
+     * @param jsonObject 如果消息中包含“error”键，则需要重新尝试使用新登录的方式发送消息
+     *                   如果无包含“error”表示登录成功，则需要更新本地保存的Token信息
+     */
+    private void processLoginResult(JSONObject jsonObject)
+    {
+        System.out.println("收到登录响应");
+        if (isErrorResult(jsonObject))
+        {
+            if (LOGIN_RETRIES <= 3)
+            {
+                login();
+                LOGIN_RETRIES++;
+            }
+            else
+            {
+                // 重复登录失败，重新连接
+                logger.debug("重复登录失败，需要重新连接");
+                //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_WEBSOCKET_DISCONNECT);
+                //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_LOGIN);
+                //throw new RuntimeException("WebSocket登录次数达到" + LOGIN_RETRIES + ", 登录失败，重新连接");
+            }
+        }
+        else
+        {
+            //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_LOGIN_SUCCESS);
+            try
+            {
+                if (!sentPingMessage)
+                {
+                    subscriptionHelper.sendPingMessage();
+                    sentPingMessage = true;
+                    LAST_PING_PONG_TIME = System.currentTimeMillis();
+                    System.out.println("##############发送ping消息################");
+                }
+
+                ConnectionStatus = "connected";
+                System.out.println("sendOnLineMessage...");
+                subscriptionHelper.sendOnLineMessage();
+
+                // 更新token以及过期时间
+                JSONObject result = jsonObject.getJSONObject("result");
+                //String userId = result.getString("id");
+                String token = result.getString("token");
+                long tokenExpires = result.getJSONObject("tokenExpires").getLong("$date");
+
+                currentUser = currentUserService.findAll().get(0);
+                currentUser.setAuthToken(token);
+                currentUser.setExpireDate(tokenExpires + "");
+                currentUserService.update(currentUser);
+
+                // 更新Rooms列表
+                //updateRoomList();
+
+                // 更新通讯录
+                //updateContacts();
+
+                // 订阅消息
+                //sendSubscriptionUserMessage();
+
+            }
+            catch (JSONException e)
+            {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // 判断新接收到的消息中是否有“error”键值
+    private boolean isErrorResult(JSONObject jsonObject)
+    {
+        return jsonObject.has("error");
     }
 }

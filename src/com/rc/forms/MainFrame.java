@@ -4,6 +4,7 @@ package com.rc.forms;
 import com.rc.components.GBC;
 import com.rc.utils.FontUtil;
 import com.rc.utils.OSUtil;
+import com.rc.websocket.WebSocketClient;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,10 +32,13 @@ public class MainFrame extends JFrame
         context = this;
         initComponents();
         initView();
+
+        // 连接WebSocket
+        startWebSocket();
+
         test();
-
-
     }
+
 
     public static MainFrame getContext()
     {
@@ -52,8 +56,6 @@ public class MainFrame extends JFrame
         leftPanel.setPreferredSize(new Dimension(250, currentWindowHeight));
 
         rightPanel = new RightPanel();
-
-
     }
 
     private void test()
@@ -131,8 +133,12 @@ public class MainFrame extends JFrame
                 currentWindowHeight = (int) e.getComponent().getBounds().getHeight();
             }
         });
+    }
 
-
+    private void startWebSocket()
+    {
+        WebSocketClient webSocketClient = new WebSocketClient();
+        webSocketClient.startClient();
     }
 }
 
