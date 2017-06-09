@@ -502,7 +502,7 @@ public class WebSocketClient
 
                             //Realm r = Realm.getDefaultInstance();
                             //Room oldRoom = roomService.findById(r, room.getRoomId());
-                            /*Room oldRoom = roomService.findById(room.getRoomId());
+                            Room oldRoom = roomService.findById(room.getRoomId());
                             if (oldRoom != null)
                             {
                                 room.setMsgSum(oldRoom.getMsgSum());
@@ -516,25 +516,27 @@ public class WebSocketClient
                                     System.out.println("oldRoom.getTotalReadCount()" + oldRoom.getTotalReadCount());
                                 }
                                 room.setTotalReadCount(oldRoom.getTotalReadCount());
-                            }*/
+                            }
 
-                           // roomService.insertOrUpdate(room);
+                            roomService.insertOrUpdate(room);
                         }
                     }
 
                     // 删除已删除的room
                     //Realm realm1 = Realm.getDefaultInstance();
-                    /*List<Room> dbRooms = roomService.find("type", finalRoomType);
+                    List<Room> dbRooms = roomService.find("type", finalRoomType);
                     for (Room r : dbRooms)
                     {
                         if (!newlyRoomIds.contains(r.getRoomId()))
                         {
                             roomService.delete(r.getRoomId());
                         }
-                    }*/
+                    }
+
+                   /* List<Room> rooms = roomService.findAll();
+                    System.out.println(rooms);*/
 
 
-                    System.out.println(roomService.findAll());
                     // 订阅Rooms相关消息
                     //sendSubscriptionRoomMessage(finalRoomType);
                     // 获取每个房间的未读消息数以及最后一条消息

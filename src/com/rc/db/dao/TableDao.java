@@ -5,11 +5,13 @@ import org.apache.ibatis.session.SqlSession;
 /**
  * Created by song on 08/06/2017.
  */
-public class TableDao extends BasicDao
+public class TableDao
 {
+    private SqlSession session;
+
     public TableDao(SqlSession session)
     {
-        super(session);
+        this.session = session;
     }
 
     public void createCurrentUserTable()

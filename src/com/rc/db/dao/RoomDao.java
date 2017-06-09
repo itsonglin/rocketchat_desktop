@@ -9,6 +9,6 @@ public class RoomDao extends BasicDao
 {
     public RoomDao(SqlSession session)
     {
-        super(session);
+        super(session, RoomDao.class);
     }
 }

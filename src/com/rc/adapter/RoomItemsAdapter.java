@@ -5,6 +5,7 @@ import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.entity.RoomItem;
 import com.rc.utils.FontUtil;
+import com.rc.utils.TimeUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -43,66 +44,31 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
     {
         viewHolders.add(position, viewHolder);
 
-        //viewHolder.panelItem = new JPanel();
-        viewHolder.setPreferredSize(new Dimension(100, 64));
-        viewHolder.setBackground(Colors.DARK);
-        viewHolder.setBorder(new RCBorder(RCBorder.BOTTOM));
-        viewHolder.setOpaque(true);
-        viewHolder.setForeground(Colors.FONT_WHITE);
-
-        // 头像
-        viewHolder.avatar = new JLabel();
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        imageIcon.setImage(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        viewHolder.avatar.setIcon(imageIcon);
-
-        // 名字
-        viewHolder.roomName = new JLabel();
-        viewHolder.roomName.setText("讨论组");
-        viewHolder.roomName.setFont(FontUtil.getDefaultFont(13));
-        viewHolder.roomName.setForeground(Colors.FONT_WHITE);
+        RoomItem item = roomItems.get(position);
+        viewHolder.roomName.setText(item.getTitle());
 
         // 消息
-        viewHolder.brief = new JLabel();
+        viewHolder.brief.setText(item.getLastMessage());
         viewHolder.brief.setText("这是一条消息");
-        viewHolder.brief.setForeground(Colors.FONT_GRAY);
-        viewHolder.brief.setFont(FontUtil.getDefaultFont(12));
-
-        viewHolder.nameBrief = new JPanel();
-        viewHolder.nameBrief.setLayout(new BorderLayout());
-        viewHolder.nameBrief.setBackground(Colors.DARK);
-        viewHolder.nameBrief.add(viewHolder.roomName, BorderLayout.NORTH);
-        viewHolder.nameBrief.add(viewHolder.brief, BorderLayout.CENTER);
 
         // 时间
-        viewHolder.time = new JLabel();
-        viewHolder.time.setText("14:51");
-        viewHolder.time.setForeground(Colors.FONT_GRAY);
+        viewHolder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        viewHolder.time.setText("星期一 14:30");
+
 
         // 未读消息数
-        viewHolder.unreadCount = new JLabel();
-        viewHolder.unreadCount.setIcon(new ImageIcon(getClass().getResource("/image/count_bg.png")));
-        viewHolder.unreadCount.setPreferredSize(new Dimension(10,10));
-        viewHolder.unreadCount.setForeground(Colors.FONT_WHITE);
-        viewHolder.unreadCount.setText("2");
-        viewHolder.unreadCount.setHorizontalTextPosition(SwingConstants.CENTER);
-        viewHolder.unreadCount.setHorizontalAlignment(SwingConstants.CENTER);
-        viewHolder.unreadCount.setVerticalAlignment(SwingConstants.CENTER);
-        viewHolder.unreadCount.setVerticalTextPosition(SwingConstants.CENTER);
+        if (item.getUnreadCount() > 0)
+        {
+            viewHolder.unreadCount.setVisible(true);
+            viewHolder.unreadCount.setText(item.getUnreadCount() + "");
+        }
+        else
+        {
+            viewHolder.unreadCount.setVisible(false);
+        }
+        viewHolder.unreadCount.setVisible(true);
+        viewHolder.unreadCount.setText(item.getUnreadCount() + "1");
 
-
-        viewHolder.timeUnread = new JPanel();
-        viewHolder.timeUnread.setLayout(new BorderLayout());
-        viewHolder.timeUnread.setBackground(Colors.DARK);
-        viewHolder.timeUnread.add(viewHolder.time, BorderLayout.NORTH);
-        viewHolder.timeUnread.add(viewHolder.unreadCount, BorderLayout.CENTER);
-
-
-
-        viewHolder.setLayout(new GridBagLayout());
-        viewHolder.add(viewHolder.avatar, new GBC(0, 0).setWeight(2, 1).setFill(GBC.BOTH).setInsets(0,5,0,0));
-        viewHolder.add(viewHolder.nameBrief, new GBC(1, 0).setWeight(9, 1).setFill(GBC.BOTH).setInsets(5,0,0,0));
-        viewHolder.add(viewHolder.timeUnread, new GBC(2, 0).setWeight(1, 1).setFill(GBC.BOTH));
 
 
         viewHolder.addMouseListener(new MouseListener()

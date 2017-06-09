@@ -14,25 +14,28 @@ import java.util.Map;
 public abstract  class BasicDao
 {
     protected SqlSession session;
+    private String className;
 
-    public BasicDao(SqlSession session)
+
+    public BasicDao(SqlSession session, Class clazz)
     {
         this.session = session;
+        this.className = clazz.getName();
     }
 
     public int insert(BasicModel model)
     {
-        return session.insert("insert", model);
+        return session.insert(className + ".insert", model);
     }
 
     public List findAll()
     {
-        return session.selectList("findAll");
+        return session.selectList(className + ".findAll");
     }
 
     public BasicModel findById(String id)
     {
-        return (BasicModel) session.selectOne("findById", id);
+        return (BasicModel) session.selectOne(className + ".findById", id);
     }
 
     public List find(String field, Object val)
@@ -49,37 +52,37 @@ public abstract  class BasicDao
             map.put("val", val);
         }
 
-        return session.selectList("find", map);
+        return session.selectList(className + ".find", map);
     }
 
     public int delete(String id)
     {
-        return session.delete("delete", id);
+        return session.delete(className + ".delete", id);
     }
 
     public int deleteAll()
     {
-        return session.delete("deleteAll");
+        return session.delete(className + ".deleteAll");
     }
 
     public int update(BasicModel model)
     {
-        return session.update("update", model);
+        return session.update(className + ".update", model);
     }
 
     public int updateIgnoreNull(BasicModel model)
     {
-        return session.update("updateIgnoreNull", model);
+        return session.update(className + ".updateIgnoreNull", model);
     }
 
     public int count()
     {
-        return (int) session.selectOne("count");
+        return (int) session.selectOne(className + ".count");
     }
 
     public boolean exist(String id)
     {
-        return ((int)(session.selectOne("exist", id))) > 0;
+        return ((int)(session.selectOne(className + ".exist", id))) > 0;
     }
 
 }

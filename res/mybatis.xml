@@ -28,6 +28,7 @@
 
     <mappers>
         <mapper resource="com/rc/db/mapping/CurrentUserMapper.xml"/>
+        <mapper resource="com/rc/db/mapping/RoomMapper.xml"/>
         <mapper resource="com/rc/db/mapping/TableMapper.xml"/>
     </mappers>
 

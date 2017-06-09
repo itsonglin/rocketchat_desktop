@@ -8,7 +8,7 @@ import java.awt.*;
  */
 public class ListPanel extends ParentAvailablePanel
 {
-    private ChatItemsPanel chatPanel;
+    private RoomsPanel roomsPanel;
     private ContactsPanel contactsPanel;
     private CollectionsPanel collectionPanel;
 
@@ -30,7 +30,7 @@ public class ListPanel extends ParentAvailablePanel
 
     private void initComponents()
     {
-        chatPanel = new ChatItemsPanel(this);
+        roomsPanel = new RoomsPanel(this);
 
         contactsPanel = new ContactsPanel(this);
 
@@ -41,7 +41,7 @@ public class ListPanel extends ParentAvailablePanel
     private void initView()
     {
         this.setLayout(cardLayout);
-        add(chatPanel, CHAT);
+        add(roomsPanel, CHAT);
         add(contactsPanel, CONTACTS);
         add(collectionPanel, COLLECTIONS);
     }

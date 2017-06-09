@@ -13,6 +13,6 @@ public  class CurrentUserDao extends BasicDao
 {
     public CurrentUserDao(SqlSession session)
     {
-        super(session);
+        super(session, CurrentUserDao.class);
     }
 }
