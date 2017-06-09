@@ -5,6 +5,7 @@ import com.rc.db.model.CurrentUser;
 import com.rc.db.service.CurrentUserService;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.*;
+import com.rc.websocket.WebSocketClient;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
 import tasks.HttpGetTask;
@@ -289,6 +290,8 @@ public class LoginFrame extends JFrame
 
             this.dispose();
             sqlSession.close();
+
+            WebSocketClient webSocketClient = new WebSocketClient();
         }
         else
         {

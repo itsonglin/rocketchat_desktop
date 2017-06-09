@@ -62,17 +62,4 @@ public abstract  class BasicDao
     {
         return ((int)(session.selectOne("exist", userId))) > 0;
     }
-
-    public int insertOrUpdate(CurrentUser currentUser)
-    {
-        if (exist(currentUser.getUserId()))
-        {
-            CurrentUser user = (CurrentUser) findById(currentUser.getUserId());
-            System.out.println(user);
-            return update(currentUser);
-        }else
-        {
-            return insert(currentUser);
-        }
-    }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Created by song on 09/06/2017.
  */
-public class BasicService<T extends BasicDao>
+public class BasicService<T extends BasicDao, E extends BasicModel>
 {
     T dao;
 
@@ -24,14 +24,14 @@ public class BasicService<T extends BasicDao>
         return dao.insert(model);
     }
 
-    public List findAll()
+    public List<E> findAll()
     {
         return dao.findAll();
     }
 
-    public BasicModel findById(String id)
+    public E findById(String id)
     {
-        return dao.findById(id);
+        return (E) dao.findById(id);
     }
 
     public int delete(String id)
@@ -63,10 +63,4 @@ public class BasicService<T extends BasicDao>
     {
         return dao.exist(id);
     }
-
-    public int insertOrUpdate(CurrentUser model)
-    {
-        return dao.insertOrUpdate(model);
-    }
-
 }
