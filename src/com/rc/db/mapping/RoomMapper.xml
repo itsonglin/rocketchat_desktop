@@ -12,7 +12,7 @@
 
 
     <select id="findById" resultType="Room">
-		SELECT * FROM room where roomId = #{roomId}
+		SELECT * FROM room where roomId = #{id}
 	</select>
 
     <select id="findAll" resultType="Room">

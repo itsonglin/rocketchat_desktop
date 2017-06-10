@@ -55,6 +55,14 @@
 		imagesize INTEGER)
 	</update>
 
+
+	<update id="createContactsUserTable">
+		create table contacts_user(
+		userId VARCHAR(20) PRIMARY KEY,
+		username VARCHAR(64),
+		name VARCHAR(64))
+	</update>
+
 	<select id="tableExist" resultType="java.lang.Integer">
 		select count(1) from sqlite_master where type = 'table' and name = #{name}
 	</select>

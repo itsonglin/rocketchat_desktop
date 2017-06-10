@@ -45,7 +45,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
     @Override
     public void onBindViewHolder(RoomItemViewHolder viewHolder, int position)
     {
-        viewHolders.add(position, viewHolder);
+        viewHolders.add(viewHolder);
 
         RoomItem item = roomItems.get(position);
         viewHolder.roomName.setText(item.getTitle());

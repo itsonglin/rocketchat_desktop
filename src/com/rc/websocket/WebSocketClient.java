@@ -549,6 +549,7 @@ public class WebSocketClient
                     //Log.i(TAG_NAME, "当前更新时间:" + lastUpdateService.find(Realm.getDefaultInstance()));
                     // 通知UI更新Rooms列表
                     //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_UPDATE_ROOM_ITEMS);
+                    RoomsPanel.getContext().notifyDataSetChanged();
 
                 } catch (JSONException e)
                 {
