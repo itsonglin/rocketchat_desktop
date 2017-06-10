@@ -28,4 +28,19 @@ public class TableDao
     {
         session.update("createRoomTable");
     }
+
+    public void createMessageTable()
+    {
+        session.update("createMessageTable");
+    }
+
+    public void createFileAttachmentTable()
+    {
+        session.update("createFileAttachmentTable");
+    }
+
+    public void createImageAttachmentTable()
+    {
+        session.update("createImageAttachmentTable");
+    }
 }

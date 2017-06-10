@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="gbk" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
+        "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+<mapper namespace="com.rc.db.dao.MessageDao">
+    <insert id="insert">
+		INSERT INTO message(id, roomId, messageContent, groupable, timestamp,
+		senderUsername, senderId, updatedAt, needToResend, progress, deleted, systemMessage,
+		fileAttachmentId, imageAttachmentId)
+		VALUES (#{id}, #{roomId}, #{messageContent}, #{groupable}, #{timestamp},
+		#{senderUsername}, #{senderId}, #{updatedAt}, #{needToResend}, #{progress},
+		#{deleted}, #{systemMessage}, #{fileAttachmentId}, #{imageAttachmentId})
+	</insert>
+
+
+    <select id="findById" resultType="Message">
+		SELECT * FROM message where id = #{id}
+	</select>
+
+    <select id="findAll" resultType="Message">
+		SELECT * FROM message
+	</select>
+
+    <select id="find" resultType="Message" statementType="STATEMENT" parameterType="map">
+        SELECT * FROM message where ${field} = ${val}
+    </select>
+
+    <select id="count" resultType="java.lang.Integer">
+		SELECT count(1) FROM message
+	</select>
+
+    <select id="exist" resultType="java.lang.Integer">
+		SELECT count(1) FROM message where id = #{id}
+	</select>
+
+    <select id="findLastMessage" resultType="Message">
+        SELECT * FROM message ORDER BY timestamp DESC limit 1
+    </select>
+
+
+
+    <delete id="deleteAll">
+		delete from message
+	</delete>
+
+    <update id="update">
+        UPDATE message
+        <set>
+            id=#{id},
+            roomId=#{roomId},
+            messageContent=#{messageContent},
+            groupable=#{groupable},
+            timestamp=#{timestamp},
+            senderUsername=#{senderUsername},
+            senderId=#{senderId},
+            updatedAt=#{updatedAt},
+            needToResend=#{needToResend},
+            progress=#{progress},
+            deleted=#{deleted},
+            systemMessage=#{systemMessage},
+            fileAttachmentId=#{fileAttachmentId},
+            imageAttachmentId=#{imageAttachmentId},
+        </set>
+        WHERE id=#{id}
+    </update>
+
+    <update id="updateIgnoreNull">
+        UPDATE message
+        <set>
+            <if test="id != null">id=#{id},</if>
+            <if test="roomId != null">roomId=#{roomId},</if>
+            <if test="messageContent != null">messageContent=#{messageContent},</if>
+            <if test="groupable != null">groupable=#{groupable},</if>
+            <if test="timestamp != null">timestamp=#{timestamp},</if>
+            <if test="senderUsername != null">senderUsername=#{senderUsername},</if>
+            <if test="senderId != null">senderId=#{senderId},</if>
+            <if test="updatedAt != null">updatedAt=#{updatedAt},</if>
+            <if test="needToResend != null">needToResend=#{needToResend},</if>
+            <if test="progress != null">progress=#{progress},</if>
+            <if test="deleted != null">deleted=#{deleted},</if>
+            <if test="systemMessage != null">systemMessage=#{systemMessage},</if>
+            <if test="fileAttachmentId != null">fileAttachmentId=#{fileAttachmentId},</if>
+            <if test="imageAttachmentId != null">imageAttachmentId=#{imageAttachmentId},</if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+</mapper>
+
+
+
+
+
+
+
+
+

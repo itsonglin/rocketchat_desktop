@@ -32,6 +32,21 @@ public class TestSQLite
             System.out.println("创建表 room");
             tableService.createRoomTable();
         }
+        if (!tableService.exist("message"))
+        {
+            System.out.println("创建表 message");
+            tableService.createMessageTable();
+        }
+        if (!tableService.exist("file_attachment"))
+        {
+            System.out.println("创建表 file_attachment");
+            tableService.createFileAttachmentTable();
+        }
+        if (!tableService.exist("image_attachment"))
+        {
+            System.out.println("创建表 image_attachment");
+            tableService.createImageAttachmentTable();
+        }
 
         //CurrentUser currentUser = new CurrentUser("3", "3", "3", "3", "3", "3", "3", "3", "3");
         //CurrentUserService currentUserService = new CurrentUserService(session);

@@ -69,11 +69,11 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
 
         // 消息
         viewHolder.brief.setText(item.getLastMessage());
-        viewHolder.brief.setText("这是一条消息");
+        //viewHolder.brief.setText("这是一条消息");
 
         // 时间
         viewHolder.time.setText(TimeUtil.diff(item.getTimestamp()));
-        viewHolder.time.setText("14:30");
+        //viewHolder.time.setText("14:30");
 
 
         // 未读消息数
@@ -86,8 +86,8 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         {
             viewHolder.unreadCount.setVisible(false);
         }
-        viewHolder.unreadCount.setVisible(true);
-        viewHolder.unreadCount.setText(item.getUnreadCount() + "1");
+        //viewHolder.unreadCount.setVisible(true);
+        //viewHolder.unreadCount.setText(item.getUnreadCount() + "1");
 
 
 

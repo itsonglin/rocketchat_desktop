@@ -2,9 +2,9 @@ package com.rc.websocket;
 
 import com.neovisionaries.ws.client.*;
 import com.rc.app.Launcher;
-import com.rc.db.model.CurrentUser;
-import com.rc.db.model.Room;
+import com.rc.db.model.*;
 import com.rc.db.service.CurrentUserService;
+import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
 import com.rc.websocket.handler.WebSocketListenerAdapter;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
@@ -19,6 +19,7 @@ import tasks.HttpResponseListener;
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,8 +47,13 @@ public class WebSocketClient
     private Logger logger;
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private RoomService roomService = Launcher.roomService;
+    private MessageService messageService = Launcher.messageService;
+
     private CurrentUser currentUser;
     private String currentUserId;
+
+    // 已经更新了最后消息及未读消息数的房间数
+    private int updatedUnreadMessageRoomsCount = 0;
 
 
     public WebSocketClient()
@@ -217,8 +223,8 @@ public class WebSocketClient
                     id = jsonText.getString("id");
                 }
 
-                if (!msg.equals("ping") && !msg.equals("updated") && !msg.equals("ready")
-                        && !id.startsWith("SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE"))
+                /*if (!msg.equals("ping") && !msg.equals("updated") && !msg.equals("ready")
+                        && !id.startsWith("SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE"))*/
                 {
 
                     logger.debug("收到消息  " + text);
@@ -301,7 +307,7 @@ public class WebSocketClient
         }
         else if (msgId.startsWith(SubscriptionHelper.SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE))
         {
-            //processLoadUnreadCountAndLastMessageResult(jsonText);
+            processLoadUnreadCountAndLastMessageResult(jsonText);
         }
         else if (msgId.equals(SubscriptionHelper.METHOD_UFSCREATE))
         {
@@ -373,11 +379,8 @@ public class WebSocketClient
 
                 // 更新token以及过期时间
                 JSONObject result = jsonObject.getJSONObject("result");
-                //String userId = result.getString("id");
                 String token = result.getString("token");
                 long tokenExpires = result.getJSONObject("tokenExpires").getLong("$date");
-
-                //currentUser = currentUserService.findAll().get(0);
                 currentUser.setAuthToken(token);
                 currentUser.setExpireDate(tokenExpires + "");
                 currentUserService.update(currentUser);
@@ -433,7 +436,6 @@ public class WebSocketClient
             throw new RuntimeException("Room 类型" + type + "不存在");
         }
 
-        //final Realm realm = Realm.getDefaultInstance();
         final String currentUsername = currentUser.getUsername();
         HttpGetTask task = new HttpGetTask();
         task.addHeader("X-Auth-Token", currentUser.getAuthToken());
@@ -500,8 +502,6 @@ public class WebSocketClient
                             }
                             room.setType(finalRoomType);
 
-                            //Realm r = Realm.getDefaultInstance();
-                            //Room oldRoom = roomService.findById(r, room.getRoomId());
                             Room oldRoom = roomService.findById(room.getRoomId());
                             if (oldRoom != null)
                             {
@@ -538,9 +538,10 @@ public class WebSocketClient
 
 
                     // 订阅Rooms相关消息
-                    //sendSubscriptionRoomMessage(finalRoomType);
+                    sendSubscriptionRoomMessage(finalRoomType);
+
                     // 获取每个房间的未读消息数以及最后一条消息
-                    //loadUnreadCountAndLastMessage(finalRoomType);
+                    loadUnreadCountAndLastMessage(finalRoomType);
 
 
                     //lastUpdateService.update(Realm.getDefaultInstance());
@@ -562,5 +563,279 @@ public class WebSocketClient
     private boolean isErrorResult(JSONObject jsonObject)
     {
         return jsonObject.has("error");
+    }
+
+    /**
+     * 发送rooms相关订阅消息
+     *
+     * @param roomType
+     */
+    private void sendSubscriptionRoomMessage(String roomType)
+    {
+        //Realm realm = Realm.getDefaultInstance();
+        List<Room> rooms = roomService.find("type", roomType);
+        for (Room room : rooms)
+        {
+            subscriptionHelper.subscriptionStreamNotifyRoomTyping(room.getRoomId());
+            subscriptionHelper.subscriptionStreamRoomMessages(room.getRoomId());
+            subscriptionHelper.subscriptionUserRoomsChanged(room.getRoomId());
+            subscriptionHelper.subscriptionStreamNotifyRoomTyping(room.getRoomId());
+            subscriptionHelper.subscriptionStreamNotifyRoomWebrtc(room.getRoomId());
+        }
+    }
+
+    /**
+     * 获取每个房间未读数及最后一条消息
+     * @param roomType
+     */
+    private void loadUnreadCountAndLastMessage(final String roomType)
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                List<Room> rooms = roomService.find("type", roomType);
+                for (Room r : rooms)
+                {
+                    updatedUnreadMessageRoomsCount++;
+                    subscriptionHelper.sendLoadUnreadCountAndLastMessage(r.getRoomId());
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 处理获取每个房间未读数及最后一条消息回调
+     * @param jsonText
+     * @throws JSONException
+     */
+    private void processLoadUnreadCountAndLastMessageResult(JSONObject jsonText) throws JSONException
+    {
+        if (!jsonText.has("result"))
+        {
+            return;
+        }
+
+        JSONObject result = jsonText.getJSONObject("result");
+
+        JSONArray messages = result.getJSONArray("messages");
+
+        if (messages.length() > 0)
+        {
+
+
+            JSONObject message = messages.getJSONObject(0);
+
+            int unreadNotLoaded = result.getInt("unreadNotLoaded");
+            int unreadCount = 0;
+
+            String roomId = message.getString("rid");
+
+            Room room = roomService.findById(roomId);
+
+            if (unreadNotLoaded > 0)
+            {
+                long messageTotalCount = 0;
+                long totalReadCount = 0;
+
+                if (room != null)
+                {
+                    messageTotalCount = room.getMsgSum();
+                    totalReadCount = room.getTotalReadCount();
+                }
+
+                if (messageTotalCount == 0)
+                {
+                    //roomService.updateTotalReadCount(roomId, unreadNotLoaded + 1);
+                    room.setTotalReadCount(unreadNotLoaded + 1);
+                }
+                else
+                {
+                    unreadCount = (int) ((unreadNotLoaded + 1) - totalReadCount);
+
+
+                    if (unreadCount < 0)
+                    {
+                        System.out.println("unreadCount -- " + unreadCount);
+                        unreadCount = 0;
+                        //roomService.updateTotalReadCount(Realm.getDefaultInstance(), roomId, unreadNotLoaded + 1);
+                        room.setTotalReadCount(unreadNotLoaded + 1);
+                    }
+                    //roomService.updateUnreadCount(Realm.getDefaultInstance(), roomId, unreadCount);
+                    room.setUnreadCount(unreadCount);
+                }
+
+                //roomService.updateMessageSum(Realm.getDefaultInstance(), roomId, unreadNotLoaded + 1);
+                room.setMsgSum(unreadNotLoaded + 1);
+
+                roomService.update(room);
+            }
+
+            String messageContent = message.getString("msg");
+            boolean isMessagePinned = false;
+            if (message.has("t"))
+            {
+                String t = message.getString("t");
+
+                if (t.equals("message_pinned"))
+                {
+                    isMessagePinned = true;
+                }
+                else if (t.equals("au") || t.equals("uj"))
+                {
+                    messageContent = messageContent + "加入群聊";
+                }
+                else if (t.equals("r"))
+                {
+                    String creator = message.getJSONObject("u").getString("username");
+                    messageContent = creator + " 更改群名称为：" + messageContent;
+                }
+                else if (t.equals("ru"))
+                {
+                    messageContent = messageContent + " 被移出群聊";
+                }
+                else if (t.equals("ul"))
+                {
+                    messageContent = messageContent + " 退出群聊";
+                }
+                else if (t.equals("user-muted"))
+                {
+                    messageContent = messageContent + " 被禁言";
+                }
+                else if (t.equals("user-unmuted"))
+                {
+                    messageContent = messageContent + " 被取消禁言";
+                }
+                else if (t.equals("subscription-role-added"))
+                {
+                    if (message.getString("role").equals("owner"))
+                    {
+                        messageContent = messageContent + " 被赋予了 所有者 角色";
+                    }
+                    else if (message.getString("role").equals("moderator"))
+                    {
+                        messageContent = messageContent + " 被赋予了 主持 角色";
+                    }
+                }
+                else if (t.equals("subscription-role-removed"))
+                {
+                    if (message.getString("role").equals("owner"))
+                    {
+                        messageContent = messageContent + " 被移除了 所有者 角色";
+                    }
+                    else if (message.getString("role").equals("moderator"))
+                    {
+                        messageContent = messageContent + " 被移除了 主持 角色";
+                    }
+                }
+
+            }
+
+            if (!isMessagePinned)
+            {
+                Message dbMessage = new Message();
+                dbMessage.setId(message.getString("_id"));
+                dbMessage.setRoomId(message.getString("rid"));
+                dbMessage.setTimestamp(message.getJSONObject("ts").getLong("$date"));
+                dbMessage.setSenderId(message.getJSONObject("u").getString("_id"));
+                dbMessage.setSenderUsername(message.getJSONObject("u").getString("username"));
+                //dbMessage.setUpdatedAt(message.getString("_updatedAt"));
+                dbMessage.setUpdatedAt(message.getJSONObject("_updatedAt").getLong("$date"));
+
+                if (message.has("groupable"))
+                {
+                    dbMessage.setGroupable(message.getBoolean("groupable"));
+                }
+
+                // 处理消息内容
+                if (message.getString("msg").startsWith("[ ]("))
+                {
+                    messageContent = message.getString("msg").replaceAll("\\[ \\]\\(.*\\)\\s*", "");
+                }
+
+                boolean isattachmentOrImage = false;
+                // 处理附件
+                if (message.has("attachments") && !message.getString("msg").startsWith("[ ]("))
+                {
+                    isattachmentOrImage = true;
+                    JSONArray attachments = message.getJSONArray("attachments");
+                    for (int j = 0; j < attachments.length(); j++)
+                    {
+                        JSONObject attachment = attachments.getJSONObject(j);
+                        if (attachment.has("image_url"))
+                        {
+                            ImageAttachment imageAttachment = new ImageAttachment();
+                            imageAttachment.setId(message.getJSONObject("file").getString("_id"));
+                            imageAttachment.setTitle(attachment.getString("title"));
+                            imageAttachment.setDescription(attachment.getString("description"));
+                            imageAttachment.setImageUrl(attachment.getString("image_url"));
+                            imageAttachment.setImagesize(attachment.getLong("image_size"));
+                            imageAttachment.setWidth(attachment.getJSONObject("image_dimensions").getInt("width"));
+                            imageAttachment.setHeight(attachment.getJSONObject("image_dimensions").getInt("height"));
+
+                            //dbMessage.getImageAttachments().add(imageAttachment);
+                            dbMessage.setImageAttachmentId(imageAttachment.getId());
+
+                            //dbMessage.setMessageContent("[图片]");
+                            messageContent = "[图片]";
+                        }
+                        else
+                        {
+                            FileAttachment fileAttachment = new FileAttachment();
+                            fileAttachment.setId(message.getJSONObject("file").getString("_id"));
+                            fileAttachment.setTitle(attachment.getString("title"));
+                            fileAttachment.setDescription(attachment.getString("description"));
+                            fileAttachment.setLink(attachment.getString("title_link"));
+                            //dbMessage.getFileAttachments().add(fileAttachment);
+                            dbMessage.setFileAttachmentId(fileAttachment.getId());
+                            //dbMessage.setMessageContent(fileAttachment.getTitle().replace("File Uploaded:", ""));
+                            messageContent = fileAttachment.getTitle().replace("File Uploaded:", "");
+
+                        }
+                    }
+                }
+
+                dbMessage.setMessageContent(messageContent);
+                //Message lastMessage = messageService.findLastMessage(realm, roomId);
+                Message lastMessage = messageService.findLastMessage(roomId);
+
+                // 有未发送成功消息
+                if (lastMessage != null
+                        && (lastMessage.getUpdatedAt() < 1 || lastMessage.isNeedToResend())
+                        && lastMessage.getSenderId().equals(currentUser.getUserId()))
+                {
+                    //roomService.updateLastMessage(Realm.getDefaultInstance(), roomId, "[有消息发送失败]", lastMessage.getTimestamp());
+                    room.setLastMessage("[有消息发送失败]");
+                    room.setLastChatAt(lastMessage.getTimestamp());
+                }
+                else
+                {
+                    //roomService.updateLastMessage(Realm.getDefaultInstance(), roomId, dbMessage.getMessageContent(), dbMessage.getTimestamp());
+                    room.setLastMessage(dbMessage.getMessageContent());
+                    room.setLastChatAt(dbMessage.getTimestamp());
+                }
+                roomService.update(room);
+
+                // 如果是附件消息（包括图片和文件），为避免最后一条消息为自己发出的附件时，
+                // 因时间戳问题而导致最后一条附件消息重复加载，要重新更新该消息的timestamp
+                if (isattachmentOrImage)
+                {
+                    //messageService.updateTimestamp(realm, dbMessage.getId(), dbMessage.getTimestamp());
+                    messageService.update(dbMessage);
+                }
+            }
+        }
+
+        updatedUnreadMessageRoomsCount--;
+
+
+        if (updatedUnreadMessageRoomsCount == 0)
+        {
+            logger.debug("通知UI更新未读数及最后一条消息");
+            // 通知UI更新未读数及最后一条消息
+            //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_UPDATE_ROOM_ITEMS);
+        }
+        //realm.close();
     }
 }

@@ -29,4 +29,19 @@ public class TableService
     {
         dao.createRoomTable();
     }
+
+    public void createMessageTable()
+    {
+        dao.createMessageTable();
+    }
+
+    public void createFileAttachmentTable()
+    {
+        dao.createFileAttachmentTable();
+    }
+
+    public void createImageAttachmentTable()
+    {
+        dao.createImageAttachmentTable();
+    }
 }

@@ -75,6 +75,23 @@ public abstract  class BasicDao
         return session.update(className + ".updateIgnoreNull", model);
     }
 
+    public List updateField(String field, Object val)
+    {
+        Map map = new HashMap();
+        map.put("field", field);
+
+        if (val instanceof String)
+        {
+            map.put("val", "'" + val + "'");
+        }
+        else
+        {
+            map.put("val", val);
+        }
+
+        return session.selectList(className + ".updateField", map);
+    }
+
     public int count()
     {
         return (int) session.selectOne(className + ".count");
