@@ -41,6 +41,7 @@ public class RoomItemViewHolder extends ViewHolder
 //        imageIcon.setImage(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
 //        avatar.setIcon(imageIcon);
 
+
         roomName.setFont(FontUtil.getDefaultFont(14));
         roomName.setForeground(Colors.FONT_WHITE);
 

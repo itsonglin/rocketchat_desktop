@@ -16,39 +16,36 @@ import java.io.IOException;
 public class ImagePanel extends JPanel
 {
     private GeneralPath path = new GeneralPath();
-    private BufferedImage image;
+    private Image image;
 
-    public ImagePanel(BufferedImage image)
+    public ImagePanel(Image image)
     {
         this.image = image;
-        addComponentListener(new ComponentAdapter()
-        {
-            @Override
-            public void componentResized(ComponentEvent e)
-            {
-            }
-        });
     }
+
+    public ImagePanel()
+    {
+
+    }
+
+    public void setImage(Image image)
+    {
+        this.image = image;
+    }
+
 
     @Override
     public void paint(Graphics g)
     {
         int width = this.getWidth(), height = this.getHeight();
-       // width = 50;
-       // height = 50;
 
         Image scaledImage = image.getScaledInstance(width, width, image.SCALE_SMOOTH);//设置缩放目标图片模板
 
         Graphics2D g2 = (Graphics2D) g;
-        RoundRectangle2D rect = new RoundRectangle2D.Double(0, 0, width, height, 8, 8);
+        RoundRectangle2D rect = new RoundRectangle2D.Float(0, 0, width, height, 8, 8);
         path.append(rect, false);
         g2.setClip(path);
         g2.drawImage(scaledImage, 0, 0, null);
         g2.dispose();
-/*                g2.setPaint(new GradientPaint(0.0F, 0.0F, Colors.DARK, 0.0F,
-                    height, Colors.DARK, true));
-                g2.drawRoundRect(0, 0, width - 1, height - 1, 10, 10);
-                g2.drawRoundRect(1, 1, width - 2, height - 2, 8, 8);*/
-
     }
 }

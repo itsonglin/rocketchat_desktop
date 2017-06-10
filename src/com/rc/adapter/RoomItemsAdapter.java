@@ -49,7 +49,21 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         viewHolder.roomName.setText(item.getTitle());
 
         ImageIcon icon = new ImageIcon();
-        icon.setImage(AvatarUtil.createAvatar(item.getTitle(), item.getTitle()));
+        // 群组头像
+        String type = item.getType();
+        if (type.equals("c"))
+        {
+            icon.setImage(AvatarUtil.createAvatar("##", item.getTitle()));
+        }
+        else if (type.equals("p"))
+        {
+            icon.setImage(AvatarUtil.createAvatar("#", item.getTitle()));
+        }
+        // 私聊头像
+        else if (type.equals("d"))
+        {
+            icon.setImage(AvatarUtil.createAvatar(item.getTitle(), item.getTitle()));
+        }
         viewHolder.avatar.setIcon(icon);
 
 
@@ -59,7 +73,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
 
         // 时间
         viewHolder.time.setText(TimeUtil.diff(item.getTimestamp()));
-        viewHolder.time.setText("星期一 14:30");
+        viewHolder.time.setText("14:30");
 
 
         // 未读消息数

@@ -4,6 +4,8 @@ import com.rc.components.Colors;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
+import java.awt.geom.GeneralPath;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -87,13 +89,13 @@ public class AvatarUtil
 
             // 抗锯齿
             g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
             // 画图
             g2d.setBackground(getColor(name));
-            g2d.setPaint(new Color(255, 255, 255));
             g2d.clearRect(0, 0, width, height);
-            g2d.setFont(font);
 
+            // 文字
+            g2d.setFont(font);
+            g2d.setPaint(new Color(255, 255, 255));
             FontMetrics fm = g2d.getFontMetrics(font);
             int strWidth = fm.stringWidth(drawString);
             int strHeight = fm.getHeight();
