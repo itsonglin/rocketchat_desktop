@@ -3,6 +3,7 @@ package com.rc.adapter;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
+import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
@@ -36,9 +37,9 @@ public class RoomItemViewHolder extends ViewHolder
         setOpaque(true);
         setForeground(Colors.FONT_WHITE);
 
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        imageIcon.setImage(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        avatar.setIcon(imageIcon);
+//        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
+//        imageIcon.setImage(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
+//        avatar.setIcon(imageIcon);
 
         roomName.setFont(FontUtil.getDefaultFont(14));
         roomName.setForeground(Colors.FONT_WHITE);

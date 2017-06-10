@@ -217,8 +217,8 @@ public class WebSocketClient
                     id = jsonText.getString("id");
                 }
 
-               /* if (!msg.equals("ping") && !msg.equals("updated") && !msg.equals("ready")
-                        && !id.startsWith("SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE"))*/
+                if (!msg.equals("ping") && !msg.equals("updated") && !msg.equals("ready")
+                        && !id.startsWith("SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE"))
                 {
 
                     logger.debug("收到消息  " + text);

@@ -4,6 +4,7 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.entity.RoomItem;
+import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
 import com.rc.utils.TimeUtil;
 
@@ -46,6 +47,11 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
 
         RoomItem item = roomItems.get(position);
         viewHolder.roomName.setText(item.getTitle());
+
+        ImageIcon icon = new ImageIcon();
+        icon.setImage(AvatarUtil.createAvatar(item.getTitle(), item.getTitle()));
+        viewHolder.avatar.setIcon(icon);
+
 
         // 消息
         viewHolder.brief.setText(item.getLastMessage());

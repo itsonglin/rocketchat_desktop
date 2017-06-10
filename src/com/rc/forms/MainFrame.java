@@ -53,7 +53,7 @@ public class MainFrame extends JFrame
         UIManager.put("TextArea.font", FontUtil.getDefaultFont());
 
         leftPanel = new LeftPanel();
-        leftPanel.setPreferredSize(new Dimension(250, currentWindowHeight));
+        leftPanel.setPreferredSize(new Dimension(260, currentWindowHeight));
 
         rightPanel = new RightPanel();
     }

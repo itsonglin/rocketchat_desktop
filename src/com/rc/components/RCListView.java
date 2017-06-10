@@ -58,7 +58,7 @@ public class RCListView extends JScrollPane
 
         this.setViewportView(contentPanel);
         this.setBorder(null);
-        this.getVerticalScrollBar().setUnitIncrement(17);
+        this.getVerticalScrollBar().setUnitIncrement(25);
         this.getVerticalScrollBar().setUI(new ScrollUI());
 
     }

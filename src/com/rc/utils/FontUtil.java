@@ -13,13 +13,14 @@ public class FontUtil
 {
     private static Font font;
 
-    static{
-        try
+    static
+    {
+        if (OSUtil.getOsType() == OSUtil.Windows)
         {
-            font = Font.createFont(Font.TRUETYPE_FONT, new BufferedInputStream(FontUtil.class.getResourceAsStream("/fonts/yahei.ttf")));
-        }catch (Exception e)
+            font = new Font("微软雅黑", Font.PLAIN, 14);
+        }
+        else
         {
-            System.out.println("找不到指定文件");
             font = new Font("微软雅黑", Font.PLAIN, 14);
         }
     }
@@ -36,8 +37,7 @@ public class FontUtil
 
     public static Font getDefaultFont(int size, int style)
     {
-
-        return font;
+        return font.deriveFont(style, size);
         //return new Font("YaHei Consolas Hybrid",  style, size);
         //return new Font("微软雅黑", style, size);
     }
