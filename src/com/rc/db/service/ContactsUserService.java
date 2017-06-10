@@ -26,4 +26,8 @@ public class ContactsUserService extends BasicService<ContactsUserDao, ContactsU
         }
     }
 
+    public int deleteByUsername(String name)
+    {
+        return dao.deleteByUsername(name);
+    }
 }

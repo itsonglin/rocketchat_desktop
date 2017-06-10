@@ -43,6 +43,12 @@
 		delete from message
 	</delete>
 
+    <delete id="deleteByRoomId">
+        delete from message where roomId = #{roomId}
+    </delete>
+
+
+
     <update id="update">
         UPDATE message
         <set>

@@ -11,4 +11,9 @@ public class ContactsUserDao extends BasicDao
     {
         super(session, ContactsUserDao.class);
     }
+
+    public int deleteByUsername(String username)
+    {
+        return session.delete("deleteByUsername", username);
+    }
 }

@@ -1,10 +1,7 @@
 package com.rc.app;
 
 import com.rc.db.model.Message;
-import com.rc.db.service.ContactsUserService;
-import com.rc.db.service.CurrentUserService;
-import com.rc.db.service.MessageService;
-import com.rc.db.service.RoomService;
+import com.rc.db.service.*;
 import com.rc.forms.LoginFrame;
 import com.rc.forms.MainFrame;
 import com.rc.utils.DbUtils;
@@ -24,6 +21,8 @@ public class Launcher
     public static CurrentUserService currentUserService;
     public static MessageService messageService;
     public static ContactsUserService contactsUserService;
+    public static ImageAttachmentService imageAttachmentService;
+    public static FileAttachmentService fileAttachmentService;
 
     static
     {
@@ -32,6 +31,8 @@ public class Launcher
         currentUserService = new CurrentUserService(sqlSession);
         messageService = new MessageService(sqlSession);
         contactsUserService = new ContactsUserService(sqlSession);
+        imageAttachmentService = new ImageAttachmentService(sqlSession);
+        fileAttachmentService = new FileAttachmentService(sqlSession);
     }
 
 

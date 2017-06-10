@@ -17,4 +17,9 @@ public class MessageDao extends BasicDao
     {
         return (Message) session.selectOne("findLastMessage", roomId);
     }
+
+    public int deleteByRoomId(String roomId)
+    {
+        return session.delete("deleteByRoomId", roomId);
+    }
 }

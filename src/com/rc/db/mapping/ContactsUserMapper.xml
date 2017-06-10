@@ -33,6 +33,11 @@
 		delete from contacts_user
 	</delete>
 
+    <delete id="deleteByUsername">
+        delete from contacts_user where username = #{username}
+    </delete>
+
+
     <update id="update">
         UPDATE contacts_user
         <set>

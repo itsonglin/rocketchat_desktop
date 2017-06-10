@@ -32,4 +32,9 @@ public class MessageService extends BasicService<MessageDao, Message>
     {
         return dao.findLastMessage(roomId);
     }
+
+    public int deleteByRoomId(String roomId)
+    {
+        return dao.deleteByRoomId(roomId);
+    }
 }

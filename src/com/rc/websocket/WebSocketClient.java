@@ -9,6 +9,8 @@ import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
 import com.rc.forms.ContactsPanel;
 import com.rc.forms.RoomsPanel;
+import com.rc.websocket.handler.StreamNotifyUserCollectionHandler;
+import com.rc.websocket.handler.StreamRoomMessagesHandler;
 import com.rc.websocket.handler.WebSocketListenerAdapter;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.log4j.Logger;
@@ -59,10 +61,16 @@ public class WebSocketClient
     // 已经更新了最后消息及未读消息数的房间数
     private int updatedUnreadMessageRoomsCount = 0;
 
+    private StreamRoomMessagesHandler streamRoomMessagesHandler;
+    private StreamNotifyUserCollectionHandler streamNotifyUserCollectionHandler;
+
 
     public WebSocketClient()
     {
         logger = Logger.getLogger(this.getClass());
+
+        streamRoomMessagesHandler = new StreamRoomMessagesHandler();
+        streamNotifyUserCollectionHandler = new StreamNotifyUserCollectionHandler(subscriptionHelper, WebSocketClient.this);
     }
 
     public void startClient()
@@ -251,11 +259,11 @@ public class WebSocketClient
                 }
                 else if (msg.equals("ready"))
                 {
-                    //processSubscriptionResult(jsonText);
+                    processSubscriptionResult(jsonText);
                 }
                 else if (msg.equals("changed"))
                 {
-                    //processChangedMessage(jsonText);
+                    processChangedMessage(jsonText);
                 }
                 else if (msg.equals("added"))
                 {
@@ -396,7 +404,7 @@ public class WebSocketClient
                 updateContacts();
 
                 // 订阅消息
-                //sendSubscriptionUserMessage();
+                sendSubscriptionUserMessage();
 
             }
             catch (JSONException e)
@@ -904,4 +912,111 @@ public class WebSocketClient
 
         task.execute(hostname + "/api/v1/users.list.base?count=1000");
     }
+
+    /**
+     * 发送user相关订阅消息
+     */
+    private void sendSubscriptionUserMessage()
+    {
+        // 订阅用户消息
+        subscriptionHelper.subscriptionUserMessage(currentUserId);
+        subscriptionHelper.subscriptionUserWebRtc(currentUserId);
+        subscriptionHelper.subscriptionUserNotification(currentUserId);
+        subscriptionHelper.subscriptionUserOtr(currentUserId);
+        subscriptionHelper.subscriptionUserRoomsChanged(currentUserId);
+        subscriptionHelper.subscriptionUsersubscriptionsChanged(currentUserId);
+        subscriptionHelper.subscriptionUserData();
+    }
+
+    /**
+     * 处理成功订阅返回信息
+     *
+     * @param jsonText
+     */
+    private void processSubscriptionResult(JSONObject jsonText)
+    {
+        //Log.d(TAG_NAME, "订阅返回消息: " + jsonText);
+    }
+
+    /**
+     * 处理msg为changed的消息
+     *
+     * @param jsonText
+     */
+    private void processChangedMessage(JSONObject jsonText) throws JSONException
+    {
+        String collection = jsonText.getString("collection");
+        JSONObject fields = jsonText.getJSONObject("fields");
+        if (collection.equals("stream-notify-user"))
+        {
+            String eventName = fields.getString("eventName");
+            eventName = eventName.substring(eventName.indexOf("/") + 1);
+            streamNotifyUserCollectionHandler.handle(eventName, jsonText.getJSONObject("fields").getJSONArray("args"));
+        }
+        else if (collection.equals("stream-room-messages"))
+        {
+            String eventName = fields.getString("eventName");
+            eventName = eventName.substring(eventName.indexOf("/") + 1);
+            streamRoomMessagesHandler.handle(eventName, jsonText.getJSONObject("fields").getJSONArray("args"));
+        }
+        else if (collection.equals("users"))
+        {
+            updateCurrentUser(fields);
+        }
+    }
+
+    /**
+     * 更新当前用户的信息
+     *
+     * @param fields
+     */
+    private void updateCurrentUser(JSONObject fields)
+    {
+        try
+        {
+            //Realm realm = Realm.getDefaultInstance();
+            //CurrentUser user = realm.copyFromRealm(currentUserService.find(realm));
+            CurrentUser user = currentUserService.findAll().get(0);
+
+            if (fields.has("services"))
+            {
+                String bcript = fields.getJSONObject("services").getJSONObject("password").getString("bcrypt");
+
+                // 修改了密码，要重新登录
+                if (!bcript.equals(user.getBcrypt()) && user.getBcrypt() != null)
+                {
+                    //currentUserService.delete(Realm.getDefaultInstance());
+                    currentUserService.deleteAll();
+
+                    //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_LOGIN);
+                    // // TODO: 2017/6/10
+                    return;
+                }
+                user.setBcrypt(bcript);
+
+            }
+
+            if (fields.has("name"))
+            {
+                String name = fields.getString("name");
+                user.setRealName(name);
+
+                if (fields.has("avatarOrigin"))
+                {
+                    String avatarOrigin = fields.getString("avatarOrigin");
+                    user.setAvatarOrigin(avatarOrigin);
+                }
+
+                //currentUserService.insertOrUpdate(Realm.getDefaultInstance(), user);
+                currentUserService.insertOrUpdate(user);
+            }
+
+            //realm.close();
+
+        } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 }
