@@ -3,9 +3,11 @@ package com.rc.websocket;
 import com.neovisionaries.ws.client.*;
 import com.rc.app.Launcher;
 import com.rc.db.model.*;
+import com.rc.db.service.ContactsUserService;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
+import com.rc.forms.ContactsPanel;
 import com.rc.forms.RoomsPanel;
 import com.rc.websocket.handler.WebSocketListenerAdapter;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
@@ -49,6 +51,7 @@ public class WebSocketClient
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private RoomService roomService = Launcher.roomService;
     private MessageService messageService = Launcher.messageService;
+    private ContactsUserService contactsUserService = Launcher.contactsUserService;
 
     private CurrentUser currentUser;
     private String currentUserId;
@@ -390,7 +393,7 @@ public class WebSocketClient
                 updateRoomList();
 
                 // 更新通讯录
-                //updateContacts();
+                updateContacts();
 
                 // 订阅消息
                 //sendSubscriptionUserMessage();
@@ -549,7 +552,7 @@ public class WebSocketClient
                     //Log.i(TAG_NAME, "当前更新时间:" + lastUpdateService.find(Realm.getDefaultInstance()));
                     // 通知UI更新Rooms列表
                     //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_UPDATE_ROOM_ITEMS);
-                    RoomsPanel.getContext().notifyDataSetChanged();
+                    //RoomsPanel.getContext().notifyDataSetChanged();
 
                 } catch (JSONException e)
                 {
@@ -600,7 +603,7 @@ public class WebSocketClient
                 List<Room> rooms = roomService.find("type", roomType);
                 for (Room r : rooms)
                 {
-                    updatedUnreadMessageRoomsCount++;
+                    //updatedUnreadMessageRoomsCount++;
                     subscriptionHelper.sendLoadUnreadCountAndLastMessage(r.getRoomId());
                 }
             }
@@ -829,10 +832,11 @@ public class WebSocketClient
             }
         }
 
-        updatedUnreadMessageRoomsCount--;
+        //updatedUnreadMessageRoomsCount--;
+        updatedUnreadMessageRoomsCount++;
 
 
-        if (updatedUnreadMessageRoomsCount == 0)
+        if (updatedUnreadMessageRoomsCount >= roomService.count())
         {
             logger.debug("通知UI更新未读数及最后一条消息");
 
@@ -841,5 +845,63 @@ public class WebSocketClient
             //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_UPDATE_ROOM_ITEMS);
         }
         //realm.close();
+    }
+
+    /**
+     * 更新通讯录
+     */
+    private void updateContacts()
+    {
+        updateContactsUser();
+    }
+
+
+    /**
+     * 发送请求更新通讯录中的用户信息
+     */
+    public void updateContactsUser()
+    {
+        HttpGetTask task = new HttpGetTask();
+        task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+        task.addHeader("X-User-Id", currentUser.getUserId());
+        task.setListener(new HttpResponseListener()
+        {
+            public void onResult(JSONObject retJson)
+            {
+                try
+                {
+                    JSONArray userArray = retJson.getJSONArray("users");
+                    if (userArray != null)
+                    {
+                        //contactsUserService.deleteAll(Realm.getDefaultInstance(), ContactsUser.class);
+                        contactsUserService.deleteAll();
+                        for (int i = 0; i < userArray.length(); i++)
+                        {
+                            JSONObject user = userArray.getJSONObject(i);
+
+                            // 忽略自己
+                            if (user.getString("_id").equals(currentUserId))
+                            {
+                                continue;
+                            }
+
+                            ContactsUser contactsUser = new ContactsUser(user.getString("_id"), user.getString("username"), user.getString("name"));
+                            //contactsUserService.insertOrUpdate(Realm.getDefaultInstance(), contactsUser);
+                            contactsUserService.insert(contactsUser);
+                        }
+                    }
+
+                    // 通知UI更新通讯录
+                    //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_UPDATE_CONTACTS);
+                    ContactsPanel.getContext().notifyDataSetChanged();
+
+                } catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        task.execute(hostname + "/api/v1/users.list.base?count=1000");
     }
 }

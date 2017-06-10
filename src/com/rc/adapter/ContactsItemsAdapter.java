@@ -4,6 +4,7 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.entity.ContactsItem;
+import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.CharacterParser;
 import com.rc.utils.FontUtil;
 
@@ -22,6 +23,7 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
     private List<ContactsItem> contactsItems;
     private List<ContactsItemViewHolder> viewHolders = new ArrayList<>();
     Map<Integer, String> positionMap = new HashMap<>();
+    private ContactsItemViewHolder selectedViewHolder;
 
     public ContactsItemsAdapter(List<ContactsItem> contactsItems)
     {
@@ -108,12 +110,13 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
         viewHolder.add(viewHolder.roomName, new GBC(1, 0).setWeight(10, 1).setFill(GBC.BOTH));
 
 
-        viewHolder.addMouseListener(new MouseListener()
+        viewHolder.addMouseListener(new AbstractMouseListener()
         {
             @Override
             public void mouseClicked(MouseEvent e)
             {
                 setBackground(viewHolder, Colors.ITEM_SELECTED);
+                selectedViewHolder = viewHolder;
 
                 for (ContactsItemViewHolder holder : viewHolders)
                 {
@@ -125,27 +128,21 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
             }
 
             @Override
-            public void mousePressed(MouseEvent e)
-            {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e)
-            {
-
-            }
-
-            @Override
             public void mouseEntered(MouseEvent e)
             {
-
+                if (selectedViewHolder != viewHolder)
+                {
+                    setBackground(viewHolder, Colors.ITEM_SELECTED_DARK);
+                }
             }
 
             @Override
             public void mouseExited(MouseEvent e)
             {
-
+                if (selectedViewHolder != viewHolder)
+                {
+                    setBackground(viewHolder, Colors.DARK);
+                }
             }
         });
     }
