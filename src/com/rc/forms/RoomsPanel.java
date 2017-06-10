@@ -18,13 +18,18 @@ import java.util.List;
  */
 public class RoomsPanel extends ParentAvailablePanel
 {
+    private static RoomsPanel context;
+
     private RCListView roomItemsListView;
     private List<RoomItem> roomItemList;
     private RoomService roomService = Launcher.roomService;
 
+
     public RoomsPanel(JPanel parent)
     {
         super(parent);
+        context = this;
+
         initComponents();
         initView();
         initData();
@@ -67,5 +72,16 @@ public class RoomsPanel extends ParentAvailablePanel
         }
 
         roomItemsListView.setAdapter(new RoomItemsAdapter(roomItemList));
+    }
+
+    public void notifyDataSetChanged()
+    {
+        initData();
+        roomItemsListView.notifyDataSetChange();
+    }
+
+    public static RoomsPanel getContext()
+    {
+        return context;
     }
 }

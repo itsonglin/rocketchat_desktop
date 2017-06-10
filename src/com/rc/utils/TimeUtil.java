@@ -11,8 +11,8 @@ import java.util.Date;
 public class TimeUtil
 {
     private static final SimpleDateFormat daySimpleDateFormat = new SimpleDateFormat("HH:mm");
-    private static final SimpleDateFormat monthSimpleDateFormat = new SimpleDateFormat("MM-dd HH:mm");
-    private static final SimpleDateFormat yearSimpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+    private static final SimpleDateFormat monthSimpleDateFormat = new SimpleDateFormat("MM/dd");
+    private static final SimpleDateFormat yearSimpleDateFormat = new SimpleDateFormat("yyyy/MM/dd");
 
     private static final Calendar calendar = Calendar.getInstance();
 
@@ -48,11 +48,11 @@ public class TimeUtil
         }
         else if (sameYear && diff < 2)
         {
-            ret = "昨天 " + daySimpleDateFormat.format(new Date(timestamp));
+            ret = "昨天"/* + daySimpleDateFormat.format(new Date(timestamp))*/;
         }
         else if (sameYear && diff < 8)
         {
-            ret = "星期" + getWeekDay(calendar.get(Calendar.DAY_OF_WEEK)) + " " + daySimpleDateFormat.format(new Date(timestamp));
+            ret = "星期" + getWeekDay(calendar.get(Calendar.DAY_OF_WEEK))/* + " " + daySimpleDateFormat.format(new Date(timestamp))*/;
         }
         else if (sameYear && diff < 366)
         {

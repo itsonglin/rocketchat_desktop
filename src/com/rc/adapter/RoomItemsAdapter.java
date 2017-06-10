@@ -4,6 +4,7 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.entity.RoomItem;
+import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
 import com.rc.utils.TimeUtil;
@@ -22,6 +23,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
 {
     private List<RoomItem> roomItems;
     private List<RoomItemViewHolder> viewHolders = new ArrayList<>();
+    private RoomItemViewHolder selectedViewHolder; // 当前选中的viewHolder
 
     public RoomItemsAdapter(List<RoomItem> roomItems)
     {
@@ -54,8 +56,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         if (type.equals("c"))
         {
             icon.setImage(AvatarUtil.createAvatar("##", item.getTitle()));
-        }
-        else if (type.equals("p"))
+        } else if (type.equals("p"))
         {
             icon.setImage(AvatarUtil.createAvatar("#", item.getTitle()));
         }
@@ -70,6 +71,13 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         // 消息
         viewHolder.brief.setText(item.getLastMessage());
         //viewHolder.brief.setText("这是一条消息");
+        if (item.getLastMessage() != null && item.getLastMessage().length() > 15)
+        {
+            viewHolder.brief.setText(item.getLastMessage().substring(0, 15) + "...");
+        }else
+        {
+            viewHolder.brief.setText(item.getLastMessage());
+        }
 
         // 时间
         viewHolder.time.setText(TimeUtil.diff(item.getTimestamp()));
@@ -81,8 +89,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         {
             viewHolder.unreadCount.setVisible(true);
             viewHolder.unreadCount.setText(item.getUnreadCount() + "");
-        }
-        else
+        } else
         {
             viewHolder.unreadCount.setVisible(false);
         }
@@ -90,13 +97,13 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         //viewHolder.unreadCount.setText(item.getUnreadCount() + "1");
 
 
-
-        viewHolder.addMouseListener(new MouseListener()
+        viewHolder.addMouseListener(new AbstractMouseListener()
         {
             @Override
             public void mouseClicked(MouseEvent e)
             {
                 setBackground(viewHolder, Colors.ITEM_SELECTED);
+                selectedViewHolder = viewHolder;
 
                 for (RoomItemViewHolder holder : viewHolders)
                 {
@@ -107,28 +114,23 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
                 }
             }
 
-            @Override
-            public void mousePressed(MouseEvent e)
-            {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e)
-            {
-
-            }
 
             @Override
             public void mouseEntered(MouseEvent e)
             {
-
+                if (selectedViewHolder != viewHolder)
+                {
+                    setBackground(viewHolder, Colors.ITEM_SELECTED_DARK);
+                }
             }
 
             @Override
             public void mouseExited(MouseEvent e)
             {
-
+                if (selectedViewHolder != viewHolder)
+                {
+                    setBackground(viewHolder, Colors.DARK);
+                }
             }
         });
     }

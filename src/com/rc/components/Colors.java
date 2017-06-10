@@ -18,7 +18,8 @@ public class Colors
     public static Color FONT_GRAY = new Color(152, 152, 152);
     public static Color FONT_GRAY_DARKER = new Color(152, 152, 152);
     public static Color DARKER = new Color(38, 41, 46);
-    public static Color ITEM_SELECTED = new Color(58, 63, 69);
+    public static Color ITEM_SELECTED_DARK = new Color(57, 63, 68);
+    public static Color ITEM_SELECTED = new Color(65, 71, 78);
     public static Color ITEM_SELECTED_LIGHT = new Color(228, 228, 228);
     public static Color LIGHT_GRAY = new Color(222, 222, 222);
     public static Color PROGRESS_BAR_START = new Color(178, 226, 129);

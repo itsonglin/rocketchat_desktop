@@ -8,8 +8,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="android.ninepatch (2)" level="project" />
-    <orderEntry type="library" name="nv-websocket-client-1.31" level="project" />
+    <orderEntry type="library" exported="" name="lib" level="project" />
+    <orderEntry type="library" exported="" name="nv-websocket-client-1.31" level="project" />
   </component>
 </module>

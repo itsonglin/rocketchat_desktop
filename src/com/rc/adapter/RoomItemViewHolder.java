@@ -7,6 +7,7 @@ import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
@@ -77,8 +78,9 @@ public class RoomItemViewHolder extends ViewHolder
     {
         setLayout(new GridBagLayout());
         add(avatar, new GBC(0, 0).setWeight(2, 1).setFill(GBC.BOTH).setInsets(0, 5, 0, 0));
-        add(nameBrief, new GBC(1, 0).setWeight(9, 1).setFill(GBC.BOTH).setInsets(5, 5, 0, 0));
+        add(nameBrief, new GBC(1, 0).setWeight(100, 1).setFill(GBC.BOTH).setInsets(5, 5, 0, 0));
         add(timeUnread, new GBC(2, 0).setWeight(1, 1).setFill(GBC.BOTH).setInsets(5, 0, 0, 0));
+
     }
 
 

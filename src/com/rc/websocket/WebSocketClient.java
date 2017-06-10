@@ -6,6 +6,7 @@ import com.rc.db.model.*;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
+import com.rc.forms.RoomsPanel;
 import com.rc.websocket.handler.WebSocketListenerAdapter;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.log4j.Logger;
@@ -833,6 +834,8 @@ public class WebSocketClient
         if (updatedUnreadMessageRoomsCount == 0)
         {
             logger.debug("通知UI更新未读数及最后一条消息");
+
+            RoomsPanel.getContext().notifyDataSetChanged();
             // 通知UI更新未读数及最后一条消息
             //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_UPDATE_ROOM_ITEMS);
         }
