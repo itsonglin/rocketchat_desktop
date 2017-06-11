@@ -12,9 +12,21 @@
 		#{deleted}, #{systemMessage}, #{fileAttachmentId}, #{imageAttachmentId})
 	</insert>
 
+    <insert id="insertAll">
+        INSERT INTO message(id, roomId, messageContent, groupable, timestamp,
+        senderUsername, senderId, updatedAt, needToResend, progress, deleted, systemMessage,
+        fileAttachmentId, imageAttachmentId)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            ( #{item.id}, #{item.roomId}, #{item.messageContent}, #{item.groupable}, #{item.timestamp},
+            #{item.senderUsername}, #{item.senderId}, #{item.updatedAt}, #{item.needToResend},
+            #{item.progress}, #{item.deleted}, #{item.systemMessage}, #{item.fileAttachmentId}, #{item.imageAttachmentId})
+        </foreach>
+    </insert>
+
 
     <select id="findById" resultType="Message">
-		SELECT * FROM message where id = #{id}
+		SELECT * FROM message WHERE id = #{id}
 	</select>
 
     <select id="findAll" resultType="Message">
@@ -22,12 +34,18 @@
 	</select>
 
     <select id="find" resultType="Message" statementType="STATEMENT" parameterType="map">
-        SELECT * FROM message where ${field} = ${val}
+        SELECT * FROM message WHERE ${field} = ${val}
     </select>
 
     <select id="findByPage" resultType="Message" statementType="STATEMENT" parameterType="map">
-        SELECT * FROM message where roomId = ${roomId} ORDER BY timestamp ASC limit ${offset}, ${pageLength}
+        SELECT * FROM (SELECT * FROM message WHERE roomId = ${roomId} ORDER BY timestamp DESC limit ${offset}, ${pageLength}) order by timestamp asc
     </select>
+
+    <select id="findBetween" resultType="Message" statementType="STATEMENT" parameterType="map">
+        SELECT * FROM message WHERE roomId = ${roomId} AND timestamp BETWEEN ${start} and ${end}
+    </select>
+
+
 
 
     <select id="count" resultType="java.lang.Integer">
@@ -35,29 +53,30 @@
 	</select>
 
     <select id="countByRoom" resultType="java.lang.Integer">
-        SELECT count(1) FROM message where roomId = #{roomId}
+        SELECT count(1) FROM message WHERE roomId = #{roomId}
     </select>
 
 
-
     <select id="exist" resultType="java.lang.Integer">
-		SELECT count(1) FROM message where id = #{id}
+		SELECT count(1) FROM message WHERE id = #{id}
 	</select>
 
     <select id="findLastMessage" resultType="Message">
         SELECT * FROM message ORDER BY timestamp DESC limit 1
     </select>
 
+    <select id="findLastMessageTime" resultType="java.lang.Long">
+       SELECT MAX(timestamp)  FROM  message WHERE roomId = #{roomId}
+    </select>
 
 
     <delete id="deleteAll">
-		delete from message
+		DELETE FROM message
 	</delete>
 
     <delete id="deleteByRoomId">
-        delete from message where roomId = #{roomId}
+        DELETE FROM message WHERE roomId = #{roomId}
     </delete>
-
 
 
     <update id="update">

@@ -41,4 +41,24 @@ public class MessageDao extends BasicDao
         map.put("pageLength", pageLength);
         return session.selectList("findByPage", map);
     }
+
+    public long findLastMessageTime(String roomId)
+    {
+        Object count = session.selectOne("findLastMessageTime", roomId);
+        return count == null ? -1 : (long) count;
+    }
+
+    public int insertAll(List<Message> list)
+    {
+        return session.insert("insertAll", list);
+    }
+
+    public List<Message> findBetween(String roomId, long start, long end)
+    {
+        Map map = new HashMap();
+        map.put("roomId", "'" + roomId + "'");
+        map.put("start", start);
+        map.put("end", end);
+        return session.selectList("findBetween", map);
+    }
 }

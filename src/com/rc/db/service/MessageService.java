@@ -49,4 +49,19 @@ public class MessageService extends BasicService<MessageDao, Message>
     {
         return dao.findByPage(roomId, page, pageLength);
     }
+
+    public long findLastMessageTime(String roomId)
+    {
+        return dao.findLastMessageTime(roomId);
+    }
+
+    public int insertAll(List<Message> list)
+    {
+        return dao.insertAll(list);
+    }
+
+    public List<Message> findBetween(String roomId, long start, long end)
+    {
+        return dao.findBetween(roomId, start, end);
+    }
 }
