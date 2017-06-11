@@ -14,6 +14,7 @@ import com.rc.utils.ImageCache;
 import com.rc.utils.TimeUtil;
 
 import javax.swing.*;
+import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.net.MalformedURLException;
@@ -113,7 +114,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     {
         MessageLeftAttachmentViewHolder holder = (MessageLeftAttachmentViewHolder) viewHolder;
         holder.time.setText(TimeUtil.diff(item.getTimestamp()));
-        holder.attachmentTitle.setText(item.getFileAttachment().getTitle());
+        holder.attachmentTitle.setText(item.getMessageContent());
         ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
         holder.sender.setText(item.getSenderUsername());
@@ -128,7 +129,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     {
         MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
         holder.time.setText(TimeUtil.diff(item.getTimestamp()));
-        holder.attachmentTitle.setText(item.getFileAttachment().getTitle());
+        holder.attachmentTitle.setText(item.getMessageContent());
         ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
     }
@@ -150,9 +151,11 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         bindAvatarAction(holder.avatar);
 
 
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource(item.getImageAttachment().getImageUrl()));
+        processImage(item, holder.image, holder);
+
+        /*ImageIcon imageIcon = new ImageIcon(getClass().getResource(item.getImageAttachment().getImageUrl()));
         preferredImageSize(imageIcon);
-        holder.image.setIcon(imageIcon);
+        holder.image.setIcon(imageIcon);*/
     }
 
     /**
@@ -165,6 +168,11 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         MessageRightImageViewHolder holder = (MessageRightImageViewHolder) viewHolder;
         holder.time.setText(TimeUtil.diff(item.getTimestamp()));
 
+        processImage(item, holder.image, holder);
+    }
+
+    private void processImage(MessageItem item, JLabel imageLabel, ViewHolder holder)
+    {
         String imageUrl = item.getImageAttachment().getImageUrl();
         String url;
         if (imageUrl.startsWith("/file-upload"))
@@ -182,7 +190,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
             public void onSuccess(ImageIcon icon)
             {
                 preferredImageSize(icon);
-                holder.image.setIcon(icon);
+                imageLabel.setIcon(icon);
                 holder.revalidate();
                 holder.repaint();
             }
@@ -193,10 +201,6 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
 
             }
         });
-
-       /* ImageIcon imageIcon = new ImageIcon(getClass().getResource(item.getImageAttachment().getImageUrl()));
-        preferredImageSize(imageIcon);
-        holder.image.setIcon(imageIcon);*/
     }
 
     /**
@@ -208,7 +212,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     {
         int width = imageIcon.getIconWidth();
         int height = imageIcon.getIconHeight();
-        float scale = width / height * 1.0F;
+        float scale = width * 1.0F / height;
 
         // 限制图片显示大小
         int maxImageWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.2);

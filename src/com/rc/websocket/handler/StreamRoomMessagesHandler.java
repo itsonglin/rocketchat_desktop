@@ -229,7 +229,10 @@ public class StreamRoomMessagesHandler implements CollectionHandler
                             //messageService.delete(Realm.getDefaultInstance(), fileAttachment.getId());
                             messageService.delete(fileAttachment.getId());
                         }
-                       // realm.close();
+
+                        fileAttachmentService.insertOrUpdate(fileAttachment);
+
+                        // realm.close();
                     }
                 }
             }

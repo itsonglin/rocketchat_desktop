@@ -37,10 +37,10 @@ public class ChatPanel extends ParentAvailablePanel
     private CurrentUser currentUser;
 
     // 当前消息分页数
-    private int page = 2;
+    private int page = 1;
 
     // 每次加载的消息条数
-    private static final int PAGE_LENGTH = 2;
+    private static final int PAGE_LENGTH = 10;
 
 
     private String roomId;
@@ -104,8 +104,6 @@ public class ChatPanel extends ParentAvailablePanel
 
     private void loadLocalHistory()
     {
-        //System.out.println(messageService.countByRoom(roomId));
-
         // 当前房间消息总数
         //int msgSum = messageService.countByRoom(roomId);
 
@@ -114,10 +112,17 @@ public class ChatPanel extends ParentAvailablePanel
         for (Message message : messages)
         {
             MessageItem item = new MessageItem(message, currentUser.getUserId());
+
+           /* MessageItem item = new MessageItem();
+            item.setMessageType(MessageItem.RIGHT_TEXT);
+            item.setMessageContent("你好你好");*/
             messageItems.add(item);
         }
+
         messagePanel.getMessageListView().notifyDataSetChange();
+        messagePanel.getMessageListView().setAutoScrollToBottom();
     }
+
 
     public void notifyDataSetChanged()
     {
@@ -125,6 +130,5 @@ public class ChatPanel extends ParentAvailablePanel
         page = 1;
         initData();
     }
-
 
 }

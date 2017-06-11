@@ -42,7 +42,7 @@ public class MessagePanel extends ParentAvailablePanel
         listView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
         listView.setHorizontalScrollBarPolicy(
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        listView.setAutoScrollToBottom();
+        //listView.setAutoScrollToBottom();
     }
 
     private void setListeners()

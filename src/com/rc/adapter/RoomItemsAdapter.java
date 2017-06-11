@@ -99,20 +99,23 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                setBackground(viewHolder, Colors.ITEM_SELECTED);
-                selectedViewHolder = viewHolder;
-
-                for (RoomItemViewHolder holder : viewHolders)
+                if (selectedViewHolder != viewHolder)
                 {
-                    if (holder != viewHolder)
-                    {
-                        setBackground(holder, Colors.DARK);
-                    }
-                }
+                    setBackground(viewHolder, Colors.ITEM_SELECTED);
+                    selectedViewHolder = viewHolder;
 
-                // 加载房间消息
-                ChatPanel.getContext().setRoomId(item.getRoomId());
-                ChatPanel.getContext().notifyDataSetChanged();
+                    for (RoomItemViewHolder holder : viewHolders)
+                    {
+                        if (holder != viewHolder)
+                        {
+                            setBackground(holder, Colors.DARK);
+                        }
+                    }
+
+                    // 加载房间消息
+                    ChatPanel.getContext().setRoomId(item.getRoomId());
+                    ChatPanel.getContext().notifyDataSetChanged();
+                }
             }
 
 

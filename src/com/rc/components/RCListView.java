@@ -22,8 +22,10 @@ public class RCListView extends JScrollPane
     private int vGap;
     private int hGap;
     private java.util.List<Rectangle> rectangleList = new ArrayList<>();
-    boolean scrollToBottom = true;
-    private AdjustmentListener adjustmentListener;
+    boolean scrollToBottom = false;
+    private  AdjustmentListener adjustmentListener;
+    private  MouseAdapter mouseAdapter;
+    private boolean registerAdjustmentListener = false;
 
     public RCListView()
     {
@@ -36,6 +38,7 @@ public class RCListView extends JScrollPane
         this.hGap = hGap;
 
         initComponents();
+        //setListeners();
         //fillComponents();
     }
 
@@ -63,36 +66,62 @@ public class RCListView extends JScrollPane
 
     }
 
+    private void setListeners()
+    {
+        if (adjustmentListener == null)
+        {
+            adjustmentListener = new AdjustmentListener()
+            {
+                public void adjustmentValueChanged(AdjustmentEvent evt)
+                {
+                    System.out.println("adjustmentValueChanged");
+                    if (evt.getAdjustmentType() == AdjustmentEvent.TRACK/* && scrollToBottom*/)
+                    {
+                        getVerticalScrollBar().setValue(getVerticalScrollBar().getModel().getMaximum()
+                                - getVerticalScrollBar().getModel().getExtent());
+                    } /*else
+                    {
+                        registerAdjustmentListener = false;
+                        System.out.println("取消注册。。。");
+                        getVerticalScrollBar().removeAdjustmentListener(adjustmentListener);
+                        removeMouseListener(mouseAdapter);
+                    }*/
+                }
+            };
+        }
+
+        if (mouseAdapter == null)
+        {
+            mouseAdapter = new MouseAdapter()
+            {
+                @Override
+                public void mouseEntered(MouseEvent e)
+                {
+                    System.out.println("mouseEntered");
+                    //scrollToBottom = false;
+                    registerAdjustmentListener = false;
+                    System.out.println("取消注册。。。");
+                    getVerticalScrollBar().removeAdjustmentListener(adjustmentListener);
+                    removeMouseListener(mouseAdapter);
+
+                    super.mouseEntered(e);
+                }
+            };
+        }
+
+        if (!registerAdjustmentListener)
+        {
+            System.out.printf("注册...");
+            getVerticalScrollBar().addAdjustmentListener(adjustmentListener);
+            addMouseListener(mouseAdapter);
+            registerAdjustmentListener = true;
+        }
+    }
+
     public void setAutoScrollToBottom()
     {
-        adjustmentListener = new AdjustmentListener()
-        {
-            public void adjustmentValueChanged(AdjustmentEvent evt)
-            {
-                if (evt.getAdjustmentType() == AdjustmentEvent.TRACK && scrollToBottom)
-                {
-                    getVerticalScrollBar().setValue(getVerticalScrollBar().getModel().getMaximum()
-                            - getVerticalScrollBar().getModel().getExtent());
-                }
-                else
-                {
-                    getVerticalScrollBar().removeAdjustmentListener(adjustmentListener);
-                }
-            }
-        };
-
-        getVerticalScrollBar().addAdjustmentListener(adjustmentListener);
-
-
-        addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                scrollToBottom = false;
-                super.mouseEntered(e);
-            }
-        });
+        scrollToBottom = true;
+        setListeners();
     }
 
     public void fillComponents()
@@ -130,7 +159,7 @@ public class RCListView extends JScrollPane
         this.adapter = adapter;
 
         fillComponents();
-        scrollToPosition(0);
+        //scrollToPosition(0);
     }
 
     public void setContentPanelBackground(Color color)
@@ -170,7 +199,6 @@ public class RCListView extends JScrollPane
     public void notifyDataSetChange()
     {
         contentPanel.removeAll();
-        repaint();
         fillComponents();
         contentPanel.revalidate();
     }

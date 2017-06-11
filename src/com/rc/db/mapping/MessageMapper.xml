@@ -26,7 +26,7 @@
     </select>
 
     <select id="findByPage" resultType="Message" statementType="STATEMENT" parameterType="map">
-        SELECT * FROM message where roomId = ${roomId} limit ${offset}, ${pageLength}
+        SELECT * FROM message where roomId = ${roomId} ORDER BY timestamp ASC limit ${offset}, ${pageLength}
     </select>
 
 
