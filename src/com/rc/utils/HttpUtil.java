@@ -191,6 +191,10 @@ public class HttpUtil
         return false;
     }
 
+    public static byte[] download(String url)
+    {
+        return download(url, null, null, null);
+    }
 
     public static byte[] download(String url, Map<String, String> headers, Map<String, String> params, ProgressListener listener)
     {
@@ -233,8 +237,13 @@ public class HttpUtil
                 {
                     outputStream.write(buff, 0, len);
                     sum += len;
-                    int progress = (int) (sum * 1.0f / total * 100);
-                    listener.onProgress(progress);
+
+                    if (listener != null)
+                    {
+                        int progress = (int) (sum * 1.0f / total * 100);
+                        listener.onProgress(progress);
+                    }
+
 
                 }
 

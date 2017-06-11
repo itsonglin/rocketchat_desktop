@@ -24,6 +24,9 @@ public class Launcher
     public static ImageAttachmentService imageAttachmentService;
     public static FileAttachmentService fileAttachmentService;
 
+    public static final String HOSTNAME = "https://rc.shls-leasing.com";
+
+
     static
     {
         sqlSession = DbUtils.getSqlSession();

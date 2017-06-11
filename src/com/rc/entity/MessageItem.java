@@ -1,5 +1,10 @@
 package com.rc.entity;
 
+import com.rc.app.Launcher;
+import com.rc.db.model.FileAttachment;
+import com.rc.db.model.ImageAttachment;
+import com.rc.db.model.Message;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,19 +38,21 @@ public class MessageItem implements Comparable<MessageItem>
     private boolean deleted;
     private int messageType;
 
-    List<FileAttachmentItem> fileAttachments = new ArrayList<>();
-    List<ImageAttachmentItem> imageAttachments = new ArrayList<>();
+    /*List<FileAttachmentItem> fileAttachments = new ArrayList<>();
+    List<ImageAttachmentItem> imageAttachments = new ArrayList<>();*/
+
+    private FileAttachmentItem fileAttachment;
+    private ImageAttachmentItem imageAttachment;
 
     public MessageItem()
     {
     }
 
-    /*public MessageItem(Message message, String currentUserId)
+    public MessageItem(Message message, String currentUserId)
     {
         this();
         this.setId(message.getId());
         this.setMessageContent(message.getMessageContent());
-
         this.setGroupable(message.isGroupable());
         this.setRoomId(message.getRoomId());
         this.setSenderId(message.getSenderId());
@@ -56,7 +63,25 @@ public class MessageItem implements Comparable<MessageItem>
         this.setProgress(message.getProgress());
         this.setDeleted(message.isDeleted());
 
-        for (FileAttachment fa : message.getFileAttachments())
+        boolean isFileAttachment = false;
+        boolean isImageAttachment = false;
+
+        if (message.getFileAttachmentId() != null)
+        {
+            isFileAttachment = true;
+
+            FileAttachment fa = Launcher.fileAttachmentService.findById(message.getFileAttachmentId());
+            this.fileAttachment = new FileAttachmentItem(fa);
+        }
+        if (message.getImageAttachmentId() != null)
+        {
+            isImageAttachment = true;
+
+            ImageAttachment ia = Launcher.imageAttachmentService.findById(message.getImageAttachmentId());
+            this.imageAttachment = new ImageAttachmentItem(ia);
+        }
+
+        /*for (FileAttachment fa : message.getFileAttachments())
         {
             this.fileAttachments.add(new FileAttachmentItem(fa));
         }
@@ -64,7 +89,7 @@ public class MessageItem implements Comparable<MessageItem>
         for (ImageAttachment ia : message.getImageAttachments())
         {
             this.imageAttachments.add(new ImageAttachmentItem(ia));
-        }
+        }*/
 
         if (message.isSystemMessage())
         {
@@ -76,12 +101,12 @@ public class MessageItem implements Comparable<MessageItem>
             if (message.getSenderId().equals(currentUserId))
             {
                 // 文件附件
-                if (message.getFileAttachments().size() > 0)
+                if (isFileAttachment)
                 {
                     this.setMessageType(RIGHT_ATTACHMENT);
                 }
                 // 图片消息
-                else if (message.getImageAttachments().size() > 0)
+                else if (isImageAttachment)
                 {
                     this.setMessageType(RIGHT_IMAGE);
                 }
@@ -94,12 +119,12 @@ public class MessageItem implements Comparable<MessageItem>
             else
             {
                 // 文件附件
-                if (message.getFileAttachments().size() > 0)
+                if (isFileAttachment)
                 {
                     this.setMessageType(LEFT_ATTACHMENT);
                 }
                 // 图片消息
-                else if (message.getImageAttachments().size() > 0)
+                else if (isImageAttachment)
                 {
                     this.setMessageType(LEFT_IMAGE);
                 }
@@ -110,7 +135,14 @@ public class MessageItem implements Comparable<MessageItem>
                 }
             }
         }
-    }*/
+    }
+
+    @Override
+    public int compareTo( MessageItem o)
+    {
+        return (int) (this.getTimestamp() - o.getTimestamp());
+
+    }
 
     public String getId()
     {
@@ -192,27 +224,6 @@ public class MessageItem implements Comparable<MessageItem>
         this.updatedAt = updatedAt;
     }
 
-    public List<FileAttachmentItem> getFileAttachments()
-    {
-        return fileAttachments;
-    }
-
-    public void setFileAttachments(List<FileAttachmentItem> fileAttachments)
-    {
-        this.fileAttachments = fileAttachments;
-    }
-
-    public List<ImageAttachmentItem> getImageAttachments()
-    {
-        return imageAttachments;
-    }
-
-    public void setImageAttachments(List<ImageAttachmentItem> imageAttachments)
-    {
-        this.imageAttachments = imageAttachments;
-    }
-
-
     public int getUnreadCount()
     {
         return unreadCount;
@@ -223,13 +234,6 @@ public class MessageItem implements Comparable<MessageItem>
         this.unreadCount = unreadCount;
     }
 
-    @Override
-    public int compareTo( MessageItem o)
-    {
-        return (int) (this.getTimestamp() - o.getTimestamp());
-
-    }
-
     public boolean isNeedToResend()
     {
         return needToResend;
@@ -238,26 +242,6 @@ public class MessageItem implements Comparable<MessageItem>
     public void setNeedToResend(boolean needToResend)
     {
         this.needToResend = needToResend;
-    }
-
-    @Override
-    public String toString()
-    {
-        return "MessageItem{" +
-                "id='" + id + '\'' +
-                ", roomId='" + roomId + '\'' +
-                ", messageContent='" + messageContent + '\'' +
-                ", groupable=" + groupable +
-                ", timestamp=" + timestamp +
-                ", senderUsername='" + senderUsername + '\'' +
-                ", senderId='" + senderId + '\'' +
-                ", updatedAt=" + updatedAt +
-                ", unreadCount=" + unreadCount +
-                ", needToResend=" + needToResend +
-                ", progress=" + progress +
-                ", fileAttachments=" + fileAttachments +
-                ", imageAttachments=" + imageAttachments +
-                '}';
     }
 
     public int getProgress()
@@ -288,6 +272,26 @@ public class MessageItem implements Comparable<MessageItem>
     public void setMessageType(int messageType)
     {
         this.messageType = messageType;
+    }
+
+    public FileAttachmentItem getFileAttachment()
+    {
+        return fileAttachment;
+    }
+
+    public void setFileAttachment(FileAttachmentItem fileAttachment)
+    {
+        this.fileAttachment = fileAttachment;
+    }
+
+    public ImageAttachmentItem getImageAttachment()
+    {
+        return imageAttachment;
+    }
+
+    public void setImageAttachment(ImageAttachmentItem imageAttachment)
+    {
+        this.imageAttachment = imageAttachment;
     }
 }
 

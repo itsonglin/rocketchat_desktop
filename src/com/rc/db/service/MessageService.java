@@ -6,6 +6,8 @@ import com.rc.db.model.Message;
 import com.rc.db.model.Room;
 import org.apache.ibatis.session.SqlSession;
 
+import java.util.List;
+
 /**
  * Created by song on 08/06/2017.
  */
@@ -36,5 +38,15 @@ public class MessageService extends BasicService<MessageDao, Message>
     public int deleteByRoomId(String roomId)
     {
         return dao.deleteByRoomId(roomId);
+    }
+
+    public int countByRoom(String roomId)
+    {
+        return dao.countByRoom(roomId);
+    }
+
+    public List<Message> findByPage(String roomId, int page, int pageLength)
+    {
+        return dao.findByPage(roomId, page, pageLength);
     }
 }

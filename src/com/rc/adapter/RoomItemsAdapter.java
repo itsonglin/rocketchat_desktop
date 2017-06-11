@@ -1,18 +1,15 @@
 package com.rc.adapter;
 
 import com.rc.components.Colors;
-import com.rc.components.GBC;
-import com.rc.components.RCBorder;
 import com.rc.entity.RoomItem;
+import com.rc.forms.ChatPanel;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.AvatarUtil;
-import com.rc.utils.FontUtil;
 import com.rc.utils.TimeUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,6 +109,10 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
                         setBackground(holder, Colors.DARK);
                     }
                 }
+
+                // 加载房间消息
+                ChatPanel.getContext().setRoomId(item.getRoomId());
+                ChatPanel.getContext().notifyDataSetChanged();
             }
 
 

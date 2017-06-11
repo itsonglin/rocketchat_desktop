@@ -25,9 +25,20 @@
         SELECT * FROM message where ${field} = ${val}
     </select>
 
+    <select id="findByPage" resultType="Message" statementType="STATEMENT" parameterType="map">
+        SELECT * FROM message where roomId = ${roomId} limit ${offset}, ${pageLength}
+    </select>
+
+
     <select id="count" resultType="java.lang.Integer">
 		SELECT count(1) FROM message
 	</select>
+
+    <select id="countByRoom" resultType="java.lang.Integer">
+        SELECT count(1) FROM message where roomId = #{roomId}
+    </select>
+
+
 
     <select id="exist" resultType="java.lang.Integer">
 		SELECT count(1) FROM message where id = #{id}

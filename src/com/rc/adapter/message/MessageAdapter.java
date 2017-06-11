@@ -2,16 +2,22 @@ package com.rc.adapter.message;
 
 import com.rc.adapter.BaseAdapter;
 import com.rc.adapter.ViewHolder;
+import com.rc.app.Launcher;
+import com.rc.db.model.CurrentUser;
+import com.rc.db.service.CurrentUserService;
 import com.rc.entity.MessageItem;
 import com.rc.forms.MainFrame;
 import com.rc.forms.UserInfoPopup;
 import com.rc.helper.AttachmentIconHelper;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.ImageCache;
 import com.rc.utils.TimeUtil;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -21,10 +27,15 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
 {
     private List<MessageItem> messageItems;
     private AttachmentIconHelper attachmentIconHelper = new AttachmentIconHelper();
+    private CurrentUserService currentUserService = Launcher.currentUserService;
+    private CurrentUser currentUser;
+    private ImageCache imageCache;
 
     public MessageAdapter(List<MessageItem> messageItems)
     {
         this.messageItems = messageItems;
+        currentUser = currentUserService.findAll().get(0);
+        imageCache = new ImageCache();
     }
 
     @Override
@@ -102,9 +113,8 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     {
         MessageLeftAttachmentViewHolder holder = (MessageLeftAttachmentViewHolder) viewHolder;
         holder.time.setText(TimeUtil.diff(item.getTimestamp()));
-        holder.attachmentTitle.setText(item.getFileAttachments().get(0).getTitle());
-        ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachments()
-                .get(0).getTitle());
+        holder.attachmentTitle.setText(item.getFileAttachment().getTitle());
+        ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
         holder.sender.setText(item.getSenderUsername());
 
@@ -118,9 +128,8 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     {
         MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
         holder.time.setText(TimeUtil.diff(item.getTimestamp()));
-        holder.attachmentTitle.setText(item.getFileAttachments().get(0).getTitle());
-        ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachments()
-                .get(0).getTitle());
+        holder.attachmentTitle.setText(item.getFileAttachment().getTitle());
+        ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
     }
 
@@ -141,7 +150,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         bindAvatarAction(holder.avatar);
 
 
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource(item.getImageAttachments().get(0).getImageUrl()));
+        ImageIcon imageIcon = new ImageIcon(getClass().getResource(item.getImageAttachment().getImageUrl()));
         preferredImageSize(imageIcon);
         holder.image.setIcon(imageIcon);
     }
@@ -156,9 +165,38 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         MessageRightImageViewHolder holder = (MessageRightImageViewHolder) viewHolder;
         holder.time.setText(TimeUtil.diff(item.getTimestamp()));
 
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource(item.getImageAttachments().get(0).getImageUrl()));
+        String imageUrl = item.getImageAttachment().getImageUrl();
+        String url;
+        if (imageUrl.startsWith("/file-upload"))
+        {
+            url = Launcher.HOSTNAME + imageUrl + ".jpg?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
+        }
+        else
+        {
+            url = "file://" + imageUrl;
+        }
+
+        imageCache.request(item.getImageAttachment().getId(), url, new ImageCache.CacheRequestListener()
+        {
+            @Override
+            public void onSuccess(ImageIcon icon)
+            {
+                preferredImageSize(icon);
+                holder.image.setIcon(icon);
+                holder.revalidate();
+                holder.repaint();
+            }
+
+            @Override
+            public void onFailed(String why)
+            {
+
+            }
+        });
+
+       /* ImageIcon imageIcon = new ImageIcon(getClass().getResource(item.getImageAttachment().getImageUrl()));
         preferredImageSize(imageIcon);
-        holder.image.setIcon(imageIcon);
+        holder.image.setIcon(imageIcon);*/
     }
 
     /**

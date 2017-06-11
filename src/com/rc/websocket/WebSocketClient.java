@@ -48,7 +48,7 @@ public class WebSocketClient
 
     private WebSocket webSocket;
     private SubscriptionHelper subscriptionHelper;
-    private String hostname = "https://rc.shls-leasing.com";
+    private String hostname = Launcher.HOSTNAME;
     private Logger logger;
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private RoomService roomService = Launcher.roomService;
@@ -239,7 +239,7 @@ public class WebSocketClient
                         && !id.startsWith("SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE"))*/
                 {
 
-                    logger.debug("收到消息  " + text);
+                    //logger.debug("收到消息  " + text);
                 }
 
 

@@ -9,15 +9,15 @@
 	</insert>
 
 
-    <select id="findById" resultType="FileAttachment">
+    <select id="findById" resultType="ImageAttachment">
 		SELECT * FROM image_attachment where id = #{id}
 	</select>
 
-    <select id="findAll" resultType="FileAttachment">
+    <select id="findAll" resultType="ImageAttachment">
 		SELECT * FROM image_attachment
 	</select>
 
-    <select id="find" resultType="FileAttachment" statementType="STATEMENT" parameterType="map">
+    <select id="find" resultType="ImageAttachment" statementType="STATEMENT" parameterType="map">
         SELECT * FROM image_attachment where ${field} = ${val}
     </select>
 

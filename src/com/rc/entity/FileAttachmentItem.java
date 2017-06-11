@@ -1,5 +1,7 @@
 package com.rc.entity;
 
+import com.rc.db.model.FileAttachment;
+
 /**
  * Created by song on 17/05/2017.
  */
@@ -15,10 +17,19 @@ public class FileAttachmentItem
     {
 
     }
+
     public FileAttachmentItem(String link)
     {
 
         this.link = link;
+    }
+
+    public FileAttachmentItem(FileAttachment fa)
+    {
+        this.id = fa.getId();
+        this.title = fa.getTitle();
+        this.link = fa.getLink();
+        this.description = fa.getDescription();
     }
 
     /*public FileAttachmentItem(FileAttachment fa)

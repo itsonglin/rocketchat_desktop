@@ -1,5 +1,7 @@
 package com.rc.entity;
 
+import com.rc.db.model.ImageAttachment;
+
 /**
  * Created by song on 17/05/2017.
  */
@@ -23,7 +25,7 @@ public class ImageAttachmentItem
         this.imageUrl = imageUrl;
     }
 
-   /* public ImageAttachmentItem(ImageAttachment ia)
+    public ImageAttachmentItem(ImageAttachment ia)
     {
         this.id = ia.getId();
         this.title = ia.getTitle();
@@ -32,7 +34,7 @@ public class ImageAttachmentItem
         this.width = ia.getWidth();
         this.height = ia.getHeight();
         this.imagesize = ia.getImagesize();
-    }*/
+    }
 
     public String getId()
     {
