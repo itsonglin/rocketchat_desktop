@@ -42,7 +42,7 @@
     </select>
 
     <select id="findBetween" resultType="Message" statementType="STATEMENT" parameterType="map">
-        SELECT * FROM message WHERE roomId = ${roomId} AND timestamp BETWEEN ${start} and ${end}
+        SELECT * FROM message WHERE roomId = ${roomId} AND timestamp BETWEEN ${start} and ${end} order by timestamp asc
     </select>
 
 

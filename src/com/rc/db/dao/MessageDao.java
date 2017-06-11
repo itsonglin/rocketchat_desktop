@@ -50,7 +50,9 @@ public class MessageDao extends BasicDao
 
     public int insertAll(List<Message> list)
     {
-        return session.insert("insertAll", list);
+        int count = session.insert("insertAll", list);
+        session.commit();
+        return count;
     }
 
     public List<Message> findBetween(String roomId, long start, long end)

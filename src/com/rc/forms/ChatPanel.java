@@ -145,18 +145,26 @@ public class ChatPanel extends ParentAvailablePanel
 
         List<Message> messages = messageService.findByPage(roomId, page++, PAGE_LENGTH);
 
-        for (Message message : messages)
+        if (messages.size() > 0 )
         {
-            MessageItem item = new MessageItem(message, currentUser.getUserId());
+            for (Message message : messages)
+            {
+                MessageItem item = new MessageItem(message, currentUser.getUserId());
 
            /* MessageItem item = new MessageItem();
             item.setMessageType(MessageItem.RIGHT_TEXT);
             item.setMessageContent("你好你好");*/
-            messageItems.add(item);
+                messageItems.add(item);
+            }
+
+            messagePanel.getMessageListView().notifyDataSetChange();
+            messagePanel.getMessageListView().setAutoScrollToBottom();
+        }
+        else
+        {
+            page = 1;
         }
 
-        messagePanel.getMessageListView().notifyDataSetChange();
-        messagePanel.getMessageListView().setAutoScrollToBottom();
     }
 
     private void updateUnreadCount(int count)
@@ -416,7 +424,7 @@ public class ChatPanel extends ParentAvailablePanel
                         ImageAttachment imageAttachment = new ImageAttachment();
                         imageAttachment.setId(message.getJSONObject("file").getString("_id"));
                         imageAttachment.setTitle(attachment.getString("title"));
-                        imageAttachment.setDescription(attachment.getString("description"));
+                        imageAttachment.setDescription(attachment.get("description").toString());
                         imageAttachment.setImageUrl(attachment.getString("image_url"));
                         imageAttachment.setImagesize(attachment.getLong("image_size"));
                         if (attachment.has("image_dimensions"))
@@ -458,8 +466,14 @@ public class ChatPanel extends ParentAvailablePanel
         if (messageList.size() > 0)
         {
             //messageService.insertOrUpdateAll(Realm.getDefaultInstance(), messageList);
-            int count = messageService.insertAll(messageList);
-            System.out.println("新增消息数：" + count);
+            //int count = messageService.insertAll(messageList);
+
+            for (Message msg : messageList)
+            {
+                messageService.insert(msg);
+            }
+
+            System.out.println("新增消息数：" + messageList.size());
 
 
             notifyNewMessageLoaded(loadUnread);
@@ -485,8 +499,12 @@ public class ChatPanel extends ParentAvailablePanel
         long from;
         if (messageItems != null)
         {
+
             //long utcCurr = simpleDateFormat.parse(getCurrentUTCTime()).getTime();
-            long utcCurr = System.currentTimeMillis();
+            // 下面这句在系统时间不准时会出错
+            //long utcCurr = System.currentTimeMillis();
+            long utcCurr = 9999999999999L;
+
             // 已有消息，追加
             if (messageItems.size() > 0)
             {
@@ -503,22 +521,22 @@ public class ChatPanel extends ParentAvailablePanel
                 }
 
                 //recyclerview.getAdapter().notifyDataSetChanged();
-                messagePanel.getMessageListView().notifyDataSetChange();
-
-
-                // 如果当前是从消息搜索界面过来的，加载了新的消息后不滚动到最后
-                if (!loadUnread && firstMessageTimestamp != 0L)
+                if (messages.size() > 0)
                 {
-                    //recyclerview.scrollToPosition(recyclerview.getAdapter().getItemCount() - 1);
-                    messagePanel.getMessageListView().setAutoScrollToBottom();
+                    messagePanel.getMessageListView().notifyDataSetChange();
+                    // 如果当前是从消息搜索界面过来的，加载了新的消息后不滚动到最后
+                    if (!loadUnread && firstMessageTimestamp != 0L)
+                    {
+                        //recyclerview.scrollToPosition(recyclerview.getAdapter().getItemCount() - 1);
+                        messagePanel.getMessageListView().setAutoScrollToBottom();
+                    }
                 }
             }
             // 无消息,加载本地消息
-           /* else
+            else
             {
-                // 7天内的消息
-                loadLocalHistoryUntilFirstShown(utcCurr);
-            }*/
+                loadLocalHistory();
+            }
         }
     }
 

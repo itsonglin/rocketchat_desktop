@@ -39,9 +39,9 @@
             id=#{id},
             title=#{title},
             imageUrl=#{imageUrl},
-            description=#{description}
-            width=#{width}
-            height=#{height}
+            description=#{description},
+            width=#{width},
+            height=#{height},
             imagesize=#{imagesize}
         </set>
         WHERE id=#{id}
