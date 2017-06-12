@@ -50,14 +50,6 @@ public class MessageRightTextViewHolder extends ViewHolder
         imageIcon.setImage(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
         avatar.setIcon(imageIcon);
 
-        addComponentListener(new ComponentAdapter()
-        {
-            @Override
-            public void componentResized(ComponentEvent e)
-            {
-               // text.setText(text.getText());
-            }
-        });
 
         time.setForeground(Colors.FONT_GRAY);
         time.setFont(FontUtil.getDefaultFont(12));

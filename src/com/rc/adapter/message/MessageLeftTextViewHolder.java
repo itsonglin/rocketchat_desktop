@@ -43,15 +43,6 @@ public class MessageLeftTextViewHolder extends ViewHolder
         text = new SizeAutoAdjustTextArea(maxWidth);
 
 
-        addComponentListener(new ComponentAdapter()
-        {
-            @Override
-            public void componentResized(ComponentEvent e)
-            {
-                text.setText(text.getText());
-            }
-        });
-
         time.setForeground(Colors.FONT_GRAY);
         time.setFont(FontUtil.getDefaultFont(12));
 

@@ -35,14 +35,10 @@ public class MessagePanel extends ParentAvailablePanel
 
     private void initComponents()
     {
-        //getData();
-
         listView = new RCListView(0, 15);
-        //listView.setVisible(false);
         listView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
         listView.setHorizontalScrollBarPolicy(
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        //listView.setAutoScrollToBottom();
     }
 
     private void setListeners()

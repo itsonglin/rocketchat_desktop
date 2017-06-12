@@ -6,10 +6,7 @@ import com.rc.adapter.ViewHolder;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.AdjustmentEvent;
-import java.awt.event.AdjustmentListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 /**
@@ -23,9 +20,13 @@ public class RCListView extends JScrollPane
     private int hGap;
     private java.util.List<Rectangle> rectangleList = new ArrayList<>();
     boolean scrollToBottom = false;
-    private  AdjustmentListener adjustmentListener;
-    private  MouseAdapter mouseAdapter;
-    private boolean registerAdjustmentListener = false;
+    private AdjustmentListener adjustmentListener;
+    private MouseAdapter mouseAdapter;
+
+    // 监听滚动到顶部事件
+    private ScrollToTopListener scrollToTopListener;
+    private boolean scrollBarPressed = false;
+    private int lastScrollValue = -1;
 
     public RCListView()
     {
@@ -38,7 +39,7 @@ public class RCListView extends JScrollPane
         this.hGap = hGap;
 
         initComponents();
-        //setListeners();
+        setListeners();
         //fillComponents();
     }
 
@@ -68,60 +69,73 @@ public class RCListView extends JScrollPane
 
     private void setListeners()
     {
-        if (adjustmentListener == null)
+        adjustmentListener = new AdjustmentListener()
         {
-            adjustmentListener = new AdjustmentListener()
+            public void adjustmentValueChanged(AdjustmentEvent evt)
             {
-                public void adjustmentValueChanged(AdjustmentEvent evt)
-                {
-                    System.out.println("adjustmentValueChanged");
-                    if (evt.getAdjustmentType() == AdjustmentEvent.TRACK/* && scrollToBottom*/)
-                    {
-                        getVerticalScrollBar().setValue(getVerticalScrollBar().getModel().getMaximum()
-                                - getVerticalScrollBar().getModel().getExtent());
-                    } /*else
-                    {
-                        registerAdjustmentListener = false;
-                        System.out.println("取消注册。。。");
-                        getVerticalScrollBar().removeAdjustmentListener(adjustmentListener);
-                        removeMouseListener(mouseAdapter);
-                    }*/
-                }
-            };
-        }
+                // 之所以要加上!scrollBarPressed这个条件，scrollBar在顶部的时间，scrollbar点击和释放都分别会触发adjustmentValueChanged这个事件
+                // 所以只让scrollBar释放的时候触发这个回调
+                // !scrollToBottom 这个条件保证在自动滚动到底部之前，不会调用此回调
 
-        if (mouseAdapter == null)
+                if (evt.getValue() == 0 && evt.getValue() != lastScrollValue && scrollToTopListener != null && !scrollBarPressed && !scrollToBottom)
+                {
+                    System.out.println("已到顶部, value = " + evt.getValue() + ", max = " + getVerticalScrollBar().getMaximum());
+                    scrollToTopListener.onScrollToTop();
+                }
+
+                if (evt.getAdjustmentType() == AdjustmentEvent.TRACK && scrollToBottom)
+                {
+                    System.out.println("滚动到底部, value = " + evt.getValue() + ", max = " + getVerticalScrollBar().getMaximum());
+
+                    getVerticalScrollBar().setValue(getVerticalScrollBar().getModel().getMaximum()
+                            - getVerticalScrollBar().getModel().getExtent());
+                }
+
+                lastScrollValue = evt.getValue();
+
+            }
+        };
+
+        mouseAdapter = new MouseAdapter()
         {
-            mouseAdapter = new MouseAdapter()
+            @Override
+            public void mousePressed(MouseEvent e)
             {
-                @Override
-                public void mouseEntered(MouseEvent e)
-                {
-                    System.out.println("mouseEntered");
-                    //scrollToBottom = false;
-                    registerAdjustmentListener = false;
-                    System.out.println("取消注册。。。");
-                    getVerticalScrollBar().removeAdjustmentListener(adjustmentListener);
-                    removeMouseListener(mouseAdapter);
+                System.out.println("scrollToBottom = false;");
+                scrollToBottom = false;
+                scrollBarPressed = true;
+                super.mouseEntered(e);
+            }
 
-                    super.mouseEntered(e);
-                }
-            };
-        }
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                scrollBarPressed = false;
+                super.mouseReleased(e);
+            }
 
-        if (!registerAdjustmentListener)
-        {
-            System.out.printf("注册...");
-            getVerticalScrollBar().addAdjustmentListener(adjustmentListener);
-            addMouseListener(mouseAdapter);
-            registerAdjustmentListener = true;
-        }
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e)
+            {
+                scrollToBottom = false;
+                super.mouseWheelMoved(e);
+            }
+        };
+
+        getVerticalScrollBar().addAdjustmentListener(adjustmentListener);
+        getVerticalScrollBar().addMouseListener(mouseAdapter);
+        addMouseListener(mouseAdapter);
+        addMouseWheelListener(mouseAdapter);
     }
 
     public void setAutoScrollToBottom()
     {
         scrollToBottom = true;
-        setListeners();
+    }
+
+    public void setAutoScrollToTop()
+    {
+        getVerticalScrollBar().setValue(1);
     }
 
     public void fillComponents()
@@ -201,5 +215,17 @@ public class RCListView extends JScrollPane
         contentPanel.removeAll();
         fillComponents();
         contentPanel.revalidate();
+        //lastScrollValue = -1;
+    }
+
+    public void setScrollToTopListener(ScrollToTopListener listener)
+    {
+        this.scrollToTopListener = listener;
+    }
+
+
+    public interface ScrollToTopListener
+    {
+        void onScrollToTop();
     }
 }

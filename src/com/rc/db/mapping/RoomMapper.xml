@@ -31,6 +31,10 @@
 		SELECT count(1) FROM room where roomId = #{id}
 	</select>
 
+    <delete id="delete">
+        delete from room where roomId = #{id}
+    </delete>
+
     <delete id="deleteAll">
 		delete from room
 	</delete>

@@ -64,4 +64,9 @@ public class MessageService extends BasicService<MessageDao, Message>
     {
         return dao.findBetween(roomId, start, end);
     }
+
+    public long findFirstMessageTime(String roomId)
+    {
+        return dao.findFirstMessageTime(roomId);
+    }
 }

@@ -69,6 +69,10 @@
        SELECT MAX(timestamp)  FROM  message WHERE roomId = #{roomId}
     </select>
 
+    <select id="findFirstMessageTime" resultType="java.lang.Long">
+        SELECT MIN(timestamp)  FROM  message WHERE roomId = #{roomId}
+    </select>
+
 
     <delete id="deleteAll">
 		DELETE FROM message

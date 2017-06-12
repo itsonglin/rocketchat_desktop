@@ -1,18 +1,23 @@
 package com.rc.utils;
 
+import com.sun.image.codec.jpeg.JPEGCodec;
+import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.apache.log4j.Logger;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
 /**
  * Created by song on 2017/6/11.
  */
 public class ImageCache
 {
+    public static final int THUMB = 0;
+    public static final int ORIGINAL = 1;
+
     private String CACHE_ROOT_PATH;
     Logger logger = Logger.getLogger(this.getClass());
 
@@ -28,61 +33,172 @@ public class ImageCache
                 file.mkdirs();
                 System.out.println("创建图片缓存目录：" + file.getAbsolutePath());
             }
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             CACHE_ROOT_PATH = "./";
         }
     }
 
-    public static void main(String[] a)
+    public ImageIcon tryGetThumbCache(String identify)
     {
-        ImageCache cache= new ImageCache();
-        String url = "https://rc.shls-leasing.com/file-upload/7yQLcXcPy6dkB2Rfb/ad_image.jpg.jpg?rc_uid=Ni7bJcX3W8yExKSa3&rc_token=Kffvg9XoLpH2o38wMZ3QmKUV1_nDFNAmpPiaH-uDHwM";
-        cache.request("7yQLcXcPy6dkB2Rfb", url, new CacheRequestListener()
-        {
-            @Override
-            public void onSuccess(ImageIcon icon)
-            {
-                System.out.println("success");
-            }
-
-            @Override
-            public void onFailed(String why)
-            {
-                System.out.println("failed");
-            }
-        });
-    }
-
-    public void request(String identify, String url, CacheRequestListener listener)
-    {
-        File cacheFile = new File(CACHE_ROOT_PATH + "/" + identify);
+        File cacheFile = new File(CACHE_ROOT_PATH + "/" + identify + "_thumb");
         if (cacheFile.exists())
         {
             ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
-            listener.onSuccess(icon);
+            return icon;
         }
-        else
+
+        return null;
+    }
+
+
+    /**
+     * 异步获取图像缩略图
+     * @param identify
+     * @param url
+     * @param listener
+     */
+    public void requestThumbAsynchronously(String identify, String url, CacheRequestListener listener)
+    {
+        requestImage(THUMB, identify, url, listener);
+
+    }
+
+    /**
+     * 异步获取图像原图
+     * @param identify
+     * @param url
+     * @param listener
+     */
+    public void requestOriginalAsynchronously(String identify, String url, CacheRequestListener listener)
+    {
+        requestImage(ORIGINAL, identify, url, listener);
+    }
+
+
+    private void requestImage(int requestType, String identify, String url, CacheRequestListener listener)
+    {
+        new Thread(new Runnable()
         {
-            byte[] data = HttpUtil.download(url);
-            try
+            @Override
+            public void run()
             {
-                FileOutputStream outputStream = new FileOutputStream(cacheFile);
-                outputStream.write(data);
-                outputStream.close();
+                File cacheFile;
+                if (requestType == THUMB)
+                {
+                    cacheFile = new File(CACHE_ROOT_PATH + "/" + identify + "_thumb");
+                }
+                else
+                {
+                    cacheFile = new File(CACHE_ROOT_PATH + "/" + identify);
+                }
 
-                ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
-                listener.onSuccess(icon);
+                if (cacheFile.exists())
+                {
+                    System.out.println("获取   " + cacheFile.getAbsolutePath());
+                    ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
+                    listener.onSuccess(icon);
+                }
+                else
+                {
+                    System.out.println("服务器获取" );
 
-            } catch (FileNotFoundException e)
+                    byte[] data = HttpUtil.download(url);
+                    if (data == null)
+                    {
+                        logger.debug("图像获取失败");
+                    }
+
+                    try
+                    {
+                        Image image = ImageIO.read(new ByteArrayInputStream(data));
+
+                        // 生成缩略图并缓存
+                        createThumb(image, identify);
+
+                        if (requestType == THUMB)
+                        {
+                            ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
+                            listener.onSuccess(icon);
+                        }
+
+                        // 缓存原图
+                        FileOutputStream fileOutputStream = new FileOutputStream(new File(CACHE_ROOT_PATH + "/" + identify));
+                        fileOutputStream.write(data);
+
+                        if (requestType == ORIGINAL)
+                        {
+                            ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
+                            listener.onSuccess(icon);
+                        }
+                    }
+                    catch (IOException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
+    }
+
+    /**
+     * 生成图片缩略图
+     * @param image
+     * @param identify
+     */
+    public void createThumb(Image image, String identify)
+    {
+        try
+        {
+            int[] imageSize = getImageSize(image);
+            int destWidth = imageSize[0];
+            int destHeight = imageSize[1];
+
+            float scale = imageSize[0] * 1.0F / imageSize[1];
+
+            if (imageSize[0] > imageSize[1] && imageSize[0] > 200)
             {
-                e.printStackTrace();
-            } catch (IOException e)
+                destWidth = 200;
+                destHeight = (int) (destWidth / scale);
+            }
+            else if (imageSize[0] < imageSize[1] && imageSize[1] > 200)
             {
-                e.printStackTrace();
+                destHeight = 200;
+                destWidth = (int) (destHeight * scale);
             }
 
+            // 开始读取文件并进行压缩
+            BufferedImage tag = new BufferedImage(destWidth, destHeight, BufferedImage.TYPE_INT_RGB);
+
+            tag.getGraphics().drawImage(image.getScaledInstance(destWidth, destHeight, Image.SCALE_SMOOTH), 0, 0, null);
+
+            File cacheFile = new File(CACHE_ROOT_PATH + "/" + identify + "_thumb");
+            FileOutputStream out = new FileOutputStream(cacheFile);
+            JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
+            encoder.encode(tag);
+            out.close();
         }
+        catch (IOException ex)
+        {
+            ex.printStackTrace();
+        }
+    }
+
+    public static int[] getImageSize(Image image)
+    {
+
+        int result[] = {0, 0};
+        try
+        {
+            result[0] = image.getWidth(null); // 得到源图宽
+            result[1] = image.getHeight(null); // 得到源图高
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 

@@ -10,15 +10,13 @@ import com.rc.forms.MainFrame;
 import com.rc.forms.UserInfoPopup;
 import com.rc.helper.AttachmentIconHelper;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.IconUtil;
 import com.rc.utils.ImageCache;
 import com.rc.utils.TimeUtil;
 
 import javax.swing.*;
-import javax.swing.text.View;
 import java.awt.*;
 import java.awt.event.MouseEvent;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -198,23 +196,36 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
             url = "file://" + imageUrl;
         }
 
-        imageCache.request(item.getImageAttachment().getId(), url, new ImageCache.CacheRequestListener()
+
+        ImageIcon imageIcon = imageCache.tryGetThumbCache(item.getImageAttachment().getId());
+
+        if (imageIcon == null)
         {
-            @Override
-            public void onSuccess(ImageIcon icon)
-            {
-                preferredImageSize(icon);
-                imageLabel.setIcon(icon);
-                holder.revalidate();
-                holder.repaint();
-            }
+            imageLabel.setIcon(IconUtil.getIcon(this, "/image/image_loading.gif"));
 
-            @Override
-            public void onFailed(String why)
+            imageCache.requestThumbAsynchronously(item.getImageAttachment().getId(), url, new ImageCache.CacheRequestListener()
             {
+                @Override
+                public void onSuccess(ImageIcon icon)
+                {
+                    preferredImageSize(icon);
+                    imageLabel.setIcon(icon);
+                    holder.revalidate();
+                    holder.repaint();
+                }
 
-            }
-        });
+                @Override
+                public void onFailed(String why)
+                {
+
+                }
+            });
+        }
+        else
+        {
+            preferredImageSize(imageIcon);
+            imageLabel.setIcon(imageIcon);
+        }
     }
 
     /**

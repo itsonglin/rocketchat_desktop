@@ -5,6 +5,7 @@ import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
+import com.rc.components.RCListView;
 import com.rc.db.model.*;
 import com.rc.db.service.*;
 import com.rc.entity.MessageItem;
@@ -16,7 +17,6 @@ import tasks.HttpGetTask;
 import tasks.HttpResponseListener;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,9 +50,8 @@ public class ChatPanel extends ParentAvailablePanel
     private MessageService messageService = Launcher.messageService;
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private RoomService roomService = Launcher.roomService;
-    private ImageAttachmentService imageAttachmentService =  Launcher.imageAttachmentService;
+    private ImageAttachmentService imageAttachmentService = Launcher.imageAttachmentService;
     private FileAttachmentService fileAttachmentService = Launcher.fileAttachmentService;
-
 
 
     // 当前消息分页数
@@ -76,6 +75,7 @@ public class ChatPanel extends ParentAvailablePanel
         initComponents();
         initView();
         initData();
+        setListeners();
     }
 
     private void initComponents()
@@ -122,18 +122,42 @@ public class ChatPanel extends ParentAvailablePanel
             messageEditorPanel.setVisible(true);
 
             // 加载本地消息
-            loadLocalHistory();
+            loadLocalHistory(); // 初次打开房间时加载历史消息
 
-            long startTs = messageService.findLastMessageTime(roomId) + 1;
 
+            // 从服务器获取本地最后一条消息以后的消息
             if (!remoteHistoryLoadedRooms.contains(roomId))
             {
+                long startTs = messageService.findLastMessageTime(roomId) + 1;
                 logger.debug("startTs = " + startTs);
-                //loadRemoteHistory(startTs - TIMESTAMP_8_HOURS, 0);
+                loadRemoteHistory(startTs - TIMESTAMP_8_HOURS, 0);
             }
 
             updateUnreadCount(0);
         }
+
+
+        messagePanel.getMessageListView().notifyDataSetChange();
+    }
+
+    private void setListeners()
+    {
+        messagePanel.getMessageListView().setScrollToTopListener(new RCListView.ScrollToTopListener()
+        {
+            @Override
+            public void onScrollToTop()
+            {
+                if (roomId != null)
+                {
+                    System.out.println("到顶啦");
+                   loadLocalHistory(); // 滚动到顶部后继续加载消息
+                    messagePanel.getMessageListView().setAutoScrollToTop();
+                    //messagePanel.getMessageListView().notifyDataSetChange();
+
+
+                }
+            }
+        });
     }
 
     /**
@@ -146,7 +170,7 @@ public class ChatPanel extends ParentAvailablePanel
 
         List<Message> messages = messageService.findByPage(roomId, page++, PAGE_LENGTH);
 
-        if (messages.size() > 0 )
+        if (messages.size() > 0)
         {
             for (Message message : messages)
             {
@@ -157,14 +181,56 @@ public class ChatPanel extends ParentAvailablePanel
             item.setMessageContent("你好你好");*/
                 messageItems.add(item);
             }
+
+            if (page > 2)
+            {
+                Collections.sort(messageItems);
+            }
         }
+        // 如果本地没有拿到消息，则从服务器拿距现在一个月内的消息
         else
         {
-            page = 1;
+            System.out.println("本地没有拿到消息，则从服务器拿距现在一个月内的消息");
+            loadMoreHistoryFromRemote();
+
+            // 数据库中没有当前房间的消，页码恢复为1
+            if (messageService.countByRoom(roomId) < 1)
+            {
+                page = 1;
+            }
         }
 
         messagePanel.getMessageListView().notifyDataSetChange();
-        messagePanel.getMessageListView().setAutoScrollToBottom();
+
+        if (page <= 2)
+        {
+            messagePanel.getMessageListView().setAutoScrollToBottom();
+        }
+    }
+
+    private void loadMoreHistoryFromRemote()
+    {
+        long firstTime = messageService.findFirstMessageTime(roomId);
+
+        // 再从服务器拿50天前的消息
+        long start = firstTime;
+        long end = firstTime - TIMESTAMP_8_HOURS;
+        // 数据库中没有该房间的任何消息
+        if (start < 0)
+        {
+            start = System.currentTimeMillis() - (1000L * 60 * 60 * 24 * 50) - TIMESTAMP_8_HOURS;
+            //end = System.currentTimeMillis() - TIMESTAMP_8_HOURS;
+            end = 0;
+        }
+        else
+        {
+            start = firstTime - (1000L * 60 * 60 * 24 * 50) - TIMESTAMP_8_HOURS;
+        }
+
+        // String sss = simpleDateFormat.format(new Date(start));
+        //String sss2 = simpleDateFormat.format(new Date(end));
+
+        loadRemoteHistory(start, end);
     }
 
     private void updateUnreadCount(int count)
@@ -202,9 +268,10 @@ public class ChatPanel extends ParentAvailablePanel
             {
                 try
                 {
-                    boolean loadUnread = (startTime != 0 && endTime == 0);
-                    processRoomHistoryResult(retJson, loadUnread);
-                } catch (Exception e)
+                    //boolean loadUnread = (startTime != 0 && endTime == 0);
+                    processRoomHistoryResult(retJson/*, loadUnread*/);
+                }
+                catch (Exception e)
                 {
                     System.out.println(e);
                     e.printStackTrace();
@@ -221,7 +288,8 @@ public class ChatPanel extends ParentAvailablePanel
             end = "";
             System.out.println(end);
 
-        } else
+        }
+        else
         {
             end = simpleDateFormat.format(new Date(endTime));
         }
@@ -230,10 +298,12 @@ public class ChatPanel extends ParentAvailablePanel
         if (room.getType().equals("c"))
         {
             t = "channels";
-        } else if (room.getType().equals("d"))
+        }
+        else if (room.getType().equals("d"))
         {
             t = "im";
-        } else if (room.getType().equals("p"))
+        }
+        else if (room.getType().equals("p"))
         {
             t = "groups";
         }
@@ -294,11 +364,11 @@ public class ChatPanel extends ParentAvailablePanel
 
     /**
      * 处理房间加载历史消息回调
+     *
      * @param jsonText
-     * @param loadUnread
      * @throws JSONException
      */
-    private void processRoomHistoryResult(JSONObject jsonText, boolean loadUnread) throws JSONException, ParseException
+    private void processRoomHistoryResult(JSONObject jsonText/*, boolean loadUnread*/) throws JSONException, ParseException
     {
         //String roomId = jsonText.getString("id").replace(SubscriptionHelper.SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE, "");
         JSONArray messages = jsonText.getJSONArray("messages");
@@ -476,10 +546,10 @@ public class ChatPanel extends ParentAvailablePanel
             System.out.println("新增消息数：" + messageList.size());
 
 
-            notifyNewMessageLoaded(loadUnread);
+            notifyNewMessageLoaded(/*loadUnread*/);
 
 
-            if (loadUnread)
+            //if (loadUnread)
             {
                 updateTotalAndUnreadCount(messageList.size(), 0);
             }
@@ -491,10 +561,9 @@ public class ChatPanel extends ParentAvailablePanel
     /**
      * 通知有新的聊天记录添加到列表中
      *
-     * @param loadUnread
      * @throws ParseException
      */
-    private void notifyNewMessageLoaded(boolean loadUnread) throws ParseException
+    private void notifyNewMessageLoaded(/*boolean loadUnread*/) throws ParseException
     {
         long from;
         if (messageItems != null)
@@ -524,10 +593,9 @@ public class ChatPanel extends ParentAvailablePanel
                 if (messages.size() > 0)
                 {
                     messagePanel.getMessageListView().notifyDataSetChange();
-                    // 如果当前是从消息搜索界面过来的，加载了新的消息后不滚动到最后
-                    if (!loadUnread && firstMessageTimestamp != 0L)
+
+                    if (page <= 2)
                     {
-                        //recyclerview.scrollToPosition(recyclerview.getAdapter().getItemCount() - 1);
                         messagePanel.getMessageListView().setAutoScrollToBottom();
                     }
                 }

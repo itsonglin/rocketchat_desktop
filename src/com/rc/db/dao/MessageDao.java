@@ -63,4 +63,10 @@ public class MessageDao extends BasicDao
         map.put("end", end);
         return session.selectList("findBetween", map);
     }
+
+    public long findFirstMessageTime(String roomId)
+    {
+        Object count = session.selectOne("findFirstMessageTime", roomId);
+        return count == null ? -1 : (long) count;
+    }
 }
