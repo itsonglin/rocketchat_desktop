@@ -50,6 +50,9 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     {
         switch (viewType)
         {
+            case MessageItem.SYSTEM_MESSAGE:{
+                return new MessageSystemMessageViewHolder();
+            }
             case MessageItem.RIGHT_TEXT:{
                 return new MessageRightTextViewHolder();
             }
@@ -84,7 +87,11 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         final MessageItem item = messageItems.get(position);
         MessageItem preItem = position == 0 ? null : messageItems.get(position - 1);
 
-        if (viewHolder instanceof MessageRightTextViewHolder)
+        if (viewHolder instanceof MessageSystemMessageViewHolder)
+        {
+            processSystemMessage(viewHolder, item);
+        }
+        else if (viewHolder instanceof MessageRightTextViewHolder)
         {
             processRightTextMessage(viewHolder, item);
         }
@@ -108,6 +115,13 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         {
             processLeftAttachmentMessage(viewHolder, item);
         }
+    }
+
+    private void processSystemMessage(ViewHolder viewHolder, MessageItem item)
+    {
+        MessageSystemMessageViewHolder holder = (MessageSystemMessageViewHolder) viewHolder;
+        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        holder.text.setText(item.getMessageContent());
     }
 
     private void processLeftAttachmentMessage(ViewHolder viewHolder, MessageItem item)

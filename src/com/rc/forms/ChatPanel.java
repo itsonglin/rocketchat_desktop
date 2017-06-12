@@ -120,15 +120,16 @@ public class ChatPanel extends ParentAvailablePanel
         {
             messagePanel.setVisible(true);
             messageEditorPanel.setVisible(true);
+
+            // 加载本地消息
             loadLocalHistory();
 
             long startTs = messageService.findLastMessageTime(roomId) + 1;
 
-
             if (!remoteHistoryLoadedRooms.contains(roomId))
             {
                 logger.debug("startTs = " + startTs);
-                loadRemoteHistory(startTs - TIMESTAMP_8_HOURS, 0);
+                //loadRemoteHistory(startTs - TIMESTAMP_8_HOURS, 0);
             }
 
             updateUnreadCount(0);
@@ -156,15 +157,14 @@ public class ChatPanel extends ParentAvailablePanel
             item.setMessageContent("你好你好");*/
                 messageItems.add(item);
             }
-
-            messagePanel.getMessageListView().notifyDataSetChange();
-            messagePanel.getMessageListView().setAutoScrollToBottom();
         }
         else
         {
             page = 1;
         }
 
+        messagePanel.getMessageListView().notifyDataSetChange();
+        messagePanel.getMessageListView().setAutoScrollToBottom();
     }
 
     private void updateUnreadCount(int count)
