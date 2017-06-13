@@ -5,6 +5,7 @@ import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.entity.ContactsItem;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.AvatarUtil;
 import com.rc.utils.CharacterParser;
 import com.rc.utils.FontUtil;
 
@@ -86,29 +87,12 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
         viewHolders.add(position, viewHolder);
         ContactsItem item = contactsItems.get(position);
 
-        //viewHolder.panelItem = new JPanel();
-        viewHolder.setPreferredSize(new Dimension(100, 50));
-        viewHolder.setBackground(Colors.DARK);
-        viewHolder.setBorder(new RCBorder(RCBorder.BOTTOM));
-        viewHolder.setOpaque(true);
-        viewHolder.setForeground(Colors.FONT_WHITE);
+        ImageIcon icon = new ImageIcon();
+        icon.setImage(AvatarUtil.createOrLoadUserAvatar(item.getName())
+                .getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+        viewHolder.avatar.setIcon(icon);
 
-        // 头像
-        viewHolder.avatar = new JLabel();
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        imageIcon.setImage(imageIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
-        viewHolder.avatar.setIcon(imageIcon);
-
-        // 名字
-        viewHolder.roomName = new JLabel();
         viewHolder.roomName.setText(item.getName());
-        viewHolder.roomName.setFont(FontUtil.getDefaultFont(13));
-        viewHolder.roomName.setForeground(Colors.FONT_WHITE);
-
-        viewHolder.setLayout(new GridBagLayout());
-        viewHolder.add(viewHolder.avatar, new GBC(0, 0).setWeight(1, 1).setFill(GBC.BOTH).setInsets(0,5,0,0));
-        viewHolder.add(viewHolder.roomName, new GBC(1, 0).setWeight(10, 1).setFill(GBC.BOTH));
-
 
         viewHolder.addMouseListener(new AbstractMouseListener()
         {

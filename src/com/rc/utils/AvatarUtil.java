@@ -3,6 +3,7 @@ package com.rc.utils;
 import com.rc.components.Colors;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.GeneralPath;
 import java.awt.geom.RoundRectangle2D;
@@ -64,6 +65,7 @@ public class AvatarUtil
         }
         return avatar;
     }
+
 
     public static Image createAvatar(String sign, String name)
     {

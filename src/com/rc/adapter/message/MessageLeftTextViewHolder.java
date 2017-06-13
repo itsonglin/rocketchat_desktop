@@ -8,7 +8,6 @@ import com.rc.components.VerticalFlowLayout;
 import com.rc.components.message.RCLeftImageMessageBubble;
 import com.rc.forms.MainFrame;
 import com.rc.utils.FontUtil;
-import com.sun.xml.internal.rngom.parse.host.Base;
 
 import javax.swing.*;
 import java.awt.*;
