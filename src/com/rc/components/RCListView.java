@@ -158,19 +158,6 @@ public class RCListView extends JScrollPane
         }
     }
 
-    public void notifyItemRangeInserted(int startPosition, int count)
-    {
-        for (int i = startPosition; i < count; i++)
-        {
-            int viewType = adapter.getItemViewType(i);
-            ViewHolder holder = adapter.onCreateViewHolder(viewType);
-            adapter.onBindViewHolder(holder, i);
-            contentPanel.add(holder, startPosition);
-        }
-    }
-
-
-
     public BaseAdapter getAdapter()
     {
         return adapter;
@@ -219,12 +206,52 @@ public class RCListView extends JScrollPane
     }
 
 
+    /**
+     * 重绘整个listView
+     */
     public void notifyDataSetChange()
     {
         contentPanel.removeAll();
         fillComponents();
         contentPanel.revalidate();
         //lastScrollValue = -1;
+    }
+
+    /**
+     * 重绘指定区间内的元素
+     * @param startPosition
+     * @param count
+     */
+    public void notifyItemRangeInserted(int startPosition, int count)
+    {
+        for (int i = startPosition; i < count; i++)
+        {
+            int viewType = adapter.getItemViewType(i);
+            ViewHolder holder = adapter.onCreateViewHolder(viewType);
+            adapter.onBindViewHolder(holder, i);
+            contentPanel.add(holder, startPosition);
+        }
+    }
+
+    /**
+     * 重绘指定位置的元素
+     * @param position
+     */
+    public void notifyItemChanged(int position)
+    {
+        contentPanel.remove(position);
+        int viewType = adapter.getItemViewType(position);
+        ViewHolder holder = adapter.onCreateViewHolder(viewType);
+        adapter.onBindViewHolder(holder, position);
+        contentPanel.add(holder, position);
+
+        /*contentPanel.getComponent(position).setBackground(Color.red);
+        contentPanel.getComponent(position).revalidate();*/
+    }
+
+    public Component getItem(int n)
+    {
+        return contentPanel.getComponent(n);
     }
 
     public void setScrollToTopListener(ScrollToTopListener listener)

@@ -1,11 +1,14 @@
 package com.rc.forms;
 
+import com.rc.adapter.RoomItemViewHolder;
 import com.rc.adapter.RoomItemsAdapter;
+import com.rc.adapter.ViewHolder;
 import com.rc.app.Launcher;
 import com.rc.components.*;
 import com.rc.db.model.Room;
 import com.rc.db.service.RoomService;
 import com.rc.entity.RoomItem;
+import com.rc.utils.TimeUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,7 +24,7 @@ public class RoomsPanel extends ParentAvailablePanel
     private static RoomsPanel context;
 
     private RCListView roomItemsListView;
-    private List<RoomItem> roomItemList;
+    private List<RoomItem> roomItemList = new ArrayList<>();
     private RoomService roomService = Launcher.roomService;
 
 
@@ -51,7 +54,7 @@ public class RoomsPanel extends ParentAvailablePanel
 
     private void initData()
     {
-        roomItemList = new ArrayList<>();
+        roomItemList.clear();
        /* for (int i = 0 ; i < 10; i ++)
         {
             RoomItem item = new RoomItem();
@@ -73,11 +76,52 @@ public class RoomsPanel extends ParentAvailablePanel
         }
     }
 
+    /**
+     * 重绘整个列表
+     */
     public void notifyDataSetChanged()
     {
         initData();
         roomItemsListView.notifyDataSetChange();
     }
+
+    /**
+     * 更新指定位置的房间项目
+     * @param roomId
+     */
+    public void updateRoomItem(String roomId)
+    {
+        for (int i = 0; i < roomItemList.size(); i++)
+        {
+            RoomItem item = roomItemList.get(i);
+            if (item.getRoomId().equals(roomId))
+            {
+                Room room = roomService.findById(item.getRoomId());
+                if (room != null)
+                {
+                    item.setLastMessage(room.getLastMessage());
+                    item.setTimestamp(room.getLastChatAt());
+                    item.setUnreadCount(room.getUnreadCount());
+                    //roomItemsListView.notifyItemChanged(i);
+
+                    RoomItemViewHolder holder = (RoomItemViewHolder) roomItemsListView.getItem(i);
+                    holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+                    holder.brief.setText(item.getLastMessage());
+                    if (item.getUnreadCount() > 0)
+                    {
+                        holder.unreadCount.setVisible(true);
+                        holder.unreadCount.setText(item.getUnreadCount() + "");
+                    } else
+                    {
+                        holder.unreadCount.setVisible(false);
+                    }
+                }
+                break;
+            }
+        }
+    }
+
+
 
     public static RoomsPanel getContext()
     {

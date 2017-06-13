@@ -128,22 +128,8 @@ public class ChatPanel extends ParentAvailablePanel
                 logger.debug("startTs = " + startTs);
                 loadRemoteHistory(startTs - TIMESTAMP_8_HOURS, 0);
             }
-
             updateUnreadCount(0);
         }
-
-        /*for (int i = 0; i < 10; i++)
-        {
-            MessageItem item = new MessageItem();
-            item.setMessageContent("bbb");
-            item.setMessageType(MessageItem.RIGHT_TEXT);
-            messageItems.add(item);
-        }
-
-
-        messagePanel.setVisible(true);
-        messageEditorPanel.setVisible(true);
-        messagePanel.getMessageListView().notifyDataSetChange();*/
     }
 
     private void setListeners()
@@ -243,22 +229,17 @@ public class ChatPanel extends ParentAvailablePanel
 
     private void updateUnreadCount(int count)
     {
-        //Room room = roomService.findById(ealm, roomId);
-        /*Room room = roomService.findById(roomId);
-        if (room == null)
-        {
-            return;
-        }*/
         if (count < 0)
         {
             System.out.println(count);
         }
-        //roomService.updateUnreadCount(Realm.getDefaultInstance(), room.getRoomId(), count);
-        //roomService.updateTotalReadCount(Realm.getDefaultInstance(), room.getRoomId(), room.getMsgSum());
-
         room.setUnreadCount(count);
         room.setTotalReadCount(room.getMsgSum());
         roomService.update(room);
+
+        // 通知UI更新未读消息数
+        RoomsPanel.getContext().updateRoomItem(room.getRoomId());
+
     }
 
     /**

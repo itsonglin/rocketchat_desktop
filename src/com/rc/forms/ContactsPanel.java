@@ -25,7 +25,7 @@ public class ContactsPanel extends ParentAvailablePanel
     private static ContactsPanel context;
 
     private RCListView contactsListView;
-    private List<ContactsItem> contactsItemList;
+    private List<ContactsItem> contactsItemList = new ArrayList<>();
     private ContactsUserService contactsUserService = Launcher.contactsUserService;
 
     public ContactsPanel(JPanel parent)
@@ -54,7 +54,7 @@ public class ContactsPanel extends ParentAvailablePanel
 
     private void initData()
     {
-        contactsItemList = new ArrayList<>();
+        contactsItemList.clear();
 
         List<ContactsUser> contactsUsers = contactsUserService.findAll();
         for (ContactsUser contactsUser : contactsUsers)
