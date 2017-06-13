@@ -1,14 +1,18 @@
 package com.rc.forms;
 
+import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.components.VerticalFlowLayout;
+import com.rc.db.model.Room;
+import com.rc.db.service.RoomService;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.FontUtil;
 import com.rc.utils.OSUtil;
 import com.sun.awt.AWTUtilities;
 import com.sun.javaws.Main;
+import com.sun.javaws.jnl.LaunchDesc;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,6 +23,8 @@ import java.awt.event.*;
  */
 public class TitlePanel extends ParentAvailablePanel
 {
+    private static TitlePanel context;
+
     private JPanel titlePanel;
     private JLabel titleLabel;
 
@@ -34,10 +40,14 @@ public class TitlePanel extends ParentAvailablePanel
     private Rectangle desktopBounds; // 去除任务栏后窗口的大小
     private Rectangle normalBounds;
 
+    private RoomService roomService = Launcher.roomService;
+    private Room room;
+
 
     public TitlePanel(JPanel parent)
     {
         super(parent);
+        context = this;
 
         initComponents();
         addListeners();
@@ -109,6 +119,7 @@ public class TitlePanel extends ParentAvailablePanel
 
         titlePanel = new JPanel();
         titlePanel.setLayout(new GridBagLayout());
+        titlePanel.setVisible(false);
 
         roomInfoButton = new JLabel();
         roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
@@ -183,6 +194,20 @@ public class TitlePanel extends ParentAvailablePanel
 
     }
 
+    public static TitlePanel getContext()
+    {
+        return context;
+    }
+
+
+    public void updateRoomTitle(String roomId)
+    {
+        room = roomService.findById(roomId);
+        this.titleLabel.setText(room.getName());
+
+        titlePanel.setVisible(true);
+    }
+
     private class ControlLabelMouseListener extends AbstractMouseListener
     {
         @Override
@@ -233,4 +258,5 @@ public class TitlePanel extends ParentAvailablePanel
             super.mouseExited(e);
         }
     }
+
 }
