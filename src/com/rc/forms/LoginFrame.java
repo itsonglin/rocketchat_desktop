@@ -254,7 +254,7 @@ public class LoginFrame extends JFrame
         {
             loginButton.setEnabled(false);
             HttpPostTask task = new HttpPostTask();
-            task.setListener(new HttpResponseListener()
+            task.setListener(new HttpResponseListener<JSONObject>()
             {
                 @Override
                 public void onResult(JSONObject ret)

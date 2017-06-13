@@ -18,7 +18,7 @@ public class ImageCache
     public static final int THUMB = 0;
     public static final int ORIGINAL = 1;
 
-    private String CACHE_ROOT_PATH;
+    private String IMAGE_CACHE_ROOT_PATH;
     Logger logger = Logger.getLogger(this.getClass());
 
 
@@ -26,8 +26,8 @@ public class ImageCache
     {
         try
         {
-            CACHE_ROOT_PATH = getClass().getResource("/").getPath() + "/cache/image";
-            File file = new File(CACHE_ROOT_PATH);
+            IMAGE_CACHE_ROOT_PATH = getClass().getResource("/").getPath() + "/cache/image";
+            File file = new File(IMAGE_CACHE_ROOT_PATH);
             if (!file.exists())
             {
                 file.mkdirs();
@@ -36,13 +36,13 @@ public class ImageCache
         }
         catch (Exception e)
         {
-            CACHE_ROOT_PATH = "./";
+            IMAGE_CACHE_ROOT_PATH = "./";
         }
     }
 
     public ImageIcon tryGetThumbCache(String identify)
     {
-        File cacheFile = new File(CACHE_ROOT_PATH + "/" + identify + "_thumb");
+        File cacheFile = new File(IMAGE_CACHE_ROOT_PATH + "/" + identify + "_thumb");
         if (cacheFile.exists())
         {
             ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
@@ -87,11 +87,11 @@ public class ImageCache
                 File cacheFile;
                 if (requestType == THUMB)
                 {
-                    cacheFile = new File(CACHE_ROOT_PATH + "/" + identify + "_thumb");
+                    cacheFile = new File(IMAGE_CACHE_ROOT_PATH + "/" + identify + "_thumb");
                 }
                 else
                 {
-                    cacheFile = new File(CACHE_ROOT_PATH + "/" + identify);
+                    cacheFile = new File(IMAGE_CACHE_ROOT_PATH + "/" + identify);
                 }
 
                 if (cacheFile.exists())
@@ -124,7 +124,7 @@ public class ImageCache
                         }
 
                         // 缓存原图
-                        FileOutputStream fileOutputStream = new FileOutputStream(new File(CACHE_ROOT_PATH + "/" + identify));
+                        FileOutputStream fileOutputStream = new FileOutputStream(new File(IMAGE_CACHE_ROOT_PATH + "/" + identify));
                         fileOutputStream.write(data);
 
                         if (requestType == ORIGINAL)
@@ -173,7 +173,7 @@ public class ImageCache
 
             tag.getGraphics().drawImage(image.getScaledInstance(destWidth, destHeight, Image.SCALE_SMOOTH), 0, 0, null);
 
-            File cacheFile = new File(CACHE_ROOT_PATH + "/" + identify + "_thumb");
+            File cacheFile = new File(IMAGE_CACHE_ROOT_PATH + "/" + identify + "_thumb");
             FileOutputStream out = new FileOutputStream(cacheFile);
             JPEGImageEncoder encoder = JPEGCodec.createJPEGEncoder(out);
             encoder.encode(tag);

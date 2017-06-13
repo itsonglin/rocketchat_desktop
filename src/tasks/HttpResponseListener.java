@@ -1,11 +1,12 @@
 package tasks;
 
-import org.json.JSONObject;
 
 /**
  * Created by song on 08/06/2017.
  */
-public interface HttpResponseListener
+public interface HttpResponseListener<T extends Object>
 {
-    void onResult(JSONObject ret);
+    void onResult(T ret);
+
+
 }

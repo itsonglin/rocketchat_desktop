@@ -1,18 +1,20 @@
 package com.rc.forms;
 
 import com.rc.adapter.ContactsItemsAdapter;
-import com.rc.adapter.RoomItemsAdapter;
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCListView;
 import com.rc.db.model.ContactsUser;
 import com.rc.db.service.ContactsUserService;
+import com.rc.db.service.CurrentUserService;
 import com.rc.entity.ContactsItem;
-import com.rc.entity.RoomItem;
+import com.rc.utils.AvatarUtil;
+import org.apache.log4j.Logger;
+import tasks.HttpBytesGetTask;
+import tasks.HttpResponseListener;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +29,8 @@ public class ContactsPanel extends ParentAvailablePanel
     private RCListView contactsListView;
     private List<ContactsItem> contactsItemList = new ArrayList<>();
     private ContactsUserService contactsUserService = Launcher.contactsUserService;
+    private Logger logger = Logger.getLogger(this.getClass());
+    private CurrentUserService currentUserService = Launcher.currentUserService;
 
     public ContactsPanel(JPanel parent)
     {
@@ -70,10 +74,80 @@ public class ContactsPanel extends ParentAvailablePanel
     {
         initData();
         contactsListView.notifyDataSetChange();
+
+        // 通讯录更新后，获取头像
+        getContactsUserAvatar();
     }
 
     public static ContactsPanel getContext()
     {
         return context;
+    }
+
+    /**
+     * 获取通讯录中用户的头像
+     */
+    private void getContactsUserAvatar()
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                for (ContactsItem user : contactsItemList)
+                {
+                    if (!AvatarUtil.customAvatarExist(user.getName()))
+                    {
+                        final String username = user.getName();
+                        logger.debug("获取头像:" + username);
+                        HttpBytesGetTask task = new HttpBytesGetTask();
+                        task.setListener(new HttpResponseListener<byte[]>()
+                        {
+                            @Override
+                            public void onResult(byte[] data)
+                            {
+                                processAvatarData(data, username);
+
+                            }
+                        });
+                        task.execute(Launcher.HOSTNAME + "/avatar/" + username);
+                    }
+                }
+
+                // 获取头像
+                final String currentUsername = currentUserService.findAll().get(0).getUsername();
+                if (!AvatarUtil.customAvatarExist(currentUsername))
+                {
+                    HttpBytesGetTask task = new HttpBytesGetTask();
+                    task.setListener(new HttpResponseListener<byte[]>()
+                    {
+                        @Override
+                        public void onResult(byte[] data)
+                        {
+                            processAvatarData(data, currentUsername);
+                        }
+                    });
+                    task.execute(Launcher.HOSTNAME + "/avatar/" + currentUsername);
+                }
+            }
+        }).start();
+
+    }
+
+    /**
+     * 处理头像数据
+     * @param data
+     * @param username
+     */
+    private void processAvatarData(byte[] data, String username)
+    {
+        if (data != null && data.length > 1024)
+        {
+            AvatarUtil.saveAvatar(data, username);
+        }
+        else
+        {
+            AvatarUtil.deleteCustomAvatar(username);
+        }
     }
 }

@@ -329,8 +329,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         if (holder.avatar != null)
         {
             ImageIcon icon = new ImageIcon();
-            // 群组头像
-            icon.setImage(AvatarUtil.createOrLoadUserAvatar(item.getSenderUsername()));
+            Image image = AvatarUtil.createOrLoadUserAvatar(item.getSenderUsername()).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            icon.setImage(image);
             holder.avatar.setIcon(icon);
 
             bindAvatarAction(holder.avatar);

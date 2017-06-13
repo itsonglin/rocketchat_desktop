@@ -1,18 +1,10 @@
 package com.rc.utils;
 
-import com.rc.components.Colors;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.GeneralPath;
-import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 
 
 /**
@@ -21,8 +13,6 @@ import java.io.IOException;
 
 public class AvatarUtil
 {
-
-
     private static final Color[] colorArr;
 
     static
@@ -49,25 +39,57 @@ public class AvatarUtil
         };
     }
 
+    private static final String AVATAR_CACHE_ROOT;
+    private static final String CUSTOM_AVATAR_CACHE_ROOT;
+    private static final int DEFAULT_AVATAR = 0;
+    private static final int CUSTOM_AVATAR = 1;
 
-    public static Image createGroupAvatar(String sign, String name)
+    static
     {
-        return createAvatar(sign, name);
+        AVATAR_CACHE_ROOT = new Object().getClass().getResource("/").getPath() + "/cache/avatar";
+        File file = new File(AVATAR_CACHE_ROOT);
+        if (!file.exists())
+        {
+            file.mkdirs();
+            System.out.println("创建头像缓存目录：" + file.getAbsolutePath());
+        }
+
+        CUSTOM_AVATAR_CACHE_ROOT = AVATAR_CACHE_ROOT + "/custom";
+        file = new File(CUSTOM_AVATAR_CACHE_ROOT);
+        if (!file.exists())
+        {
+            file.mkdirs();
+            System.out.println("创建用户自定义头像缓存目录：" + file.getAbsolutePath());
+        }
+    }
+
+
+    public static Image createOrLoadGroupAvatar(String sign, String name)
+    {
+        Image avatar = getCachedImageAvatar(sign);
+        if (avatar == null)
+        {
+            System.out.println("创建群组头像");
+            return createAvatar(sign, name);
+        }
+
+        return avatar;
     }
 
 
     public static Image createOrLoadUserAvatar(String username)
     {
-        Image avatar = getImageAvatar(username);
+        Image avatar = getCachedImageAvatar(username);
         if (avatar == null)
         {
             return createAvatar(username, username);
         }
+
         return avatar;
     }
 
 
-    public static Image createAvatar(String sign, String name)
+    private static Image createAvatar(String sign, String name)
     {
         String drawString;
         if (sign.length() > 1)
@@ -80,11 +102,11 @@ public class AvatarUtil
 
         try
         {
-            int width = 40;
-            int height = 40;
+            int width = 50;
+            int height = 50;
 
             // 创建BufferedImage对象
-            Font font = FontUtil.getDefaultFont(19, Font.PLAIN);
+            Font font = FontUtil.getDefaultFont(24, Font.PLAIN);
             BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             // 获取Graphics2D
             Graphics2D g2d = image.createGraphics();
@@ -105,6 +127,9 @@ public class AvatarUtil
             g2d.drawString(drawString, x, strHeight);
             g2d.dispose();
 
+            File file = new File(AVATAR_CACHE_ROOT + "/" + sign + ".jpg");
+            ImageIO.write(image, "jpg", file);
+
             return image;
         } catch (Exception ex)
         {
@@ -121,19 +146,31 @@ public class AvatarUtil
         return colorArr[position];
     }
 
-
     public static void saveAvatar(byte[] data, String username)
     {
+        saveAvatar(data, username, CUSTOM_AVATAR);
+    }
+
+    private static void saveAvatar(byte[] data, String username, int type)
+    {
         String path = "";
-        File avatarPath = new File(path + "/" + "avatar");
-        if (!avatarPath.exists())
+        if (type == DEFAULT_AVATAR)
         {
-            avatarPath.mkdirs();
+            path = AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+        } else if (type == CUSTOM_AVATAR)
+        {
+            path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".jpg";
         }
+        else
+        {
+            throw new RuntimeException("类型不存在");
+        }
+
+        File avatarPath = new File(path);
 
         try
         {
-            FileOutputStream outputStream = new FileOutputStream(avatarPath + "/" + username + ".jpg");
+            FileOutputStream outputStream = new FileOutputStream(avatarPath);
             outputStream.write(data);
             outputStream.close();
         } catch (FileNotFoundException e)
@@ -145,18 +182,52 @@ public class AvatarUtil
         }
     }
 
-    public static Image getImageAvatar(String username)
+    private static Image getCachedImageAvatar(String username)
     {
-        return null;
+        if (customAvatarExist(username))
+        {
+            String path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+            ImageIcon imageIcon = new ImageIcon(path);
+            return imageIcon.getImage();
+        } else if (defaultAvatarExist(username))
+        {
+            String path = AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+            ImageIcon imageIcon = new ImageIcon(path);
+            return imageIcon.getImage();
+        } else
+        {
+            return null;
+        }
     }
 
-    public static boolean avatarExist(String username)
+
+    public static boolean customAvatarExist(String username)
     {
-        return false;
+        String path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+        File file = new File(path);
+        return file.exists();
     }
 
-    public static void deleteAvatar(String username)
+    public static boolean defaultAvatarExist(String username)
     {
+        String path = AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+        File file = new File(path);
+        return file.exists();
+    }
 
+    public static void deleteCustomAvatar(String username)
+    {
+        String path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+
+        File file = new File(path);
+        if (file.exists())
+        {
+            file.delete();
+        }
+    }
+
+    public static void main(String[] a)
+    {
+        System.out.println(AvatarUtil.customAvatarExist("song"));
     }
 }

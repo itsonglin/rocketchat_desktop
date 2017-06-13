@@ -53,15 +53,18 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         String type = item.getType();
         if (type.equals("c"))
         {
-            icon.setImage(AvatarUtil.createAvatar("##", item.getTitle()));
+            icon.setImage(AvatarUtil.createOrLoadGroupAvatar("##", item.getTitle())
+                    .getScaledInstance(40,40, Image.SCALE_SMOOTH));
         } else if (type.equals("p"))
         {
-            icon.setImage(AvatarUtil.createAvatar("#", item.getTitle()));
+            icon.setImage(AvatarUtil.createOrLoadGroupAvatar("#", item.getTitle())
+                    .getScaledInstance(40,40, Image.SCALE_SMOOTH));
         }
         // 私聊头像
         else if (type.equals("d"))
         {
-            icon.setImage(AvatarUtil.createAvatar(item.getTitle(), item.getTitle()));
+            Image image = AvatarUtil.createOrLoadUserAvatar(item.getTitle()).getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            icon.setImage(image);
         }
         viewHolder.avatar.setIcon(icon);
 

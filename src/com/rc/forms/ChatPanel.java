@@ -250,7 +250,7 @@ public class ChatPanel extends ParentAvailablePanel
         remoteHistoryLoadedRooms.add(roomId);
 
         HttpGetTask task = new HttpGetTask();
-        task.setListener(new HttpResponseListener()
+        task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override
             public void onResult(JSONObject retJson)

@@ -453,7 +453,7 @@ public class WebSocketClient
         task.addHeader("X-Auth-Token", currentUser.getAuthToken());
         task.addHeader("X-User-Id", currentUser.getUserId());
         final String finalRoomType = roomType;
-        task.setListener(new HttpResponseListener()
+        task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override
             public void onResult(JSONObject retJson)
@@ -872,7 +872,7 @@ public class WebSocketClient
         HttpGetTask task = new HttpGetTask();
         task.addHeader("X-Auth-Token", currentUser.getAuthToken());
         task.addHeader("X-User-Id", currentUser.getUserId());
-        task.setListener(new HttpResponseListener()
+        task.setListener(new HttpResponseListener<JSONObject>()
         {
             public void onResult(JSONObject retJson)
             {

@@ -8,8 +8,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="lib" level="project" />
-    <orderEntry type="library" name="nv-websocket-client-1.31" level="project" />
-    <orderEntry type="library" name="android.ninepatch (3)" level="project" />
+    <orderEntry type="library" name="rocketchat_desktop" level="project" />
+    <orderEntry type="library" name="lib" level="project" />
   </component>
 </module>
