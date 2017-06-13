@@ -10,6 +10,7 @@ import com.rc.forms.MainFrame;
 import com.rc.forms.UserInfoPopup;
 import com.rc.helper.AttachmentIconHelper;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.AvatarUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.ImageCache;
 import com.rc.utils.TimeUtil;
@@ -22,7 +23,7 @@ import java.util.List;
 /**
  * Created by song on 17-6-2.
  */
-public class MessageAdapter extends BaseAdapter<ViewHolder>
+public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 {
     private List<MessageItem> messageItems;
     private AttachmentIconHelper attachmentIconHelper = new AttachmentIconHelper();
@@ -44,29 +45,36 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     }
 
     @Override
-    public ViewHolder onCreateViewHolder(int viewType)
+    public BaseMessageViewHolder onCreateViewHolder(int viewType)
     {
         switch (viewType)
         {
-            case MessageItem.SYSTEM_MESSAGE:{
+            case MessageItem.SYSTEM_MESSAGE:
+            {
                 return new MessageSystemMessageViewHolder();
             }
-            case MessageItem.RIGHT_TEXT:{
+            case MessageItem.RIGHT_TEXT:
+            {
                 return new MessageRightTextViewHolder();
             }
-            case MessageItem.LEFT_TEXT:{
+            case MessageItem.LEFT_TEXT:
+            {
                 return new MessageLeftTextViewHolder();
             }
-            case MessageItem.RIGHT_IMAGE:{
+            case MessageItem.RIGHT_IMAGE:
+            {
                 return new MessageRightImageViewHolder();
             }
-            case MessageItem.LEFT_IMAGE:{
+            case MessageItem.LEFT_IMAGE:
+            {
                 return new MessageLeftImageViewHolder();
             }
-            case MessageItem.RIGHT_ATTACHMENT:{
+            case MessageItem.RIGHT_ATTACHMENT:
+            {
                 return new MessageRightAttachmentViewHolder();
             }
-            case MessageItem.LEFT_ATTACHMENT:{
+            case MessageItem.LEFT_ATTACHMENT:
+            {
                 return new MessageLeftAttachmentViewHolder();
             }
         }
@@ -75,7 +83,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder viewHolder, int position)
+    public void onBindViewHolder(BaseMessageViewHolder viewHolder, int position)
     {
         if (viewHolder == null)
         {
@@ -84,6 +92,8 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
 
         final MessageItem item = messageItems.get(position);
         MessageItem preItem = position == 0 ? null : messageItems.get(position - 1);
+
+        processTimeAndAvatar(item, preItem, viewHolder);
 
         if (viewHolder instanceof MessageSystemMessageViewHolder)
         {
@@ -118,29 +128,21 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     private void processSystemMessage(ViewHolder viewHolder, MessageItem item)
     {
         MessageSystemMessageViewHolder holder = (MessageSystemMessageViewHolder) viewHolder;
-        holder.time.setText(TimeUtil.diff(item.getTimestamp(),true));
         holder.text.setText(item.getMessageContent());
     }
 
     private void processLeftAttachmentMessage(ViewHolder viewHolder, MessageItem item)
     {
         MessageLeftAttachmentViewHolder holder = (MessageLeftAttachmentViewHolder) viewHolder;
-        holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
         holder.attachmentTitle.setText(item.getMessageContent());
         ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
         holder.sender.setText(item.getSenderUsername());
-
-        ImageIcon avatarIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        avatarIcon.setImage(avatarIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        holder.avatar.setIcon(avatarIcon);
-        bindAvatarAction(holder.avatar);
     }
 
     private void processRightAttachmentMessage(ViewHolder viewHolder, MessageItem item)
     {
         MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
-        holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
         holder.attachmentTitle.setText(item.getMessageContent());
         ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
@@ -148,20 +150,14 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
 
     /**
      * 对方发送的图片
+     *
      * @param viewHolder
      * @param item
      */
     private void processLeftImageMessage(ViewHolder viewHolder, MessageItem item)
     {
         MessageLeftImageViewHolder holder = (MessageLeftImageViewHolder) viewHolder;
-        holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
         holder.sender.setText(item.getSenderUsername());
-
-        ImageIcon avatarIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        avatarIcon.setImage(avatarIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        holder.avatar.setIcon(avatarIcon);
-        bindAvatarAction(holder.avatar);
-
 
         processImage(item, holder.image, holder);
 
@@ -172,13 +168,13 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
 
     /**
      * 我发送的图片
+     *
      * @param viewHolder
      * @param item
      */
     private void processRightImageMessage(ViewHolder viewHolder, MessageItem item)
     {
         MessageRightImageViewHolder holder = (MessageRightImageViewHolder) viewHolder;
-        holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
 
         processImage(item, holder.image, holder);
     }
@@ -230,6 +226,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
 
     /**
      * 根据图片尺寸大小调整图片显示的大小
+     *
      * @param imageIcon
      * @return
      */
@@ -261,7 +258,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     {
         MessageRightTextViewHolder holder = (MessageRightTextViewHolder) viewHolder;
         holder.text.setText(item.getMessageContent());
-        holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
+
         //processMessageContent(holder.messageText, item);
         //registerMessageTextListener(holder.messageText, item);
 
@@ -296,19 +293,61 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     private void processLeftTextMessage(ViewHolder viewHolder, final MessageItem item)
     {
         MessageLeftTextViewHolder holder = (MessageLeftTextViewHolder) viewHolder;
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        imageIcon.setImage(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        holder.avatar.setIcon(imageIcon);
-        bindAvatarAction(holder.avatar);
 
         holder.text.setText(item.getMessageContent());
-        holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
         holder.sender.setText("Song");
     }
 
+    /**
+     * 处理消息发送时间 以及 消息发送者头像
+     *
+     * @param item
+     * @param preItem
+     * @param holder
+     */
+    private void processTimeAndAvatar(MessageItem item, MessageItem preItem, BaseMessageViewHolder holder)
+    {
+        // 如果当前消息的时间与上条消息时间相差大于1分钟，则显示当前消息的时间
+        if (preItem != null)
+        {
+            if (TimeUtil.inTheSameMinute(item.getTimestamp(), preItem.getTimestamp()))
+            {
+                holder.time.setVisible(false);
+            }
+            else
+            {
+                holder.time.setVisible(true);
+                holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
+            }
+        }
+        else
+        {
+            holder.time.setVisible(true);
+            holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
+        }
+
+        if (holder.avatar != null)
+        {
+            ImageIcon icon = new ImageIcon();
+            // 群组头像
+            icon.setImage(AvatarUtil.createOrLoadUserAvatar(item.getSenderUsername()));
+            holder.avatar.setIcon(icon);
+
+            bindAvatarAction(holder.avatar);
+        }
+
+
+        /*
+        {
+            holder.avatar.setImageBitmap(AvatarUtil.createOrLoadUserAvatar(this.activity, item.getSenderUsername()));
+        }*/
+    }
+
+
     private void bindAvatarAction(JLabel avatarLabel)
     {
-        avatarLabel.addMouseListener(new AbstractMouseListener(){
+        avatarLabel.addMouseListener(new AbstractMouseListener()
+        {
             @Override
             public void mouseClicked(MouseEvent e)
             {

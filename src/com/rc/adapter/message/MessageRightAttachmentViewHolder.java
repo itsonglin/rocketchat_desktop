@@ -14,11 +14,11 @@ import java.awt.*;
 /**
  * Created by song on 17-6-3.
  */
-public class MessageRightAttachmentViewHolder extends ViewHolder
+public class MessageRightAttachmentViewHolder extends BaseMessageViewHolder
 {
     public SizeAutoAdjustTextArea attachmentTitle;
-    public JLabel avatar = new JLabel();
-    public JLabel time = new JLabel();
+    //public JLabel avatar = new JLabel();
+    //public JLabel time = new JLabel();
     public JLabel resend = new JLabel(); // 重发按钮
     public RCProgressBar progressBar = new RCProgressBar(); // 进度条
 
@@ -38,10 +38,6 @@ public class MessageRightAttachmentViewHolder extends ViewHolder
     {
         int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.427);
         attachmentTitle = new SizeAutoAdjustTextArea(maxWidth);
-
-        ImageIcon avatarIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        avatarIcon.setImage(avatarIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        avatar.setIcon(avatarIcon);
 
         time.setForeground(Colors.FONT_GRAY);
         time.setFont(FontUtil.getDefaultFont(12));
@@ -94,7 +90,7 @@ public class MessageRightAttachmentViewHolder extends ViewHolder
         messageAvatarPanel.add(resendAttachmentPanel, new GBC(1, 0).setWeight(1000, 1)
                 .setAnchor(GBC.EAST).setInsets(0, 0, 5, 0));
         messageAvatarPanel.add(avatar, new GBC(2, 0).setWeight(1, 1).setAnchor(GBC.NORTH)
-                .setInsets(5, 0, 0, 0));
+                .setInsets(5, 0, 0, 10));
 
         add(timePanel, BorderLayout.NORTH);
         add(messageAvatarPanel, BorderLayout.CENTER);

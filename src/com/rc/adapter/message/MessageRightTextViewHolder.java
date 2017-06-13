@@ -20,10 +20,10 @@ import java.awt.event.MouseEvent;
 /**
  * Created by song on 17-6-2.
  */
-public class MessageRightTextViewHolder extends ViewHolder
+public class MessageRightTextViewHolder extends BaseMessageViewHolder
 {
-    public JLabel avatar = new JLabel();
-    public JLabel time = new JLabel();
+    //public JLabel avatar = new JLabel();
+    //public JLabel time = new JLabel();
     public SizeAutoAdjustTextArea text;
     public RCRightImageMessageBubble messageBubble = new RCRightImageMessageBubble();
     //public RCRightTextMessageBubble text = new RCRightTextMessageBubble();
@@ -45,10 +45,6 @@ public class MessageRightTextViewHolder extends ViewHolder
     {
         int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.5);
         text = new SizeAutoAdjustTextArea(maxWidth);
-
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        imageIcon.setImage(imageIcon.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH));
-        avatar.setIcon(imageIcon);
 
 
         time.setForeground(Colors.FONT_GRAY);
@@ -116,7 +112,7 @@ public class MessageRightTextViewHolder extends ViewHolder
 
         messageAvatarPanel.setLayout(new GridBagLayout());
         messageAvatarPanel.add(resendTextPanel, new GBC(1, 0).setWeight(1000, 1).setAnchor(GBC.EAST).setInsets(0, 0, 5, 0));
-        messageAvatarPanel.add(avatar, new GBC(2, 0).setWeight(1, 1).setAnchor(GBC.NORTH).setInsets(5, 0, 0, 0));
+        messageAvatarPanel.add(avatar, new GBC(2, 0).setWeight(1, 1).setAnchor(GBC.NORTH).setInsets(5, 0, 0, 10));
 
         add(timePanel, BorderLayout.NORTH);
         add(messageAvatarPanel, BorderLayout.CENTER);

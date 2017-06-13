@@ -8,6 +8,8 @@ import com.rc.components.VerticalFlowLayout;
 import com.rc.components.message.RCLeftImageMessageBubble;
 import com.rc.forms.MainFrame;
 import com.rc.utils.FontUtil;
+import com.sun.xml.internal.rngom.parse.host.Base;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
@@ -18,11 +20,11 @@ import java.awt.event.MouseEvent;
 /**
  * Created by song on 17-6-2.
  */
-public class MessageLeftTextViewHolder extends ViewHolder
+public class MessageLeftTextViewHolder extends BaseMessageViewHolder
 {
     public JLabel sender = new JLabel();
-    public JLabel avatar = new JLabel();
-    public JLabel time = new JLabel();
+    //public JLabel avatar = new JLabel();
+    //public JLabel time = new JLabel();
     //public RCLeftTextMessageBubble text = new RCLeftTextMessageBubble();
 
     public SizeAutoAdjustTextArea text;

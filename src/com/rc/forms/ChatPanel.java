@@ -212,13 +212,13 @@ public class ChatPanel extends ParentAvailablePanel
         // 数据库中没有该房间的任何消息
         if (start < 0)
         {
-            start = System.currentTimeMillis() - (1000L * 60 * 60 * 24 * 50) - TIMESTAMP_8_HOURS;
+            start = System.currentTimeMillis() - (1000L * 60 * 60 * 24 * 100) - TIMESTAMP_8_HOURS;
             //end = System.currentTimeMillis() - TIMESTAMP_8_HOURS;
             end = 0;
         }
         else
         {
-            start = firstTime - (1000L * 60 * 60 * 24 * 50) - TIMESTAMP_8_HOURS;
+            start = firstTime - (1000L * 60 * 60 * 24 * 100) - TIMESTAMP_8_HOURS;
         }
 
         // String sss = simpleDateFormat.format(new Date(start));

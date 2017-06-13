@@ -21,15 +21,16 @@ import java.awt.geom.RoundRectangle2D;
 /**
  * Created by song on 17-6-2.
  */
-public class MessageSystemMessageViewHolder extends ViewHolder
+public class MessageSystemMessageViewHolder extends BaseMessageViewHolder
 {
-    public JLabel time = new JLabel();
+    //public JLabel time = new JLabel();
     public JLabel text = new JLabel();
     private JPanel timePanel = new JPanel();
     private JPanel textPanel;
 
     public MessageSystemMessageViewHolder()
     {
+        avatar = null;
         initComponents();
         initView();
     }

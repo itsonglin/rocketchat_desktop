@@ -13,11 +13,11 @@ import java.awt.*;
 /**
  * Created by song on 17-6-2.
  */
-public class MessageLeftImageViewHolder extends ViewHolder
+public class MessageLeftImageViewHolder extends BaseMessageViewHolder
 {
     public JLabel sender = new JLabel();
-    public JLabel avatar = new JLabel();
-    public JLabel time = new JLabel();
+    //public JLabel avatar = new JLabel();
+    //public JLabel time = new JLabel();
     public JLabel image = new JLabel();
     private RCLeftImageMessageBubble imageBubble = new RCLeftImageMessageBubble();
     private JPanel timePanel = new JPanel();
