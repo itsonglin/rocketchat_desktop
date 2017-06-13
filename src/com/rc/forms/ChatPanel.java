@@ -118,12 +118,8 @@ public class ChatPanel extends ParentAvailablePanel
     {
         if (roomId != null)
         {
-            messagePanel.setVisible(true);
-            messageEditorPanel.setVisible(true);
-
             // 加载本地消息
             loadLocalHistory(); // 初次打开房间时加载历史消息
-
 
             // 从服务器获取本地最后一条消息以后的消息
             if (!remoteHistoryLoadedRooms.contains(roomId))
@@ -136,8 +132,18 @@ public class ChatPanel extends ParentAvailablePanel
             updateUnreadCount(0);
         }
 
+        /*for (int i = 0; i < 10; i++)
+        {
+            MessageItem item = new MessageItem();
+            item.setMessageContent("bbb");
+            item.setMessageType(MessageItem.RIGHT_TEXT);
+            messageItems.add(item);
+        }
 
-        messagePanel.getMessageListView().notifyDataSetChange();
+
+        messagePanel.setVisible(true);
+        messageEditorPanel.setVisible(true);
+        messagePanel.getMessageListView().notifyDataSetChange();*/
     }
 
     private void setListeners()
@@ -147,14 +153,34 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void onScrollToTop()
             {
+                // 当滚动到顶部时，继续拿前面的消息
                 if (roomId != null)
                 {
                     System.out.println("到顶啦");
-                   loadLocalHistory(); // 滚动到顶部后继续加载消息
-                    messagePanel.getMessageListView().setAutoScrollToTop();
-                    //messagePanel.getMessageListView().notifyDataSetChange();
+                    List<Message> messages = messageService.findOffset(roomId, messageItems.size(), PAGE_LENGTH);
 
+                    if (messages.size() > 0)
+                    {
+                        for (Message message : messages)
+                        {
+                            MessageItem item = new MessageItem(message, currentUser.getUserId());
+                            messageItems.add(0, item);
+                        }
+                    }
+                    // 如果本地没有拿到消息，则从服务器拿距现在一个月内的消息
+                    else
+                    {
+                        System.out.println("AAA本地没有拿到消息，则从服务器拿距现在一个月内的消息");
+                        loadMoreHistoryFromRemote();
 
+                        // 数据库中没有当前房间的消，页码恢复为1
+                        if (messageService.countByRoom(roomId) < 1)
+                        {
+                            page = 1;
+                        }
+                    }
+
+                    messagePanel.getMessageListView().notifyItemRangeInserted(0, messages.size());
                 }
             }
         });
@@ -165,26 +191,14 @@ public class ChatPanel extends ParentAvailablePanel
      */
     private void loadLocalHistory()
     {
-        // 当前房间消息总数
-        //int msgSum = messageService.countByRoom(roomId);
-
-        List<Message> messages = messageService.findByPage(roomId, page++, PAGE_LENGTH);
+        List<Message> messages = messageService.findByPage(roomId, messageItems.size(), PAGE_LENGTH);
 
         if (messages.size() > 0)
         {
             for (Message message : messages)
             {
                 MessageItem item = new MessageItem(message, currentUser.getUserId());
-
-           /* MessageItem item = new MessageItem();
-            item.setMessageType(MessageItem.RIGHT_TEXT);
-            item.setMessageContent("你好你好");*/
                 messageItems.add(item);
-            }
-
-            if (page > 2)
-            {
-                Collections.sort(messageItems);
             }
         }
         // 如果本地没有拿到消息，则从服务器拿距现在一个月内的消息
@@ -192,17 +206,11 @@ public class ChatPanel extends ParentAvailablePanel
         {
             System.out.println("本地没有拿到消息，则从服务器拿距现在一个月内的消息");
             loadMoreHistoryFromRemote();
-
-            // 数据库中没有当前房间的消，页码恢复为1
-            if (messageService.countByRoom(roomId) < 1)
-            {
-                page = 1;
-            }
         }
 
         messagePanel.getMessageListView().notifyDataSetChange();
 
-        if (page <= 2)
+        if (messageItems.size() <= PAGE_LENGTH)
         {
             messagePanel.getMessageListView().setAutoScrollToBottom();
         }
@@ -268,8 +276,8 @@ public class ChatPanel extends ParentAvailablePanel
             {
                 try
                 {
-                    //boolean loadUnread = (startTime != 0 && endTime == 0);
-                    processRoomHistoryResult(retJson/*, loadUnread*/);
+                    boolean loadUnread = (startTime != 0 && endTime == 0);
+                    processRoomHistoryResult(retJson, loadUnread);
                 }
                 catch (Exception e)
                 {
@@ -368,7 +376,7 @@ public class ChatPanel extends ParentAvailablePanel
      * @param jsonText
      * @throws JSONException
      */
-    private void processRoomHistoryResult(JSONObject jsonText/*, boolean loadUnread*/) throws JSONException, ParseException
+    private void processRoomHistoryResult(JSONObject jsonText, boolean loadUnread) throws JSONException, ParseException
     {
         //String roomId = jsonText.getString("id").replace(SubscriptionHelper.SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE, "");
         JSONArray messages = jsonText.getJSONArray("messages");
@@ -546,7 +554,7 @@ public class ChatPanel extends ParentAvailablePanel
             System.out.println("新增消息数：" + messageList.size());
 
 
-            notifyNewMessageLoaded(/*loadUnread*/);
+            notifyNewMessageLoaded(loadUnread);
 
 
             //if (loadUnread)
@@ -563,7 +571,7 @@ public class ChatPanel extends ParentAvailablePanel
      *
      * @throws ParseException
      */
-    private void notifyNewMessageLoaded(/*boolean loadUnread*/) throws ParseException
+    private void notifyNewMessageLoaded(boolean loadUnread) throws ParseException
     {
         long from;
         if (messageItems != null)
@@ -574,36 +582,40 @@ public class ChatPanel extends ParentAvailablePanel
             //long utcCurr = System.currentTimeMillis();
             long utcCurr = 9999999999999L;
 
-            // 已有消息，追加
-            if (messageItems.size() > 0)
+            // 如果是加載未读消息，则新的消息追回到现有消息后
+            if (loadUnread)
             {
-                from = messageItems.get(messageItems.size() - 1).getTimestamp();
-                //List<Message> messages = messageService.findBetween(realm, roomId, from + 1, utcCurr);
-                List<Message> messages = messageService.findBetween(roomId, from + 1, utcCurr);
-
-                for (Message message : messages)
+                // 已有消息，追加
+                if (messageItems.size() > 0)
                 {
-                    if (!message.isDeleted())
+                    from = messageItems.get(messageItems.size() - 1).getTimestamp();
+                    //List<Message> messages = messageService.findBetween(realm, roomId, from + 1, utcCurr);
+                    List<Message> messages = messageService.findBetween(roomId, from + 1, utcCurr);
+
+                    for (Message message : messages)
                     {
-                        messageItems.add(new MessageItem(message, currentUser.getUserId()));
+                        if (!message.isDeleted())
+                        {
+                            messageItems.add(new MessageItem(message, currentUser.getUserId()));
+                        }
+                    }
+
+                    //recyclerview.getAdapter().notifyDataSetChanged();
+                    if (messages.size() > 0)
+                    {
+                        messagePanel.getMessageListView().notifyDataSetChange();
+
+                        if (page <= 2)
+                        {
+                            messagePanel.getMessageListView().setAutoScrollToBottom();
+                        }
                     }
                 }
-
-                //recyclerview.getAdapter().notifyDataSetChanged();
-                if (messages.size() > 0)
+                // 无消息,加载本地消息
+                else
                 {
-                    messagePanel.getMessageListView().notifyDataSetChange();
-
-                    if (page <= 2)
-                    {
-                        messagePanel.getMessageListView().setAutoScrollToBottom();
-                    }
+                    loadLocalHistory();
                 }
-            }
-            // 无消息,加载本地消息
-            else
-            {
-                loadLocalHistory();
             }
         }
     }
@@ -639,9 +651,10 @@ public class ChatPanel extends ParentAvailablePanel
     public void notifyDataSetChanged()
     {
         messageItems.clear();
-        page = 1;
+
         initData();
+        messagePanel.setVisible(true);
+        messageEditorPanel.setVisible(true);
+
     }
-
-
 }

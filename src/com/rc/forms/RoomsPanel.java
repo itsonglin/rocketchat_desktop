@@ -33,6 +33,7 @@ public class RoomsPanel extends ParentAvailablePanel
         initComponents();
         initView();
         initData();
+        roomItemsListView.setAdapter(new RoomItemsAdapter(roomItemList));
     }
 
     private void initComponents()
@@ -70,8 +71,6 @@ public class RoomsPanel extends ParentAvailablePanel
 
             roomItemList.add(item);
         }
-
-        roomItemsListView.setAdapter(new RoomItemsAdapter(roomItemList));
     }
 
     public void notifyDataSetChanged()

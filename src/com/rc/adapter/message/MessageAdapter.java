@@ -118,14 +118,14 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     private void processSystemMessage(ViewHolder viewHolder, MessageItem item)
     {
         MessageSystemMessageViewHolder holder = (MessageSystemMessageViewHolder) viewHolder;
-        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        holder.time.setText(TimeUtil.diff(item.getTimestamp(),true));
         holder.text.setText(item.getMessageContent());
     }
 
     private void processLeftAttachmentMessage(ViewHolder viewHolder, MessageItem item)
     {
         MessageLeftAttachmentViewHolder holder = (MessageLeftAttachmentViewHolder) viewHolder;
-        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
         holder.attachmentTitle.setText(item.getMessageContent());
         ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
@@ -140,7 +140,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     private void processRightAttachmentMessage(ViewHolder viewHolder, MessageItem item)
     {
         MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
-        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
         holder.attachmentTitle.setText(item.getMessageContent());
         ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
@@ -154,7 +154,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     private void processLeftImageMessage(ViewHolder viewHolder, MessageItem item)
     {
         MessageLeftImageViewHolder holder = (MessageLeftImageViewHolder) viewHolder;
-        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
         holder.sender.setText(item.getSenderUsername());
 
         ImageIcon avatarIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
@@ -178,7 +178,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     private void processRightImageMessage(ViewHolder viewHolder, MessageItem item)
     {
         MessageRightImageViewHolder holder = (MessageRightImageViewHolder) viewHolder;
-        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
 
         processImage(item, holder.image, holder);
     }
@@ -261,7 +261,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
     {
         MessageRightTextViewHolder holder = (MessageRightTextViewHolder) viewHolder;
         holder.text.setText(item.getMessageContent());
-        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
         //processMessageContent(holder.messageText, item);
         //registerMessageTextListener(holder.messageText, item);
 
@@ -302,7 +302,7 @@ public class MessageAdapter extends BaseAdapter<ViewHolder>
         bindAvatarAction(holder.avatar);
 
         holder.text.setText(item.getMessageContent());
-        holder.time.setText(TimeUtil.diff(item.getTimestamp()));
+        holder.time.setText(TimeUtil.diff(item.getTimestamp(), true));
         holder.sender.setText("Song");
     }
 

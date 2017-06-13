@@ -69,4 +69,13 @@ public class MessageDao extends BasicDao
         Object count = session.selectOne("findFirstMessageTime", roomId);
         return count == null ? -1 : (long) count;
     }
+
+    public List<Message> findOffset(String roomId, int offset, int pageLength)
+    {
+        Map map = new HashMap();
+        map.put("roomId", "'" + roomId + "'");
+        map.put("offset",offset);
+        map.put("pageLength", pageLength);
+        return session.selectList("findByPage", map);
+    }
 }

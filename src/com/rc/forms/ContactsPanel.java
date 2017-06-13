@@ -36,6 +36,7 @@ public class ContactsPanel extends ParentAvailablePanel
         initComponents();
         initView();
         initData();
+        contactsListView.setAdapter(new ContactsItemsAdapter(contactsItemList));
     }
 
 
@@ -63,8 +64,6 @@ public class ContactsPanel extends ParentAvailablePanel
 
             contactsItemList.add(item);
         }
-
-        contactsListView.setAdapter(new ContactsItemsAdapter(contactsItemList));
     }
 
     public void notifyDataSetChanged()

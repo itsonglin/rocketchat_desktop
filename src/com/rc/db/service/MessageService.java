@@ -50,6 +50,11 @@ public class MessageService extends BasicService<MessageDao, Message>
         return dao.findByPage(roomId, page, pageLength);
     }
 
+    public List<Message> findOffset(String roomId, int offset, int pageLength)
+    {
+        return dao.findOffset(roomId, offset, pageLength);
+    }
+
     public long findLastMessageTime(String roomId)
     {
         return dao.findLastMessageTime(roomId);

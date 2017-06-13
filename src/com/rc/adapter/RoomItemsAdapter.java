@@ -101,9 +101,6 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
             {
                 if (selectedViewHolder != viewHolder)
                 {
-                    setBackground(viewHolder, Colors.ITEM_SELECTED);
-                    selectedViewHolder = viewHolder;
-
                     for (RoomItemViewHolder holder : viewHolders)
                     {
                         if (holder != viewHolder)
@@ -115,7 +112,14 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
                     // 加载房间消息
                     ChatPanel.getContext().setRoomId(item.getRoomId());
                     ChatPanel.getContext().notifyDataSetChanged();
+
+                    setBackground(viewHolder, Colors.ITEM_SELECTED);
+                    selectedViewHolder = viewHolder;
                 }
+
+                /*ChatPanel.getContext().setRoomId(item.getRoomId());
+                ChatPanel.getContext().notifyDataSetChanged();*/
+
             }
 
 
