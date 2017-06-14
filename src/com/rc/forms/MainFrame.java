@@ -1,8 +1,10 @@
 package com.rc.forms;
 
 
+import com.rc.app.Test;
 import com.rc.components.GBC;
 import com.rc.utils.FontUtil;
+import com.rc.utils.IconUtil;
 import com.rc.utils.OSUtil;
 import com.rc.websocket.WebSocketClient;
 
@@ -32,11 +34,42 @@ public class MainFrame extends JFrame
         context = this;
         initComponents();
         initView();
+        initTray();
 
         // 连接WebSocket
         startWebSocket();
 
         test();
+    }
+
+    /**
+     * 初始化系统托盘图标
+     */
+    private void initTray()
+    {
+        SystemTray systemTray = SystemTray.getSystemTray();//获取系统托盘
+        try
+        {
+            Image icon = IconUtil.getIcon(this, "/image/ic_launcher.png", 18,18).getImage();
+
+            TrayIcon trayIcon = new TrayIcon(icon, "和理通");
+            trayIcon.addMouseListener(new MouseAdapter()
+            {
+                @Override
+                public void mouseClicked(MouseEvent e)
+                {
+                    setVisible(true);
+                    super.mouseClicked(e);
+                }
+            });
+
+            systemTray.add(trayIcon);
+
+        }
+        catch (AWTException e)
+        {
+            e.printStackTrace();
+        }
     }
 
 
@@ -48,6 +81,8 @@ public class MainFrame extends JFrame
 
     private void initComponents()
     {
+        setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
+
         UIManager.put("Label.font", FontUtil.getDefaultFont());
         UIManager.put("Panel.font", FontUtil.getDefaultFont());
         UIManager.put("TextArea.font", FontUtil.getDefaultFont());

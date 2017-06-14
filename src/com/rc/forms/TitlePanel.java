@@ -8,9 +8,12 @@ import com.rc.components.VerticalFlowLayout;
 import com.rc.db.model.Room;
 import com.rc.db.service.RoomService;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
+import com.rc.utils.ImageCache;
 import com.rc.utils.OSUtil;
 import com.sun.awt.AWTUtilities;
+import com.sun.imageio.plugins.common.ImageUtil;
 import com.sun.javaws.Main;
 import com.sun.javaws.jnl.LaunchDesc;
 
@@ -68,10 +71,10 @@ public class TitlePanel extends ParentAvailablePanel
                 screenSize.height - screenInsets.top - screenInsets.bottom);
 
         normalBounds = new Rectangle(
-                (screenSize.width - MainFrame.DEFAULT_WIDTH) / 2 ,
+                (screenSize.width - MainFrame.DEFAULT_WIDTH) / 2,
                 (screenSize.height - MainFrame.DEFAULT_HEIGHT) / 2,
                 MainFrame.DEFAULT_WIDTH,
-                MainFrame.DEFAULT_HEIGHT );
+                MainFrame.DEFAULT_HEIGHT);
 
     }
 
@@ -87,28 +90,14 @@ public class TitlePanel extends ParentAvailablePanel
                 {
                     roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
                     roomMemberPanel.setVisible(false);
-                } else
+                }
+                else
                 {
                     roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options_restore.png")));
                     roomMemberPanel.setVisible(true);
                 }
             }
         });
-
-        /*MainFrame.getContext().addWindowStateListener(new WindowStateListener()
-        {
-            @Override
-            public void windowStateChanged(WindowEvent e)
-            {
-                if (e.getNewState() == Frame.MAXIMIZED_BOTH)
-                {
-                    maxLabel.setIcon(restoreIcon);
-                } else if (e.getNewState() == Frame.NORMAL)
-                {
-                    maxLabel.setIcon(maxIcon);
-                }
-            }
-        });*/
     }
 
     private void initComponents()
@@ -127,7 +116,6 @@ public class TitlePanel extends ParentAvailablePanel
         roomInfoButton.setCursor(handCursor);
 
         titleLabel = new JLabel();
-        titleLabel.setText("小学生(5)");
         titleLabel.setFont(FontUtil.getDefaultFont(16));
 
 
@@ -180,7 +168,8 @@ public class TitlePanel extends ParentAvailablePanel
             add(controlPanel);
             add(titlePanel);
             margin = 5;
-        } else
+        }
+        else
         {
             add(titlePanel);
             margin = 15;
@@ -188,10 +177,6 @@ public class TitlePanel extends ParentAvailablePanel
 
         titlePanel.add(titleLabel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(100, 1).setInsets(margin, margin, 0, 0));
         titlePanel.add(roomInfoButton, new GBC(1, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(margin, 0, 0, margin));
-
-        //add(controlPanel);
-        //add(titlePanel);
-
     }
 
     public static TitlePanel getContext()
@@ -215,16 +200,10 @@ public class TitlePanel extends ParentAvailablePanel
         {
             if (e.getComponent() == closeLabel)
             {
-                System.exit(1);
-            } else if (e.getComponent() == maxLabel)
+                MainFrame.getContext().setVisible(false);
+            }
+            else if (e.getComponent() == maxLabel)
             {
-                /*if (maxLabel.getIcon() == maxIcon)
-                {
-                    MainFrame.getContext().setExtendedState(JFrame.MAXIMIZED_BOTH);
-                }else
-                {
-                    MainFrame.getContext().setExtendedState(JFrame.NORMAL);
-                }*/
                 if (windowMax)
                 {
                     MainFrame.getContext().setBounds(normalBounds);
@@ -237,8 +216,8 @@ public class TitlePanel extends ParentAvailablePanel
                     maxLabel.setIcon(restoreIcon);
                     windowMax = true;
                 }
-
-            } else if (e.getComponent() == minLabel)
+            }
+            else if (e.getComponent() == minLabel)
             {
                 MainFrame.getContext().setExtendedState(JFrame.ICONIFIED);
             }
@@ -247,14 +226,14 @@ public class TitlePanel extends ParentAvailablePanel
         @Override
         public void mouseEntered(MouseEvent e)
         {
-            ((JLabel)e.getSource()).setBackground(Colors.LIGHT_GRAY);
+            ((JLabel) e.getSource()).setBackground(Colors.LIGHT_GRAY);
             super.mouseEntered(e);
         }
 
         @Override
         public void mouseExited(MouseEvent e)
         {
-            ((JLabel)e.getSource()).setBackground(Colors.WINDOW_BACKGROUND);
+            ((JLabel) e.getSource()).setBackground(Colors.WINDOW_BACKGROUND);
             super.mouseExited(e);
         }
     }

@@ -51,9 +51,8 @@ public class Launcher
         else
         {
             frame = new LoginFrame();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
-
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setVisible(true);
     }
 

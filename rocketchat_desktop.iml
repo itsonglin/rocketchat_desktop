@@ -11,5 +11,14 @@
     <orderEntry type="library" name="rocketchat_desktop" level="project" />
     <orderEntry type="library" name="lib" level="project" />
     <orderEntry type="library" name="android.ninepatch (4)" level="project" />
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/lib/gwt-dev-1.4.62-mac.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
