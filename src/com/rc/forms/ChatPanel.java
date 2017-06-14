@@ -706,6 +706,9 @@ public class ChatPanel extends ParentAvailablePanel
 
     }
 
+    /**
+     * 添加一条消息到最后，或者更新已有消息
+     */
     public void addOrUpdateMessageItem()
     {
         Message message = messageService.findLastMessage(roomId);
@@ -727,7 +730,14 @@ public class ChatPanel extends ParentAvailablePanel
         MessageItem messageItem = new MessageItem(message, currentUser.getUserId());
         this.messageItems.add(messageItem);
         messagePanel.getMessageListView().notifyItemInserted(messageItems.size() - 1);
-        messagePanel.getMessageListView().setAutoScrollToBottom();
+
+        // 只有当滚动条在最底部最，新消到来后才自动滚动到底部
+        JScrollBar scrollBar = messagePanel.getMessageListView().getVerticalScrollBar();
+        if (scrollBar.getValue() == (scrollBar.getModel().getMaximum() - scrollBar.getModel().getExtent()))
+        {
+            messagePanel.getMessageListView().setAutoScrollToBottom();
+        }
+
         //recyclerview.scrollToPosition(recyclerview.getAdapter().getItemCount() - 1);
 
         updateUnreadCount(0);
