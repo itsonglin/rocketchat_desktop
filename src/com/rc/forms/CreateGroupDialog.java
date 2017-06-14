@@ -235,7 +235,7 @@ public class CreateGroupDialog extends JDialog
             if (item.getName().equals(username))
             {
                 selectedUsersList.add(item);
-                selectedUserListView.notifyDataSetChange();
+                selectedUserListView.notifyDataSetChange(false);
 
             }
         }
@@ -258,7 +258,7 @@ public class CreateGroupDialog extends JDialog
 
         if (dataChanged)
         {
-            selectedUserListView.notifyDataSetChange();
+            selectedUserListView.notifyDataSetChange(false);
         }
 
         return dataChanged;

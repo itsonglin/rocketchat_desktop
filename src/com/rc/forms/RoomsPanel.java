@@ -82,7 +82,7 @@ public class RoomsPanel extends ParentAvailablePanel
     public void notifyDataSetChanged()
     {
         initData();
-        roomItemsListView.notifyDataSetChange();
+        roomItemsListView.notifyDataSetChange(true);
     }
 
     /**

@@ -9,6 +9,7 @@ import com.rc.db.service.FileAttachmentService;
 import com.rc.db.service.ImageAttachmentService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
+import com.rc.forms.RoomsPanel;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -262,7 +263,7 @@ public class StreamRoomMessagesHandler implements CollectionHandler
            // roomService.updateLastMessage(Realm.getDefaultInstance(), room, message.getMessageContent(), message.getTimestamp());
             room.setLastMessage(message.getMessageContent());
             room.setLastChatAt(message.getTimestamp());
-
+            roomService.update(room);
             //realm.close();
 
             // 通知UI更新
@@ -284,6 +285,10 @@ public class StreamRoomMessagesHandler implements CollectionHandler
 
             //TODO
             logger.debug("通知UI更新,有新消息进来");
+
+            // 更新房间列表
+            RoomsPanel.getContext().notifyDataSetChanged();
+
 
             /*((WebSocketService) context).sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION,
                     WebSocketService.EVENT_NEW_ROOM_MESSAGE_RECEIVED, param);*/

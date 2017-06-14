@@ -5,6 +5,7 @@ import com.rc.adapter.HeaderViewHolder;
 import com.rc.adapter.ViewHolder;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -27,6 +28,8 @@ public class RCListView extends JScrollPane
     private ScrollToTopListener scrollToTopListener;
     private boolean scrollBarPressed = false;
     private int lastScrollValue = -1;
+
+    private static int lastItemCount = 0;
 
     public RCListView()
     {
@@ -139,6 +142,7 @@ public class RCListView extends JScrollPane
             return;
         }
 
+        lastItemCount = adapter.getCount();
         for (int i = 0; i < adapter.getCount(); i++)
         {
             int viewType = adapter.getItemViewType(i);
@@ -207,12 +211,22 @@ public class RCListView extends JScrollPane
     /**
      * 重绘整个listView
      */
-    public void notifyDataSetChange()
+    public void notifyDataSetChange(boolean keepSize)
     {
+        if (keepSize)
+        {
+            if (lastItemCount == adapter.getCount())
+            {
+                System.out.println("数量相同");
+                // 保持原来内容面板的宽高，避免滚动条长度改变或可见状态改变时闪屏
+                contentPanel.setPreferredSize(new Dimension(contentPanel.getWidth(), contentPanel.getHeight()));
+            }
+        }
+
         contentPanel.removeAll();
         fillComponents();
         contentPanel.revalidate();
-        //lastScrollValue = -1;
+
     }
 
     /**

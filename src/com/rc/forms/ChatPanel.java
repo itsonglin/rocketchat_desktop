@@ -195,7 +195,7 @@ public class ChatPanel extends ParentAvailablePanel
             loadMoreHistoryFromRemote(true);
         }
 
-        messagePanel.getMessageListView().notifyDataSetChange();
+        messagePanel.getMessageListView().notifyDataSetChange(false);
 
         if (messageItems.size() <= PAGE_LENGTH)
         {
@@ -628,7 +628,7 @@ public class ChatPanel extends ParentAvailablePanel
                     //recyclerview.getAdapter().notifyDataSetChanged();
                     if (messages.size() > 0)
                     {
-                        messagePanel.getMessageListView().notifyDataSetChange();
+                        messagePanel.getMessageListView().notifyDataSetChange(false);
 
                         if (page <= 2)
                         {
@@ -659,7 +659,7 @@ public class ChatPanel extends ParentAvailablePanel
                 if (messages.size() > 0)
                 {
                     //Collections.sort(messageItems);
-                    messagePanel.getMessageListView().notifyDataSetChange();
+                    messagePanel.getMessageListView().notifyDataSetChange(false);
                     messagePanel.getMessageListView().setAutoScrollToBottom();
                 }
             }

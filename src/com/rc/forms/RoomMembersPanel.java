@@ -71,7 +71,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         {
             getRoomMembers();
             super.setVisible(aFlag);
-            listView.notifyDataSetChange();
+            listView.notifyDataSetChange(false);
         }
 
         super.setVisible(aFlag);
