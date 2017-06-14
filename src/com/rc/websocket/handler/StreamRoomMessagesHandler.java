@@ -10,6 +10,7 @@ import com.rc.db.service.ImageAttachmentService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
 import com.rc.forms.ChatPanel;
+import com.rc.forms.MainFrame;
 import com.rc.forms.RoomsPanel;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -284,19 +285,49 @@ public class StreamRoomMessagesHandler implements CollectionHandler
                         WebSocketService.DEQUEUE_AND_UPLOAD, param);*/
             }
 
-            // 如果是当前打开的房间，更新消息列表
-            if (message.getRoomId().equals(ChatPanel.CHAT_ROOM_OPEN_ID))
+
+
+
+
+
+
+            MainFrame context = MainFrame.getContext();
+            // 更新房间列表
+            RoomsPanel.getContext().notifyDataSetChanged();
+
+            context.playMessageSound();
+
+            // 如果主窗口没有显示，则任务栏闪动
+            if (!context.isVisible())
             {
-                // 如果是刚刚自己上传的文件，提示UI不要再把这条消息加入到消息列表中，防止消息重复出现
-                if (!myUploadFile)
+                if (!context.isTrayFlashing())
                 {
-                    ChatPanel.getContext().addOrUpdateMessageItem();
+                    context.setTrayFlashing();
                 }
+
+                context.playMessageSound();
             }
+            // 主窗口已显示
             else
             {
-                // 更新房间列表
-                RoomsPanel.getContext().notifyDataSetChanged();
+                // 窗体打开，但没有被激活，则任务栏图标高亮
+                if (!context.isActive())
+                {
+                    System.out.println("要播放声音");
+                    context.playMessageSound();
+                    context.setVisible(true);
+                    context.toFront();
+                }
+
+                // 如果是当前打开的房间，更新消息列表
+                if (message.getRoomId().equals(ChatPanel.CHAT_ROOM_OPEN_ID))
+                {
+                    // 如果是刚刚自己上传的文件，提示UI不要再把这条消息加入到消息列表中，防止消息重复出现
+                    if (!myUploadFile)
+                    {
+                        ChatPanel.getContext().addOrUpdateMessageItem();
+                    }
+                }
             }
 
 

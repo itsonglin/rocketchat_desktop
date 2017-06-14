@@ -1,16 +1,21 @@
 package com.rc.forms;
 
 
-import com.rc.app.Test;
-import com.rc.components.GBC;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.OSUtil;
 import com.rc.websocket.WebSocketClient;
+import sun.audio.AudioPlayer;
+import sun.audio.AudioStream;
 
 import javax.swing.*;
+import java.applet.Applet;
+import java.applet.AudioClip;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by song on 17-5-28.
@@ -28,19 +33,70 @@ public class MainFrame extends JFrame
     private static Point origin = new Point();
 
     private static MainFrame context;
+    private Image normalTrayIcon; // 正常时的任务栏图标
+    private Image emptyTrayIcon; // 闪动时的任务栏图标
+    private TrayIcon trayIcon;
+    private boolean trayFlashing = false;
+    private AudioStream messageSound; //消息到来时候的提示间
+
 
     public MainFrame()
     {
         context = this;
         initComponents();
         initView();
-        initTray();
+        initResource();
 
         // 连接WebSocket
         startWebSocket();
-
         test();
     }
+
+    private void initResource()
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                initTray();
+                //initSound();
+            }
+        }).start();
+
+    }
+
+    /**
+     * 初始化提示声音
+     */
+    private void initSound()
+    {
+        try
+        {
+            InputStream inputStream = getClass().getResourceAsStream("/wav/msg.wav");
+            messageSound = new AudioStream(inputStream);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 播放消息提示间
+     */
+    public void playMessageSound()
+    {
+        try
+        {
+            InputStream inputStream = getClass().getResourceAsStream("/wav/msg.wav");
+            messageSound = new AudioStream(inputStream);
+            AudioPlayer.player.start(messageSound);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * 初始化系统托盘图标
@@ -50,26 +106,72 @@ public class MainFrame extends JFrame
         SystemTray systemTray = SystemTray.getSystemTray();//获取系统托盘
         try
         {
-            Image icon = IconUtil.getIcon(this, "/image/ic_launcher.png", 18,18).getImage();
+            normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher.png", 20, 20).getImage();
+            emptyTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher_empty.png", 20, 20).getImage();
 
-            TrayIcon trayIcon = new TrayIcon(icon, "和理通");
+            trayIcon = new TrayIcon(normalTrayIcon, "和理通");
+            trayIcon.setImageAutoSize(true);
             trayIcon.addMouseListener(new MouseAdapter()
             {
                 @Override
                 public void mouseClicked(MouseEvent e)
                 {
+                    // 显示主窗口
                     setVisible(true);
+
+                    // 任务栏图标停止闪动
+                    if (trayFlashing)
+                    {
+                        trayFlashing = false;
+                        trayIcon.setImage(normalTrayIcon);
+                    }
+
                     super.mouseClicked(e);
                 }
             });
 
-            systemTray.add(trayIcon);
 
-        }
-        catch (AWTException e)
+            systemTray.add(trayIcon);
+        } catch (AWTException e)
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 设置任务栏图标闪动
+     */
+    public void setTrayFlashing()
+    {
+        trayFlashing = true;
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                while (trayFlashing)
+                {
+                    try
+                    {
+                        trayIcon.setImage(emptyTrayIcon);
+                        Thread.sleep(800);
+
+                        trayIcon.setImage(normalTrayIcon);
+                        Thread.sleep(800);
+
+                    } catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+
+            }
+        }).start();
+    }
+
+    public boolean isTrayFlashing()
+    {
+        return trayFlashing;
     }
 
 
@@ -95,7 +197,6 @@ public class MainFrame extends JFrame
 
     private void test()
     {
-
 
     }
 
@@ -126,8 +227,8 @@ public class MainFrame extends JFrame
     private void centerScreen()
     {
         Toolkit tk = Toolkit.getDefaultToolkit();
-        this.setLocation((tk.getScreenSize().width - currentWindowWidth)/2,
-                (tk.getScreenSize().height - currentWindowHeight)/2);
+        this.setLocation((tk.getScreenSize().width - currentWindowWidth) / 2,
+                (tk.getScreenSize().height - currentWindowHeight) / 2);
     }
 
     private void addListener()
