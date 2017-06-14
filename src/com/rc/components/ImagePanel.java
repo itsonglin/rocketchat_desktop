@@ -39,13 +39,15 @@ public class ImagePanel extends JPanel
     {
         int width = this.getWidth(), height = this.getHeight();
 
-        Image scaledImage = image.getScaledInstance(width, width, image.SCALE_SMOOTH);//设置缩放目标图片模板
+        // 图像缩放到容器宽高
+        ImageIcon imageIcon = new ImageIcon();
+        imageIcon.setImage(image.getScaledInstance(width, height, Image.SCALE_SMOOTH));
 
         Graphics2D g2 = (Graphics2D) g;
         RoundRectangle2D rect = new RoundRectangle2D.Float(0, 0, width, height, 8, 8);
         path.append(rect, false);
         g2.setClip(path);
-        g2.drawImage(scaledImage, 0, 0, null);
+        g2.drawImage(imageIcon.getImage(), 0, 0, null);
         g2.dispose();
     }
 }

@@ -1,10 +1,13 @@
 package com.rc.forms;
 
+import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.ImagePanel;
 import com.rc.components.message.MainOperationPopupMenu;
+import com.rc.db.service.CurrentUserService;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
 
 import javax.imageio.ImageIO;
@@ -21,6 +24,7 @@ public class MyInfoPanel extends ParentAvailablePanel
     private ImagePanel avatar;
     private JLabel username;
     private JLabel menuIcon;
+    private CurrentUserService currentUserService = Launcher.currentUserService;
 
     MainOperationPopupMenu mainOperationPopupMenu;
 
@@ -40,17 +44,14 @@ public class MyInfoPanel extends ParentAvailablePanel
 
         //GImage.setBorder(new SubtleSquareBorder(true));
 
-        try
-        {
-            avatar = new ImagePanel(ImageIO.read(getClass().getResourceAsStream("/image/avatar.jpg")));
-            avatar.setPreferredSize(new Dimension(50, 50));
-            avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        Image image = AvatarUtil.createOrLoadUserAvatar("song");
 
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+        //avatar = new ImagePanel(ImageIO.read(getClass().getResourceAsStream("/image/avatar.jpg")));
+        avatar = new ImagePanel(image);
+
+        avatar.setPreferredSize(new Dimension(50, 50));
+        avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
 
         username = new JLabel();
         username.setText("松");
@@ -75,7 +76,7 @@ public class MyInfoPanel extends ParentAvailablePanel
             public void mouseClicked(MouseEvent e)
             {
                 Component component = e.getComponent();
-                mainOperationPopupMenu.show(component, -112,50);
+                mainOperationPopupMenu.show(component, -112, 50);
                 super.mouseClicked(e);
             }
         });

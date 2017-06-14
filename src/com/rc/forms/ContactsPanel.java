@@ -99,7 +99,7 @@ public class ContactsPanel extends ParentAvailablePanel
                     if (!AvatarUtil.customAvatarExist(user.getName()))
                     {
                         final String username = user.getName();
-                        logger.debug("获取头像:" + username);
+                        //logger.debug("获取头像:" + username);
                         HttpBytesGetTask task = new HttpBytesGetTask();
                         task.setListener(new HttpResponseListener<byte[]>()
                         {

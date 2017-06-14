@@ -44,6 +44,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
     public void onBindViewHolder(RoomItemViewHolder viewHolder, int position)
     {
         viewHolders.add(viewHolder);
+        //viewHolder.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         RoomItem item = roomItems.get(position);
         viewHolder.roomName.setText(item.getTitle());
@@ -101,32 +102,32 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         viewHolder.addMouseListener(new AbstractMouseListener()
         {
             @Override
-            public void mouseClicked(MouseEvent e)
+            public void mouseReleased(MouseEvent e)
             {
-                if (selectedViewHolder != viewHolder)
+                if (e.getButton() == MouseEvent.BUTTON1)
                 {
-                    for (RoomItemViewHolder holder : viewHolders)
+
+                    if (selectedViewHolder != viewHolder)
                     {
-                        if (holder != viewHolder)
+                        for (RoomItemViewHolder holder : viewHolders)
                         {
-                            setBackground(holder, Colors.DARK);
+                            if (holder != viewHolder)
+                            {
+                                setBackground(holder, Colors.DARK);
+                            }
                         }
+
+                        // 加载房间消息
+                        ChatPanel.getContext().setRoomId(item.getRoomId());
+                        ChatPanel.getContext().notifyDataSetChanged();
+
+                        // 更新房间标题
+                        TitlePanel.getContext().updateRoomTitle(item.getRoomId());
+
+                        setBackground(viewHolder, Colors.ITEM_SELECTED);
+                        selectedViewHolder = viewHolder;
                     }
-
-                    // 加载房间消息
-                    ChatPanel.getContext().setRoomId(item.getRoomId());
-                    ChatPanel.getContext().notifyDataSetChanged();
-
-                   // 更新房间标题
-                    TitlePanel.getContext().updateRoomTitle(item.getRoomId());
-
-                    setBackground(viewHolder, Colors.ITEM_SELECTED);
-                    selectedViewHolder = viewHolder;
                 }
-
-                /*ChatPanel.getContext().setRoomId(item.getRoomId());
-                ChatPanel.getContext().notifyDataSetChanged();*/
-
             }
 
 
