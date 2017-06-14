@@ -268,6 +268,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
            /* holder.resendButton.setVisibility(View.VISIBLE);
             holder.messageSendingProgressBar.setVisibility(View.GONE);
             holder.resendButton.setTag(R.id.message_id, item.getId());*/
+            holder.sendingProgress.setVisible(false);
+            holder.resend.setVisible(true);
         }
         else
         {
@@ -275,11 +277,11 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             // 如果是刚发送的消息，显示正在发送进度条
             if (item.getUpdatedAt() < 1)
             {
-                //holder.messageSendingProgressBar.setVisibility(View.VISIBLE);
+                holder.sendingProgress.setVisible(true);
             }
             else
             {
-                //holder.messageSendingProgressBar.setVisibility(View.GONE);
+                holder.sendingProgress.setVisible(false);
             }
         }
     }

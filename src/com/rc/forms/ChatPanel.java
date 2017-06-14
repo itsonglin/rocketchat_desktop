@@ -9,15 +9,21 @@ import com.rc.components.RCListView;
 import com.rc.db.model.*;
 import com.rc.db.service.*;
 import com.rc.entity.MessageItem;
+import com.rc.websocket.WebSocketClient;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import tasks.HttpGetTask;
 import tasks.HttpResponseListener;
+import tasks.MessageResendTask;
+import tasks.ResendTaskCallback;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.Document;
 import java.awt.*;
+import java.awt.event.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -88,7 +94,7 @@ public class ChatPanel extends ParentAvailablePanel
         messagePanel.getMessageListView().setAdapter(adapter);
 
         messageEditorPanel = new MessageEditorPanel(this);
-        messageEditorPanel.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH, MainFrame.DEFAULT_WIDTH / 4 ));
+        messageEditorPanel.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH, MainFrame.DEFAULT_WIDTH / 4));
     }
 
 
@@ -109,14 +115,6 @@ public class ChatPanel extends ParentAvailablePanel
     {
         return context;
     }
-
-    public void setRoomId(String roomId)
-    {
-        this.roomId = roomId;
-        CHAT_ROOM_OPEN_ID = roomId;
-        this.room = roomService.findById(roomId);
-    }
-
 
     private void initData()
     {
@@ -147,7 +145,6 @@ public class ChatPanel extends ParentAvailablePanel
                 // 当滚动到顶部时，继续拿前面的消息
                 if (roomId != null)
                 {
-                    System.out.println("到顶啦");
                     List<Message> messages = messageService.findOffset(roomId, messageItems.size(), PAGE_LENGTH);
 
                     if (messages.size() > 0)
@@ -175,6 +172,57 @@ public class ChatPanel extends ParentAvailablePanel
                 }
             }
         });
+
+        JTextPane editor = messageEditorPanel.getEditor();
+        Document document = editor.getDocument();
+
+        editor.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyPressed(KeyEvent e)
+            {
+                if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_ENTER)
+                {
+                    try
+                    {
+                        document.insertString(document.getLength(), "\n", null);
+                    }
+                    catch (BadLocationException e1)
+                    {
+                        e1.printStackTrace();
+                    }
+                }
+                else if (!e.isControlDown() && e.getKeyCode() == KeyEvent.VK_ENTER)
+                {
+                    System.out.println("发送消息");
+                    sendTextMessage(null, editor.getText());
+                    e.consume();
+                }
+            }
+        });
+
+        messageEditorPanel.getSendButton().addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                sendTextMessage(null, editor.getText());
+            }
+        });
+
+    }
+
+
+    /**
+     * 设置当前打开的房间ID
+     *
+     * @param roomId
+     */
+    public void setRoomId(String roomId)
+    {
+        this.roomId = roomId;
+        CHAT_ROOM_OPEN_ID = roomId;
+        this.room = roomService.findById(roomId);
     }
 
     /**
@@ -264,6 +312,11 @@ public class ChatPanel extends ParentAvailablePanel
         }
     }
 
+    /**
+     * 更新数据库中的房间未读消息数，以及房间列表中的未读消息数
+     *
+     * @param count
+     */
     private void updateUnreadCount(int count)
     {
         room = roomService.findById(roomId);
@@ -354,49 +407,6 @@ public class ChatPanel extends ParentAvailablePanel
         task.addRequestParam("latest", end);
         task.addRequestParam("unreads", "true");
         task.execute(url);
-    }
-
-    public String getCurrentUTCTime()
-    {
-        StringBuffer utcTimebuffer = new StringBuffer();
-        // 1、取得本地时间：
-        Calendar cal = Calendar.getInstance();
-        // 2、取得时间偏移量：
-        int zoneOffset = cal.get(java.util.Calendar.ZONE_OFFSET);
-        // 3、取得夏令时差：
-        int dstOffset = cal.get(java.util.Calendar.DST_OFFSET);
-        // 4、从本地时间里扣除这些差量，即可以取得UTC时间：
-        cal.add(java.util.Calendar.MILLISECOND, -(zoneOffset + dstOffset));
-        int year = cal.get(Calendar.YEAR);
-        int month = cal.get(Calendar.MONTH) + 1;
-        int day = cal.get(Calendar.DAY_OF_MONTH);
-        int hour = cal.get(Calendar.HOUR_OF_DAY);
-        int minute = cal.get(Calendar.MINUTE);
-        int second = cal.get(Calendar.SECOND);
-        int mSecond = cal.get(Calendar.MILLISECOND);
-
-        utcTimebuffer.append(year).append("-")
-                .append(month < 10 ? ("0" + month) : month).append("-")
-                .append(day < 10 ? ("0" + day) : day);
-
-        utcTimebuffer.append("T").append(hour < 10 ? ("0" + hour) : hour).append(":")
-                .append(minute < 10 ? ("0" + minute) : minute).append(":")
-                .append(second < 10 ? ("0" + second) : second).append(".");
-
-        if (mSecond < 10)
-        {
-            utcTimebuffer.append("00" + mSecond).append("Z");
-        }
-        else if (mSecond < 100)
-        {
-            utcTimebuffer.append("0" + mSecond).append("Z");
-        }
-        else
-        {
-            utcTimebuffer.append(mSecond).append("Z");
-        }
-
-        return utcTimebuffer.toString();
     }
 
     /**
@@ -675,29 +685,19 @@ public class ChatPanel extends ParentAvailablePanel
      */
     private void updateTotalAndUnreadCount(int totalAdded, int unread)
     {
-        //Room room = roomService.findById(realm, roomId);
-
-        //int total = room.getMsgSum();
-        //int unreadc = room.getUnreadCount();
-
         if (unread < 0)
         {
             System.out.println(unread);
         }
-        //roomService.updateUnreadCount(Realm.getDefaultInstance(), room, unread);
-        //roomService.updateMessageSum(Realm.getDefaultInstance(), room, room.getMsgSum() + totalAdded);
-
         room.setUnreadCount(unread);
         room.setMsgSum(room.getMsgSum() + totalAdded);
         roomService.update(room);
-
-        /*Intent intent = new Intent();
-        intent.putExtra("roomId", roomId);
-        intent.putExtra("unreadCount", 0);
-        this.setResult(OPEN_CHAT_ROOM_RESULT, intent);*/
     }
 
 
+    /**
+     * 通知数据改变，需要重绘整个列表
+     */
     public void notifyDataSetChanged()
     {
         messageItems.clear();
@@ -705,7 +705,6 @@ public class ChatPanel extends ParentAvailablePanel
         initData();
         messagePanel.setVisible(true);
         messageEditorPanel.setVisible(true);
-
     }
 
     /**
@@ -719,19 +718,34 @@ public class ChatPanel extends ParentAvailablePanel
             return;
         }
 
+        /*int position = 0;
         for (MessageItem msg : messageItems)
         {
             if (message.getId().equals(msg.getId()))
             {
                 msg.setUpdatedAt(message.getTimestamp());
-                messagePanel.getMessageListView().notifyDataSetChanged(false);
+                messagePanel.getMessageListView().notifyItemChanged(position);
+                updateUnreadCount(0);
+                return;
+            }
+
+            position++;
+        }*/
+
+        for (int i = messageItems.size() - 1; i >= 0; i--)
+        {
+            if (message.getId().equals(messageItems.get(i).getId()))
+            {
+                messageItems.get(i).setUpdatedAt(message.getTimestamp());
+                messagePanel.getMessageListView().notifyItemChanged(i);
+                updateUnreadCount(0);
                 return;
             }
         }
 
         MessageItem messageItem = new MessageItem(message, currentUser.getUserId());
         this.messageItems.add(messageItem);
-        messagePanel.getMessageListView().notifyItemInserted(messageItems.size() - 1);
+        messagePanel.getMessageListView().notifyItemInserted(messageItems.size() - 1, false);
 
         // 只有当滚动条在最底部最，新消到来后才自动滚动到底部
         JScrollBar scrollBar = messagePanel.getMessageListView().getVerticalScrollBar();
@@ -740,9 +754,186 @@ public class ChatPanel extends ParentAvailablePanel
             messagePanel.getMessageListView().setAutoScrollToBottom();
         }
 
-        //recyclerview.scrollToPosition(recyclerview.getAdapter().getItemCount() - 1);
-
         updateUnreadCount(0);
+    }
+
+    /**
+     * 添加一条消息到消息列表最后
+     * @param item
+     */
+    private void addMessageItemToEnd(MessageItem item)
+    {
+        this.messageItems.add(item);
+        messagePanel.getMessageListView().notifyItemInserted(messageItems.size() - 1, true);
+        messagePanel.getMessageListView().setAutoScrollToBottom();
+
+    }
+
+
+    /**
+     * 发送文本消息
+     */
+    public void sendTextMessage(String messageId, String content)
+    {
+        if (content == null || content.isEmpty())
+        {
+            return ;
+        }
+
+        //String content = null;
+        Message dbMessage = null;
+        if (messageId == null)
+        {
+            MessageItem item = new MessageItem();
+            //content = editText.getText().toString();
+            if (content == null || content.equals(""))
+            {
+                return;
+            }
+
+            messageId = randomMessageId();
+            item.setMessageContent(content);
+            //item.setTimestamp(System.currentTimeMillis() - TIMESTAMP_8_HOURS);
+            item.setTimestamp(System.currentTimeMillis());
+            item.setSenderId(currentUser.getUserId());
+            item.setSenderUsername(currentUser.getUsername());
+            item.setId(messageId);
+            item.setMessageType(MessageItem.RIGHT_TEXT);
+
+            dbMessage = new Message();
+            dbMessage.setId(messageId);
+            dbMessage.setMessageContent(content);
+            dbMessage.setRoomId(roomId);
+            dbMessage.setSenderId(currentUser.getUserId());
+            dbMessage.setSenderUsername(currentUser.getUsername());
+            dbMessage.setTimestamp(item.getTimestamp());
+            dbMessage.setNeedToResend(false);
+
+            //mAdapter.addItem(item);
+            //recyclerview.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+            addMessageItemToEnd(item);
+
+            messageEditorPanel.getEditor().setText("");
+            //messageService.insertOrUpdate(Realm.getDefaultInstance(), dbMessage);
+
+            messageService.insert(dbMessage);
+
+        }
+        // 已有消息重发
+        else
+        {
+            //dbMessage = messageService.findById(realm, messageId);
+            Message msg = messageService.findById(messageId);
+
+            //Message msg = realm.copyFromRealm(dbMessage);
+            //msg.setTimestamp(System.currentTimeMillis() - TIMESTAMP_8_HOURS);
+            msg.setTimestamp(System.currentTimeMillis());
+            msg.setUpdatedAt(0);
+            msg.setNeedToResend(false);
+            //messageService.insertOrUpdate(realm, msg);
+            messageService.insertOrUpdate(msg);
+
+            content = dbMessage.getMessageContent();
+
+            for (MessageItem msgItem : messageItems)
+            {
+                if (msgItem.getId().equals(dbMessage.getId()))
+                {
+                    msgItem.setNeedToResend(false);
+                    msgItem.setUpdatedAt(0);
+                    msgItem.setTimestamp(System.currentTimeMillis());
+
+                    messagePanel.getMessageListView().notifyDataSetChanged(false);
+                    break;
+                }
+            }
+        }
+
+        // 发送
+       //WebSocketClient.getContext().sendTextMessage(roomId, messageId, content);
+
+
+        MessageResendTask task = new MessageResendTask();
+        task.setListener(new ResendTaskCallback(10000)
+        {
+            @Override
+            public void onNeedResend(String messageId)
+            {
+                //Realm realm = Realm.getDefaultInstance();
+                //Message msg = messageService.findById(realm, messageId);
+                Message msg = messageService.findById(messageId);
+                if (msg.getUpdatedAt() == 0)
+                {
+                    // 发送失败的消息往往是后面的消息，从后往前遍历性能更佳
+                    for (int i = messageItems.size() - 1; i >= 0; i--)
+                    {
+                        if (messageItems.get(i).getId().equals(messageId))
+                        {
+                            messageItems.get(i).setNeedToResend(true);
+                            //messageService.updateNeedToResend(Realm.getDefaultInstance(), msg, true);
+                            msg.setNeedToResend(true);
+                            messageService.update(msg);
+
+                            // 离开房间再次进入时，确保能够更新消息状态
+                            /*try
+                            {
+                                // 确保是上条发送失败的消息
+                                MessageItem targetMsg = ((MessageListAdapter) recyclerview.getAdapter()).getMessageItems().get(i);
+                                if (targetMsg.getId().equals(messageItems.get(i).getId()))
+                                {
+                                    ((MessageListAdapter) recyclerview.getAdapter()).getMessageItems().get(i).setNeedToResend(true);
+                                    recyclerview.getAdapter().notifyItemChanged(i);
+                                }
+                            } catch (Exception e)
+                            {
+                                Log.e("消息重发", "消息不存在，可能不是此房间");
+                            }
+*/
+                            //roomService.updateLastMessage(Realm.getDefaultInstance(), roomId, "[有消息发送失败]", msg.getTimestamp());
+
+                            // 注意这里不能用类的成员room，因为可能已经离开了原来的房间
+                            Room room = roomService.findById(msg.getRoomId());
+                            room.setLastMessage("[有消息发送失败]");
+                            room.setLastChatAt(msg.getTimestamp());
+                            roomService.update(room);
+
+                            //((MainFrameActivity) MainFrameActivity.getContext()).updateChatItem(msg.getRoomId());
+                            // 更新房间列表
+                            RoomsPanel.getContext().updateRoomItem(msg.getRoomId());
+
+                            // 更新消息列表
+                            messagePanel.getMessageListView().notifyItemChanged(i);
+
+                            break;
+                        }
+                    }
+                }
+                //realm.close();
+            }
+        });
+        task.execute(messageId);
+
+        // 显示正在发送...
+       //showSendingMessage();
+    }
+
+    private void showSendingMessage()
+    {
+        Room room = roomService.findById(roomId);
+        room.setLastMessage("[发送中...]");
+        roomService.update(room);
+        RoomsPanel.getContext().updateRoomItem(roomId);
+    }
+
+
+    /**
+     * 随机生成MessageId
+     * @return
+     */
+    private String randomMessageId()
+    {
+        String raw = UUID.randomUUID().toString().replace("-", "");
+        return raw;
     }
 }
 

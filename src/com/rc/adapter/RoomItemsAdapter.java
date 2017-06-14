@@ -43,7 +43,10 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
     @Override
     public void onBindViewHolder(RoomItemViewHolder viewHolder, int position)
     {
-        viewHolders.add(viewHolder);
+        if (!viewHolders.contains(viewHolder))
+        {
+            viewHolders.add(viewHolder);
+        }
         //viewHolder.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         RoomItem item = roomItems.get(position);

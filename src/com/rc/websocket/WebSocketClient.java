@@ -34,6 +34,7 @@ import java.util.Map;
  */
 public class WebSocketClient
 {
+    private static WebSocketClient context;
 
     public static String ConnectionStatus = "disconnected";
     public static long LAST_PING_PONG_TIME; // 上次发送ping或pong消息的时间
@@ -67,10 +68,16 @@ public class WebSocketClient
 
     public WebSocketClient()
     {
+        context = this;
         logger = Logger.getLogger(this.getClass());
 
         streamRoomMessagesHandler = new StreamRoomMessagesHandler();
         streamNotifyUserCollectionHandler = new StreamNotifyUserCollectionHandler(subscriptionHelper, WebSocketClient.this);
+    }
+
+    public static WebSocketClient getContext()
+    {
+        return context;
     }
 
     public void startClient()
@@ -1017,6 +1024,14 @@ public class WebSocketClient
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 发送文本消息
+     */
+    public void sendTextMessage(String roomId, String messageId, String content)
+    {
+        subscriptionHelper.sendTextMessage(roomId, messageId, content);
     }
 
 }

@@ -37,7 +37,10 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
     @Override
     public void onBindViewHolder(RoomMembersItemViewHolder viewHolder, int position)
     {
-        viewHolders.add(viewHolder);
+        if (!viewHolders.contains(viewHolder))
+        {
+            viewHolders.add(viewHolder);
+        }
 
         String name = members.get(position);
         viewHolder.roomName.setText(name);

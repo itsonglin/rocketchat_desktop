@@ -98,7 +98,11 @@ public class RoomsPanel extends ParentAvailablePanel
                 Room room = roomService.findById(item.getRoomId());
                 if (room != null)
                 {
-                    RoomItemViewHolder holder = (RoomItemViewHolder) roomItemsListView.getItem(i);
+                    item.setLastMessage(room.getLastMessage());
+                    item.setTimestamp(room.getLastChatAt());
+                    item.setUnreadCount(room.getUnreadCount());
+                    roomItemsListView.notifyItemChanged(i);
+                    /*RoomItemViewHolder holder = (RoomItemViewHolder) roomItemsListView.getItem(i);
 
                     item.setLastMessage(room.getLastMessage());
                     item.setTimestamp(room.getLastChatAt());
@@ -121,7 +125,7 @@ public class RoomsPanel extends ParentAvailablePanel
                     } else
                     {
                         holder.unreadCount.setVisible(false);
-                    }
+                    }*/
                 }
                 break;
             }

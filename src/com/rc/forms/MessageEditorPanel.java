@@ -2,6 +2,7 @@ package com.rc.forms;
 
 import com.rc.components.Colors;
 import com.rc.components.GBC;
+import com.rc.components.ScrollUI;
 import com.rc.components.message.JIMSendTextPane;
 import com.rc.components.RCButton;
 import com.rc.utils.FontUtil;
@@ -17,7 +18,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
     private JPanel controlLabel;
     private JLabel fileLabel;
     private JScrollPane textScrollPane;
-    private JIMSendTextPane textEditor;
+    private JTextPane textEditor;
     private JPanel sendPanel;
     private RCButton sendButton;
 
@@ -42,13 +43,14 @@ public class MessageEditorPanel extends ParentAvailablePanel
         fileLabel.setToolTipText("上传附件");
         controlLabel.add(fileLabel);
 
-        textEditor = new JIMSendTextPane();
+        textEditor = new JTextPane();
         textEditor.setBackground(Colors.WINDOW_BACKGROUND);
         textEditor.setFont(FontUtil.getDefaultFont(16));
         textEditor.setMargin(new Insets(0,15,0,0));
         textScrollPane = new JScrollPane(textEditor);
+        textScrollPane.getVerticalScrollBar().setUI(new ScrollUI(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND));
         textScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        textScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
+        textScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         textScrollPane.setBorder(null);
 
         sendPanel = new JPanel();
@@ -69,4 +71,15 @@ public class MessageEditorPanel extends ParentAvailablePanel
         add(textScrollPane, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 15));
         add(sendPanel, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0,0,10,10));
     }
+
+    public JTextPane getEditor()
+    {
+        return textEditor;
+    }
+
+    public JButton getSendButton()
+    {
+        return sendButton;
+    }
+
 }

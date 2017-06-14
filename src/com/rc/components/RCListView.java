@@ -251,12 +251,11 @@ public class RCListView extends JScrollPane
      */
     public void notifyItemChanged(int position)
     {
-        contentPanel.remove(position);
-        int viewType = adapter.getItemViewType(position);
-        ViewHolder holder = adapter.onCreateViewHolder(viewType);
+        //contentPanel.remove(position);
+        //int viewType = adapter.getItemViewType(position);
+        //ViewHolder holder = adapter.onCreateViewHolder(viewType);
+        ViewHolder holder = (ViewHolder) getItem(position);
         adapter.onBindViewHolder(holder, position);
-        contentPanel.add(holder, position);
-
         /*contentPanel.getComponent(position).setBackground(Color.red);
         contentPanel.getComponent(position).revalidate();*/
     }
@@ -271,12 +270,15 @@ public class RCListView extends JScrollPane
         this.scrollToTopListener = listener;
     }
 
-    public void notifyItemInserted(int position)
+    public void notifyItemInserted(int position, boolean end)
     {
         int viewType = adapter.getItemViewType(position);
         ViewHolder holder = adapter.onCreateViewHolder(viewType);
         adapter.onBindViewHolder(holder, position);
+
+        position = end ? -1 : position;
         contentPanel.add(holder, position);
+        contentPanel.revalidate();
     }
 
 
