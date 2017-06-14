@@ -30,6 +30,9 @@ import java.util.List;
  */
 public class ChatPanel extends ParentAvailablePanel
 {
+    private MessagePanel messagePanel;
+    private MessageEditorPanel messageEditorPanel;
+
     private static ChatPanel context;
 
     public static final long TIMESTAMP_8_HOURS = 28800000L;
@@ -38,8 +41,6 @@ public class ChatPanel extends ParentAvailablePanel
     // APP启动时，已加载过远程未读消息的Rooms
     private static List<String> remoteHistoryLoadedRooms = new ArrayList<>();
 
-    private MessagePanel messagePanel;
-    private MessageEditorPanel messageEditorPanel;
     private java.util.List<MessageItem> messageItems = new ArrayList<>();
     private MessageAdapter adapter;
     private CurrentUser currentUser;
@@ -87,6 +88,7 @@ public class ChatPanel extends ParentAvailablePanel
         messagePanel.getMessageListView().setAdapter(adapter);
 
         messageEditorPanel = new MessageEditorPanel(this);
+        messageEditorPanel.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH, MainFrame.DEFAULT_WIDTH / 4 ));
     }
 
 
