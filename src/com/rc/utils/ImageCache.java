@@ -188,6 +188,10 @@ public class ImageCache
     public static int[] getImageSize(Image image)
     {
 
+        if (image == null)
+        {
+            return new int[] {10, 10};
+        }
         int result[] = {0, 0};
         try
         {

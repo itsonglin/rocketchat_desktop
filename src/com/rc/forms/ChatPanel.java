@@ -126,8 +126,9 @@ public class ChatPanel extends ParentAvailablePanel
             {
                 long startTs = messageService.findLastMessageTime(roomId) + 1;
                 logger.debug("startTs = " + startTs);
-                loadRemoteHistory(startTs - TIMESTAMP_8_HOURS, 0);
+                loadRemoteHistory(startTs - TIMESTAMP_8_HOURS, 0, true, false, null);
             }
+
             updateUnreadCount(0);
         }
     }
@@ -156,8 +157,8 @@ public class ChatPanel extends ParentAvailablePanel
                     // 如果本地没有拿到消息，则从服务器拿距现在一个月内的消息
                     else
                     {
-                        System.out.println("AAA本地没有拿到消息，则从服务器拿距现在一个月内的消息");
-                        loadMoreHistoryFromRemote();
+                        System.out.println("到顶，本地没有拿到消息，从服务器拿距现在一个月内的消息");
+                        loadMoreHistoryFromRemote(false);
 
                         // 数据库中没有当前房间的消，页码恢复为1
                         if (messageService.countByRoom(roomId) < 1)
@@ -190,8 +191,8 @@ public class ChatPanel extends ParentAvailablePanel
         // 如果本地没有拿到消息，则从服务器拿距现在一个月内的消息
         else
         {
-            System.out.println("本地没有拿到消息，则从服务器拿距现在一个月内的消息");
-            loadMoreHistoryFromRemote();
+            System.out.println("本地没有拿到消息，从服务器拿距现在一个月内的消息");
+            loadMoreHistoryFromRemote(true);
         }
 
         messagePanel.getMessageListView().notifyDataSetChange();
@@ -202,29 +203,61 @@ public class ChatPanel extends ParentAvailablePanel
         }
     }
 
-    private void loadMoreHistoryFromRemote()
+    /**
+     * 从服务器拿更多历史消，如从本地第一条消息起一个月内的消息
+     */
+    private void loadMoreHistoryFromRemote(boolean firstRequest)
     {
         long firstTime = messageService.findFirstMessageTime(roomId);
 
         // 再从服务器拿50天前的消息
-        long start = firstTime;
+        final long[] start = {firstTime};
         long end = firstTime - TIMESTAMP_8_HOURS;
         // 数据库中没有该房间的任何消息
-        if (start < 0)
+        if (start[0] < 0)
         {
-            start = System.currentTimeMillis() - (1000L * 60 * 60 * 24 * 100) - TIMESTAMP_8_HOURS;
+            start[0] = System.currentTimeMillis() - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
             //end = System.currentTimeMillis() - TIMESTAMP_8_HOURS;
             end = 0;
         }
         else
         {
-            start = firstTime - (1000L * 60 * 60 * 24 * 100) - TIMESTAMP_8_HOURS;
+            start[0] = firstTime - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
         }
 
-        // String sss = simpleDateFormat.format(new Date(start));
-        //String sss2 = simpleDateFormat.format(new Date(end));
+        // 如果是第一次打开该房间，且第一次拿到的历史消息数小于10条，则持续拿
+        if (firstRequest)
+        {
+            RemoteHistoryReceivedListener listener = new RemoteHistoryReceivedListener()
+            {
+                @Override
+                public void onReceived(int newMessageCount)
+                {
+                    // 如果一个月内没有消息，继续拿
+                    if (newMessageCount < 10)
+                    {
+                        start[0] = start[0] - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
 
-        loadRemoteHistory(start, end);
+                        if (start[0] > (1483200000000L - TIMESTAMP_8_HOURS)) // 2017/1/1的时间
+                        {
+                            System.out.println("一个月内没有消息或拿到的消息少于10条，继续拿");
+                            loadRemoteHistory(start[0], 0, false, firstRequest, this);
+                        }
+                        else
+                        {
+                            System.out.println("年代太久远，不拿了");
+                        }
+                    }
+                }
+            };
+
+            loadRemoteHistory(start[0], end, false, firstRequest, listener);
+        }
+        // 滚动到顶部时的请求
+        else
+        {
+            loadRemoteHistory(start[0], end, false, firstRequest, null);
+        }
     }
 
     private void updateUnreadCount(int count)
@@ -245,9 +278,12 @@ public class ChatPanel extends ParentAvailablePanel
     /**
      * 加载远程历史记录
      */
-    private void loadRemoteHistory(final long startTime, final long endTime)
+    private void loadRemoteHistory(final long startTime, final long endTime, boolean loadUnread, boolean firstRequest, RemoteHistoryReceivedListener listener)
     {
-        remoteHistoryLoadedRooms.add(roomId);
+        if (!remoteHistoryLoadedRooms.contains(roomId))
+        {
+            remoteHistoryLoadedRooms.add(roomId);
+        }
 
         HttpGetTask task = new HttpGetTask();
         task.setListener(new HttpResponseListener<JSONObject>()
@@ -255,10 +291,18 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void onResult(JSONObject retJson)
             {
+
                 try
                 {
-                    boolean loadUnread = (startTime != 0 && endTime == 0);
-                    processRoomHistoryResult(retJson, loadUnread);
+                    int newMessageCount;
+                    //boolean loadUnread = (startTime != 0 && endTime == 0);
+                    newMessageCount = processRoomHistoryResult(retJson, loadUnread, firstRequest);
+                    System.out.println("newMessageCount = " + newMessageCount);
+
+                    if (listener != null)
+                    {
+                        listener.onReceived(newMessageCount);
+                    }
                 }
                 catch (Exception e)
                 {
@@ -355,9 +399,10 @@ public class ChatPanel extends ParentAvailablePanel
      * 处理房间加载历史消息回调
      *
      * @param jsonText
+     * @param firstRequest
      * @throws JSONException
      */
-    private void processRoomHistoryResult(JSONObject jsonText, boolean loadUnread) throws JSONException, ParseException
+    private int processRoomHistoryResult(JSONObject jsonText, boolean loadUnread, boolean firstRequest) throws JSONException, ParseException
     {
         //String roomId = jsonText.getString("id").replace(SubscriptionHelper.SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE, "");
         JSONArray messages = jsonText.getJSONArray("messages");
@@ -529,13 +574,13 @@ public class ChatPanel extends ParentAvailablePanel
 
             for (Message msg : messageList)
             {
-                messageService.insert(msg);
+                messageService.insertOrUpdate(msg);
             }
 
             System.out.println("新增消息数：" + messageList.size());
 
-
-            notifyNewMessageLoaded(loadUnread);
+            // 通知UI更新消息列表
+            notifyNewMessageLoaded(loadUnread, firstRequest);
 
 
             //if (loadUnread)
@@ -544,7 +589,7 @@ public class ChatPanel extends ParentAvailablePanel
             }
         }
 
-        //List<Message> messa = messageService.findAll(Realm.getDefaultInstance());
+        return messageList.size();
     }
 
     /**
@@ -552,9 +597,8 @@ public class ChatPanel extends ParentAvailablePanel
      *
      * @throws ParseException
      */
-    private void notifyNewMessageLoaded(boolean loadUnread) throws ParseException
+    private void notifyNewMessageLoaded(boolean loadUnread, boolean firstRequest) throws ParseException
     {
-        long from;
         if (messageItems != null)
         {
 
@@ -569,7 +613,7 @@ public class ChatPanel extends ParentAvailablePanel
                 // 已有消息，追加
                 if (messageItems.size() > 0)
                 {
-                    from = messageItems.get(messageItems.size() - 1).getTimestamp();
+                    long from = messageItems.get(messageItems.size() - 1).getTimestamp();
                     //List<Message> messages = messageService.findBetween(realm, roomId, from + 1, utcCurr);
                     List<Message> messages = messageService.findBetween(roomId, from + 1, utcCurr);
 
@@ -596,6 +640,27 @@ public class ChatPanel extends ParentAvailablePanel
                 else
                 {
                     loadLocalHistory();
+                }
+            }
+            // 第一次请求该房间历史消，通常是一个月内的消息
+            else if (firstRequest)
+            {
+                messageItems.clear();
+                List<Message> messages = messageService.findOffset(roomId, messageItems.size(), PAGE_LENGTH);
+
+                for (Message message : messages)
+                {
+                    if (!message.isDeleted())
+                    {
+                        messageItems.add(new MessageItem(message, currentUser.getUserId()));
+                    }
+                }
+
+                if (messages.size() > 0)
+                {
+                    //Collections.sort(messageItems);
+                    messagePanel.getMessageListView().notifyDataSetChange();
+                    messagePanel.getMessageListView().setAutoScrollToBottom();
                 }
             }
         }
@@ -638,4 +703,9 @@ public class ChatPanel extends ParentAvailablePanel
         messageEditorPanel.setVisible(true);
 
     }
+}
+
+interface RemoteHistoryReceivedListener
+{
+    void onReceived(int newMessageCount);
 }

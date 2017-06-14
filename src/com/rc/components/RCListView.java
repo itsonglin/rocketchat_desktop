@@ -97,7 +97,6 @@ public class RCListView extends JScrollPane
             @Override
             public void mousePressed(MouseEvent e)
             {
-                System.out.println("scrollToBottom = false;");
                 scrollToBottom = false;
                 scrollBarPressed = true;
                 super.mouseEntered(e);
