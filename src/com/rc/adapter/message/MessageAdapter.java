@@ -333,7 +333,12 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             icon.setImage(image);
             holder.avatar.setIcon(icon);
 
-            bindAvatarAction(holder.avatar);
+            if (item.getMessageType() == MessageItem.LEFT_ATTACHMENT
+                    || item.getMessageType() == MessageItem.LEFT_IMAGE
+                    || item.getMessageType() == MessageItem.LEFT_TEXT)
+            {
+                bindAvatarAction(holder.avatar, item.getSenderUsername());
+            }
         }
 
 
@@ -344,14 +349,14 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     }
 
 
-    private void bindAvatarAction(JLabel avatarLabel)
+    private void bindAvatarAction(JLabel avatarLabel, String username)
     {
         avatarLabel.addMouseListener(new AbstractMouseListener()
         {
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                UserInfoPopup popup = new UserInfoPopup();
+                UserInfoPopup popup = new UserInfoPopup(username);
                 popup.show(e.getComponent(), e.getX(), e.getY());
 
                 super.mouseClicked(e);

@@ -43,8 +43,8 @@ public class MyInfoPanel extends ParentAvailablePanel
     {
 
         //GImage.setBorder(new SubtleSquareBorder(true));
-
-        Image image = AvatarUtil.createOrLoadUserAvatar("song");
+        String currentUsername = currentUserService.findAll().get(0).getUsername();
+        Image image = AvatarUtil.createOrLoadUserAvatar(currentUsername);
 
         //avatar = new ImagePanel(ImageIO.read(getClass().getResourceAsStream("/image/avatar.jpg")));
         avatar = new ImagePanel(image);
@@ -54,7 +54,7 @@ public class MyInfoPanel extends ParentAvailablePanel
 
 
         username = new JLabel();
-        username.setText("松");
+        username.setText(currentUsername);
         username.setFont(FontUtil.getDefaultFont(16));
         username.setForeground(Colors.FONT_WHITE);
 

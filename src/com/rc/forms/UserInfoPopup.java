@@ -4,9 +4,9 @@ package com.rc.forms;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCButton;
+import com.rc.utils.AvatarUtil;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**
@@ -15,12 +15,14 @@ import java.awt.*;
 public class UserInfoPopup extends JPopupMenu
 {
     private JPanel contentPanel;
-    private JLabel avatar;
-    private JLabel username;
+    private JLabel avatarLabel;
+    private JLabel usernameLabel;
     private JButton sendButton;
+    private String username;
 
-    public UserInfoPopup()
+    public UserInfoPopup(String username)
     {
+        this.username = username;
         initComponents();
         initView();
     }
@@ -34,13 +36,13 @@ public class UserInfoPopup extends JPopupMenu
         contentPanel.setPreferredSize(new Dimension(200, 200));
         contentPanel.setBackground(Colors.WINDOW_BACKGROUND_LIGHT);
 
-        avatar = new JLabel();
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        imageIcon.setImage(imageIcon.getImage().getScaledInstance(60, 60, Image.SCALE_SMOOTH));
-        avatar.setIcon(imageIcon);
+        avatarLabel = new JLabel();
+        ImageIcon imageIcon = new ImageIcon();
+        imageIcon.setImage(AvatarUtil.createOrLoadUserAvatar(username).getScaledInstance(60, 60, Image.SCALE_SMOOTH));
+        avatarLabel.setIcon(imageIcon);
 
-        username = new JLabel();
-        username.setText("Song");
+        usernameLabel = new JLabel();
+        usernameLabel.setText("Song");
 
         sendButton = new RCButton("发消息");
         sendButton.setPreferredSize(new Dimension(180, 40));
@@ -57,8 +59,8 @@ public class UserInfoPopup extends JPopupMenu
         avatarUsernamePanel.setBackground(Colors.WINDOW_BACKGROUND_LIGHT);
 
         avatarUsernamePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
-        avatarUsernamePanel.add(avatar);
-        avatarUsernamePanel.add(username);
+        avatarUsernamePanel.add(avatarLabel);
+        avatarUsernamePanel.add(usernameLabel);
         avatarUsernamePanel.setPreferredSize(new Dimension(180, 80));
 
 

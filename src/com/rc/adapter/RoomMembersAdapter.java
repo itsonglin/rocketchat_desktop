@@ -108,7 +108,7 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
             imageIcon.setImage(imageIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
             viewHolder.avatar.setIcon(imageIcon);
 
-            UserInfoPopup userInfoPopup = new UserInfoPopup();
+            UserInfoPopup userInfoPopup = new UserInfoPopup(name);
 
 
             viewHolder.addMouseListener(new AbstractMouseListener()
