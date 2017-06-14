@@ -62,7 +62,7 @@
 	</select>
 
     <select id="findLastMessage" resultType="Message">
-        SELECT * FROM message ORDER BY timestamp DESC limit 1
+        SELECT * FROM message where roomId = #{roomId} ORDER BY timestamp DESC limit 1
     </select>
 
     <select id="findLastMessageTime" resultType="java.lang.Long">

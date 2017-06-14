@@ -64,7 +64,7 @@ public class HttpUtil
         }
         else
         {
-            throw new RuntimeException("Get请求失败");
+            throw new RuntimeException("Get请求失败:" + url);
         }
 
         return null;
@@ -80,13 +80,13 @@ public class HttpUtil
                 return response.body().string();
             } catch (IOException e)
             {
-                System.out.println("Get请求失败");
+                System.out.println("Get请求失败: " +url);
                 return null;
             }
         }
         else
         {
-            System.out.println("Get请求失败");
+            System.out.println("Get请求失败: " + url);
 
             return null;
         }
