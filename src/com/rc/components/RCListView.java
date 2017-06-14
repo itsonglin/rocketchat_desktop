@@ -211,7 +211,7 @@ public class RCListView extends JScrollPane
     /**
      * 重绘整个listView
      */
-    public void notifyDataSetChange(boolean keepSize)
+    public void notifyDataSetChanged(boolean keepSize)
     {
         if (keepSize)
         {
@@ -269,6 +269,14 @@ public class RCListView extends JScrollPane
     public void setScrollToTopListener(ScrollToTopListener listener)
     {
         this.scrollToTopListener = listener;
+    }
+
+    public void notifyItemInserted(int position)
+    {
+        int viewType = adapter.getItemViewType(position);
+        ViewHolder holder = adapter.onCreateViewHolder(viewType);
+        adapter.onBindViewHolder(holder, position);
+        contentPanel.add(holder, position);
     }
 
 

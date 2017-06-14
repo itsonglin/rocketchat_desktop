@@ -295,7 +295,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         MessageLeftTextViewHolder holder = (MessageLeftTextViewHolder) viewHolder;
 
         holder.text.setText(item.getMessageContent());
-        holder.sender.setText("Song");
+        holder.sender.setText(item.getSenderUsername());
     }
 
     /**

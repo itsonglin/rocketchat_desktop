@@ -10,7 +10,6 @@ import com.rc.utils.IconUtil;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
-import javax.swing.text.html.HTMLDocument;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -235,7 +234,7 @@ public class CreateGroupDialog extends JDialog
             if (item.getName().equals(username))
             {
                 selectedUsersList.add(item);
-                selectedUserListView.notifyDataSetChange(false);
+                selectedUserListView.notifyDataSetChanged(false);
 
             }
         }
@@ -258,7 +257,7 @@ public class CreateGroupDialog extends JDialog
 
         if (dataChanged)
         {
-            selectedUserListView.notifyDataSetChange(false);
+            selectedUserListView.notifyDataSetChanged(false);
         }
 
         return dataChanged;

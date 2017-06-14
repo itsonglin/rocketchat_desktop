@@ -33,6 +33,7 @@ public class ChatPanel extends ParentAvailablePanel
     private static ChatPanel context;
 
     public static final long TIMESTAMP_8_HOURS = 28800000L;
+    public static String CHAT_ROOM_OPEN_ID = "";
 
     // APP启动时，已加载过远程未读消息的Rooms
     private static List<String> remoteHistoryLoadedRooms = new ArrayList<>();
@@ -110,6 +111,7 @@ public class ChatPanel extends ParentAvailablePanel
     public void setRoomId(String roomId)
     {
         this.roomId = roomId;
+        CHAT_ROOM_OPEN_ID = roomId;
         this.room = roomService.findById(roomId);
     }
 
@@ -195,7 +197,7 @@ public class ChatPanel extends ParentAvailablePanel
             loadMoreHistoryFromRemote(true);
         }
 
-        messagePanel.getMessageListView().notifyDataSetChange(false);
+        messagePanel.getMessageListView().notifyDataSetChanged(false);
 
         if (messageItems.size() <= PAGE_LENGTH)
         {
@@ -262,6 +264,7 @@ public class ChatPanel extends ParentAvailablePanel
 
     private void updateUnreadCount(int count)
     {
+        room = roomService.findById(roomId);
         if (count < 0)
         {
             System.out.println(count);
@@ -272,7 +275,6 @@ public class ChatPanel extends ParentAvailablePanel
 
         // 通知UI更新未读消息数
         RoomsPanel.getContext().updateRoomItem(room.getRoomId());
-
     }
 
     /**
@@ -628,7 +630,7 @@ public class ChatPanel extends ParentAvailablePanel
                     //recyclerview.getAdapter().notifyDataSetChanged();
                     if (messages.size() > 0)
                     {
-                        messagePanel.getMessageListView().notifyDataSetChange(false);
+                        messagePanel.getMessageListView().notifyDataSetChanged(false);
 
                         if (page <= 2)
                         {
@@ -659,7 +661,7 @@ public class ChatPanel extends ParentAvailablePanel
                 if (messages.size() > 0)
                 {
                     //Collections.sort(messageItems);
-                    messagePanel.getMessageListView().notifyDataSetChange(false);
+                    messagePanel.getMessageListView().notifyDataSetChanged(false);
                     messagePanel.getMessageListView().setAutoScrollToBottom();
                 }
             }
@@ -702,6 +704,33 @@ public class ChatPanel extends ParentAvailablePanel
         messagePanel.setVisible(true);
         messageEditorPanel.setVisible(true);
 
+    }
+
+    public void addOrUpdateMessageItem()
+    {
+        Message message = messageService.findLastMessage(roomId);
+        if (message == null || message.isDeleted())
+        {
+            return;
+        }
+
+        for (MessageItem msg : messageItems)
+        {
+            if (message.getId().equals(msg.getId()))
+            {
+                msg.setUpdatedAt(message.getTimestamp());
+                messagePanel.getMessageListView().notifyDataSetChanged(false);
+                return;
+            }
+        }
+
+        MessageItem messageItem = new MessageItem(message, currentUser.getUserId());
+        this.messageItems.add(messageItem);
+        messagePanel.getMessageListView().notifyItemInserted(messageItems.size() - 1);
+        messagePanel.getMessageListView().setAutoScrollToBottom();
+        //recyclerview.scrollToPosition(recyclerview.getAdapter().getItemCount() - 1);
+
+        updateUnreadCount(0);
     }
 }
 

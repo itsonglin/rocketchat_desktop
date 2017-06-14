@@ -2,7 +2,6 @@ package com.rc.forms;
 
 import com.rc.adapter.RoomItemViewHolder;
 import com.rc.adapter.RoomItemsAdapter;
-import com.rc.adapter.ViewHolder;
 import com.rc.app.Launcher;
 import com.rc.components.*;
 import com.rc.db.model.Room;
@@ -82,7 +81,7 @@ public class RoomsPanel extends ParentAvailablePanel
     public void notifyDataSetChanged()
     {
         initData();
-        roomItemsListView.notifyDataSetChange(true);
+        roomItemsListView.notifyDataSetChanged(true);
     }
 
     /**

@@ -73,7 +73,7 @@ public class ContactsPanel extends ParentAvailablePanel
     public void notifyDataSetChanged()
     {
         initData();
-        contactsListView.notifyDataSetChange(false);
+        contactsListView.notifyDataSetChanged(false);
 
         // 通讯录更新后，获取头像
         getContactsUserAvatar();
