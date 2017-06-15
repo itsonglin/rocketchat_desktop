@@ -86,4 +86,12 @@ public class MessageDao extends BasicDao
         map.put("status","'" + status + "'");
         return session.update("updateNeedToResend", map);
     }
+
+    public int updateProgress(String id, int progress)
+    {
+        Map map = new HashMap();
+        map.put("id", "'" + id + "'");
+        map.put("progress", progress);
+        return session.update("updateProgress", map);
+    }
 }

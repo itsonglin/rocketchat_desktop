@@ -82,6 +82,10 @@
         DELETE FROM message WHERE roomId = #{roomId}
     </delete>
 
+    <delete id="delete">
+        DELETE FROM MESSAGE WHERE id = #{id}
+    </delete>
+
 
     <update id="update">
         UPDATE message
@@ -127,6 +131,10 @@
 
     <update id="updateNeedToResend" statementType="STATEMENT" parameterType="map">
         UPDATE message SET needToResend = ${status} where id= ${id}
+    </update>
+
+    <update id="updateProgress" statementType="STATEMENT" parameterType="map">
+        UPDATE message SET progress = ${progress} where id= ${id}
     </update>
 
 </mapper>

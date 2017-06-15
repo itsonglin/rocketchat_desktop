@@ -55,6 +55,7 @@ public class ImageCache
 
     /**
      * 异步获取图像缩略图
+     *
      * @param identify
      * @param url
      * @param listener
@@ -67,6 +68,7 @@ public class ImageCache
 
     /**
      * 异步获取图像原图
+     *
      * @param identify
      * @param url
      * @param listener
@@ -102,16 +104,31 @@ public class ImageCache
                 }
                 else
                 {
-                    System.out.println("服务器获取" );
-
-                    byte[] data = HttpUtil.download(url);
-                    if (data == null)
-                    {
-                        logger.debug("图像获取失败");
-                    }
-
                     try
                     {
+                        byte[] data;
+
+                        // 本地上传的文件，则从原上传路径复制一份分缓存目录
+                        if (url.startsWith("file://"))
+                        {
+                            String originUrl = url.substring(7);
+                            FileInputStream fileInputStream = new FileInputStream(originUrl);
+                            data = new byte[fileInputStream.available()];
+                            fileInputStream.read(data);
+                        }
+                        // 接收的图像，从服务器获取并缓存
+                        else
+                        {
+                            System.out.println("服务器获取");
+                            data = HttpUtil.download(url);
+                        }
+
+
+                        if (data == null)
+                        {
+                            logger.debug("图像获取失败");
+                        }
+
                         Image image = ImageIO.read(new ByteArrayInputStream(data));
 
                         // 生成缩略图并缓存
@@ -144,6 +161,7 @@ public class ImageCache
 
     /**
      * 生成图片缩略图
+     *
      * @param image
      * @param identify
      */
@@ -190,7 +208,7 @@ public class ImageCache
 
         if (image == null)
         {
-            return new int[] {10, 10};
+            return new int[]{10, 10};
         }
         int result[] = {0, 0};
         try

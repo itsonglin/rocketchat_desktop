@@ -6,9 +6,12 @@ import com.rc.components.ScrollUI;
 import com.rc.components.message.JIMSendTextPane;
 import com.rc.components.RCButton;
 import com.rc.utils.FontUtil;
+import com.rc.utils.IconUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by song on 17-5-30.
@@ -21,6 +24,8 @@ public class MessageEditorPanel extends ParentAvailablePanel
     private JTextPane textEditor;
     private JPanel sendPanel;
     private RCButton sendButton;
+    private ImageIcon fileNormalIcon;
+    private ImageIcon fileActiveIcon;
 
 
     public MessageEditorPanel(JPanel parent)
@@ -29,6 +34,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
 
         initComponents();
         initView();
+        setListeners();
     }
 
     private void initComponents()
@@ -38,7 +44,9 @@ public class MessageEditorPanel extends ParentAvailablePanel
         controlLabel.setLayout(new FlowLayout(FlowLayout.LEFT, 15,5));
 
         fileLabel = new JLabel();
-        fileLabel.setIcon(new ImageIcon(getClass().getResource("/image/file.png")));
+        fileNormalIcon = IconUtil.getIcon(this, "/image/file.png");
+        fileActiveIcon = IconUtil.getIcon(this, "/image/file_active.png");
+        fileLabel.setIcon(fileNormalIcon);
         fileLabel.setCursor(handCursor);
         fileLabel.setToolTipText("上传附件");
         controlLabel.add(fileLabel);
@@ -72,6 +80,27 @@ public class MessageEditorPanel extends ParentAvailablePanel
         add(sendPanel, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0,0,10,10));
     }
 
+    private void setListeners()
+    {
+        fileLabel.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                fileLabel.setIcon(fileActiveIcon);
+                super.mouseEntered(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                fileLabel.setIcon(fileNormalIcon);
+                super.mouseExited(e);
+            }
+        });
+    }
+
+
     public JTextPane getEditor()
     {
         return textEditor;
@@ -80,6 +109,11 @@ public class MessageEditorPanel extends ParentAvailablePanel
     public JButton getSendButton()
     {
         return sendButton;
+    }
+
+    public JLabel getUploadFileLabel()
+    {
+        return fileLabel;
     }
 
 }

@@ -45,6 +45,8 @@ public class MessageRightAttachmentViewHolder extends BaseMessageViewHolder
         ImageIcon resendIcon = new ImageIcon(getClass().getResource("/image/resend.png"));
         resendIcon.setImage(resendIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         resend.setIcon(resendIcon);
+        resend.setToolTipText("文件发送失败，点击重新发送");
+
         //resend.setVisible(false);
 
 
@@ -59,7 +61,7 @@ public class MessageRightAttachmentViewHolder extends BaseMessageViewHolder
 
         progressBar.setMaximum(100);
         progressBar.setMinimum(0);
-        progressBar.setValue(100);
+        progressBar.setValue(5);
         progressBar.setUI(new GradientProgressBarUI());
 
         attachmentBubble.setCursor(new Cursor(Cursor.HAND_CURSOR));

@@ -7,6 +7,7 @@ import com.rc.db.service.ContactsUserService;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
+import com.rc.forms.ChatPanel;
 import com.rc.forms.ContactsPanel;
 import com.rc.forms.RoomsPanel;
 import com.rc.websocket.handler.StreamNotifyUserCollectionHandler;
@@ -64,6 +65,7 @@ public class WebSocketClient
 
     private StreamRoomMessagesHandler streamRoomMessagesHandler;
     private StreamNotifyUserCollectionHandler streamNotifyUserCollectionHandler;
+    private String uploadFilename = null;
 
 
     public WebSocketClient()
@@ -330,11 +332,11 @@ public class WebSocketClient
         }
         else if (msgId.equals(SubscriptionHelper.METHOD_UFSCREATE))
         {
-            //processUsfCreate(jsonText);
+            processUsfCreate(jsonText);
         }
         else if (msgId.equals(SubscriptionHelper.METHOD_UFSCOMPLETE))
         {
-            //processUsfComplete(jsonText);
+            processUsfComplete(jsonText);
         }
         else if (msgId.equals(SubscriptionHelper.METHOD_SEND_CHANGE_PASSWORD_MESSAGE))
         {
@@ -972,6 +974,81 @@ public class WebSocketClient
         }
     }
 
+    private void processUsfCreate(JSONObject jsonText) throws JSONException
+    {
+
+        if (uploadFilename == null)
+        {
+            return;
+        }
+
+        if (jsonText.has("error"))
+        {
+            processUsfCreateErrorMessage(jsonText.getJSONObject("error"));
+            return;
+        }
+
+        JSONObject res = jsonText.getJSONObject("result");
+        final String fileId = res.getString("fileId");
+        final String token = res.getString("token");
+        String url = res.getString("url");
+
+        // 通知开始上传文件
+        /*Map<String, String> data = new HashMap<>();
+        data.put("url", url);
+        data.put("uploadFilename", uploadFilename);
+        data.put("token", token);
+        data.put("fileId", fileId);*/
+
+        //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_START_UPLOAD_FILE, data);
+        //webSocket.sendBinary(data);
+
+        ChatPanel.getContext().notifyStartUploadFile(url, uploadFilename, fileId, token);
+    }
+
+    /**
+     * 处理文件上传时UsfCreate消息的错误
+     *
+     * @param error
+     */
+    private void processUsfCreateErrorMessage(JSONObject error) throws JSONException
+    {
+        String errorType = error.getString("error");
+
+        // 上传文件过大
+        if (errorType.equals("error-file-too-large"))
+        {
+            String reason = error.getString("reason");
+            String size = reason.substring(reason.indexOf("of ") + 3);
+            size = size.substring(0, size.length() - 1);
+
+            System.out.println("上传文件大小不能超过" + size);
+            //TODO
+            /*Map<String, String> param = new HashMap<>();
+            param.put("message", "上传文件大小不能超过" + size);
+            sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, WebSocketService.EVENT_UPLOAD_FILE_TOO_LARGE_ERROR, param);*/
+
+        }
+    }
+
+    private void processUsfComplete(JSONObject jsonText) throws JSONException
+    {
+        JSONObject res = jsonText.getJSONObject("result");
+        String roomId = res.getString("rid");
+        String fileId = res.getString("_id");
+        String url = res.getString("url");
+        String name = res.getString("name");
+        long size = res.getLong("size");
+        String identify = null;
+        if (res.has("identify"))
+        {
+            identify = res.getJSONObject("identify").toString();
+        }
+
+        String type = res.getString("type");
+        subscriptionHelper.sendFileMessage(roomId, fileId, url, name, size, type, identify);
+    }
+
     /**
      * 更新当前用户的信息
      *
@@ -1032,6 +1109,18 @@ public class WebSocketClient
     public void sendTextMessage(String roomId, String messageId, String content)
     {
         subscriptionHelper.sendTextMessage(roomId, messageId, content);
+    }
+
+    public void sendFileMessage(String roomId, String uploadFilePath)
+    {
+        uploadFilename = uploadFilePath;
+        subscriptionHelper.sendUfsCreateMessage(roomId, uploadFilePath);
+    }
+
+    public void sendUfsCompleteMessage(String fileId, String token)
+    {
+        subscriptionHelper.sendUfsCompleteMessage(fileId, token);
+        uploadFilename = null;
     }
 
 }

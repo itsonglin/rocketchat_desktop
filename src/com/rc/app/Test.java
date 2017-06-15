@@ -2,27 +2,40 @@ package com.rc.app;
 
 import com.rc.utils.IconUtil;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowStateListener;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Created by song on 14/06/2017.
  */
 public class Test
 {
-    public static void main(String[] a)
+    public static void main(String[] a) throws IOException
     {
-        MyFrame frame = new MyFrame();
-
-        frame.setSize(300, 400);
-        //frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setVisible(true);
-
+        int[] ret = getImageSize("/Users/song/add_member.png");
+        System.out.println(ret[0] + ", " + ret[1]);
     }
+
+
+    private static int[] getImageSize(String file) throws IOException
+    {
+        // Bitmap image = BitmapFactory.decodeFile(file);
+
+        BufferedImage image = ImageIO.read(new File(file));
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        return new int[]{width, height};
+    }
+
 
 
     static class MyFrame extends JFrame

@@ -43,6 +43,7 @@ public class MessageRightImageViewHolder extends BaseMessageViewHolder
         resendIcon.setImage(resendIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         resend.setIcon(resendIcon);
         resend.setVisible(false);
+        resend.setToolTipText("图片发送失败，点击重新发送");
 
         ImageIcon sendingIcon = new ImageIcon(getClass().getResource("/image/sending.gif"));
         sendingProgress.setIcon(sendingIcon);

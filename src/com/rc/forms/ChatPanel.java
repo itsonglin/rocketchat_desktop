@@ -1,6 +1,9 @@
 package com.rc.forms;
 
+import com.rc.adapter.message.BaseMessageViewHolder;
 import com.rc.adapter.message.MessageAdapter;
+import com.rc.adapter.message.MessageRightAttachmentViewHolder;
+import com.rc.adapter.message.MessageRightImageViewHolder;
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
@@ -8,22 +11,28 @@ import com.rc.components.RCBorder;
 import com.rc.components.RCListView;
 import com.rc.db.model.*;
 import com.rc.db.service.*;
+import com.rc.entity.FileAttachmentItem;
+import com.rc.entity.ImageAttachmentItem;
 import com.rc.entity.MessageItem;
+import com.rc.utils.MimeTypeUtil;
 import com.rc.websocket.WebSocketClient;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import tasks.HttpGetTask;
-import tasks.HttpResponseListener;
-import tasks.MessageResendTask;
-import tasks.ResendTaskCallback;
+import tasks.*;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -60,6 +69,7 @@ public class ChatPanel extends ParentAvailablePanel
     private RoomService roomService = Launcher.roomService;
     private ImageAttachmentService imageAttachmentService = Launcher.imageAttachmentService;
     private FileAttachmentService fileAttachmentService = Launcher.fileAttachmentService;
+    public static List<String> uploadingOrDownloadingFiles = new ArrayList<>();
 
 
     // 当前消息分页数
@@ -205,6 +215,7 @@ public class ChatPanel extends ParentAvailablePanel
             }
         });
 
+        // 发送按钮
         messageEditorPanel.getSendButton().addActionListener(new ActionListener()
         {
             @Override
@@ -218,8 +229,31 @@ public class ChatPanel extends ParentAvailablePanel
             }
         });
 
-    }
+        // 上传文件按钮
+        messageEditorPanel.getUploadFileLabel().addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                JFileChooser fileChooser = new JFileChooser();
+                fileChooser.setDialogTitle("请选择上传文件或图片");
+                fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
+                fileChooser.showDialog(MainFrame.getContext(), "上传");
+                File selectedFile = fileChooser.getSelectedFile();
+
+                System.out.println(selectedFile.getAbsolutePath());
+
+                String path = selectedFile.getAbsolutePath();
+                sendFileMessage(path);
+                showSendingMessage();
+
+                super.mouseClicked(e);
+            }
+        });
+
+
+    }
 
     /**
      * 设置当前打开的房间ID
@@ -917,6 +951,331 @@ public class ChatPanel extends ParentAvailablePanel
     {
         String raw = UUID.randomUUID().toString().replace("-", "");
         return raw;
+    }
+
+    /**
+     * 发送文件消息
+     *
+     * @param path
+     */
+    private void sendFileMessage(String path)
+    {
+        WebSocketClient.getContext().sendFileMessage(roomId, path);
+    }
+
+    /**
+     * 重发文件消息
+     *
+     * @param messageId
+     * @param type
+     */
+    public void resendFileMessage(String messageId, String type)
+    {
+        //Message dbMessage = messageService.findById(realm, messageId);
+        Message dbMessage = messageService.findById(messageId);
+        String path = null;
+
+        if (type.equals("file"))
+        {
+            if (dbMessage.getFileAttachmentId() != null)
+            {
+                //path = dbMessage.getFileAttachments().get(0).getLink();
+                path = fileAttachmentService.findById(dbMessage.getFileAttachmentId()).getLink();
+            }
+            else
+            {
+                path = null;
+            }
+        }
+        else
+        {
+            if (dbMessage.getImageAttachmentId() != null)
+            {
+                //path = dbMessage.getImageAttachments().get(0).getImageUrl();
+                path = imageAttachmentService.findById(dbMessage.getImageAttachmentId()).getImageUrl();
+            }
+            else
+            {
+                path = null;
+
+            }
+        }
+
+
+        if (path != null)
+        {
+            /*int index = -1;
+            for (int i = 0; i < messageItems.size(); i++)
+            {
+                if (messageItems.get(i).getId().equals(messageId))
+                {
+                    index = i;
+                    break;
+                }
+            }*/
+
+            int index = findMessageItemReverse(messageId);
+
+            if (index > -1)
+            {
+                messageItems.remove(index);
+                messagePanel.getMessageListView().notifyItemRemoved(index);
+                messageService.delete(dbMessage.getId());
+            }
+
+            sendFileMessage(path);
+            showSendingMessage();
+        }
+    }
+
+    /**
+     * 通知开始上传文件
+     *
+     * @param url
+     * @param uploadFilename
+     * @param fileId
+     * @param token
+     */
+    public void notifyStartUploadFile(String url, String uploadFilename, String fileId, String token)
+    {
+        uploadFile(url, uploadFilename, fileId, token);
+        uploadingOrDownloadingFiles.add(fileId);
+    }
+
+    /**
+     * 上传文件
+     *
+     * @param url
+     * @param uploadFilename
+     * @param fileId
+     * @param token
+     */
+    private void uploadFile(String url, String uploadFilename, final String fileId, final String token)
+    {
+        final MessageItem item = new MessageItem();
+        String type = MimeTypeUtil.getMime(uploadFilename.substring(uploadFilename.lastIndexOf(".")));
+        final boolean isImage = type.startsWith("image/");
+
+        // 发送的是图片
+        int[] bounds;
+        String name = uploadFilename.substring(uploadFilename.lastIndexOf("/") + 1); // 文件名
+
+        FileAttachment fileAttachment = null;
+        ImageAttachment imageAttachment = null;
+        Message dbMessage = new Message();
+        dbMessage.setProgress(-1);
+
+        if (isImage)
+        {
+            bounds = getImageSize(uploadFilename);
+            imageAttachment = new ImageAttachment();
+            imageAttachment.setId(fileId);
+            imageAttachment.setWidth(bounds[0]);
+            imageAttachment.setHeight(bounds[1]);
+            imageAttachment.setImageUrl(uploadFilename);
+            imageAttachment.setTitle(name);
+            //item.getImageAttachments().add(new ImageAttachmentItem(imageAttachment));
+            //dbMessage.getImageAttachments().add(imageAttachment);
+            item.setImageAttachment(new ImageAttachmentItem(imageAttachment));
+            dbMessage.setImageAttachmentId(imageAttachment.getId());
+            imageAttachmentService.insertOrUpdate(imageAttachment);
+
+            item.setMessageType(MessageItem.RIGHT_IMAGE);
+        }
+        else
+        {
+
+            fileAttachment = new FileAttachment();
+            fileAttachment.setId(fileId);
+            fileAttachment.setLink(uploadFilename);
+            fileAttachment.setTitle(name);
+            //item.getFileAttachments().add(new FileAttachmentItem(fileAttachment));
+            //dbMessage.getFileAttachments().add(fileAttachment);
+            item.setFileAttachment(new FileAttachmentItem(fileAttachment));
+            dbMessage.setFileAttachmentId(fileAttachment.getId());
+            fileAttachmentService.insertOrUpdate(fileAttachment);
+
+            item.setMessageType(MessageItem.RIGHT_ATTACHMENT);
+        }
+
+
+        // 晢时使用fileId作为messageId
+        final String messageId = fileId;
+        item.setMessageContent(name);
+        item.setTimestamp(System.currentTimeMillis());
+        item.setSenderId(currentUser.getUserId());
+        item.setSenderUsername(currentUser.getUsername());
+        item.setId(messageId);
+        //item.getFileAttachments().add(fileAttachment);
+        item.setProgress(0);
+
+
+        dbMessage.setId(messageId);
+        dbMessage.setMessageContent(name);
+        dbMessage.setRoomId(roomId);
+        dbMessage.setSenderId(currentUser.getUserId());
+        dbMessage.setSenderUsername(currentUser.getUsername());
+        dbMessage.setTimestamp(item.getTimestamp());
+        dbMessage.setUpdatedAt(-1L);
+        //dbMessage.getFileAttachments().add(fileAttachment);
+
+        //mAdapter.addItem(item);
+        addMessageItemToEnd(item);
+        //recyclerview.smoothScrollToPosition(mAdapter.getItemCount() - 1);
+
+        //editText.setText("");
+        //messageService.insertOrUpdate(Realm.getDefaultInstance(), dbMessage);
+        messageService.insertOrUpdate(dbMessage);
+
+        File file = new File(uploadFilename);
+        if (!file.exists())
+        {
+            //throw new RuntimeException("文件不存在");
+            JOptionPane.showMessageDialog(null, "文件不存在", "上传失败", JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            final List<byte[]> dataParts = cuttingFile(file);
+            final int[] index = {1};
+//            String type = MimeTypeUtil.getMime(file.getName().substring(file.getName().lastIndexOf(".")));
+//            // 发送的是图片
+//            int[] bounds = getImageSize(uploadFilename);
+
+            final int[] uploadedBlockCount = {1};
+            UploadTaskCallback callback = new UploadTaskCallback()
+            {
+                @Override
+                public void onTaskSuccess()
+                {
+                    // 当收到上一个分块的响应后，才能开始上传下一个分块，否则容易造成分块接收顺序错乱
+                    uploadedBlockCount[0]++;
+                    if (uploadedBlockCount[0] <= dataParts.size())
+                    {
+                        sendDataPart(uploadedBlockCount[0], dataParts, url, type, this);
+                    }
+
+
+                    int progress = (int) ((index[0] * 1.0f / dataParts.size()) * 100);
+                    index[0]++;
+
+                    if (progress == 100)
+                    {
+                        WebSocketClient.getContext().sendUfsCompleteMessage(fileId, token);
+                        uploadingOrDownloadingFiles.remove(fileId);
+                    }
+
+
+                    for (int i = messageItems.size() - 1; i >= 0; i--)
+                    {
+                        if (messageItems.get(i).getId().equals(item.getId()))
+                        {
+                            messageItems.get(i).setProgress(progress);
+                            //messageService.updateProgress(Realm.getDefaultInstance(), messageItems.get(i).getId(), progress);
+                            messageService.updateProgress(messageItems.get(i).getId(), progress);
+
+
+                            BaseMessageViewHolder viewHolder = getViewHolderByPosition(i);
+                            if (viewHolder != null)
+                            {
+                                if (isImage)
+                                {
+                                    MessageRightImageViewHolder holder = (MessageRightImageViewHolder) viewHolder;
+                                    if (progress >= 100)
+                                    {
+                                        holder.sendingProgress.setVisible(false);
+                                    }
+                                }
+                                else
+                                {
+                                    MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
+                                    //Log.e("progress", messageItems.get(i).getId() + " --- position = " + i + " ---- " + progress);
+                                    holder.progressBar.setVisible(true);
+                                    holder.progressBar.setValue(progress);
+                                    if (progress >= 100)
+                                    {
+                                        holder.progressBar.setVisible(false);
+                                    }
+                                }
+
+                            }
+                            break;
+                        }
+                    }
+
+                    logger.debug("file uploading, progress = " + progress + "%");
+                }
+
+                @Override
+                public void onTaskError()
+                {
+                }
+            };
+
+            sendDataPart(uploadedBlockCount[0], dataParts, url, type, callback);
+        }
+    }
+
+    private void sendDataPart(int partIndex, List<byte[]> dataParts, String baseUploadUrl, String type, UploadTaskCallback callback)
+    {
+        logger.debug("发送第" + partIndex + "个分块，共" + dataParts.size() + "个分块");
+        float uploadProgress = partIndex * 1.0f / dataParts.size();
+        String uploadUrl = baseUploadUrl + "&?progress=" + uploadProgress;
+        new UploadTask(callback).execute(uploadUrl, type, dataParts.get(partIndex - 1));
+    }
+
+    private int[] getImageSize(String file)
+    {
+        try
+        {
+            BufferedImage image = ImageIO.read(new File(file));
+            int width = image.getWidth();
+            int height = image.getHeight();
+            return new int[]{width, height};
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return new int[]{0, 0};
+    }
+
+    private static List<byte[]> cuttingFile(File file)
+    {
+        long size = file.length();
+
+        //int partSize = 512000;
+        int partSize = 4140;
+        int blockCount;
+        blockCount = (int) (size % partSize == 0 ? size / partSize : size / partSize + 1);
+        List<byte[]> dataParts = new ArrayList<>(blockCount);
+        try
+        {
+            byte[] buffer = new byte[partSize];
+            int len;
+            FileInputStream inputStream = new FileInputStream(file);
+
+            while ((len = inputStream.read(buffer)) > -1)
+            {
+                byte[] dataPart = Arrays.copyOf(buffer, len);
+                dataParts.add(dataPart);
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return dataParts;
+    }
+
+    private BaseMessageViewHolder getViewHolderByPosition(int position)
+    {
+        return (BaseMessageViewHolder) messagePanel.getMessageListView().getItem(position);
     }
 }
 

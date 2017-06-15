@@ -139,7 +139,8 @@ public class StreamRoomMessagesHandler implements CollectionHandler
 
             // 当前是否打开了对应的聊天窗口
             // TODO
-            boolean inChatRoom = false;
+            boolean inChatRoom = message.getRoomId().equals(ChatPanel.CHAT_ROOM_OPEN_ID);
+
             /*boolean inChatRoom = MainFrameActivity.CHAT_ROOM_OPEN_ID != null
                     && MainFrameActivity.CHAT_ROOM_OPEN_ID.equals(message.getRoomId());*/
 
@@ -182,8 +183,9 @@ public class StreamRoomMessagesHandler implements CollectionHandler
                             myUploadFile = true;
                             ImageAttachment ia = imageAttachmentService.findById(tempMsg.getImageAttachmentId());
                             imageAttachment.setTitle(ia.getTitle());
-                            imageAttachment.setImageUrl(ia.getImageUrl());
+                            //imageAttachment.setImageUrl(ia.getImageUrl());
                             imageAttachment.setDescription(ia.getDescription());
+
                             message.setNeedToResend(false);
                             message.setTimestamp(tempMsg.getTimestamp());
 
@@ -225,6 +227,7 @@ public class StreamRoomMessagesHandler implements CollectionHandler
                             fileAttachment.setTitle(fa.getTitle());
                             fileAttachment.setLink(fa.getLink());
                             fileAttachment.setDescription(fa.getDescription());
+
                             message.setNeedToResend(false);
                             message.setTimestamp(tempMsg.getTimestamp());
 
@@ -251,23 +254,18 @@ public class StreamRoomMessagesHandler implements CollectionHandler
             messageService.insertOrUpdate(message);
 
             // 更新Room相关信息
-            //Realm realm = Realm.getDefaultInstance();
-            //Room room = roomService.findById(realm, message.getRoomId());
             Room room = roomService.findById(message.getRoomId());
-            //roomService.updateMessageSum(Realm.getDefaultInstance(), room, room.getMsgSum() + 1);
             room.setMsgSum(room.getMsgSum() + 1);
 
+            // 如果没有打开房间，则需要更新未读消息数，如果已经在房间中了，则无需更新未读消息数
             if (!myUploadFile && !inChatRoom)
             {
-                //roomService.updateUnreadCount(Realm.getDefaultInstance(), room.getRoomId(), room.getUnreadCount() + 1);
                 room.setUnreadCount(room.getUnreadCount() + 1);
             }
 
-           // roomService.updateLastMessage(Realm.getDefaultInstance(), room, message.getMessageContent(), message.getTimestamp());
             room.setLastMessage(message.getMessageContent());
             room.setLastChatAt(message.getTimestamp());
             roomService.update(room);
-            //realm.close();
 
             // 通知UI更新
             Map<String, String> param = new HashMap();
@@ -286,13 +284,11 @@ public class StreamRoomMessagesHandler implements CollectionHandler
                         WebSocketService.DEQUEUE_AND_UPLOAD, param);*/
             }
 
-
-            /*((WebSocketService) context).sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION,
-                    WebSocketService.EVENT_NEW_ROOM_MESSAGE_RECEIVED, param);*/
-
+            // 更新主程序窗口状态
             notifyMainFrame(message, myUploadFile);
 
-        } catch (JSONException e)
+        }
+        catch (JSONException e)
         {
             e.printStackTrace();
         }

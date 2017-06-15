@@ -79,4 +79,9 @@ public class MessageService extends BasicService<MessageDao, Message>
     {
         return dao.updateNeedToResend(id, status);
     }
+
+    public int updateProgress(String id, int progress)
+    {
+        return dao.updateProgress(id, progress);
+    }
 }

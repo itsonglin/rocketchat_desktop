@@ -80,7 +80,7 @@ public abstract  class BasicDao
         Map map = new HashMap();
         map.put("field", field);
 
-        if (val instanceof String)
+        if (val instanceof String || val instanceof Boolean)
         {
             map.put("val", "'" + val + "'");
         }

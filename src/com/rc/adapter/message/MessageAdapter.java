@@ -154,6 +154,56 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         holder.attachmentTitle.setText(item.getMessageContent());
         ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
+
+        if (item.getProgress() != 0 && item.getProgress() != 100)
+        {
+            Message msg = messageService.findById(item.getId());
+            if (msg != null)
+            {
+                item.setProgress(msg.getProgress());
+
+                holder.progressBar.setVisible(true);
+                holder.progressBar.setValue(item.getProgress());
+
+                if (item.getProgress() == 100)
+                {
+                    holder.progressBar.setVisible(false);
+                }
+                else
+                {
+                    if (!ChatPanel.getContext().uploadingOrDownloadingFiles.contains(item.getFileAttachment().getId()))
+                    {
+                        item.setNeedToResend(true);
+                    }
+                }
+            }
+        }
+        else
+        {
+            holder.progressBar.setVisible(false);
+        }
+
+
+        // 判断是否显示重发按钮
+        if (item.isNeedToResend())
+        {
+            holder.resend.setVisible(true);
+        }
+        else
+        {
+            holder.resend.setVisible(false);
+        }
+
+        holder.resend.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                //System.out.println(item.getMessageContent() + "正在重发");
+                ChatPanel.getContext().resendFileMessage(item.getId(), "file");
+                super.mouseClicked(e);
+            }
+        });
     }
 
     /**
@@ -185,6 +235,60 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         MessageRightImageViewHolder holder = (MessageRightImageViewHolder) viewHolder;
 
         processImage(item, holder.image, holder);
+
+        if (item.getProgress() != 0 && item.getProgress() != 100)
+        {
+            Message msg = messageService.findById(item.getId());
+            if (msg != null)
+            {
+                item.setProgress(msg.getProgress());
+
+                if (item.getProgress() == 100)
+                {
+                    holder.sendingProgress.setVisible(false);
+                }
+                else
+                {
+                    if (!ChatPanel.getContext().uploadingOrDownloadingFiles.contains(item.getImageAttachment().getId()))
+                    {
+                        item.setNeedToResend(true);
+                    }
+                }
+            }
+        }
+        else
+        {
+            if (item.getUpdatedAt() < 1)
+            {
+                holder.sendingProgress.setVisible(true);
+            }
+            else
+            {
+                holder.sendingProgress.setVisible(false);
+            }
+        }
+
+
+        // 判断是否显示重发按钮
+        if (item.isNeedToResend())
+        {
+            holder.resend.setVisible(true);
+        }
+        else
+        {
+            holder.resend.setVisible(false);
+        }
+
+        holder.resend.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                //System.out.println(item.getMessageContent() + "正在重发");
+                ChatPanel.getContext().resendFileMessage(item.getId(), "image");
+                super.mouseClicked(e);
+            }
+        });
     }
 
     private void processImage(MessageItem item, JLabel imageLabel, ViewHolder holder)
