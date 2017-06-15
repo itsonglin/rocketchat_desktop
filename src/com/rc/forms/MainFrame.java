@@ -1,20 +1,21 @@
 package com.rc.forms;
 
 
+import com.rc.components.Colors;
+import com.rc.components.GBC;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.OSUtil;
 import com.rc.websocket.WebSocketClient;
+import com.sun.awt.AWTUtilities;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
 import javax.swing.*;
-import java.applet.Applet;
-import java.applet.AudioClip;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.awt.geom.RoundRectangle2D;
 import java.io.InputStream;
 
 /**
@@ -193,9 +194,19 @@ public class MainFrame extends JFrame
     {
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
+        String windows="com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+        try
+        {
+            UIManager.setLookAndFeel(windows);
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
         UIManager.put("Label.font", FontUtil.getDefaultFont());
         UIManager.put("Panel.font", FontUtil.getDefaultFont());
         UIManager.put("TextArea.font", FontUtil.getDefaultFont());
+
 
         leftPanel = new LeftPanel();
         leftPanel.setPreferredSize(new Dimension(260, currentWindowHeight));
@@ -213,20 +224,24 @@ public class MainFrame extends JFrame
         setSize(DEFAULT_WIDTH, DEFAULT_HEIGHT);
         setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
+
         if (OSUtil.getOsType() != OSUtil.Mac_OS)
         {
             // 隐藏标题栏
             setUndecorated(true);
         }
 
-        //getRootPane().setWindowDecorationStyle(JRootPane.NONE );//使frame只剩下标题栏
         addListener();
+
+       // getRootPane().setBorder(new LineBorder(Colors.LIGHT_GRAY));
 
         add(leftPanel, BorderLayout.WEST);
         add(rightPanel, BorderLayout.CENTER);
 
         centerScreen();
     }
+
+
 
 
     /**

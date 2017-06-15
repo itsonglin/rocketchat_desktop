@@ -108,15 +108,18 @@ public class TitlePanel extends ParentAvailablePanel
 
         titlePanel = new JPanel();
         titlePanel.setLayout(new GridBagLayout());
-        titlePanel.setVisible(false);
+        //titlePanel.setVisible(false);
 
         roomInfoButton = new JLabel();
         roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
         roomInfoButton.setHorizontalAlignment(JLabel.CENTER);
         roomInfoButton.setCursor(handCursor);
+        roomInfoButton.setVisible(false);
+
 
         titleLabel = new JLabel();
         titleLabel.setFont(FontUtil.getDefaultFont(16));
+        titleLabel.setText("和理通");
 
 
         ControlLabelMouseListener listener = new ControlLabelMouseListener();
@@ -190,7 +193,10 @@ public class TitlePanel extends ParentAvailablePanel
         room = roomService.findById(roomId);
         this.titleLabel.setText(room.getName());
 
-        titlePanel.setVisible(true);
+        //titlePanel.setVisible(true);
+        roomInfoButton.setVisible(true);
+        RightPanel parent = (RightPanel) getParent();
+        parent.showPanel(RightPanel.MESSAGE);
     }
 
     private class ControlLabelMouseListener extends AbstractMouseListener

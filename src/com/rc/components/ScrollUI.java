@@ -96,6 +96,7 @@ public class ScrollUI extends BasicScrollBarUI
         button.setBorderPainted(false);
         button.setContentAreaFilled(false);
         button.setBorder(null);
+        button.setPreferredSize(new Dimension(0,0));
         return button;
     }
 
@@ -110,6 +111,7 @@ public class ScrollUI extends BasicScrollBarUI
         button.setContentAreaFilled(false);
         button.setFocusable(false);
         button.setBorder(null);
+        button.setPreferredSize(new Dimension(0,0));
         return button;
     }
 }

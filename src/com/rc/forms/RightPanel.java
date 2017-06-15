@@ -12,8 +12,19 @@ import java.awt.*;
 public class RightPanel extends JPanel
 {
     private TitlePanel titlePanel;
-    private ChatPanel chatPanel;
     private RoomMembersPanel roomMembersPanel;
+
+    private ChatPanel chatPanel;
+    private TipPanel tipPanel;
+
+    private JPanel contentPanel;
+
+    private CardLayout cardLayout;
+
+    public static final String MESSAGE = "MESSAGE";
+    public static final String TIP = "TIP";
+
+
 
     public RightPanel()
     {
@@ -24,22 +35,45 @@ public class RightPanel extends JPanel
 
     private void initComponents()
     {
+        cardLayout = new CardLayout();
+        contentPanel = new JPanel();
+        contentPanel.setLayout(cardLayout);
+
         titlePanel = new TitlePanel(this);
         chatPanel = new ChatPanel(this);
         roomMembersPanel = new RoomMembersPanel(this);
+        tipPanel = new TipPanel(this);
     }
 
     private void initView()
     {
+        contentPanel.add(tipPanel, TIP);
+        contentPanel.add(chatPanel, MESSAGE);
+
         this.setBackground(Colors.WINDOW_BACKGROUND);
         this.setLayout(new BorderLayout());
         add(titlePanel, BorderLayout.NORTH);
-        add(chatPanel, BorderLayout.CENTER);
         add(roomMembersPanel, BorderLayout.EAST);
+        add(contentPanel, BorderLayout.CENTER);
+
+
+        // add(chatPanel, BorderLayout.CENTER);
+        //add(tipPanel, BorderLayout.CENTER);
     }
+
+    public void showPanel(String who)
+    {
+        cardLayout.show(contentPanel, who);
+    }
+
 
     public JPanel getRoomMembersPanel()
     {
         return roomMembersPanel;
+    }
+
+    public JPanel getTipPanel()
+    {
+        return tipPanel;
     }
 }
