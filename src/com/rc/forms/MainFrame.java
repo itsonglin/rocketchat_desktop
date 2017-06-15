@@ -106,7 +106,15 @@ public class MainFrame extends JFrame
         SystemTray systemTray = SystemTray.getSystemTray();//获取系统托盘
         try
         {
-            normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher.png", 20, 20).getImage();
+            if (OSUtil.getOsType() == OSUtil.Mac_OS)
+            {
+                normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher_dark.png", 20, 20).getImage();
+            }
+            else
+            {
+                normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher.png", 20, 20).getImage();
+            }
+
             emptyTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher_empty.png", 20, 20).getImage();
 
             trayIcon = new TrayIcon(normalTrayIcon, "和理通");
