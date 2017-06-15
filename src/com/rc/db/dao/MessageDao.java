@@ -78,4 +78,12 @@ public class MessageDao extends BasicDao
         map.put("pageLength", pageLength);
         return session.selectList("findByPage", map);
     }
+
+    public int updateNeedToResend(String id, boolean status)
+    {
+        Map map = new HashMap();
+        map.put("id", "'" + id + "'");
+        map.put("status","'" + status + "'");
+        return session.update("updateNeedToResend", map);
+    }
 }

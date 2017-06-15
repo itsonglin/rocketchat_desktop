@@ -125,6 +125,10 @@
         WHERE id=#{id}
     </update>
 
+    <update id="updateNeedToResend" statementType="STATEMENT" parameterType="map">
+        UPDATE message SET needToResend = ${status} where id= ${id}
+    </update>
+
 </mapper>
 
 

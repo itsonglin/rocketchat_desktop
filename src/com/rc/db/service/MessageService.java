@@ -74,4 +74,9 @@ public class MessageService extends BasicService<MessageDao, Message>
     {
         return dao.findFirstMessageTime(roomId);
     }
+
+    public int updateNeedToResend(String id, boolean status)
+    {
+        return dao.updateNeedToResend(id, status);
+    }
 }

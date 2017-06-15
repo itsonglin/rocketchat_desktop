@@ -4,7 +4,9 @@ import com.rc.adapter.BaseAdapter;
 import com.rc.adapter.ViewHolder;
 import com.rc.app.Launcher;
 import com.rc.db.model.CurrentUser;
+import com.rc.db.model.Message;
 import com.rc.db.service.CurrentUserService;
+import com.rc.db.service.MessageService;
 import com.rc.entity.MessageItem;
 import com.rc.forms.MainFrame;
 import com.rc.forms.UserInfoPopup;
@@ -14,6 +16,7 @@ import com.rc.utils.AvatarUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.ImageCache;
 import com.rc.utils.TimeUtil;
+import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,6 +33,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private CurrentUser currentUser;
     private ImageCache imageCache;
+    private MessageService messageService = Launcher.messageService;
+    private Logger logger = Logger.getLogger(this.getClass());
+
 
     public MessageAdapter(List<MessageItem> messageItems)
     {
@@ -263,17 +269,23 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         //registerMessageTextListener(holder.messageText, item);
 
         // 判断是否显示重发按钮
-        if (item.isNeedToResend())
+        boolean needToUpdateResendStatus = !item.isNeedToResend() && item.getUpdatedAt() < 1 && System.currentTimeMillis() - item.getTimestamp() > 10 * 1000;
+
+        if (item.isNeedToResend() || needToUpdateResendStatus)
         {
-           /* holder.resendButton.setVisibility(View.VISIBLE);
-            holder.messageSendingProgressBar.setVisibility(View.GONE);
-            holder.resendButton.setTag(R.id.message_id, item.getId());*/
+            if (needToUpdateResendStatus)
+            {
+                messageService.updateNeedToResend(item.getId(), true);
+            }
+
+            logger.debug("显示重发按钮");
+
             holder.sendingProgress.setVisible(false);
             holder.resend.setVisible(true);
         }
         else
         {
-            //holder.resendButton.setVisibility(View.GONE);
+            holder.resend.setVisible(false);
             // 如果是刚发送的消息，显示正在发送进度条
             if (item.getUpdatedAt() < 1)
             {

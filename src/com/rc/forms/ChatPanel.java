@@ -759,6 +759,7 @@ public class ChatPanel extends ParentAvailablePanel
 
     /**
      * 添加一条消息到消息列表最后
+     *
      * @param item
      */
     private void addMessageItemToEnd(MessageItem item)
@@ -777,7 +778,7 @@ public class ChatPanel extends ParentAvailablePanel
     {
         if (content == null || content.isEmpty())
         {
-            return ;
+            return;
         }
 
         //String content = null;
@@ -850,7 +851,7 @@ public class ChatPanel extends ParentAvailablePanel
         }
 
         // 发送
-       //WebSocketClient.getContext().sendTextMessage(roomId, messageId, content);
+        WebSocketClient.getContext().sendTextMessage(roomId, messageId, content);
 
 
         MessageResendTask task = new MessageResendTask();
@@ -867,6 +868,7 @@ public class ChatPanel extends ParentAvailablePanel
                     // 发送失败的消息往往是后面的消息，从后往前遍历性能更佳
                     for (int i = messageItems.size() - 1; i >= 0; i--)
                     {
+                        // 找到消息列表中对应的消息
                         if (messageItems.get(i).getId().equals(messageId))
                         {
                             messageItems.get(i).setNeedToResend(true);
@@ -874,7 +876,7 @@ public class ChatPanel extends ParentAvailablePanel
                             msg.setNeedToResend(true);
                             messageService.update(msg);
 
-                            // 离开房间再次进入时，确保能够更新消息状态
+                            // 确保在消息发送到显示重发按钮的这段时间内，离开房间再次进入时，能够更新消息的重发状态
                             /*try
                             {
                                 // 确保是上条发送失败的消息
@@ -887,25 +889,26 @@ public class ChatPanel extends ParentAvailablePanel
                             } catch (Exception e)
                             {
                                 Log.e("消息重发", "消息不存在，可能不是此房间");
-                            }
-*/
+                            }*/
+
                             //roomService.updateLastMessage(Realm.getDefaultInstance(), roomId, "[有消息发送失败]", msg.getTimestamp());
 
-                            // 注意这里不能用类的成员room，因为可能已经离开了原来的房间
-                            Room room = roomService.findById(msg.getRoomId());
-                            room.setLastMessage("[有消息发送失败]");
-                            room.setLastChatAt(msg.getTimestamp());
-                            roomService.update(room);
-
-                            //((MainFrameActivity) MainFrameActivity.getContext()).updateChatItem(msg.getRoomId());
-                            // 更新房间列表
-                            RoomsPanel.getContext().updateRoomItem(msg.getRoomId());
 
                             // 更新消息列表
                             messagePanel.getMessageListView().notifyItemChanged(i);
 
                             break;
                         }
+
+                        // 注意这里不能用类的成员room，因为可能已经离开了原来的房间
+                        Room room = roomService.findById(msg.getRoomId());
+                        room.setLastMessage("[有消息发送失败]");
+                        room.setLastChatAt(msg.getTimestamp());
+                        roomService.update(room);
+
+                        //((MainFrameActivity) MainFrameActivity.getContext()).updateChatItem(msg.getRoomId());
+                        // 更新房间列表
+                        RoomsPanel.getContext().updateRoomItem(msg.getRoomId());
                     }
                 }
                 //realm.close();
@@ -914,7 +917,7 @@ public class ChatPanel extends ParentAvailablePanel
         task.execute(messageId);
 
         // 显示正在发送...
-       //showSendingMessage();
+        //showSendingMessage();
     }
 
     private void showSendingMessage()
@@ -928,6 +931,7 @@ public class ChatPanel extends ParentAvailablePanel
 
     /**
      * 随机生成MessageId
+     *
      * @return
      */
     private String randomMessageId()
