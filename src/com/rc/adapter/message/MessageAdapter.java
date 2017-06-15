@@ -8,6 +8,7 @@ import com.rc.db.model.Message;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
 import com.rc.entity.MessageItem;
+import com.rc.forms.ChatPanel;
 import com.rc.forms.MainFrame;
 import com.rc.forms.UserInfoPopup;
 import com.rc.helper.AttachmentIconHelper;
@@ -20,6 +21,7 @@ import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 
@@ -296,6 +298,17 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 holder.sendingProgress.setVisible(false);
             }
         }
+
+        holder.resend.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                //System.out.println(item.getMessageContent() + "正在重发");
+                ChatPanel.getContext().sendTextMessage(item.getId(), null);
+                super.mouseClicked(e);
+            }
+        });
     }
 
     /**

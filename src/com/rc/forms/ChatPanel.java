@@ -194,7 +194,11 @@ public class ChatPanel extends ParentAvailablePanel
                 }
                 else if (!e.isControlDown() && e.getKeyCode() == KeyEvent.VK_ENTER)
                 {
-                    System.out.println("发送消息");
+                    if (editor.getText() == null || editor.getText().isEmpty())
+                    {
+                        return;
+                    }
+
                     sendTextMessage(null, editor.getText());
                     e.consume();
                 }
@@ -206,6 +210,10 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void actionPerformed(ActionEvent e)
             {
+                if (editor.getText() == null || editor.getText().isEmpty())
+                {
+                    return;
+                }
                 sendTextMessage(null, editor.getText());
             }
         });
@@ -718,30 +726,15 @@ public class ChatPanel extends ParentAvailablePanel
             return;
         }
 
-        /*int position = 0;
-        for (MessageItem msg : messageItems)
+        int pos = findMessageItemReverse(message.getId());
+        if (pos > -1)
         {
-            if (message.getId().equals(msg.getId()))
-            {
-                msg.setUpdatedAt(message.getTimestamp());
-                messagePanel.getMessageListView().notifyItemChanged(position);
-                updateUnreadCount(0);
-                return;
-            }
-
-            position++;
-        }*/
-
-        for (int i = messageItems.size() - 1; i >= 0; i--)
-        {
-            if (message.getId().equals(messageItems.get(i).getId()))
-            {
-                messageItems.get(i).setUpdatedAt(message.getTimestamp());
-                messagePanel.getMessageListView().notifyItemChanged(i);
-                updateUnreadCount(0);
-                return;
-            }
+            messageItems.get(pos).setUpdatedAt(message.getTimestamp());
+            messagePanel.getMessageListView().notifyItemChanged(pos);
+            updateUnreadCount(0);
+            return;
         }
+
 
         MessageItem messageItem = new MessageItem(message, currentUser.getUserId());
         this.messageItems.add(messageItem);
@@ -773,14 +766,11 @@ public class ChatPanel extends ParentAvailablePanel
 
     /**
      * 发送文本消息
+     * <p>
+     * 如果messageId不为null, 则认为重发该消息，否则发送一条新的消息
      */
     public void sendTextMessage(String messageId, String content)
     {
-        if (content == null || content.isEmpty())
-        {
-            return;
-        }
-
         //String content = null;
         Message dbMessage = null;
         if (messageId == null)
@@ -834,20 +824,17 @@ public class ChatPanel extends ParentAvailablePanel
             //messageService.insertOrUpdate(realm, msg);
             messageService.insertOrUpdate(msg);
 
-            content = dbMessage.getMessageContent();
+            content = msg.getMessageContent();
 
-            for (MessageItem msgItem : messageItems)
+            int pos = findMessageItemReverse(msg.getId());
+            if (pos > -1)
             {
-                if (msgItem.getId().equals(dbMessage.getId()))
-                {
-                    msgItem.setNeedToResend(false);
-                    msgItem.setUpdatedAt(0);
-                    msgItem.setTimestamp(System.currentTimeMillis());
-
-                    messagePanel.getMessageListView().notifyDataSetChanged(false);
-                    break;
-                }
+                messageItems.get(pos).setNeedToResend(false);
+                messageItems.get(pos).setUpdatedAt(0);
+                messageItems.get(pos).setTimestamp(System.currentTimeMillis());
+                messagePanel.getMessageListView().notifyItemChanged(pos);
             }
+
         }
 
         // 发送
@@ -865,53 +852,25 @@ public class ChatPanel extends ParentAvailablePanel
                 Message msg = messageService.findById(messageId);
                 if (msg.getUpdatedAt() == 0)
                 {
-                    // 发送失败的消息往往是后面的消息，从后往前遍历性能更佳
-                    for (int i = messageItems.size() - 1; i >= 0; i--)
+                    // 更新消息列表
+                    int pos = findMessageItemReverse(messageId);
+                    if (pos > -1)
                     {
-                        // 找到消息列表中对应的消息
-                        if (messageItems.get(i).getId().equals(messageId))
-                        {
-                            messageItems.get(i).setNeedToResend(true);
-                            //messageService.updateNeedToResend(Realm.getDefaultInstance(), msg, true);
-                            msg.setNeedToResend(true);
-                            messageService.update(msg);
-
-                            // 确保在消息发送到显示重发按钮的这段时间内，离开房间再次进入时，能够更新消息的重发状态
-                            /*try
-                            {
-                                // 确保是上条发送失败的消息
-                                MessageItem targetMsg = ((MessageListAdapter) recyclerview.getAdapter()).getMessageItems().get(i);
-                                if (targetMsg.getId().equals(messageItems.get(i).getId()))
-                                {
-                                    ((MessageListAdapter) recyclerview.getAdapter()).getMessageItems().get(i).setNeedToResend(true);
-                                    recyclerview.getAdapter().notifyItemChanged(i);
-                                }
-                            } catch (Exception e)
-                            {
-                                Log.e("消息重发", "消息不存在，可能不是此房间");
-                            }*/
-
-                            //roomService.updateLastMessage(Realm.getDefaultInstance(), roomId, "[有消息发送失败]", msg.getTimestamp());
-
-
-                            // 更新消息列表
-                            messagePanel.getMessageListView().notifyItemChanged(i);
-
-                            break;
-                        }
-
-                        // 注意这里不能用类的成员room，因为可能已经离开了原来的房间
-                        Room room = roomService.findById(msg.getRoomId());
-                        room.setLastMessage("[有消息发送失败]");
-                        room.setLastChatAt(msg.getTimestamp());
-                        roomService.update(room);
-
-                        //((MainFrameActivity) MainFrameActivity.getContext()).updateChatItem(msg.getRoomId());
-                        // 更新房间列表
-                        RoomsPanel.getContext().updateRoomItem(msg.getRoomId());
+                        messageItems.get(pos).setNeedToResend(true);
+                        msg.setNeedToResend(true);
+                        messageService.update(msg);
+                        messagePanel.getMessageListView().notifyItemChanged(pos);
                     }
+
+
+                    // 更新房间列表
+                    // 注意这里不能用类的成员room，因为可能已经离开了原来的房间
+                    Room room = roomService.findById(msg.getRoomId());
+                    room.setLastMessage("[有消息发送失败]");
+                    room.setLastChatAt(msg.getTimestamp());
+                    roomService.update(room);
+                    RoomsPanel.getContext().updateRoomItem(msg.getRoomId());
                 }
-                //realm.close();
             }
         });
         task.execute(messageId);
@@ -926,6 +885,26 @@ public class ChatPanel extends ParentAvailablePanel
         room.setLastMessage("[发送中...]");
         roomService.update(room);
         RoomsPanel.getContext().updateRoomItem(roomId);
+    }
+
+    /**
+     * 倒序查找指定的消息在messageItems中的位置
+     *
+     * @param messageId
+     * @return 查找成功，返回该消息在messageItems中的位置，否则返回-1
+     */
+    private int findMessageItemReverse(String messageId)
+    {
+        for (int i = messageItems.size() - 1; i >= 0; i--)
+        {
+            // 找到消息列表中对应的消息
+            if (messageItems.get(i).getId().equals(messageId))
+            {
+                return i;
+            }
+        }
+
+        return -1;
     }
 
 
