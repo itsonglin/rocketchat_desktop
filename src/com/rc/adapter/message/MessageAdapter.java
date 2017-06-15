@@ -23,6 +23,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -314,7 +316,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             imageCache.requestThumbAsynchronously(item.getImageAttachment().getId(), url, new ImageCache.CacheRequestListener()
             {
                 @Override
-                public void onSuccess(ImageIcon icon)
+                public void onSuccess(ImageIcon icon, String path)
                 {
                     preferredImageSize(icon);
                     imageLabel.setIcon(icon);
@@ -334,6 +336,38 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             preferredImageSize(imageIcon);
             imageLabel.setIcon(imageIcon);
         }
+
+        // 当点击图片时，使用默认程序打开图片
+        imageLabel.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                imageCache.requestOriginalAsynchronously(item.getImageAttachment().getId(), item.getImageAttachment().getImageUrl(), new ImageCache.CacheRequestListener()
+                {
+                    @Override
+                    public void onSuccess(ImageIcon icon, String path)
+                    {
+                        try
+                        {
+                            Desktop.getDesktop().open(new File(path));
+                        }
+                        catch (IOException e1)
+                        {
+                            JOptionPane.showMessageDialog(null, "图像不存在", "图像不存在", JOptionPane.ERROR_MESSAGE);
+                            e1.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailed(String why)
+                    {
+
+                    }
+                });
+                super.mouseClicked(e);
+            }
+        });
     }
 
     /**

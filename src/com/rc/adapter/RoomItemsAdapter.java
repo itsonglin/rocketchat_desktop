@@ -121,7 +121,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
                         }
 
                         // 加载房间消息
-                        ChatPanel.getContext().setRoomId(item.getRoomId());
+                        ChatPanel.getContext().enterRoom(item.getRoomId());
                         ChatPanel.getContext().notifyDataSetChanged();
 
                         // 更新房间标题

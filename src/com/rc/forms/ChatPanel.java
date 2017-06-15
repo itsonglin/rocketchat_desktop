@@ -241,12 +241,12 @@ public class ChatPanel extends ParentAvailablePanel
 
                 fileChooser.showDialog(MainFrame.getContext(), "上传");
                 File selectedFile = fileChooser.getSelectedFile();
-
-                System.out.println(selectedFile.getAbsolutePath());
-
-                String path = selectedFile.getAbsolutePath();
-                sendFileMessage(path);
-                showSendingMessage();
+                if (selectedFile != null)
+                {
+                    String path = selectedFile.getAbsolutePath();
+                    sendFileMessage(path);
+                    showSendingMessage();
+                }
 
                 super.mouseClicked(e);
             }
@@ -256,15 +256,16 @@ public class ChatPanel extends ParentAvailablePanel
     }
 
     /**
-     * 设置当前打开的房间ID
+     * 进入指定房间
      *
      * @param roomId
      */
-    public void setRoomId(String roomId)
+    public void enterRoom(String roomId)
     {
         this.roomId = roomId;
         CHAT_ROOM_OPEN_ID = roomId;
         this.room = roomService.findById(roomId);
+        sendReadMessage();
     }
 
     /**
@@ -1223,6 +1224,12 @@ public class ChatPanel extends ParentAvailablePanel
         new UploadTask(callback).execute(uploadUrl, type, dataParts.get(partIndex - 1));
     }
 
+    /**
+     * 获取图片的宽高
+     *
+     * @param file
+     * @return
+     */
     private int[] getImageSize(String file)
     {
         try
@@ -1240,12 +1247,17 @@ public class ChatPanel extends ParentAvailablePanel
         return new int[]{0, 0};
     }
 
+    /**
+     * 分割大文件，分块上传
+     * @param file
+     * @return
+     */
     private static List<byte[]> cuttingFile(File file)
     {
         long size = file.length();
 
-        //int partSize = 512000;
-        int partSize = 4140;
+        int partSize = 512000;
+        //int partSize = 4140;
         int blockCount;
         blockCount = (int) (size % partSize == 0 ? size / partSize : size / partSize + 1);
         List<byte[]> dataParts = new ArrayList<>(blockCount);
@@ -1271,6 +1283,12 @@ public class ChatPanel extends ParentAvailablePanel
         }
 
         return dataParts;
+    }
+
+
+    private void sendReadMessage()
+    {
+        WebSocketClient.getContext().sendReadMessage(roomId);
     }
 
     private BaseMessageViewHolder getViewHolderByPosition(int position)

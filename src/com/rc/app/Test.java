@@ -20,8 +20,10 @@ public class Test
 {
     public static void main(String[] a) throws IOException
     {
-        int[] ret = getImageSize("/Users/song/add_member.png");
-        System.out.println(ret[0] + ", " + ret[1]);
+        //int[] ret = getImageSize("/Users/song/add_member.png");
+        //System.out.println(ret[0] + ", " + ret[1]);
+
+        Desktop.getDesktop().open(new File("/Users/song/Downloads/windows版.rar"));
     }
 
 

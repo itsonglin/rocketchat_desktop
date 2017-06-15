@@ -54,6 +54,7 @@ public class MessageLeftAttachmentViewHolder extends BaseMessageViewHolder
         progressBar.setMinimum(0);
         progressBar.setValue(100);
         progressBar.setUI(new GradientProgressBarUI());
+        progressBar.setVisible(false);
 
         messageBubble.setCursor(new Cursor(Cursor.HAND_CURSOR));
 

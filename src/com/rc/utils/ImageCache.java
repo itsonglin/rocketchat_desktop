@@ -100,7 +100,7 @@ public class ImageCache
                 {
                     System.out.println("获取   " + cacheFile.getAbsolutePath());
                     ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
-                    listener.onSuccess(icon);
+                    listener.onSuccess(icon, cacheFile.getAbsolutePath());
                 }
                 else
                 {
@@ -137,7 +137,7 @@ public class ImageCache
                         if (requestType == THUMB)
                         {
                             ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
-                            listener.onSuccess(icon);
+                            listener.onSuccess(icon, cacheFile.getAbsolutePath());
                         }
 
                         // 缓存原图
@@ -147,7 +147,7 @@ public class ImageCache
                         if (requestType == ORIGINAL)
                         {
                             ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
-                            listener.onSuccess(icon);
+                            listener.onSuccess(icon, cacheFile.getAbsolutePath());
                         }
                     }
                     catch (IOException e)
@@ -226,7 +226,7 @@ public class ImageCache
 
     public interface CacheRequestListener
     {
-        void onSuccess(ImageIcon icon);
+        void onSuccess(ImageIcon icon, String path);
 
         void onFailed(String why);
     }

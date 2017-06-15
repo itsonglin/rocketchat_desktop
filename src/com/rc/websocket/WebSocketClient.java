@@ -1123,4 +1123,8 @@ public class WebSocketClient
         uploadFilename = null;
     }
 
+    public void sendReadMessage(String roomId)
+    {
+        subscriptionHelper.sendReadMessages(roomId);
+    }
 }
