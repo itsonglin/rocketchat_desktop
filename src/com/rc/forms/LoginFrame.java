@@ -273,9 +273,6 @@ public class LoginFrame extends JFrame
     {
         if (ret.get("status").equals("success"))
         {
-            MainFrame frame = new MainFrame();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setVisible(true);
 
             JSONObject data = ret.getJSONObject("data");
             String authToken = data.getString("authToken");
@@ -290,6 +287,10 @@ public class LoginFrame extends JFrame
             currentUserService.insertOrUpdate(currentUser);
 
             this.dispose();
+
+            MainFrame frame = new MainFrame();
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setVisible(true);
         }
         else
         {
