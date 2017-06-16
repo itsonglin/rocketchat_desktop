@@ -803,13 +803,13 @@ public class WebSocketClient
                         {
                             FileAttachment fileAttachment = new FileAttachment();
                             fileAttachment.setId(message.getJSONObject("file").getString("_id"));
-                            fileAttachment.setTitle(attachment.getString("title"));
+                            fileAttachment.setTitle(attachment.getString("title").substring(15));
                             fileAttachment.setDescription(attachment.getString("description"));
                             fileAttachment.setLink(attachment.getString("title_link"));
                             //dbMessage.getFileAttachments().add(fileAttachment);
                             dbMessage.setFileAttachmentId(fileAttachment.getId());
                             //dbMessage.setMessageContent(fileAttachment.getTitle().replace("File Uploaded:", ""));
-                            messageContent = fileAttachment.getTitle().replace("File Uploaded:", "");
+                            messageContent = fileAttachment.getTitle();
 
                         }
                     }

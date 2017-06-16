@@ -56,6 +56,9 @@ public class MessageLeftAttachmentViewHolder extends MessageAttachmentViewHolder
 
         messageBubble.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        sizeLabel.setFont(FontUtil.getDefaultFont(12));
+        sizeLabel.setForeground(Colors.FONT_GRAY);
+
     }
 
     private void initView()
@@ -70,6 +73,9 @@ public class MessageLeftAttachmentViewHolder extends MessageAttachmentViewHolder
                 .setInsets(5, 8, 5, 5));
         attachmentPanel.add(progressBar, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL)
                 .setAnchor(GBC.SOUTH).setInsets(0, 8, 5, 5));
+
+        attachmentPanel.add(sizeLabel, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL).setAnchor(GBC.SOUTH).setInsets(-20,8,5,0));
+
 
         messageBubble.add(attachmentPanel);
 

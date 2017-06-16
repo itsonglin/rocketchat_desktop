@@ -16,15 +16,8 @@ import java.awt.*;
  */
 public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolder
 {
-    //public SizeAutoAdjustTextArea attachmentTitle;
     public JLabel resend = new JLabel(); // 重发按钮
-    //public RCProgressBar progressBar = new RCProgressBar(); // 进度条
-
     private RCRightAttachmentMessageBubble attachmentBubble = new RCRightAttachmentMessageBubble();
-    //private JPanel timePanel = new JPanel(); // 时间面板
-    //private JPanel messageAvatarPanel = new JPanel(); // 消息 + 头像组合面板
-    //private JPanel attachmentPanel = new JPanel(); // 附件面板
-    //public JLabel attachmentIcon = new JLabel(); // 附件类型icon
 
     public MessageRightAttachmentViewHolder()
     {
@@ -64,6 +57,8 @@ public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolde
 
         attachmentBubble.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+        sizeLabel.setFont(FontUtil.getDefaultFont(12));
+        sizeLabel.setForeground(Colors.FONT_GRAY);
     }
 
     private void initView()
@@ -75,9 +70,9 @@ public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolde
         attachmentPanel.setLayout(new GridBagLayout());
         attachmentPanel.add(attachmentIcon, new GBC(0, 0).setWeight(1, 1).setInsets(5,5,5,0));
         attachmentPanel.add(attachmentTitle, new GBC(1, 0).setWeight(100, 1).setAnchor(GBC.NORTH)
-                .setInsets(5, 8, 5, 5));
-        attachmentPanel.add(progressBar, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL)
-                .setAnchor(GBC.SOUTH).setInsets(0, 8, 5, 5));
+                .setInsets(5, 5, 0, 5));
+        attachmentPanel.add(progressBar, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL).setAnchor(GBC.SOUTH).setInsets(0, 8, 5, 5));
+        attachmentPanel.add(sizeLabel, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL).setAnchor(GBC.SOUTH).setInsets(-20,8,5,0));
 
         attachmentBubble.add(attachmentPanel);
 

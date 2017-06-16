@@ -16,4 +16,6 @@ public class MessageAttachmentViewHolder extends BaseMessageViewHolder
     protected JPanel messageAvatarPanel = new JPanel(); // 消息 + 头像组合面板
     protected JPanel attachmentPanel = new JPanel(); // 附件面板
     protected JLabel attachmentIcon = new JLabel(); // 附件类型icon
+    public JLabel sizeLabel = new JLabel();
+
 }

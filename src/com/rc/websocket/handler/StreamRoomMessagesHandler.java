@@ -201,12 +201,12 @@ public class StreamRoomMessagesHandler implements CollectionHandler
                     {
                         FileAttachment fileAttachment = new FileAttachment();
                         fileAttachment.setId(obj.getJSONObject("file").getString("_id"));
-                        fileAttachment.setTitle(attachment.getString("title"));
+                        fileAttachment.setTitle(attachment.getString("title").substring(15));
                         fileAttachment.setDescription(attachment.getString("description"));
                         fileAttachment.setLink(attachment.getString("title_link"));
                         //message.getFileAttachments().add(fileAttachment);
                         message.setFileAttachmentId(fileAttachment.getId());
-                        message.setMessageContent(fileAttachment.getTitle().replace("File Uploaded:", ""));
+                        message.setMessageContent(fileAttachment.getTitle());
 
                         // 查找是否有临时以FildId作为MessageId的消息
                         //Realm realm = Realm.getDefaultInstance();
