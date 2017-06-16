@@ -300,26 +300,31 @@ public class ChatPanel extends ParentAvailablePanel
         }
     }
 
+    private long loadRemoteStartTime = 0;
+
     /**
-     * 从服务器拿更多历史消，如从本地第一条消息起一个月内的消息
+     * 从服务器拿更多历史消息，如从本地第一条消息起一个月内的消息
      */
     private void loadMoreHistoryFromRemote(boolean firstRequest)
     {
         long firstTime = messageService.findFirstMessageTime(roomId);
 
         // 再从服务器拿50天前的消息
-        final long[] start = {firstTime};
+        loadRemoteStartTime = firstTime;
+
         long end = firstTime - TIMESTAMP_8_HOURS;
+
+
         // 数据库中没有该房间的任何消息
-        if (start[0] < 0)
+        if (loadRemoteStartTime < 0)
         {
-            start[0] = System.currentTimeMillis() - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
+            loadRemoteStartTime = System.currentTimeMillis() - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
             //end = System.currentTimeMillis() - TIMESTAMP_8_HOURS;
             end = 0;
         }
         else
         {
-            start[0] = firstTime - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
+            loadRemoteStartTime = firstTime - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
         }
 
         // 如果是第一次打开该房间，且第一次拿到的历史消息数小于10条，则持续拿
@@ -333,12 +338,13 @@ public class ChatPanel extends ParentAvailablePanel
                     // 如果一个月内没有消息，继续拿
                     if (newMessageCount < 10)
                     {
-                        start[0] = start[0] - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
+                        long lastStartTime = loadRemoteStartTime - 1;
+                        loadRemoteStartTime = loadRemoteStartTime - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
 
-                        if (start[0] > (1483200000000L - TIMESTAMP_8_HOURS)) // 2017/1/1的时间
+                        if (loadRemoteStartTime > (1483200000000L - TIMESTAMP_8_HOURS)) // 2017/1/1的时间
                         {
                             System.out.println("一个月内没有消息或拿到的消息少于10条，继续拿");
-                            loadRemoteHistory(start[0], 0, false, firstRequest, this);
+                            loadRemoteHistory(loadRemoteStartTime, lastStartTime, false, firstRequest, this);
                         }
                         else
                         {
@@ -348,12 +354,12 @@ public class ChatPanel extends ParentAvailablePanel
                 }
             };
 
-            loadRemoteHistory(start[0], end, false, firstRequest, listener);
+            loadRemoteHistory(loadRemoteStartTime, end, false, firstRequest, listener);
         }
         // 滚动到顶部时的请求
         else
         {
-            loadRemoteHistory(start[0], end, false, firstRequest, null);
+            loadRemoteHistory(loadRemoteStartTime, end, false, firstRequest, null);
         }
     }
 
