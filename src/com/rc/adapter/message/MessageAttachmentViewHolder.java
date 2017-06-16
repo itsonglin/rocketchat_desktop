@@ -10,12 +10,12 @@ import javax.swing.*;
  */
 public class MessageAttachmentViewHolder extends BaseMessageViewHolder
 {
-    protected SizeAutoAdjustTextArea attachmentTitle;
+    public SizeAutoAdjustTextArea attachmentTitle;
     public RCProgressBar progressBar = new RCProgressBar(); // 进度条
-    protected JPanel timePanel = new JPanel(); // 时间面板
-    protected JPanel messageAvatarPanel = new JPanel(); // 消息 + 头像组合面板
-    protected JPanel attachmentPanel = new JPanel(); // 附件面板
-    protected JLabel attachmentIcon = new JLabel(); // 附件类型icon
+    public JPanel timePanel = new JPanel(); // 时间面板
+    public JPanel messageAvatarPanel = new JPanel(); // 消息 + 头像组合面板
+    public JPanel attachmentPanel = new JPanel(); // 附件面板
+    public JLabel attachmentIcon = new JLabel(); // 附件类型icon
     public JLabel sizeLabel = new JLabel();
 
 }

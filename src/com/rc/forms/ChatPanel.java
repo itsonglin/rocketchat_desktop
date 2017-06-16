@@ -1124,6 +1124,7 @@ public class ChatPanel extends ParentAvailablePanel
 
         //mAdapter.addItem(item);
         addMessageItemToEnd(item);
+
         //recyclerview.smoothScrollToPosition(mAdapter.getItemCount() - 1);
 
         //editText.setText("");
@@ -1216,6 +1217,28 @@ public class ChatPanel extends ParentAvailablePanel
 
             sendDataPart(uploadedBlockCount[0], dataParts, url, type, callback);
         }
+    }
+
+    /**
+     * 设置附件点击监听
+     * @param viewHolder
+     */
+    private void setMyUploadAttachmentClickListener(MessageAttachmentViewHolder viewHolder, String uploadFilePath)
+    {
+        MouseAdapter listener = new MouseAdapter()
+        {
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON1)
+                {
+                    openFile(uploadFilePath);
+                }
+            }
+        };
+
+        viewHolder.attachmentPanel.addMouseListener(listener);
+        viewHolder.attachmentTitle.addMouseListener(listener);
     }
 
     private void sendDataPart(int partIndex, List<byte[]> dataParts, String baseUploadUrl, String type, UploadTaskCallback callback)
@@ -1320,20 +1343,24 @@ public class ChatPanel extends ParentAvailablePanel
     public void downloadOrOpenFile(String messageId)
     {
         Message message = messageService.findById(messageId);
+        FileAttachment fileAttachment;
         if (message == null)
         {
-            JOptionPane.showMessageDialog(null, "无效的消息", "错误", JOptionPane.ERROR_MESSAGE);
-            return;
+            // 如果没有messageId对应的message, 尝试寻找messageId对应的file attachment，因为在自己上传文件时，此时是以fileId作为临时的messageId
+            fileAttachment = fileAttachmentService.findById(messageId);
+        }
+        else
+        {
+            fileAttachment = fileAttachmentService.findById(message.getFileAttachmentId());
         }
 
-        FileAttachment fileAttachment = fileAttachmentService.findById(message.getFileAttachmentId());
         if (fileAttachment == null)
         {
             JOptionPane.showMessageDialog(null, "无效的附件消息", "错误", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
-        String filepath = fileCache.tryGetFileCache(message.getFileAttachmentId(), fileAttachment.getTitle());
+        String filepath = fileCache.tryGetFileCache(fileAttachment.getId(), fileAttachment.getTitle());
         if (filepath == null)
         {
             // 服务器上的文件

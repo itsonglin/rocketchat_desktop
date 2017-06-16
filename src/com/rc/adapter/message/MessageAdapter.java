@@ -4,9 +4,11 @@ import com.rc.adapter.BaseAdapter;
 import com.rc.adapter.ViewHolder;
 import com.rc.app.Launcher;
 import com.rc.db.model.CurrentUser;
+import com.rc.db.model.FileAttachment;
 import com.rc.db.model.Message;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
+import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.MessageItem;
 import com.rc.forms.ChatPanel;
 import com.rc.forms.MainFrame;
@@ -238,7 +240,19 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
     private void processAttachmentSize(MessageAttachmentViewHolder viewHolder, MessageItem item)
     {
-        String path = fileCache.tryGetFileCache(item.getFileAttachment().getId(), item.getFileAttachment().getTitle());
+        FileAttachmentItem attachment = item.getFileAttachment();
+        String path;
+        // 远程服务器文件
+        if (attachment.getLink().startsWith("/file-upload"))
+        {
+            path = fileCache.tryGetFileCache(item.getFileAttachment().getId(), item.getFileAttachment().getTitle());
+        }
+        // 我自己上传的文件
+        else
+        {
+            path = attachment.getLink();
+        }
+
         if (path != null)
         {
             viewHolder.sizeLabel.setVisible(true);
