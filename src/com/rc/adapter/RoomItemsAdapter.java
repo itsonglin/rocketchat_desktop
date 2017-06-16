@@ -3,6 +3,7 @@ package com.rc.adapter;
 import com.rc.components.Colors;
 import com.rc.entity.RoomItem;
 import com.rc.forms.ChatPanel;
+import com.rc.forms.RoomMembersPanel;
 import com.rc.forms.TitlePanel;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.AvatarUtil;
@@ -122,6 +123,8 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
 
                         // 加载房间消息
                         ChatPanel.getContext().enterRoom(item.getRoomId());
+                        RoomMembersPanel.getContext().setRoomId(item.getRoomId());
+                        TitlePanel.getContext().hideRoomMembersPanel();
 
                         setBackground(viewHolder, Colors.ITEM_SELECTED);
                         selectedViewHolder = viewHolder;
