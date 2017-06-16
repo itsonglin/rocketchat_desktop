@@ -46,7 +46,7 @@ public class AvatarUtil
 
     static
     {
-        AVATAR_CACHE_ROOT = new Object().getClass().getResource("/").getPath() + "/cache/avatar";
+        AVATAR_CACHE_ROOT = new Object().getClass().getResource("/cache").getPath() + "/avatar";
         File file = new File(AVATAR_CACHE_ROOT);
         if (!file.exists())
         {

@@ -26,7 +26,7 @@ public class FileCache
     {
         try
         {
-            FILE_CACHE_ROOT_PATH = getClass().getResource("/").getPath() + "/cache/file";
+            FILE_CACHE_ROOT_PATH = getClass().getResource("/cache").getPath() + "/file";
             File file = new File(FILE_CACHE_ROOT_PATH);
             if (!file.exists())
             {
