@@ -11,8 +11,8 @@ import com.rc.db.service.CurrentUserService;
 import com.rc.entity.ContactsItem;
 import com.rc.utils.AvatarUtil;
 import org.apache.log4j.Logger;
-import tasks.HttpBytesGetTask;
-import tasks.HttpResponseListener;
+import com.rc.tasks.HttpBytesGetTask;
+import com.rc.tasks.HttpResponseListener;
 
 import javax.swing.*;
 import java.awt.*;

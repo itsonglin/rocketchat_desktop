@@ -24,7 +24,7 @@ public class Launcher
     public static ImageAttachmentService imageAttachmentService;
     public static FileAttachmentService fileAttachmentService;
 
-    public static final String HOSTNAME = "https://rc.shls-leasing.com";
+    public static final String HOSTNAME = "https://chat1.shls-leasing.com";
 
 
     static

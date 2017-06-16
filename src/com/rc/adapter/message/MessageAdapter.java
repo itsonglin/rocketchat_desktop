@@ -148,6 +148,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
         holder.sender.setText(item.getSenderUsername());
+
+        setAttachmentClickListener(holder, item);
     }
 
     private void processRightAttachmentMessage(ViewHolder viewHolder, MessageItem item)
@@ -206,6 +208,23 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 super.mouseClicked(e);
             }
         });
+
+        setAttachmentClickListener(holder, item);
+    }
+
+    private void setAttachmentClickListener(MessageAttachmentViewHolder viewHolder, MessageItem item)
+    {
+        MouseAdapter listener = new MouseAdapter()
+        {
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                ChatPanel.getContext().downloadOrOpenFile(item.getId());
+            }
+        };
+
+        viewHolder.attachmentPanel.addMouseListener(listener);
+        viewHolder.attachmentTitle.addMouseListener(listener);
     }
 
     /**
@@ -313,7 +332,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         {
             imageLabel.setIcon(IconUtil.getIcon(this, "/image/image_loading.gif"));
 
-            imageCache.requestThumbAsynchronously(item.getImageAttachment().getId(), url, new ImageCache.CacheRequestListener()
+            imageCache.requestThumbAsynchronously(item.getImageAttachment().getId(), url, new ImageCache.ImageCacheRequestListener()
             {
                 @Override
                 public void onSuccess(ImageIcon icon, String path)
@@ -343,7 +362,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                imageCache.requestOriginalAsynchronously(item.getImageAttachment().getId(), item.getImageAttachment().getImageUrl(), new ImageCache.CacheRequestListener()
+                imageCache.requestOriginalAsynchronously(item.getImageAttachment().getId(), item.getImageAttachment().getImageUrl(), new ImageCache.ImageCacheRequestListener()
                 {
                     @Override
                     public void onSuccess(ImageIcon icon, String path)

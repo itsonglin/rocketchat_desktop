@@ -76,7 +76,8 @@ public class MainFrame extends JFrame
         {
             InputStream inputStream = getClass().getResourceAsStream("/wav/msg.wav");
             messageSound = new AudioStream(inputStream);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -92,7 +93,8 @@ public class MainFrame extends JFrame
             InputStream inputStream = getClass().getResourceAsStream("/wav/msg.wav");
             messageSound = new AudioStream(inputStream);
             AudioPlayer.player.start(messageSound);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -141,7 +143,8 @@ public class MainFrame extends JFrame
 
 
             systemTray.add(trayIcon);
-        } catch (AWTException e)
+        }
+        catch (AWTException e)
         {
             e.printStackTrace();
         }
@@ -168,7 +171,8 @@ public class MainFrame extends JFrame
                         trayIcon.setImage(normalTrayIcon);
                         Thread.sleep(800);
 
-                    } catch (InterruptedException e)
+                    }
+                    catch (InterruptedException e)
                     {
                         e.printStackTrace();
                     }
@@ -194,14 +198,6 @@ public class MainFrame extends JFrame
     {
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
-        String windows="com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
-        try
-        {
-            UIManager.setLookAndFeel(windows);
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
 
         UIManager.put("Label.font", FontUtil.getDefaultFont());
         UIManager.put("Panel.font", FontUtil.getDefaultFont());
@@ -229,19 +225,27 @@ public class MainFrame extends JFrame
         {
             // 隐藏标题栏
             setUndecorated(true);
+
+            String windows = "com.sun.java.swing.plaf.windows.WindowsLookAndFeel";
+            try
+            {
+                UIManager.setLookAndFeel(windows);
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+            }
         }
 
         addListener();
 
-       // getRootPane().setBorder(new LineBorder(Colors.LIGHT_GRAY));
+        // getRootPane().setBorder(new LineBorder(Colors.LIGHT_GRAY));
 
         add(leftPanel, BorderLayout.WEST);
         add(rightPanel, BorderLayout.CENTER);
 
         centerScreen();
     }
-
-
 
 
     /**

@@ -14,19 +14,17 @@ import java.awt.*;
 /**
  * Created by song on 17-6-3.
  */
-public class MessageRightAttachmentViewHolder extends BaseMessageViewHolder
+public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolder
 {
-    public SizeAutoAdjustTextArea attachmentTitle;
-    //public JLabel avatar = new JLabel();
-    //public JLabel time = new JLabel();
+    //public SizeAutoAdjustTextArea attachmentTitle;
     public JLabel resend = new JLabel(); // 重发按钮
-    public RCProgressBar progressBar = new RCProgressBar(); // 进度条
+    //public RCProgressBar progressBar = new RCProgressBar(); // 进度条
 
     private RCRightAttachmentMessageBubble attachmentBubble = new RCRightAttachmentMessageBubble();
-    private JPanel timePanel = new JPanel(); // 时间面板
-    private JPanel messageAvatarPanel = new JPanel(); // 消息 + 头像组合面板
-    private JPanel attachmentPanel = new JPanel(); // 附件面板
-    public JLabel attachmentIcon = new JLabel(); // 附件类型icon
+    //private JPanel timePanel = new JPanel(); // 时间面板
+    //private JPanel messageAvatarPanel = new JPanel(); // 消息 + 头像组合面板
+    //private JPanel attachmentPanel = new JPanel(); // 附件面板
+    //public JLabel attachmentIcon = new JLabel(); // 附件类型icon
 
     public MessageRightAttachmentViewHolder()
     {

@@ -1,9 +1,6 @@
 package com.rc.forms;
 
-import com.rc.adapter.message.BaseMessageViewHolder;
-import com.rc.adapter.message.MessageAdapter;
-import com.rc.adapter.message.MessageRightAttachmentViewHolder;
-import com.rc.adapter.message.MessageRightImageViewHolder;
+import com.rc.adapter.message.*;
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
@@ -14,13 +11,15 @@ import com.rc.db.service.*;
 import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.ImageAttachmentItem;
 import com.rc.entity.MessageItem;
+import com.rc.utils.FileCache;
+import com.rc.utils.HttpUtil;
 import com.rc.utils.MimeTypeUtil;
 import com.rc.websocket.WebSocketClient;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import tasks.*;
+import com.rc.tasks.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -70,6 +69,7 @@ public class ChatPanel extends ParentAvailablePanel
     private ImageAttachmentService imageAttachmentService = Launcher.imageAttachmentService;
     private FileAttachmentService fileAttachmentService = Launcher.fileAttachmentService;
     public static List<String> uploadingOrDownloadingFiles = new ArrayList<>();
+    private FileCache fileCache;
 
 
     // 当前消息分页数
@@ -94,6 +94,8 @@ public class ChatPanel extends ParentAvailablePanel
         initView();
         initData();
         setListeners();
+
+        fileCache = new FileCache();
     }
 
     private void initComponents()
@@ -1249,6 +1251,7 @@ public class ChatPanel extends ParentAvailablePanel
 
     /**
      * 分割大文件，分块上传
+     *
      * @param file
      * @return
      */
@@ -1295,6 +1298,108 @@ public class ChatPanel extends ParentAvailablePanel
     {
         return (BaseMessageViewHolder) messagePanel.getMessageListView().getItem(position);
     }
+
+
+    /**
+     * 打开文件，如果文件不存在，则下载
+     *
+     * @param messageId
+     */
+    public void downloadOrOpenFile(String messageId)
+    {
+        Message message = messageService.findById(messageId);
+        if (message == null)
+        {
+            JOptionPane.showMessageDialog(null, "无效的消息", "错误", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        FileAttachment fileAttachment = fileAttachmentService.findById(message.getFileAttachmentId());
+        if (fileAttachment == null)
+        {
+            JOptionPane.showMessageDialog(null, "无效的附件消息", "错误", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String filepath = fileCache.tryGetFileCache(message.getFileAttachmentId(), fileAttachment.getTitle().substring(15));
+        if (filepath == null)
+        {
+            // 服务器上的文件
+            if (fileAttachment.getLink().startsWith("/file-upload"))
+            {
+                downloadFile(fileAttachment, messageId);
+            }
+            // 本地的文件
+            else
+            {
+                openFile(fileAttachment.getLink());
+            }
+        }
+        else
+        {
+            openFile(filepath);
+        }
+    }
+
+    /**
+     * 下载文件
+     * @param fileAttachment
+     * @param messageId
+     */
+    private void downloadFile(FileAttachment fileAttachment, String messageId)
+    {
+        final DownloadTask task = new DownloadTask(new HttpUtil.ProgressListener()
+        {
+            @Override
+            public void onProgress(int progress)
+            {
+                logger.debug("文件下载进度：" + progress);
+                int pos = findMessageItemReverse(messageId);
+                if (pos > -1)
+                {
+                    MessageAttachmentViewHolder holder = (MessageAttachmentViewHolder) getViewHolderByPosition(pos);
+                    if (progress >= 0 && progress < 100)
+                    {
+                        holder.progressBar.setVisible(true);
+                        holder.progressBar.setValue(progress);
+                    }
+                    else if (progress >= 100)
+                    {
+                        holder.progressBar.setVisible(false);
+                    }
+
+                }
+            }
+        });
+
+        task.setListener(new HttpResponseListener<byte[]>()
+        {
+            @Override
+            public void onResult(byte[] data)
+            {
+                //System.out.println(data);
+                String path = fileCache.cacheFile(fileAttachment.getId(), fileAttachment.getTitle().substring(15), data);
+                System.out.println("文件已缓存在 " + path);
+            }
+        });
+
+        String url = Launcher.HOSTNAME + fileAttachment.getLink() + "?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
+        task.execute(url);
+    }
+
+    private void openFile(String path)
+    {
+        try
+        {
+            Desktop.getDesktop().open(new File(path));
+        }
+        catch (IOException e1)
+        {
+            JOptionPane.showMessageDialog(null, "文件打开失败:\n" + e1.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            e1.printStackTrace();
+        }
+    }
+
 }
 
 interface RemoteHistoryReceivedListener

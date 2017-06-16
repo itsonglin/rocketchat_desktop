@@ -230,8 +230,11 @@ public class HttpUtil
                 InputStream inputStream = response.body().byteStream();
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 byte[] buff = new byte[2048000];
+
                 int len;
                 long total = response.body().contentLength();
+                //total = response.body().bytes().length;
+                //long total = inputStream.available();
                 long sum = 0L;
                 while ((len = inputStream.read(buff)) > -1)
                 {
@@ -243,7 +246,6 @@ public class HttpUtil
                         int progress = (int) (sum * 1.0f / total * 100);
                         listener.onProgress(progress);
                     }
-
 
                 }
 

@@ -60,7 +60,7 @@ public class ImageCache
      * @param url
      * @param listener
      */
-    public void requestThumbAsynchronously(String identify, String url, CacheRequestListener listener)
+    public void requestThumbAsynchronously(String identify, String url, ImageCacheRequestListener listener)
     {
         requestImage(THUMB, identify, url, listener);
 
@@ -73,13 +73,13 @@ public class ImageCache
      * @param url
      * @param listener
      */
-    public void requestOriginalAsynchronously(String identify, String url, CacheRequestListener listener)
+    public void requestOriginalAsynchronously(String identify, String url, ImageCacheRequestListener listener)
     {
         requestImage(ORIGINAL, identify, url, listener);
     }
 
 
-    private void requestImage(int requestType, String identify, String url, CacheRequestListener listener)
+    private void requestImage(int requestType, String identify, String url, ImageCacheRequestListener listener)
     {
         new Thread(new Runnable()
         {
@@ -224,7 +224,7 @@ public class ImageCache
     }
 
 
-    public interface CacheRequestListener
+    public interface ImageCacheRequestListener
     {
         void onSuccess(ImageIcon icon, String path);
 
