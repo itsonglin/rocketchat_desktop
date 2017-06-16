@@ -266,6 +266,13 @@ public class RCListView extends JScrollPane
         return contentPanel.getComponent(n);
     }
 
+    public JPanel getContentPanel()
+    {
+        return contentPanel;
+    }
+
+
+
     public void setScrollToTopListener(ScrollToTopListener listener)
     {
         this.scrollToTopListener = listener;
