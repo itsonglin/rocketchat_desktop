@@ -222,9 +222,10 @@ public class HttpUtil
 
         Request request = reqBuilder.build();
         byte[] data = null;
+        Response response = null;
         try
         {
-            Response response = client.newCall(request).execute();
+            response = client.newCall(request).execute();
             if (response.isSuccessful())
             {
                 InputStream inputStream = response.body().byteStream();
@@ -257,6 +258,10 @@ public class HttpUtil
         } catch (IOException e)
         {
             e.printStackTrace();
+        }
+        finally
+        {
+            response.close();
         }
 
         return data;

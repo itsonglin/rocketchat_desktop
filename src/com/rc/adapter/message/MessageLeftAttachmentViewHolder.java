@@ -74,7 +74,7 @@ public class MessageLeftAttachmentViewHolder extends MessageAttachmentViewHolder
         attachmentPanel.add(progressBar, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL)
                 .setAnchor(GBC.SOUTH).setInsets(0, 8, 5, 5));
 
-        attachmentPanel.add(sizeLabel, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL).setAnchor(GBC.SOUTH).setInsets(-20,8,5,0));
+        attachmentPanel.add(sizeLabel, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL).setAnchor(GBC.SOUTH).setInsets(-20,8,3,0));
 
 
         messageBubble.add(attachmentPanel);

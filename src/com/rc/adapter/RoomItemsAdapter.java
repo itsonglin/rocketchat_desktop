@@ -122,10 +122,6 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
 
                         // 加载房间消息
                         ChatPanel.getContext().enterRoom(item.getRoomId());
-                        ChatPanel.getContext().notifyDataSetChanged();
-
-                        // 更新房间标题
-                        TitlePanel.getContext().updateRoomTitle(item.getRoomId());
 
                         setBackground(viewHolder, Colors.ITEM_SELECTED);
                         selectedViewHolder = viewHolder;

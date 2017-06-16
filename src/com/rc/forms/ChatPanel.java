@@ -15,6 +15,7 @@ import com.rc.utils.FileCache;
 import com.rc.utils.HttpUtil;
 import com.rc.utils.MimeTypeUtil;
 import com.rc.websocket.WebSocketClient;
+import okhttp3.OkHttpClient;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * 右侧聊天面板
@@ -61,6 +63,8 @@ public class ChatPanel extends ParentAvailablePanel
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     private Room room; // 当前房间
     private long firstMessageTimestamp = 0L;
+    // 房间的用户
+    public List<String> roomMembers = new ArrayList<>();
 
 
     private MessageService messageService = Launcher.messageService;
@@ -83,9 +87,12 @@ public class ChatPanel extends ParentAvailablePanel
 
     private Logger logger = Logger.getLogger(this.getClass());
 
+    private List<String> remoteRoomMemberLoadedRooms = new ArrayList<>();
+
 
     public ChatPanel(JPanel parent)
     {
+
         super(parent);
         context = this;
         currentUser = currentUserService.findAll().get(0);
@@ -268,6 +275,33 @@ public class ChatPanel extends ParentAvailablePanel
         CHAT_ROOM_OPEN_ID = roomId;
         this.room = roomService.findById(roomId);
         sendReadMessage();
+
+        this.notifyDataSetChanged();
+
+        // 更新房间，尤其是成员数
+        updateRoomTitle();
+    }
+
+    private void updateRoomTitle()
+    {
+        String title = room.getName();
+        if (!room.getType().equals("d"))
+        {
+            // 加载本地群成员
+            loadLocalRoomMembers();
+
+            // 远程获取群成员
+            if (!remoteRoomMemberLoadedRooms.contains(roomId))
+            {
+                loadRemoteRoomMembers();
+            }
+
+            title += " (" + (roomMembers.size() + 1) + ")";
+        }
+
+
+        // 更新房间标题
+        TitlePanel.getContext().updateRoomTitle(title);
     }
 
     /**
@@ -1227,6 +1261,7 @@ public class ChatPanel extends ParentAvailablePanel
 
     /**
      * 设置附件点击监听
+     *
      * @param viewHolder
      */
     private void setMyUploadAttachmentClickListener(MessageAttachmentViewHolder viewHolder, String uploadFilePath)
@@ -1238,7 +1273,7 @@ public class ChatPanel extends ParentAvailablePanel
             {
                 if (e.getButton() == MouseEvent.BUTTON1)
                 {
-                    openFile(uploadFilePath);
+                    openFileWithDefaultApplication(uploadFilePath);
                 }
             }
         };
@@ -1332,7 +1367,7 @@ public class ChatPanel extends ParentAvailablePanel
 
         try
         {
-            return  (BaseMessageViewHolder) messagePanel.getMessageListView().getItem(position);
+            return (BaseMessageViewHolder) messagePanel.getMessageListView().getItem(position);
         }
         catch (Exception e)
         {
@@ -1377,12 +1412,12 @@ public class ChatPanel extends ParentAvailablePanel
             // 本地的文件
             else
             {
-                openFile(fileAttachment.getLink());
+                openFileWithDefaultApplication(fileAttachment.getLink());
             }
         }
         else
         {
-            openFile(filepath);
+            openFileWithDefaultApplication(filepath);
         }
     }
 
@@ -1447,7 +1482,12 @@ public class ChatPanel extends ParentAvailablePanel
         task.execute(url);
     }
 
-    private void openFile(String path)
+    /**
+     * 使用默认程序打开文件
+     *
+     * @param path
+     */
+    private void openFileWithDefaultApplication(String path)
     {
         try
         {
@@ -1455,9 +1495,158 @@ public class ChatPanel extends ParentAvailablePanel
         }
         catch (IOException e1)
         {
-            JOptionPane.showMessageDialog(null, "文件打开失败:\n" + e1.getMessage(), "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "文件打开失败，没有找到关联的应用程序", "错误", JOptionPane.ERROR_MESSAGE);
             e1.printStackTrace();
         }
+    }
+
+    /**
+     * 加载本地房间用户
+     */
+    private void loadLocalRoomMembers()
+    {
+        roomMembers.clear();
+        String members = room.getMember();
+
+        if (members != null)
+        {
+            String creator = room.getCreatorName();
+            String[] userArr = members.split(",");
+            for (int i = 0; i < userArr.length; i++)
+            {
+                if (!roomMembers.contains(userArr[i]) && !userArr[i].equals(creator))
+                {
+                    roomMembers.add(userArr[i]);
+                }
+            }
+        }
+    }
+
+    /**
+     * 加载远程房间用户
+     */
+    private void loadRemoteRoomMembers()
+    {
+        remoteRoomMemberLoadedRooms.add(roomId);
+
+        logger.debug("远程获取房间 " + room.getName() + " 的群成员");
+        String url = null;
+        String arrayName = "";
+        //room = roomService.findById(roomId);
+        if (room.getType().equals("c"))
+        {
+            url = Launcher.HOSTNAME + "/api/v1/channels.info?roomId=" + room.getRoomId();
+            arrayName = "channel";
+        }
+        else if (room.getType().equals("p"))
+        {
+            url = Launcher.HOSTNAME + "/api/v1/groups.info?roomId=" + room.getRoomId();
+            arrayName = "group";
+        }
+        else if (room.getType().equals("d"))
+        {
+            return;
+        }
+
+        HttpGetTask task = new HttpGetTask();
+        task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+        task.addHeader("X-User-Id", currentUser.getUserId());
+
+        final String finalArrayName = arrayName;
+        task.setListener(new HttpResponseListener<JSONObject>()
+        {
+            @Override
+            public void onResult(JSONObject retJson)
+            {
+                String creator = "";
+                try
+                {
+                    JSONObject obj = retJson.getJSONObject(finalArrayName);
+                    if (obj.has("u"))
+                    {
+                        creator = obj.getJSONObject("u").getString("username");
+                        if (!roomMembers.contains(creator))
+                        {
+                            roomMembers.add(creator);
+                        }
+                        //roomService.updateCreatorUsername(Realm.getDefaultInstance(), room.getRoomId(), creator);
+                        room.setCreatorName(creator);
+                        roomService.update(room);
+                    }
+                    boolean newUserAdded = false;
+                    boolean userRemoved = false;
+                    JSONArray members = obj.getJSONArray("usernames");
+                    List<String> memberList = new ArrayList<>();
+                    for (int i = 0; i < members.length(); i++)
+                    {
+                        memberList.add(members.getString(i));
+
+                        if (!roomMembers.contains(members.getString(i)))
+                        {
+                            roomMembers.add(members.getString(i));
+                            newUserAdded = true;
+                        }
+                    }
+
+                    List<String> removedList = new ArrayList<String>();
+                    for (String name : roomMembers)
+                    {
+                        if (!memberList.contains(name))
+                        {
+                            removedList.add(name);
+                            userRemoved = true;
+                        }
+                    }
+                    roomMembers.removeAll(removedList);
+
+
+                    // 有人加入或移除时，更新本地信息
+                    if (newUserAdded || userRemoved)
+                    {
+                        // 更新本地members
+                        updateLocalMembers(roomMembers);
+
+                        // 更新房间名中的成员数
+                        updateRoomTitle();
+                    }
+
+                    roomMembers.remove(creator);
+
+
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        task.execute(url);
+    }
+
+    /**
+     * 更新本地房间成员
+     *
+     * @param users
+     */
+    private void updateLocalMembers(List<String> users)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < users.size(); i++)
+        {
+            sb.append(users.get(i));
+            if (i < users.size() - 1)
+            {
+                sb.append(",");
+            }
+        }
+
+        room.setMember(sb.toString());
+        roomService.update(room);
+        //roomService.updateMembers(Realm.getDefaultInstance(), room.getRoomId(), sb.toString());
+        //room = roomService.findById(realm, room.getRoomId());
+        //System.out.println(room);
+
     }
 
 }

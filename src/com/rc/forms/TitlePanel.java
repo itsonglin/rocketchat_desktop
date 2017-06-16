@@ -188,12 +188,10 @@ public class TitlePanel extends ParentAvailablePanel
     }
 
 
-    public void updateRoomTitle(String roomId)
+    public void updateRoomTitle(String title)
     {
-        room = roomService.findById(roomId);
-        this.titleLabel.setText(room.getName());
+        this.titleLabel.setText(title);
 
-        //titlePanel.setVisible(true);
         roomInfoButton.setVisible(true);
         RightPanel parent = (RightPanel) getParent();
         parent.showPanel(RightPanel.MESSAGE);

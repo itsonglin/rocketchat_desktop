@@ -44,7 +44,19 @@ public class SizeAutoAdjustTextArea extends JTextArea
         //int targetWidth = fm.stringWidth(lineArr[info[1]]) + 25;
 
         int targetHeight = lineHeight * lineCount;
-        int targetWidth = fm.stringWidth(lineArr[info[1]]) + 5;
+        int targetWidth = 20;
+
+        if (lineCount > 0)
+        {
+            targetWidth = fm.stringWidth(lineArr[info[1]]) + 5;
+        }
+        // 输入全为\n的情况
+        else
+        {
+            targetHeight = lineHeight;
+            t = " ";
+        }
+
 
         if (targetWidth > maxWidth)
         {
