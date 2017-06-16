@@ -1404,7 +1404,7 @@ public class ChatPanel extends ParentAvailablePanel
 
         if (fileAttachment == null)
         {
-            JOptionPane.showMessageDialog(null, "无效的附件消息", "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "无效的附件消息", "消息无效", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -1502,7 +1502,7 @@ public class ChatPanel extends ParentAvailablePanel
         }
         catch (IOException e1)
         {
-            JOptionPane.showMessageDialog(null, "文件打开失败，没有找到关联的应用程序", "错误", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(null, "文件打开失败，没有找到关联的应用程序", "打开失败", JOptionPane.ERROR_MESSAGE);
             e1.printStackTrace();
         }
     }

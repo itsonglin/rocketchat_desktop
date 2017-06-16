@@ -102,11 +102,11 @@ public class AvatarUtil
 
         try
         {
-            int width = 50;
-            int height = 50;
+            int width = 150;
+            int height = 150;
 
             // 创建BufferedImage对象
-            Font font = FontUtil.getDefaultFont(24, Font.PLAIN);
+            Font font = FontUtil.getDefaultFont(86, Font.PLAIN);
             BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             // 获取Graphics2D
             Graphics2D g2d = image.createGraphics();
