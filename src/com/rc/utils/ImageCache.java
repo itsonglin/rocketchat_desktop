@@ -1,5 +1,6 @@
 package com.rc.utils;
 
+import com.rc.app.Launcher;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.apache.log4j.Logger;
@@ -26,7 +27,9 @@ public class ImageCache
     {
         try
         {
-            IMAGE_CACHE_ROOT_PATH = getClass().getResource("/cache").getPath() + "/image";
+            //IMAGE_CACHE_ROOT_PATH = getClass().getResource("/cache").getPath() + "/image";
+            IMAGE_CACHE_ROOT_PATH = Launcher.appFilesBasePath + "/cache/image";
+
             File file = new File(IMAGE_CACHE_ROOT_PATH);
             if (!file.exists())
             {

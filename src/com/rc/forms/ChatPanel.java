@@ -1438,8 +1438,6 @@ public class ChatPanel extends ParentAvailablePanel
     {
         final DownloadTask task = new DownloadTask(new HttpUtil.ProgressListener()
         {
-
-
             @Override
             public void onProgress(int progress)
             {

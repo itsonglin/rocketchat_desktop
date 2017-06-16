@@ -23,24 +23,5 @@ class Test extends JFrame
 {
     public static void main(String[] args)
     {
-        SwingUtilities.invokeLater(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                JFrame.setDefaultLookAndFeelDecorated(true);
-                Test frame = new Test();
-                frame.setSize(new Dimension(200, 300));
-                frame.setUndecorated(true);
-
-                /** 设置圆角 */
-                AWTUtilities.setWindowShape(frame, new RoundRectangle2D.Double(
-                        0.0D, 0.0D, frame.getWidth(), frame.getHeight(), 26.0D,
-                        26.0D));
-
-                frame.setVisible(true);
-            }
-
-        });
     }
 }

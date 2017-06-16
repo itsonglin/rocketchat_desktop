@@ -1,5 +1,7 @@
 package com.rc.utils;
 
+import com.rc.app.Launcher;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -46,7 +48,9 @@ public class AvatarUtil
 
     static
     {
-        AVATAR_CACHE_ROOT = new Object().getClass().getResource("/cache").getPath() + "/avatar";
+        //AVATAR_CACHE_ROOT = new Object().getClass().getResource("/cache").getPath() + "/avatar";
+        AVATAR_CACHE_ROOT = Launcher.appFilesBasePath + "/cache/avatar";
+
         File file = new File(AVATAR_CACHE_ROOT);
         if (!file.exists())
         {
