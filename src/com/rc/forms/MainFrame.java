@@ -203,6 +203,9 @@ public class MainFrame extends JFrame
         UIManager.put("Panel.font", FontUtil.getDefaultFont());
         UIManager.put("TextArea.font", FontUtil.getDefaultFont());
 
+        //UIManager.put("Panel.background", Colors.WINDOW_BACKGROUND);
+
+
 
         leftPanel = new LeftPanel();
         leftPanel.setPreferredSize(new Dimension(260, currentWindowHeight));
