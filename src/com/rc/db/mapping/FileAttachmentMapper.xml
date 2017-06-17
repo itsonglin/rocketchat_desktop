@@ -3,6 +3,9 @@
         PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="com.rc.db.dao.FileAttachmentDao">
+
+    <cache/>
+
     <insert id="insert">
 		INSERT INTO file_attachment(id, title, link, description)
 		VALUES (#{id}, #{title}, #{link}, #{description})

@@ -3,6 +3,9 @@
 	PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"     
 	"http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="com.rc.db.dao.CurrentUserDao">
+
+	<cache/>
+
 	<insert id="insert">
 		INSERT INTO current_user(userId,username,authToken,password,rawPassword,expireDate, realName, bcrypt, avatarOrigin)
 		VALUES (#{userId},#{username},#{authToken},#{password},#{rawPassword},#{expireDate},#{realName},#{bcrypt},#{avatarOrigin})

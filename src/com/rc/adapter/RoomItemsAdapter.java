@@ -113,6 +113,9 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
 
                     if (selectedViewHolder != viewHolder)
                     {
+                        // 进入房间
+                        enterRoom(item.getRoomId());
+
                         for (RoomItemViewHolder holder : viewHolders)
                         {
                             if (holder != viewHolder)
@@ -120,11 +123,6 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
                                 setBackground(holder, Colors.DARK);
                             }
                         }
-
-                        // 加载房间消息
-                        ChatPanel.getContext().enterRoom(item.getRoomId());
-                        RoomMembersPanel.getContext().setRoomId(item.getRoomId());
-                        TitlePanel.getContext().hideRoomMembersPanel();
 
                         setBackground(viewHolder, Colors.ITEM_SELECTED);
                         selectedViewHolder = viewHolder;
@@ -159,4 +157,14 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         holder.nameBrief.setBackground(color);
         holder.timeUnread.setBackground(color);
     }
+
+    private void enterRoom(String roomId)
+    {
+        // 加载房间消息
+        ChatPanel.getContext().enterRoom(roomId);
+
+        RoomMembersPanel.getContext().setRoomId(roomId);
+        TitlePanel.getContext().hideRoomMembersPanel();
+    }
+
 }

@@ -3,6 +3,9 @@
         PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"
         "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
 <mapper namespace="com.rc.db.dao.MessageDao">
+
+    <cache/>
+
     <insert id="insert">
 		INSERT INTO message(id, roomId, messageContent, groupable, timestamp,
 		senderUsername, senderId, updatedAt, needToResend, progress, deleted, systemMessage,

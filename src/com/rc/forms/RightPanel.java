@@ -43,6 +43,8 @@ public class RightPanel extends JPanel
         chatPanel = new ChatPanel(this);
         roomMembersPanel = new RoomMembersPanel(this);
         tipPanel = new TipPanel(this);
+
+        setBorder(new LineBorder(Colors.SCROLL_BAR_TRACK_LIGHT));
     }
 
     private void initView()

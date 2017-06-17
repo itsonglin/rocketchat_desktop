@@ -274,12 +274,14 @@ public class ChatPanel extends ParentAvailablePanel
         this.roomId = roomId;
         CHAT_ROOM_OPEN_ID = roomId;
         this.room = roomService.findById(roomId);
-        sendReadMessage();
 
+        // 更新房间标题，尤其是成员数
+        updateRoomTitle();
+
+        // 更新消息列表
         this.notifyDataSetChanged();
 
-        // 更新房间，尤其是成员数
-        updateRoomTitle();
+        sendReadMessage();
     }
 
     private void updateRoomTitle()
@@ -785,11 +787,19 @@ public class ChatPanel extends ParentAvailablePanel
      */
     public void notifyDataSetChanged()
     {
-        messageItems.clear();
-
-        initData();
-        messagePanel.setVisible(true);
-        messageEditorPanel.setVisible(true);
+        messagePanel.getMessageListView().setVisible(false);
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                messageItems.clear();
+                initData();
+                messagePanel.setVisible(true);
+                messageEditorPanel.setVisible(true);
+                messagePanel.getMessageListView().setVisible(true);
+            }
+        }).start();
     }
 
     /**
