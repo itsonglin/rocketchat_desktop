@@ -4,6 +4,7 @@ import com.rc.components.Colors;
 import com.rc.components.message.MessagePopupMenu;
 import com.rc.forms.UserInfoPopup;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.AvatarUtil;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -107,8 +108,8 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
             });
         } else
         {
-            ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-            imageIcon.setImage(imageIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+            ImageIcon imageIcon = new ImageIcon();
+            imageIcon.setImage(AvatarUtil.createOrLoadUserAvatar(name).getScaledInstance(30, 30, Image.SCALE_SMOOTH));
             viewHolder.avatar.setIcon(imageIcon);
 
             UserInfoPopup userInfoPopup = new UserInfoPopup(name);

@@ -213,7 +213,6 @@ public class RCListView extends JScrollPane
      */
     public void notifyDataSetChanged(boolean keepSize)
     {
-        System.out.println("重绘");
         if (keepSize)
         {
             if (lastItemCount == adapter.getCount())
@@ -266,6 +265,13 @@ public class RCListView extends JScrollPane
     {
         return contentPanel.getComponent(n);
     }
+
+    public JPanel getContentPanel()
+    {
+        return contentPanel;
+    }
+
+
 
     public void setScrollToTopListener(ScrollToTopListener listener)
     {

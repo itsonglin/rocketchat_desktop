@@ -1,7 +1,6 @@
-package tasks;
+package com.rc.tasks;
 
 import com.rc.utils.HttpUtil;
-import org.json.JSONObject;
 
 import java.io.IOException;
 

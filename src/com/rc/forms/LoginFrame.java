@@ -1,16 +1,15 @@
 package com.rc.forms;
 
+import com.rc.app.Launcher;
 import com.rc.components.*;
 import com.rc.db.model.CurrentUser;
 import com.rc.db.service.CurrentUserService;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.*;
-import com.rc.websocket.WebSocketClient;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONObject;
-import tasks.HttpGetTask;
-import tasks.HttpPostTask;
-import tasks.HttpResponseListener;
+import com.rc.tasks.HttpPostTask;
+import com.rc.tasks.HttpResponseListener;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -265,7 +264,7 @@ public class LoginFrame extends JFrame
 
             task.addRequestParam("username", username.getText());
             task.addRequestParam("password", new String(password.getPassword()));
-            task.execute("https://rc.shls-leasing.com/api/v1/login");
+            task.execute(Launcher.HOSTNAME + "/api/v1/login");
         }
     }
 

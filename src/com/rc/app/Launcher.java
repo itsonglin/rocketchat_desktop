@@ -1,6 +1,5 @@
 package com.rc.app;
 
-import com.rc.db.model.Message;
 import com.rc.db.service.*;
 import com.rc.forms.LoginFrame;
 import com.rc.forms.MainFrame;
@@ -8,8 +7,6 @@ import com.rc.utils.DbUtils;
 import org.apache.ibatis.session.SqlSession;
 
 import javax.swing.*;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by song on 09/06/2017.
@@ -24,7 +21,10 @@ public class Launcher
     public static ImageAttachmentService imageAttachmentService;
     public static FileAttachmentService fileAttachmentService;
 
-    public static final String HOSTNAME = "https://rc.shls-leasing.com";
+    public static final String HOSTNAME = "https://chat1.shls-leasing.com";
+
+    public static String userHome;
+    public static String appFilesBasePath;
 
 
     static
@@ -41,6 +41,8 @@ public class Launcher
 
     public void launch()
     {
+        config();
+
         JFrame frame;
         // 原来登录过
         if (checkLoginInfo())
@@ -54,6 +56,13 @@ public class Launcher
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
         frame.setVisible(true);
+    }
+
+    private void config()
+    {
+        userHome = System.getProperty("user.home");
+
+        appFilesBasePath = userHome + "/Helichat";
     }
 
     private boolean checkLoginInfo()

@@ -1,12 +1,11 @@
-package tasks;
+package com.rc.tasks;
 
 import com.rc.utils.HttpUtil;
-import org.json.JSONObject;
 
 /**
- * Created by song on 08/06/2017.
+ * Created by song on 2017/6/13.
  */
-public class HttpGetTask extends HttpTask
+public class HttpBytesGetTask extends HttpTask
 {
     @Override
     public void execute(String url)
@@ -16,14 +15,12 @@ public class HttpGetTask extends HttpTask
             @Override
             public void run()
             {
-                String ret = HttpUtil.get(url, headers, requestParams);
-                JSONObject retJson = new JSONObject(ret);
+                byte[] ret = HttpUtil.getBytes(url, headers, requestParams);
                 if (listener != null)
                 {
-                    listener.onResult(retJson);
+                    listener.onResult(ret);
                 }
             }
         }).start();
-
     }
 }

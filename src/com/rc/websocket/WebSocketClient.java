@@ -13,19 +13,16 @@ import com.rc.forms.RoomsPanel;
 import com.rc.websocket.handler.StreamNotifyUserCollectionHandler;
 import com.rc.websocket.handler.StreamRoomMessagesHandler;
 import com.rc.websocket.handler.WebSocketListenerAdapter;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import sun.security.krb5.Realm;
-import tasks.HttpGetTask;
-import tasks.HttpResponseListener;
+import com.rc.tasks.HttpGetTask;
+import com.rc.tasks.HttpResponseListener;
 
 import javax.net.ssl.SSLContext;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -806,13 +803,13 @@ public class WebSocketClient
                         {
                             FileAttachment fileAttachment = new FileAttachment();
                             fileAttachment.setId(message.getJSONObject("file").getString("_id"));
-                            fileAttachment.setTitle(attachment.getString("title"));
+                            fileAttachment.setTitle(attachment.getString("title").substring(15));
                             fileAttachment.setDescription(attachment.getString("description"));
                             fileAttachment.setLink(attachment.getString("title_link"));
                             //dbMessage.getFileAttachments().add(fileAttachment);
                             dbMessage.setFileAttachmentId(fileAttachment.getId());
                             //dbMessage.setMessageContent(fileAttachment.getTitle().replace("File Uploaded:", ""));
-                            messageContent = fileAttachment.getTitle().replace("File Uploaded:", "");
+                            messageContent = fileAttachment.getTitle();
 
                         }
                     }

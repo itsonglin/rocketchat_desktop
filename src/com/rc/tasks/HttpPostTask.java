@@ -1,10 +1,7 @@
-package tasks;
+package com.rc.tasks;
 
 import com.rc.utils.HttpUtil;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by song on 08/06/2017.

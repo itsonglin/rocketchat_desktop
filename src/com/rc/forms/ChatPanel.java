@@ -1,9 +1,6 @@
 package com.rc.forms;
 
-import com.rc.adapter.message.BaseMessageViewHolder;
-import com.rc.adapter.message.MessageAdapter;
-import com.rc.adapter.message.MessageRightAttachmentViewHolder;
-import com.rc.adapter.message.MessageRightImageViewHolder;
+import com.rc.adapter.message.*;
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
@@ -14,13 +11,16 @@ import com.rc.db.service.*;
 import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.ImageAttachmentItem;
 import com.rc.entity.MessageItem;
+import com.rc.utils.FileCache;
+import com.rc.utils.HttpUtil;
 import com.rc.utils.MimeTypeUtil;
 import com.rc.websocket.WebSocketClient;
+import okhttp3.OkHttpClient;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import tasks.*;
+import com.rc.tasks.*;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -37,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
+import java.util.logging.Level;
 
 /**
  * 右侧聊天面板
@@ -62,6 +63,8 @@ public class ChatPanel extends ParentAvailablePanel
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     private Room room; // 当前房间
     private long firstMessageTimestamp = 0L;
+    // 房间的用户
+    public List<String> roomMembers = new ArrayList<>();
 
 
     private MessageService messageService = Launcher.messageService;
@@ -70,6 +73,7 @@ public class ChatPanel extends ParentAvailablePanel
     private ImageAttachmentService imageAttachmentService = Launcher.imageAttachmentService;
     private FileAttachmentService fileAttachmentService = Launcher.fileAttachmentService;
     public static List<String> uploadingOrDownloadingFiles = new ArrayList<>();
+    private FileCache fileCache;
 
 
     // 当前消息分页数
@@ -83,9 +87,12 @@ public class ChatPanel extends ParentAvailablePanel
 
     private Logger logger = Logger.getLogger(this.getClass());
 
+    private List<String> remoteRoomMemberLoadedRooms = new ArrayList<>();
+
 
     public ChatPanel(JPanel parent)
     {
+
         super(parent);
         context = this;
         currentUser = currentUserService.findAll().get(0);
@@ -94,6 +101,8 @@ public class ChatPanel extends ParentAvailablePanel
         initView();
         initData();
         setListeners();
+
+        fileCache = new FileCache();
     }
 
     private void initComponents()
@@ -266,6 +275,33 @@ public class ChatPanel extends ParentAvailablePanel
         CHAT_ROOM_OPEN_ID = roomId;
         this.room = roomService.findById(roomId);
         sendReadMessage();
+
+        this.notifyDataSetChanged();
+
+        // 更新房间，尤其是成员数
+        updateRoomTitle();
+    }
+
+    private void updateRoomTitle()
+    {
+        String title = room.getName();
+        if (!room.getType().equals("d"))
+        {
+            // 加载本地群成员
+            loadLocalRoomMembers();
+
+            // 远程获取群成员
+            if (!remoteRoomMemberLoadedRooms.contains(roomId))
+            {
+                loadRemoteRoomMembers();
+            }
+
+            title += " (" + (roomMembers.size() + 1) + ")";
+        }
+
+
+        // 更新房间标题
+        TitlePanel.getContext().updateRoomTitle(title);
     }
 
     /**
@@ -298,26 +334,31 @@ public class ChatPanel extends ParentAvailablePanel
         }
     }
 
+    private long loadRemoteStartTime = 0;
+
     /**
-     * 从服务器拿更多历史消，如从本地第一条消息起一个月内的消息
+     * 从服务器拿更多历史消息，如从本地第一条消息起一个月内的消息
      */
     private void loadMoreHistoryFromRemote(boolean firstRequest)
     {
         long firstTime = messageService.findFirstMessageTime(roomId);
 
         // 再从服务器拿50天前的消息
-        final long[] start = {firstTime};
+        loadRemoteStartTime = firstTime;
+
         long end = firstTime - TIMESTAMP_8_HOURS;
+
+
         // 数据库中没有该房间的任何消息
-        if (start[0] < 0)
+        if (loadRemoteStartTime < 0)
         {
-            start[0] = System.currentTimeMillis() - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
+            loadRemoteStartTime = System.currentTimeMillis() - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
             //end = System.currentTimeMillis() - TIMESTAMP_8_HOURS;
             end = 0;
         }
         else
         {
-            start[0] = firstTime - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
+            loadRemoteStartTime = firstTime - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
         }
 
         // 如果是第一次打开该房间，且第一次拿到的历史消息数小于10条，则持续拿
@@ -331,12 +372,13 @@ public class ChatPanel extends ParentAvailablePanel
                     // 如果一个月内没有消息，继续拿
                     if (newMessageCount < 10)
                     {
-                        start[0] = start[0] - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
+                        long lastStartTime = loadRemoteStartTime - 1;
+                        loadRemoteStartTime = loadRemoteStartTime - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
 
-                        if (start[0] > (1483200000000L - TIMESTAMP_8_HOURS)) // 2017/1/1的时间
+                        if (loadRemoteStartTime > (1483200000000L - TIMESTAMP_8_HOURS)) // 2017/1/1的时间
                         {
                             System.out.println("一个月内没有消息或拿到的消息少于10条，继续拿");
-                            loadRemoteHistory(start[0], 0, false, firstRequest, this);
+                            loadRemoteHistory(loadRemoteStartTime, lastStartTime, false, firstRequest, this);
                         }
                         else
                         {
@@ -346,12 +388,12 @@ public class ChatPanel extends ParentAvailablePanel
                 }
             };
 
-            loadRemoteHistory(start[0], end, false, firstRequest, listener);
+            loadRemoteHistory(loadRemoteStartTime, end, false, firstRequest, listener);
         }
         // 滚动到顶部时的请求
         else
         {
-            loadRemoteHistory(start[0], end, false, firstRequest, null);
+            loadRemoteHistory(loadRemoteStartTime, end, false, firstRequest, null);
         }
     }
 
@@ -607,11 +649,11 @@ public class ChatPanel extends ParentAvailablePanel
                     {
                         FileAttachment fileAttachment = new FileAttachment();
                         fileAttachment.setId(message.getJSONObject("file").getString("_id"));
-                        fileAttachment.setTitle(attachment.getString("title"));
+                        fileAttachment.setTitle(attachment.getString("title").substring(15));
                         fileAttachment.setDescription(attachment.getString("description"));
                         fileAttachment.setLink(attachment.getString("title_link"));
                         //dbMessage.getFileAttachments().add(fileAttachment);
-                        messageContent = fileAttachment.getTitle().replace("File Uploaded:", "");
+                        messageContent = fileAttachment.getTitle();
 
                         dbMessage.setFileAttachmentId(fileAttachment.getId());
                         fileAttachmentService.insertOrUpdate(fileAttachment);
@@ -930,14 +972,21 @@ public class ChatPanel extends ParentAvailablePanel
      */
     private int findMessageItemReverse(String messageId)
     {
-        for (int i = messageItems.size() - 1; i >= 0; i--)
+        // 浅复制一份messageItems来排序，因为原本messageItems顺序并不是按照时间顺序排列的
+        List<MessageItem> tmpItems = new ArrayList<>();
+        tmpItems.addAll(messageItems);
+        Collections.sort(tmpItems);
+
+        for (int i = tmpItems.size() - 1; i >= 0; i--)
         {
             // 找到消息列表中对应的消息
-            if (messageItems.get(i).getId().equals(messageId))
+            if (tmpItems.get(i).getId().equals(messageId))
             {
                 return i;
             }
         }
+
+        tmpItems = null;
 
         return -1;
     }
@@ -1122,6 +1171,7 @@ public class ChatPanel extends ParentAvailablePanel
 
         //mAdapter.addItem(item);
         addMessageItemToEnd(item);
+
         //recyclerview.smoothScrollToPosition(mAdapter.getItemCount() - 1);
 
         //editText.setText("");
@@ -1216,6 +1266,29 @@ public class ChatPanel extends ParentAvailablePanel
         }
     }
 
+    /**
+     * 设置附件点击监听
+     *
+     * @param viewHolder
+     */
+    private void setMyUploadAttachmentClickListener(MessageAttachmentViewHolder viewHolder, String uploadFilePath)
+    {
+        MouseAdapter listener = new MouseAdapter()
+        {
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON1)
+                {
+                    openFileWithDefaultApplication(uploadFilePath);
+                }
+            }
+        };
+
+        viewHolder.attachmentPanel.addMouseListener(listener);
+        viewHolder.attachmentTitle.addMouseListener(listener);
+    }
+
     private void sendDataPart(int partIndex, List<byte[]> dataParts, String baseUploadUrl, String type, UploadTaskCallback callback)
     {
         logger.debug("发送第" + partIndex + "个分块，共" + dataParts.size() + "个分块");
@@ -1249,6 +1322,7 @@ public class ChatPanel extends ParentAvailablePanel
 
     /**
      * 分割大文件，分块上传
+     *
      * @param file
      * @return
      */
@@ -1293,8 +1367,293 @@ public class ChatPanel extends ParentAvailablePanel
 
     private BaseMessageViewHolder getViewHolderByPosition(int position)
     {
-        return (BaseMessageViewHolder) messagePanel.getMessageListView().getItem(position);
+        if (position < 0)
+        {
+            return null;
+        }
+
+        try
+        {
+            return (BaseMessageViewHolder) messagePanel.getMessageListView().getItem(position);
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
+
+
+    /**
+     * 打开文件，如果文件不存在，则下载
+     *
+     * @param messageId
+     */
+    public void downloadOrOpenFile(String messageId)
+    {
+        Message message = messageService.findById(messageId);
+        FileAttachment fileAttachment;
+        if (message == null)
+        {
+            // 如果没有messageId对应的message, 尝试寻找messageId对应的file attachment，因为在自己上传文件时，此时是以fileId作为临时的messageId
+            fileAttachment = fileAttachmentService.findById(messageId);
+        }
+        else
+        {
+            fileAttachment = fileAttachmentService.findById(message.getFileAttachmentId());
+        }
+
+        if (fileAttachment == null)
+        {
+            JOptionPane.showMessageDialog(null, "无效的附件消息", "消息无效", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String filepath = fileCache.tryGetFileCache(fileAttachment.getId(), fileAttachment.getTitle());
+        if (filepath == null)
+        {
+            // 服务器上的文件
+            if (fileAttachment.getLink().startsWith("/file-upload"))
+            {
+                downloadFile(fileAttachment, messageId);
+            }
+            // 本地的文件
+            else
+            {
+                openFileWithDefaultApplication(fileAttachment.getLink());
+            }
+        }
+        else
+        {
+            openFileWithDefaultApplication(filepath);
+        }
+    }
+
+    /**
+     * 下载文件
+     *
+     * @param fileAttachment
+     * @param messageId
+     */
+    private void downloadFile(FileAttachment fileAttachment, String messageId)
+    {
+        final DownloadTask task = new DownloadTask(new HttpUtil.ProgressListener()
+        {
+            @Override
+            public void onProgress(int progress)
+            {
+                int pos = findMessageItemReverse(messageId);
+                MessageAttachmentViewHolder holder = (MessageAttachmentViewHolder) getViewHolderByPosition(pos);
+
+                logger.debug("文件下载进度：" + progress);
+                if (pos < 0 || holder == null)
+                {
+                    return;
+                }
+
+                if (progress >= 0 && progress < 100)
+                {
+                    holder.progressBar.setVisible(true);
+                    holder.progressBar.setValue(progress);
+                }
+                else if (progress >= 100)
+                {
+                    holder.progressBar.setVisible(false);
+                    holder.sizeLabel.setVisible(true);
+                }
+            }
+        });
+
+        task.setListener(new HttpResponseListener<byte[]>()
+        {
+            @Override
+            public void onResult(byte[] data)
+            {
+                //System.out.println(data);
+                String path = fileCache.cacheFile(fileAttachment.getId(), fileAttachment.getTitle(), data);
+                System.out.println("文件已缓存在 " + path);
+
+                int pos = findMessageItemReverse(messageId);
+                MessageAttachmentViewHolder holder = (MessageAttachmentViewHolder) getViewHolderByPosition(pos);
+
+                if (pos < 0 || holder == null)
+                {
+                    return;
+                }
+                holder.sizeLabel.setText(fileCache.fileSizeString(path));
+            }
+        });
+
+        String url = Launcher.HOSTNAME + fileAttachment.getLink() + "?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
+        task.execute(url);
+    }
+
+    /**
+     * 使用默认程序打开文件
+     *
+     * @param path
+     */
+    private void openFileWithDefaultApplication(String path)
+    {
+        try
+        {
+            Desktop.getDesktop().open(new File(path));
+        }
+        catch (IOException e1)
+        {
+            JOptionPane.showMessageDialog(null, "文件打开失败，没有找到关联的应用程序", "打开失败", JOptionPane.ERROR_MESSAGE);
+            e1.printStackTrace();
+        }
+    }
+
+    /**
+     * 加载本地房间用户
+     */
+    private void loadLocalRoomMembers()
+    {
+        roomMembers.clear();
+        String members = room.getMember();
+
+        if (members != null)
+        {
+            String creator = room.getCreatorName();
+            String[] userArr = members.split(",");
+            for (int i = 0; i < userArr.length; i++)
+            {
+                if (!roomMembers.contains(userArr[i]) && !userArr[i].equals(creator))
+                {
+                    roomMembers.add(userArr[i]);
+                }
+            }
+        }
+    }
+
+    /**
+     * 加载远程房间用户
+     */
+    private void loadRemoteRoomMembers()
+    {
+        remoteRoomMemberLoadedRooms.add(roomId);
+
+        logger.debug("远程获取房间 " + room.getName() + " 的群成员");
+        String url = null;
+        String arrayName = "";
+        //room = roomService.findById(roomId);
+        if (room.getType().equals("c"))
+        {
+            url = Launcher.HOSTNAME + "/api/v1/channels.info?roomId=" + room.getRoomId();
+            arrayName = "channel";
+        }
+        else if (room.getType().equals("p"))
+        {
+            url = Launcher.HOSTNAME + "/api/v1/groups.info?roomId=" + room.getRoomId();
+            arrayName = "group";
+        }
+        else if (room.getType().equals("d"))
+        {
+            return;
+        }
+
+        HttpGetTask task = new HttpGetTask();
+        task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+        task.addHeader("X-User-Id", currentUser.getUserId());
+
+        final String finalArrayName = arrayName;
+        task.setListener(new HttpResponseListener<JSONObject>()
+        {
+            @Override
+            public void onResult(JSONObject retJson)
+            {
+                String creator = "";
+                try
+                {
+                    JSONObject obj = retJson.getJSONObject(finalArrayName);
+                    if (obj.has("u"))
+                    {
+                        creator = obj.getJSONObject("u").getString("username");
+                        if (!roomMembers.contains(creator))
+                        {
+                            roomMembers.add(creator);
+                        }
+                        //roomService.updateCreatorUsername(Realm.getDefaultInstance(), room.getRoomId(), creator);
+                        room.setCreatorName(creator);
+                        roomService.update(room);
+                    }
+                    boolean newUserAdded = false;
+                    boolean userRemoved = false;
+                    JSONArray members = obj.getJSONArray("usernames");
+                    List<String> memberList = new ArrayList<>();
+                    for (int i = 0; i < members.length(); i++)
+                    {
+                        memberList.add(members.getString(i));
+
+                        if (!roomMembers.contains(members.getString(i)))
+                        {
+                            roomMembers.add(members.getString(i));
+                            newUserAdded = true;
+                        }
+                    }
+
+                    List<String> removedList = new ArrayList<String>();
+                    for (String name : roomMembers)
+                    {
+                        if (!memberList.contains(name))
+                        {
+                            removedList.add(name);
+                            userRemoved = true;
+                        }
+                    }
+                    roomMembers.removeAll(removedList);
+
+
+                    // 有人加入或移除时，更新本地信息
+                    if (newUserAdded || userRemoved)
+                    {
+                        // 更新本地members
+                        updateLocalMembers(roomMembers);
+
+                        // 更新房间名中的成员数
+                        updateRoomTitle();
+                    }
+
+                    roomMembers.remove(creator);
+
+
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        task.execute(url);
+    }
+
+    /**
+     * 更新本地房间成员
+     *
+     * @param users
+     */
+    private void updateLocalMembers(List<String> users)
+    {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < users.size(); i++)
+        {
+            sb.append(users.get(i));
+            if (i < users.size() - 1)
+            {
+                sb.append(",");
+            }
+        }
+
+        room.setMember(sb.toString());
+        roomService.update(room);
+        //roomService.updateMembers(Realm.getDefaultInstance(), room.getRoomId(), sb.toString());
+        //room = roomService.findById(realm, room.getRoomId());
+        //System.out.println(room);
+
+    }
+
 }
 
 interface RemoteHistoryReceivedListener

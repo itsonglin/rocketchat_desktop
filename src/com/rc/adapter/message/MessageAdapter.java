@@ -4,19 +4,18 @@ import com.rc.adapter.BaseAdapter;
 import com.rc.adapter.ViewHolder;
 import com.rc.app.Launcher;
 import com.rc.db.model.CurrentUser;
+import com.rc.db.model.FileAttachment;
 import com.rc.db.model.Message;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
+import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.MessageItem;
 import com.rc.forms.ChatPanel;
 import com.rc.forms.MainFrame;
 import com.rc.forms.UserInfoPopup;
 import com.rc.helper.AttachmentIconHelper;
 import com.rc.listener.AbstractMouseListener;
-import com.rc.utils.AvatarUtil;
-import com.rc.utils.IconUtil;
-import com.rc.utils.ImageCache;
-import com.rc.utils.TimeUtil;
+import com.rc.utils.*;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -39,6 +38,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     private ImageCache imageCache;
     private MessageService messageService = Launcher.messageService;
     private Logger logger = Logger.getLogger(this.getClass());
+    private FileCache fileCache;
 
 
     public MessageAdapter(List<MessageItem> messageItems)
@@ -46,6 +46,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         this.messageItems = messageItems;
         currentUser = currentUserService.findAll().get(0);
         imageCache = new ImageCache();
+        fileCache = new FileCache();
     }
 
     @Override
@@ -148,6 +149,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
         holder.sender.setText(item.getSenderUsername());
+
+        setAttachmentClickListener(holder, item);
+        processAttachmentSize(holder, item);
     }
 
     private void processRightAttachmentMessage(ViewHolder viewHolder, MessageItem item)
@@ -206,6 +210,54 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 super.mouseClicked(e);
             }
         });
+
+        setAttachmentClickListener(holder, item);
+        processAttachmentSize(holder, item);
+    }
+
+    /**
+     * 设置附件点击监听
+     * @param viewHolder
+     * @param item
+     */
+    private void setAttachmentClickListener(MessageAttachmentViewHolder viewHolder, MessageItem item)
+    {
+        MouseAdapter listener = new MouseAdapter()
+        {
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON1)
+                {
+                    ChatPanel.getContext().downloadOrOpenFile(item.getId());
+                }
+            }
+        };
+
+        viewHolder.attachmentPanel.addMouseListener(listener);
+        viewHolder.attachmentTitle.addMouseListener(listener);
+    }
+
+    private void processAttachmentSize(MessageAttachmentViewHolder viewHolder, MessageItem item)
+    {
+        FileAttachmentItem attachment = item.getFileAttachment();
+        String path;
+        // 远程服务器文件
+        if (attachment.getLink().startsWith("/file-upload"))
+        {
+            path = fileCache.tryGetFileCache(item.getFileAttachment().getId(), item.getFileAttachment().getTitle());
+        }
+        // 我自己上传的文件
+        else
+        {
+            path = attachment.getLink();
+        }
+
+        if (path != null)
+        {
+            viewHolder.sizeLabel.setVisible(true);
+            viewHolder.sizeLabel.setText(fileCache.fileSizeString(path));
+        }
     }
 
     /**
@@ -313,7 +365,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         {
             imageLabel.setIcon(IconUtil.getIcon(this, "/image/image_loading.gif"));
 
-            imageCache.requestThumbAsynchronously(item.getImageAttachment().getId(), url, new ImageCache.CacheRequestListener()
+            imageCache.requestThumbAsynchronously(item.getImageAttachment().getId(), url, new ImageCache.ImageCacheRequestListener()
             {
                 @Override
                 public void onSuccess(ImageIcon icon, String path)
@@ -343,7 +395,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                imageCache.requestOriginalAsynchronously(item.getImageAttachment().getId(), item.getImageAttachment().getImageUrl(), new ImageCache.CacheRequestListener()
+                imageCache.requestOriginalAsynchronously(item.getImageAttachment().getId(), item.getImageAttachment().getImageUrl(), new ImageCache.ImageCacheRequestListener()
                 {
                     @Override
                     public void onSuccess(ImageIcon icon, String path)

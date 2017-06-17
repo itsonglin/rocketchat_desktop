@@ -1,5 +1,6 @@
 package com.rc.utils;
 
+import com.rc.app.Launcher;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.apache.log4j.Logger;
@@ -26,7 +27,9 @@ public class ImageCache
     {
         try
         {
-            IMAGE_CACHE_ROOT_PATH = getClass().getResource("/").getPath() + "/cache/image";
+            //IMAGE_CACHE_ROOT_PATH = getClass().getResource("/cache").getPath() + "/image";
+            IMAGE_CACHE_ROOT_PATH = Launcher.appFilesBasePath + "/cache/image";
+
             File file = new File(IMAGE_CACHE_ROOT_PATH);
             if (!file.exists())
             {
@@ -60,7 +63,7 @@ public class ImageCache
      * @param url
      * @param listener
      */
-    public void requestThumbAsynchronously(String identify, String url, CacheRequestListener listener)
+    public void requestThumbAsynchronously(String identify, String url, ImageCacheRequestListener listener)
     {
         requestImage(THUMB, identify, url, listener);
 
@@ -73,13 +76,13 @@ public class ImageCache
      * @param url
      * @param listener
      */
-    public void requestOriginalAsynchronously(String identify, String url, CacheRequestListener listener)
+    public void requestOriginalAsynchronously(String identify, String url, ImageCacheRequestListener listener)
     {
         requestImage(ORIGINAL, identify, url, listener);
     }
 
 
-    private void requestImage(int requestType, String identify, String url, CacheRequestListener listener)
+    private void requestImage(int requestType, String identify, String url, ImageCacheRequestListener listener)
     {
         new Thread(new Runnable()
         {
@@ -224,7 +227,7 @@ public class ImageCache
     }
 
 
-    public interface CacheRequestListener
+    public interface ImageCacheRequestListener
     {
         void onSuccess(ImageIcon icon, String path);
 

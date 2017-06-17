@@ -100,6 +100,28 @@ public class TitlePanel extends ParentAvailablePanel
         });
     }
 
+    /**
+     * 隐藏群成员面板
+     */
+    public void hideRoomMembersPanel()
+    {
+        JPanel roomMemberPanel = ((RightPanel) getParentPanel()).getRoomMembersPanel();
+        roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
+        roomMemberPanel.setVisible(false);
+    }
+
+    /**
+     * 显示群成员面板
+     */
+    public void showRoomMembersPanel()
+    {
+        JPanel roomMemberPanel = ((RightPanel) getParentPanel()).getRoomMembersPanel();
+        roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options_restore.png")));
+        roomMemberPanel.setVisible(true);
+    }
+
+
+
     private void initComponents()
     {
         Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
@@ -188,12 +210,10 @@ public class TitlePanel extends ParentAvailablePanel
     }
 
 
-    public void updateRoomTitle(String roomId)
+    public void updateRoomTitle(String title)
     {
-        room = roomService.findById(roomId);
-        this.titleLabel.setText(room.getName());
+        this.titleLabel.setText(title);
 
-        //titlePanel.setVisible(true);
         roomInfoButton.setVisible(true);
         RightPanel parent = (RightPanel) getParent();
         parent.showPanel(RightPanel.MESSAGE);

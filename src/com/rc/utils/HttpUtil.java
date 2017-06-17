@@ -222,16 +222,20 @@ public class HttpUtil
 
         Request request = reqBuilder.build();
         byte[] data = null;
+        Response response = null;
         try
         {
-            Response response = client.newCall(request).execute();
+            response = client.newCall(request).execute();
             if (response.isSuccessful())
             {
                 InputStream inputStream = response.body().byteStream();
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                 byte[] buff = new byte[2048000];
+
                 int len;
                 long total = response.body().contentLength();
+                //total = response.body().bytes().length;
+                //long total = inputStream.available();
                 long sum = 0L;
                 while ((len = inputStream.read(buff)) > -1)
                 {
@@ -244,7 +248,6 @@ public class HttpUtil
                         listener.onProgress(progress);
                     }
 
-
                 }
 
                 data = outputStream.toByteArray();
@@ -255,6 +258,10 @@ public class HttpUtil
         } catch (IOException e)
         {
             e.printStackTrace();
+        }
+        finally
+        {
+            response.close();
         }
 
         return data;
