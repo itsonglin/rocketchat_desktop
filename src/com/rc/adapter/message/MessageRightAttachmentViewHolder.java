@@ -2,6 +2,7 @@ package com.rc.adapter.message;
 
 import com.rc.adapter.ViewHolder;
 import com.rc.components.*;
+import com.rc.components.message.NinePatchImageIcon;
 import com.rc.components.message.RCRightAttachmentMessageBubble;
 import com.rc.components.message.RCRightImageMessageBubble;
 import com.rc.forms.MainFrame;
@@ -10,6 +11,8 @@ import com.rc.utils.FontUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by song on 17-6-3.
@@ -17,7 +20,8 @@ import java.awt.*;
 public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolder
 {
     public JLabel resend = new JLabel(); // 重发按钮
-    public RCRightAttachmentMessageBubble attachmentBubble = new RCRightAttachmentMessageBubble();
+    //public RCRightAttachmentMessageBubble attachmentBubble = new RCRightAttachmentMessageBubble();
+
 
     public MessageRightAttachmentViewHolder()
     {
@@ -27,11 +31,10 @@ public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolde
 
     private void initComponents()
     {
+        messageBubble = new RCRightAttachmentMessageBubble();
+
         timePanel.setBackground(Colors.WINDOW_BACKGROUND);
         messageAvatarPanel.setBackground(Colors.WINDOW_BACKGROUND);
-
-        int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.427);
-        attachmentTitle = new SizeAutoAdjustTextArea(maxWidth);
 
         time.setForeground(Colors.FONT_GRAY);
         time.setFont(FontUtil.getDefaultFont(12));
@@ -58,10 +61,11 @@ public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolde
         progressBar.setValue(5);
         progressBar.setUI(new GradientProgressBarUI());
 
-        attachmentBubble.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        messageBubble.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         sizeLabel.setFont(FontUtil.getDefaultFont(12));
         sizeLabel.setForeground(Colors.FONT_GRAY);
+
     }
 
     private void initView()
@@ -77,13 +81,13 @@ public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolde
         attachmentPanel.add(progressBar, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL).setAnchor(GBC.SOUTH).setInsets(0, 8, 5, 5));
         attachmentPanel.add(sizeLabel, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL).setAnchor(GBC.SOUTH).setInsets(-20,8,0,0));
 
-        attachmentBubble.add(attachmentPanel);
+        messageBubble.add(attachmentPanel);
 
 
         JPanel resendAttachmentPanel = new JPanel();
         resendAttachmentPanel.setBackground(Colors.WINDOW_BACKGROUND);
         resendAttachmentPanel.add(resend, BorderLayout.WEST);
-        resendAttachmentPanel.add(attachmentBubble, BorderLayout.CENTER);
+        resendAttachmentPanel.add(messageBubble, BorderLayout.CENTER);
 
         messageAvatarPanel.setLayout(new GridBagLayout());
         messageAvatarPanel.add(resendAttachmentPanel, new GBC(1, 0).setWeight(1000, 1)

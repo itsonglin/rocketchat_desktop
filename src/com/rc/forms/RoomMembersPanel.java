@@ -51,12 +51,17 @@ public class RoomMembersPanel extends ParentAvailablePanel
     private void initComponents()
     {
         setBorder(new LineBorder(Colors.LIGHT_GRAY));
+        setBackground(Colors.FONT_WHITE);
 
         setPreferredSize(new Dimension(ROOM_MEMBER_PANEL_WIDTH, MainFrame.getContext().currentWindowHeight));
         setVisible(false);
         listView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
+        listView.setContentPanelBackground(Colors.FONT_WHITE);
 
         operationPanel.setPreferredSize(new Dimension(60, 80));
+        operationPanel.setBackground(Colors.FONT_WHITE);
+
+
 
         leaveButton.setText("退出群聊");
         leaveButton.setForeground(Colors.RED);
@@ -119,6 +124,18 @@ public class RoomMembersPanel extends ParentAvailablePanel
         }
         else
         {
+            if (isRoomCreator())
+            {
+                members.remove("添加成员");
+                members.add("添加成员");
+
+                if (members.size() > 2)
+                {
+                    members.remove("删除成员");
+                    members.add("删除成员");
+                }
+            }
+
             String roomMembers = room.getMember();
             if (room.getCreatorName() != null)
             {
@@ -134,18 +151,6 @@ public class RoomMembersPanel extends ParentAvailablePanel
                     {
                         members.add(userArr[i]);
                     }
-                }
-            }
-
-            if (isRoomCreator())
-            {
-                members.remove("添加成员");
-                members.add("添加成员");
-
-                if (members.size() > 2)
-                {
-                    members.remove("删除成员");
-                    members.add("删除成员");
                 }
             }
         }

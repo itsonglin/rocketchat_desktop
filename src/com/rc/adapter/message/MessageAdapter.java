@@ -234,7 +234,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
 
         listView.setScrollHiddenOnMouseLeave(holder.attachmentPanel);
-        listView.setScrollHiddenOnMouseLeave(holder.attachmentBubble);
+        listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
         listView.setScrollHiddenOnMouseLeave(holder.attachmentTitle);
     }
 

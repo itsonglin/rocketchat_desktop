@@ -10,7 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 /**
- * 文本气泡
+ * 附件气泡
  *
  * Created by song on 17-6-3.
  */
@@ -49,19 +49,31 @@ public class RCAttachmentMessageBubble extends JPanel
             @Override
             public void mouseEntered(MouseEvent e)
             {
-                setBackgroundIcon(backgroundActiveIcon);
-                RCAttachmentMessageBubble.this.repaint();
-
+                setActiveStatus(true);
             }
 
             @Override
             public void mouseExited(MouseEvent e)
             {
-                setBackgroundIcon(backgroundNormalIcon);
-                RCAttachmentMessageBubble.this.repaint();
+                setActiveStatus(false);
             }
         });
     }
+
+    public void setActiveStatus(boolean status)
+    {
+        if (status)
+        {
+            setBackgroundIcon(backgroundActiveIcon);
+        }
+        else
+        {
+            setBackgroundIcon(backgroundNormalIcon);
+        }
+
+        RCAttachmentMessageBubble.this.repaint();
+    }
+
 
     public NinePatchImageIcon getBackgroundNormalIcon()
     {
