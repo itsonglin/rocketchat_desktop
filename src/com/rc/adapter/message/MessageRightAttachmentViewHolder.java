@@ -17,7 +17,7 @@ import java.awt.*;
 public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolder
 {
     public JLabel resend = new JLabel(); // 重发按钮
-    private RCRightAttachmentMessageBubble attachmentBubble = new RCRightAttachmentMessageBubble();
+    public RCRightAttachmentMessageBubble attachmentBubble = new RCRightAttachmentMessageBubble();
 
     public MessageRightAttachmentViewHolder()
     {
@@ -75,7 +75,7 @@ public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolde
         attachmentPanel.add(attachmentTitle, new GBC(1, 0).setWeight(100, 1).setAnchor(GBC.NORTH)
                 .setInsets(5, 5, 0, 5));
         attachmentPanel.add(progressBar, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL).setAnchor(GBC.SOUTH).setInsets(0, 8, 5, 5));
-        attachmentPanel.add(sizeLabel, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL).setAnchor(GBC.SOUTH).setInsets(-20,8,3,0));
+        attachmentPanel.add(sizeLabel, new GBC(1, 1).setWeight(1, 1).setFill(GBC.HORIZONTAL).setAnchor(GBC.SOUTH).setInsets(-20,8,0,0));
 
         attachmentBubble.add(attachmentPanel);
 

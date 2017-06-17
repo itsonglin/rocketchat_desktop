@@ -19,7 +19,7 @@ public class MessageLeftImageViewHolder extends BaseMessageViewHolder
     //public JLabel avatar = new JLabel();
     //public JLabel time = new JLabel();
     public JLabel image = new JLabel();
-    private RCLeftImageMessageBubble imageBubble = new RCLeftImageMessageBubble();
+    public RCLeftImageMessageBubble imageBubble = new RCLeftImageMessageBubble();
     private JPanel timePanel = new JPanel();
     private JPanel messageAvatarPanel = new JPanel();
 

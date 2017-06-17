@@ -109,7 +109,7 @@ public class ChatPanel extends ParentAvailablePanel
     {
         messagePanel = new MessagePanel(this);
         messagePanel.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.LIGHT_GRAY));
-        adapter = new MessageAdapter(messageItems);
+        adapter = new MessageAdapter(messageItems, messagePanel.getMessageListView());
         messagePanel.getMessageListView().setAdapter(adapter);
 
         messageEditorPanel = new MessageEditorPanel(this);
@@ -1118,7 +1118,7 @@ public class ChatPanel extends ParentAvailablePanel
 
         // 发送的是图片
         int[] bounds;
-        String name = uploadFilename.substring(uploadFilename.lastIndexOf("/") + 1); // 文件名
+        String name = uploadFilename.substring(uploadFilename.lastIndexOf(File.separator) + 1); // 文件名
 
         FileAttachment fileAttachment = null;
         ImageAttachment imageAttachment = null;
@@ -1147,6 +1147,7 @@ public class ChatPanel extends ParentAvailablePanel
 
             fileAttachment = new FileAttachment();
             fileAttachment.setId(fileId);
+            System.out.println(File.separator);
             fileAttachment.setLink(uploadFilename);
             fileAttachment.setTitle(name);
             //item.getFileAttachments().add(new FileAttachmentItem(fileAttachment));
@@ -1250,11 +1251,17 @@ public class ChatPanel extends ParentAvailablePanel
                                 {
                                     MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
                                     //Log.e("progress", messageItems.get(i).getId() + " --- position = " + i + " ---- " + progress);
+
+                                    // 隐藏"等待上传"，并显示进度条
+                                    holder.sizeLabel.setVisible(false);
                                     holder.progressBar.setVisible(true);
                                     holder.progressBar.setValue(progress);
+
                                     if (progress >= 100)
                                     {
                                         holder.progressBar.setVisible(false);
+                                        holder.sizeLabel.setVisible(true);
+                                        holder.sizeLabel.setText(fileCache.fileSizeString(uploadFilename));
                                     }
                                 }
 

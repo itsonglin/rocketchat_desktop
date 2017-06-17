@@ -5,6 +5,7 @@ import com.rc.utils.FontUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -49,30 +50,15 @@ public class RCTextMessageBubble extends JTextArea
 
     private void setListener()
     {
-        addMouseListener(new MouseListener()
+        addMouseListener(new MouseAdapter()
         {
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e)
-            {
-
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e)
-            {
-            }
 
             @Override
             public void mouseEntered(MouseEvent e)
             {
                 setBackgroundIcon(backgroundActiveIcon);
                 repaint();
+                super.mouseEntered(e);
             }
 
             @Override
@@ -80,6 +66,7 @@ public class RCTextMessageBubble extends JTextArea
             {
                 setBackgroundIcon(backgroundNormalIcon);
                 repaint();
+                super.mouseExited(e);
             }
         });
     }

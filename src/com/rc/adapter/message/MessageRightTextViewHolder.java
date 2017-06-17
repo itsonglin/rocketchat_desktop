@@ -70,13 +70,13 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
             @Override
             public void mouseReleased(MouseEvent e)
             {
-                /*System.out.println(e);
+                System.out.println(e);
                 System.out.println(e.getX() + ", " + e.getY() + ", " + text.getWidth() + ", " + text.getHeight());
 
                 if (e.getX() > text.getWidth() || e.getY() > text.getHeight())
                 {
                     messageBubble.setBackgroundIcon(messageBubble.getBackgroundNormalIcon());
-                }*/
+                }
                 super.mouseReleased(e);
             }
 
@@ -106,11 +106,10 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
         timePanel.add(time);
 
         messageBubble.add(text, BorderLayout.CENTER);
-        //JTextArea text = new JTextArea("addComponentListener(new Cpter()你好你好啊，。/");
-        messageBubble.add(text, BorderLayout.CENTER);
 
         JPanel resendTextPanel = new JPanel();
         resendTextPanel.setBackground(Colors.WINDOW_BACKGROUND);
+
         resendTextPanel.add(resend, BorderLayout.WEST);
         resendTextPanel.add(sendingProgress, BorderLayout.WEST);
         resendTextPanel.add(messageBubble, BorderLayout.CENTER);

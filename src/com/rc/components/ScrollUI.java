@@ -24,6 +24,15 @@ public class ScrollUI extends BasicScrollBarUI
         this.trackColor = trackColor;
     }
 
+    public void setThumbColor(Color thumbColor)
+    {
+        this.thumbColor = thumbColor;
+    }
+
+    public void setTrackColor(Color trackColor)
+    {
+        this.trackColor = trackColor;
+    }
 
     @Override
     protected void configureScrollBarColors()

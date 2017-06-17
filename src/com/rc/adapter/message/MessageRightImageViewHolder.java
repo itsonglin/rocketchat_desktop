@@ -21,7 +21,7 @@ public class MessageRightImageViewHolder extends BaseMessageViewHolder
     public JLabel resend = new JLabel(); // 重发按钮
     public JLabel sendingProgress = new JLabel(); // 正在发送
 
-    private RCRightImageMessageBubble imageBubble = new RCRightImageMessageBubble();
+    public RCRightImageMessageBubble imageBubble = new RCRightImageMessageBubble();
     private JPanel timePanel = new JPanel();
     private JPanel messageAvatarPanel = new JPanel();
 

@@ -3,6 +3,7 @@ package com.rc.adapter.message;
 import com.rc.adapter.BaseAdapter;
 import com.rc.adapter.ViewHolder;
 import com.rc.app.Launcher;
+import com.rc.components.RCListView;
 import com.rc.db.model.CurrentUser;
 import com.rc.db.model.FileAttachment;
 import com.rc.db.model.Message;
@@ -32,6 +33,7 @@ import java.util.List;
 public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 {
     private List<MessageItem> messageItems;
+    private RCListView listView;
     private AttachmentIconHelper attachmentIconHelper = new AttachmentIconHelper();
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private CurrentUser currentUser;
@@ -41,9 +43,11 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     private FileCache fileCache;
 
 
-    public MessageAdapter(List<MessageItem> messageItems)
+    public MessageAdapter(List<MessageItem> messageItems, RCListView listView)
     {
         this.messageItems = messageItems;
+        this.listView = listView;
+
         currentUser = currentUserService.findAll().get(0);
         imageCache = new ImageCache();
         fileCache = new FileCache();
@@ -152,6 +156,10 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
         setAttachmentClickListener(holder, item);
         processAttachmentSize(holder, item);
+
+        listView.setScrollHiddenOnMouseLeave(holder.attachmentPanel);
+        listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
+        listView.setScrollHiddenOnMouseLeave(holder.attachmentTitle);
     }
 
     private void processRightAttachmentMessage(ViewHolder viewHolder, MessageItem item)
@@ -193,6 +201,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         // 判断是否显示重发按钮
         if (item.isNeedToResend())
         {
+            holder.sizeLabel.setVisible(false);
+            holder.progressBar.setVisible(false);
             holder.resend.setVisible(true);
         }
         else
@@ -212,7 +222,20 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         });
 
         setAttachmentClickListener(holder, item);
-        processAttachmentSize(holder, item);
+
+        if (item.getUpdatedAt() > 0)
+        {
+            processAttachmentSize(holder, item);
+        }
+        else
+        {
+            holder.sizeLabel.setText("等待上传...");
+        }
+
+
+        listView.setScrollHiddenOnMouseLeave(holder.attachmentPanel);
+        listView.setScrollHiddenOnMouseLeave(holder.attachmentBubble);
+        listView.setScrollHiddenOnMouseLeave(holder.attachmentTitle);
     }
 
     /**
@@ -273,9 +296,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
         processImage(item, holder.image, holder);
 
-        /*ImageIcon imageIcon = new ImageIcon(getClass().getResource(item.getImageAttachment().getImageUrl()));
-        preferredImageSize(imageIcon);
-        holder.image.setIcon(imageIcon);*/
+        listView.setScrollHiddenOnMouseLeave(holder.image);
+        listView.setScrollHiddenOnMouseLeave(holder.imageBubble);
     }
 
     /**
@@ -343,6 +365,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 super.mouseClicked(e);
             }
         });
+
+        listView.setScrollHiddenOnMouseLeave(holder.image);
+        listView.setScrollHiddenOnMouseLeave(holder.imageBubble);
     }
 
     private void processImage(MessageItem item, JLabel imageLabel, ViewHolder holder)
@@ -499,6 +524,11 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 super.mouseClicked(e);
             }
         });
+
+        listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
+        listView.setScrollHiddenOnMouseLeave(holder.text);
+
+
     }
 
     /**
@@ -513,6 +543,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
         holder.text.setText(item.getMessageContent());
         holder.sender.setText(item.getSenderUsername());
+
+        listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
+        listView.setScrollHiddenOnMouseLeave(holder.text);
     }
 
     /**

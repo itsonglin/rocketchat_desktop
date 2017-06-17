@@ -19,7 +19,7 @@ public class MessageLeftAttachmentViewHolder extends MessageAttachmentViewHolder
     //public RCProgressBar progressBar = new RCProgressBar(); // 进度条
     //public JLabel attachmentIcon = new JLabel(); // 附件类型icon
 
-    private RCLeftImageMessageBubble messageBubble = new RCLeftImageMessageBubble();
+    public RCLeftImageMessageBubble messageBubble = new RCLeftImageMessageBubble();
     //private JPanel timePanel = new JPanel();
     //private JPanel messageAvatarPanel = new JPanel();
     //private JPanel attachmentPanel = new JPanel(); // 附件面板

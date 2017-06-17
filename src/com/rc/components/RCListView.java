@@ -23,6 +23,7 @@ public class RCListView extends JScrollPane
     boolean scrollToBottom = false;
     private AdjustmentListener adjustmentListener;
     private MouseAdapter mouseAdapter;
+    private ScrollUI scrollUI;
 
     // 监听滚动到顶部事件
     private ScrollToTopListener scrollToTopListener;
@@ -30,6 +31,8 @@ public class RCListView extends JScrollPane
     private int lastScrollValue = -1;
 
     private static int lastItemCount = 0;
+    private MouseAdapter scrollMouseListener;
+    private boolean scrollAttachMouseListener = false;
 
     public RCListView()
     {
@@ -43,38 +46,42 @@ public class RCListView extends JScrollPane
 
         initComponents();
         setListeners();
-        //fillComponents();
-
-        //setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER);
-        test();
     }
 
-    private void test()
+    public void setScrollHiddenOnMouseLeave(JComponent component)
     {
-       // setScrollBarColor(Colors.WINDOW_BACKGROUND, Colors.WINDOW_BACKGROUND);
-
-        addMouseListener(new MouseAdapter()
+        if (scrollMouseListener == null)
         {
-            @Override
-            public void mouseEntered(MouseEvent e)
+
+            scrollMouseListener = new MouseAdapter()
             {
-                //setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
-                setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
+                @Override
+                public void mouseEntered(MouseEvent e)
+                {
+                    setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
+                    getVerticalScrollBar().repaint();
 
+                    super.mouseEntered(e);
+                }
 
-                super.mouseEntered(e);
-            }
+                @Override
+                public void mouseExited(MouseEvent e)
+                {
+                    setScrollBarColor(Colors.WINDOW_BACKGROUND, Colors.WINDOW_BACKGROUND);
+                    getVerticalScrollBar().repaint();
 
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                setScrollBarColor(Colors.WINDOW_BACKGROUND, Colors.WINDOW_BACKGROUND);
+                    super.mouseExited(e);
+                }
+            };
+        }
 
-                //setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER);
+        if (!scrollAttachMouseListener)
+        {
+            getVerticalScrollBar().addMouseListener(scrollMouseListener);
+            scrollAttachMouseListener = true;
+        }
 
-                super.mouseExited(e);
-            }
-        });
+        component.addMouseListener(scrollMouseListener);
     }
 
     /**
@@ -85,7 +92,17 @@ public class RCListView extends JScrollPane
      */
     public void setScrollBarColor(Color thumbColor, Color trackColor)
     {
-        this.getVerticalScrollBar().setUI(new ScrollUI(thumbColor, trackColor));
+        if (scrollUI == null)
+        {
+            scrollUI = new ScrollUI(thumbColor, trackColor);
+            this.getVerticalScrollBar().setUI(scrollUI);
+        }
+        else
+        {
+            scrollUI.setThumbColor(thumbColor);
+            scrollUI.setTrackColor(trackColor);
+        }
+        //this.getVerticalScrollBar().setUI(new ScrollUI(thumbColor, trackColor));
     }
 
     private void initComponents()
@@ -263,6 +280,7 @@ public class RCListView extends JScrollPane
 
     /**
      * 重绘指定区间内的元素
+     *
      * @param startPosition
      * @param count
      */
@@ -279,6 +297,7 @@ public class RCListView extends JScrollPane
 
     /**
      * 重绘指定位置的元素
+     *
      * @param position
      */
     public void notifyItemChanged(int position)
@@ -301,7 +320,6 @@ public class RCListView extends JScrollPane
     {
         return contentPanel;
     }
-
 
 
     public void setScrollToTopListener(ScrollToTopListener listener)
