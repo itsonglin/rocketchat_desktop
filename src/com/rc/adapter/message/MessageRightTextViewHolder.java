@@ -43,6 +43,9 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
 
     private void initComponents()
     {
+        timePanel.setBackground(Colors.WINDOW_BACKGROUND);
+        messageAvatarPanel.setBackground(Colors.WINDOW_BACKGROUND);
+
         int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.5);
         text = new SizeAutoAdjustTextArea(maxWidth);
 
@@ -107,6 +110,7 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
         messageBubble.add(text, BorderLayout.CENTER);
 
         JPanel resendTextPanel = new JPanel();
+        resendTextPanel.setBackground(Colors.WINDOW_BACKGROUND);
         resendTextPanel.add(resend, BorderLayout.WEST);
         resendTextPanel.add(sendingProgress, BorderLayout.WEST);
         resendTextPanel.add(messageBubble, BorderLayout.CENTER);

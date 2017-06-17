@@ -10,6 +10,7 @@ import com.rc.forms.MainFrame;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -66,6 +67,9 @@ public class MessageLeftTextViewHolder extends BaseMessageViewHolder
                 super.mouseReleased(e);
             }
         });
+
+        messageAvatarPanel.setBackground(Colors.WINDOW_BACKGROUND);
+        timePanel.setBackground(Colors.WINDOW_BACKGROUND);
     }
 
     private void initView()
@@ -76,6 +80,7 @@ public class MessageLeftTextViewHolder extends BaseMessageViewHolder
         messageBubble.add(text);
 
         JPanel senderMessagePanel = new JPanel();
+        senderMessagePanel.setBackground(Colors.WINDOW_BACKGROUND);
         senderMessagePanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0,2,true, false));
         senderMessagePanel.add(sender);
         senderMessagePanel.add(messageBubble);

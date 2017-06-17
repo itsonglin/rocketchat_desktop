@@ -27,6 +27,9 @@ public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolde
 
     private void initComponents()
     {
+        timePanel.setBackground(Colors.WINDOW_BACKGROUND);
+        messageAvatarPanel.setBackground(Colors.WINDOW_BACKGROUND);
+
         int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.427);
         attachmentTitle = new SizeAutoAdjustTextArea(maxWidth);
 
@@ -78,6 +81,7 @@ public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolde
 
 
         JPanel resendAttachmentPanel = new JPanel();
+        resendAttachmentPanel.setBackground(Colors.WINDOW_BACKGROUND);
         resendAttachmentPanel.add(resend, BorderLayout.WEST);
         resendAttachmentPanel.add(attachmentBubble, BorderLayout.CENTER);
 

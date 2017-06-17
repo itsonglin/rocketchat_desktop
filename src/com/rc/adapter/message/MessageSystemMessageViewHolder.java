@@ -37,6 +37,9 @@ public class MessageSystemMessageViewHolder extends BaseMessageViewHolder
 
     private void initComponents()
     {
+        setBackground(Colors.WINDOW_BACKGROUND);
+        timePanel.setBackground(Colors.WINDOW_BACKGROUND);
+
         time.setForeground(Colors.FONT_GRAY);
         time.setFont(FontUtil.getDefaultFont(12));
         text.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -64,19 +67,17 @@ public class MessageSystemMessageViewHolder extends BaseMessageViewHolder
             }
         };
         textPanel.setFont(FontUtil.getDefaultFont(12));
-
-
     }
 
     private void initView()
     {
-        JPanel contentPaenl = new JPanel();
-        contentPaenl.setLayout(new VerticalFlowLayout(VerticalFlowLayout.CENTER, 0, 0, true, false));
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.CENTER, 0, 0, true, false));
         timePanel.add(time);
         textPanel.add(text);
-        contentPaenl.add(timePanel);
-        contentPaenl.add(textPanel);
+        contentPanel.add(timePanel);
+        contentPanel.add(textPanel);
 
-        add(contentPaenl);
+        add(contentPanel);
     }
 }

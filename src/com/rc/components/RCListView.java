@@ -61,6 +61,7 @@ public class RCListView extends JScrollPane
     {
         contentPanel = new JPanel();
         contentPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, hGap, vGap, true, false));
+        contentPanel.setBackground(Colors.WINDOW_BACKGROUND);
         //contentPanel.setLayout(new GridLayout(4, 1));
 
         this.setViewportView(contentPanel);

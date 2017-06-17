@@ -34,6 +34,8 @@ public class MessageLeftAttachmentViewHolder extends MessageAttachmentViewHolder
     private void initComponents()
     {
         //messageBubble.add(image);
+        messageAvatarPanel.setBackground(Colors.WINDOW_BACKGROUND);
+        timePanel.setBackground(Colors.WINDOW_BACKGROUND);
 
         int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.427);
         attachmentTitle = new SizeAutoAdjustTextArea(maxWidth);
@@ -41,6 +43,7 @@ public class MessageLeftAttachmentViewHolder extends MessageAttachmentViewHolder
 
         time.setForeground(Colors.FONT_GRAY);
         time.setFont(FontUtil.getDefaultFont(12));
+
 
         sender.setFont(FontUtil.getDefaultFont(12));
         sender.setForeground(Colors.FONT_GRAY);
@@ -81,6 +84,7 @@ public class MessageLeftAttachmentViewHolder extends MessageAttachmentViewHolder
 
 
         JPanel senderMessagePanel = new JPanel();
+        senderMessagePanel.setBackground(Colors.WINDOW_BACKGROUND);
         senderMessagePanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0,2,true, false));
         senderMessagePanel.add(sender);
         senderMessagePanel.add(messageBubble);

@@ -31,8 +31,11 @@ public class MessageLeftImageViewHolder extends BaseMessageViewHolder
 
     private void initComponents()
     {
-        imageBubble.add(image);
+        timePanel.setBackground(Colors.WINDOW_BACKGROUND);
+        messageAvatarPanel.setBackground(Colors.WINDOW_BACKGROUND);
 
+
+        imageBubble.add(image);
 
         time.setForeground(Colors.FONT_GRAY);
         time.setFont(FontUtil.getDefaultFont(12));
@@ -48,6 +51,7 @@ public class MessageLeftImageViewHolder extends BaseMessageViewHolder
         timePanel.add(time);
 
         JPanel senderMessagePanel = new JPanel();
+        senderMessagePanel.setBackground(Colors.WINDOW_BACKGROUND);
         senderMessagePanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0,2,true, false));
         senderMessagePanel.add(sender);
         senderMessagePanel.add(imageBubble);
