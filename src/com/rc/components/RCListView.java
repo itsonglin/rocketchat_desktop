@@ -44,6 +44,37 @@ public class RCListView extends JScrollPane
         initComponents();
         setListeners();
         //fillComponents();
+
+        //setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER);
+        test();
+    }
+
+    private void test()
+    {
+       // setScrollBarColor(Colors.WINDOW_BACKGROUND, Colors.WINDOW_BACKGROUND);
+
+        addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                //setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_AS_NEEDED);
+                setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
+
+
+                super.mouseEntered(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                setScrollBarColor(Colors.WINDOW_BACKGROUND, Colors.WINDOW_BACKGROUND);
+
+                //setVerticalScrollBarPolicy(VERTICAL_SCROLLBAR_NEVER);
+
+                super.mouseExited(e);
+            }
+        });
     }
 
     /**
@@ -62,7 +93,6 @@ public class RCListView extends JScrollPane
         contentPanel = new JPanel();
         contentPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, hGap, vGap, true, false));
         contentPanel.setBackground(Colors.WINDOW_BACKGROUND);
-        //contentPanel.setLayout(new GridLayout(4, 1));
 
         this.setViewportView(contentPanel);
         this.setBorder(null);
