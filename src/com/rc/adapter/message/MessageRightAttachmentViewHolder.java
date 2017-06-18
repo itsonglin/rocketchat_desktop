@@ -20,7 +20,6 @@ import java.awt.event.MouseEvent;
 public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolder
 {
     public JLabel resend = new JLabel(); // 重发按钮
-    //public RCRightAttachmentMessageBubble attachmentBubble = new RCRightAttachmentMessageBubble();
 
 
     public MessageRightAttachmentViewHolder()
@@ -33,11 +32,11 @@ public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolde
     {
         messageBubble = new RCRightAttachmentMessageBubble();
 
-        timePanel.setBackground(Colors.WINDOW_BACKGROUND);
+        /*timePanel.setBackground(Colors.WINDOW_BACKGROUND);
         messageAvatarPanel.setBackground(Colors.WINDOW_BACKGROUND);
 
         time.setForeground(Colors.FONT_GRAY);
-        time.setFont(FontUtil.getDefaultFont(12));
+        time.setFont(FontUtil.getDefaultFont(12));*/
 
         ImageIcon resendIcon = new ImageIcon(getClass().getResource("/image/resend.png"));
         resendIcon.setImage(resendIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
@@ -47,24 +46,18 @@ public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolde
         //resend.setVisible(false);
 
 
-        attachmentPanel.setOpaque(false);
+       /* attachmentPanel.setOpaque(false);
 
-
-        //ImageIcon attachmentTypeIcon = new ImageIcon(getClass().getResource("/image/pdf.png"));
-        //attachmentIcon.setIcon(attachmentTypeIcon);
-
-        //preferredAttachmentSize();
-        //attachmentTitle.setPreferredSize(new Dimension(100, 100));
 
         progressBar.setMaximum(100);
         progressBar.setMinimum(0);
         progressBar.setValue(5);
-        progressBar.setUI(new GradientProgressBarUI());
+        progressBar.setUI(new GradientProgressBarUI());*/
 
         messageBubble.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        sizeLabel.setFont(FontUtil.getDefaultFont(12));
-        sizeLabel.setForeground(Colors.FONT_GRAY);
+       /* sizeLabel.setFont(FontUtil.getDefaultFont(12));
+        sizeLabel.setForeground(Colors.FONT_GRAY);*/
 
     }
 

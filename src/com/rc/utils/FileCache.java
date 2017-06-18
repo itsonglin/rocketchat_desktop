@@ -55,6 +55,11 @@ public class FileCache
 
     public String cacheFile(String identify, String name, byte[] data)
     {
+        if (data == null || data.length < 1)
+        {
+            return null;
+        }
+
         File cacheFile = new File(FILE_CACHE_ROOT_PATH + "/" + identify + "_" + name);
         try
         {

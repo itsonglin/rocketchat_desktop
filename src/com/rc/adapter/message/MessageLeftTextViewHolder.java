@@ -81,7 +81,7 @@ public class MessageLeftTextViewHolder extends BaseMessageViewHolder
 
         JPanel senderMessagePanel = new JPanel();
         senderMessagePanel.setBackground(Colors.WINDOW_BACKGROUND);
-        senderMessagePanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0,2,true, false));
+        senderMessagePanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0,0,true, false));
         senderMessagePanel.add(sender);
         senderMessagePanel.add(messageBubble);
 

@@ -14,16 +14,7 @@ import java.awt.*;
  */
 public class MessageLeftAttachmentViewHolder extends MessageAttachmentViewHolder
 {
-    //public SizeAutoAdjustTextArea attachmentTitle;
     public JLabel sender = new JLabel();
-    //public RCProgressBar progressBar = new RCProgressBar(); // 进度条
-    //public JLabel attachmentIcon = new JLabel(); // 附件类型icon
-
-    //public RCLeftImageMessageBubble messageBubble = new RCLeftImageMessageBubble();
-    //private JPanel timePanel = new JPanel();
-    //private JPanel messageAvatarPanel = new JPanel();
-    //private JPanel attachmentPanel = new JPanel(); // 附件面板
-
 
     public MessageLeftAttachmentViewHolder()
     {
@@ -35,19 +26,18 @@ public class MessageLeftAttachmentViewHolder extends MessageAttachmentViewHolder
     {
         messageBubble = new RCLeftImageMessageBubble();
 
+        /*timePanel.setBackground(Colors.WINDOW_BACKGROUND);
         messageAvatarPanel.setBackground(Colors.WINDOW_BACKGROUND);
-        timePanel.setBackground(Colors.WINDOW_BACKGROUND);
-
 
         time.setForeground(Colors.FONT_GRAY);
-        time.setFont(FontUtil.getDefaultFont(12));
+        time.setFont(FontUtil.getDefaultFont(12));*/
 
 
         sender.setFont(FontUtil.getDefaultFont(12));
         sender.setForeground(Colors.FONT_GRAY);
         //sender.setVisible(false);
 
-        attachmentPanel.setOpaque(false);
+        /*attachmentPanel.setOpaque(false);
 
         progressBar.setMaximum(100);
         progressBar.setMinimum(0);
@@ -58,7 +48,10 @@ public class MessageLeftAttachmentViewHolder extends MessageAttachmentViewHolder
         messageBubble.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         sizeLabel.setFont(FontUtil.getDefaultFont(12));
-        sizeLabel.setForeground(Colors.FONT_GRAY);
+        sizeLabel.setForeground(Colors.FONT_GRAY);*/
+
+        messageBubble.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
 
     }
 
@@ -83,7 +76,7 @@ public class MessageLeftAttachmentViewHolder extends MessageAttachmentViewHolder
 
         JPanel senderMessagePanel = new JPanel();
         senderMessagePanel.setBackground(Colors.WINDOW_BACKGROUND);
-        senderMessagePanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0,2,true, false));
+        senderMessagePanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0,0,true, false));
         senderMessagePanel.add(sender);
         senderMessagePanel.add(messageBubble);
 

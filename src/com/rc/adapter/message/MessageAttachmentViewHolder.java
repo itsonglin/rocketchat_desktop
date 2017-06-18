@@ -1,11 +1,15 @@
 package com.rc.adapter.message;
 
+import com.rc.components.Colors;
+import com.rc.components.GradientProgressBarUI;
 import com.rc.components.RCProgressBar;
 import com.rc.components.SizeAutoAdjustTextArea;
 import com.rc.components.message.RCAttachmentMessageBubble;
 import com.rc.forms.MainFrame;
+import com.rc.utils.FontUtil;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -57,5 +61,22 @@ public class MessageAttachmentViewHolder extends BaseMessageViewHolder
     {
         int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.427);
         attachmentTitle = new SizeAutoAdjustTextArea(maxWidth);
+
+        timePanel.setBackground(Colors.WINDOW_BACKGROUND);
+        messageAvatarPanel.setBackground(Colors.WINDOW_BACKGROUND);
+
+        time.setForeground(Colors.FONT_GRAY);
+        time.setFont(FontUtil.getDefaultFont(12));
+
+        attachmentPanel.setOpaque(false);
+
+        progressBar.setMaximum(100);
+        progressBar.setMinimum(0);
+        progressBar.setValue(100);
+        progressBar.setUI(new GradientProgressBarUI());
+        progressBar.setVisible(false);
+
+        sizeLabel.setFont(FontUtil.getDefaultFont(12));
+        sizeLabel.setForeground(Colors.FONT_GRAY);
     }
 }

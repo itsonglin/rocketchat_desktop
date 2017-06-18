@@ -1469,7 +1469,15 @@ public class ChatPanel extends ParentAvailablePanel
 
                 if (progress >= 0 && progress < 100)
                 {
-                    holder.progressBar.setVisible(true);
+                    if (holder.sizeLabel.isVisible())
+                    {
+                        holder.sizeLabel.setVisible(false);
+                    }
+                    if (!holder.progressBar.isVisible())
+                    {
+                        holder.progressBar.setVisible(true);
+                    }
+
                     holder.progressBar.setValue(progress);
                 }
                 else if (progress >= 100)
@@ -1487,7 +1495,6 @@ public class ChatPanel extends ParentAvailablePanel
             {
                 //System.out.println(data);
                 String path = fileCache.cacheFile(fileAttachment.getId(), fileAttachment.getTitle(), data);
-                System.out.println("文件已缓存在 " + path);
 
                 int pos = findMessageItemReverse(messageId);
                 MessageAttachmentViewHolder holder = (MessageAttachmentViewHolder) getViewHolderByPosition(pos);
@@ -1496,7 +1503,18 @@ public class ChatPanel extends ParentAvailablePanel
                 {
                     return;
                 }
-                holder.sizeLabel.setText(fileCache.fileSizeString(path));
+                if (path == null)
+                {
+                    holder.sizeLabel.setVisible(true);
+                    holder.sizeLabel.setText("文件获取失败");
+                    holder.progressBar.setVisible(false);
+                }
+                else
+                {
+                    holder.sizeLabel.setVisible(true);
+                    System.out.println("文件已缓存在 " + path);
+                    holder.sizeLabel.setText(fileCache.fileSizeString(path));
+                }
             }
         });
 
