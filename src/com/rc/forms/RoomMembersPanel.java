@@ -108,7 +108,8 @@ public class RoomMembersPanel extends ParentAvailablePanel
             if (room.getType().equals("d"))
             {
                 leaveButton.setVisible(false);
-            }else
+            }
+            else
             {
                 leaveButton.setVisible(true);
             }
@@ -139,33 +140,35 @@ public class RoomMembersPanel extends ParentAvailablePanel
         }
         else
         {
+            String roomMembers = room.getMember();
+            String[] userArr = new String[]{};
+            if (roomMembers != null)
+            {
+                userArr = roomMembers.split(",");
+            }
+
             if (isRoomCreator())
             {
                 members.remove("添加成员");
                 members.add("添加成员");
 
-                if (members.size() > 2)
+                if (userArr.length > 2)
                 {
                     members.remove("删除成员");
                     members.add("删除成员");
                 }
             }
 
-            String roomMembers = room.getMember();
             if (room.getCreatorName() != null)
             {
                 members.add(room.getCreatorName());
             }
 
-            if (roomMembers != null)
+            for (int i = 0; i < userArr.length; i++)
             {
-                String[] userArr = roomMembers.split(",");
-                for (int i = 0; i < userArr.length; i++)
+                if (!members.contains(userArr[i]))
                 {
-                    if (!members.contains(userArr[i]))
-                    {
-                        members.add(userArr[i]);
-                    }
+                    members.add(userArr[i]);
                 }
             }
         }
