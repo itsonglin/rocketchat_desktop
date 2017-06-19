@@ -1,7 +1,10 @@
 package com.rc.adapter;
 
+import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.message.MessagePopupMenu;
+import com.rc.db.model.CurrentUser;
+import com.rc.db.service.CurrentUserService;
 import com.rc.forms.UserInfoPopup;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.AvatarUtil;
@@ -22,11 +25,14 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
 {
     private List<String> members;
     private List<RoomMembersItemViewHolder> viewHolders = new ArrayList<>();
+    private CurrentUser currentUser;
+    private CurrentUserService currentUserService = Launcher.currentUserService;
+
 
     public RoomMembersAdapter(List<String> members)
     {
-
         this.members = members;
+        currentUser = currentUserService.findAll().get(0);
     }
 
     @Override
@@ -115,30 +121,33 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
             UserInfoPopup userInfoPopup = new UserInfoPopup(name);
 
 
-            viewHolder.addMouseListener(new AbstractMouseListener()
+            if (!name.equals(currentUser.getUsername()))
             {
-                @Override
-                public void mouseClicked(MouseEvent e)
+                viewHolder.addMouseListener(new AbstractMouseListener()
                 {
-                    viewHolder.setBackground(Colors.ITEM_SELECTED_LIGHT);
-
-                    // 弹出用户信息面板
-                    if (e.getButton() == MouseEvent.BUTTON1)
+                    @Override
+                    public void mouseClicked(MouseEvent e)
                     {
-                        userInfoPopup.show(e.getComponent(), e.getX(), e.getY());
-                    }
+                        viewHolder.setBackground(Colors.ITEM_SELECTED_LIGHT);
 
-
-                    for (RoomMembersItemViewHolder holder : viewHolders)
-                    {
-                        if (holder != viewHolder)
+                        // 弹出用户信息面板
+                        if (e.getButton() == MouseEvent.BUTTON1)
                         {
-                            holder.setBackground(Colors.WINDOW_BACKGROUND_LIGHT);
+                            userInfoPopup.show(e.getComponent(), e.getX(), e.getY());
                         }
-                    }
 
-                }
-            });
+
+                        for (RoomMembersItemViewHolder holder : viewHolders)
+                        {
+                            if (holder != viewHolder)
+                            {
+                                holder.setBackground(Colors.WINDOW_BACKGROUND_LIGHT);
+                            }
+                        }
+
+                    }
+                });
+            }
         }
 
     }
