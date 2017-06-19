@@ -99,6 +99,13 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         {
             viewHolder.unreadCount.setVisible(false);
         }
+
+        // 设置是否激活
+        if (ChatPanel.CHAT_ROOM_OPEN_ID != null && item.getRoomId().equals(ChatPanel.CHAT_ROOM_OPEN_ID))
+        {
+            setBackground(viewHolder, Colors.ITEM_SELECTED);
+            selectedViewHolder = viewHolder;
+        }
         //viewHolder.unreadCount.setVisible(true);
         //viewHolder.unreadCount.setText(item.getUnreadCount() + "1");
 
@@ -124,7 +131,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
                             }
                         }
 
-                        setBackground(viewHolder, Colors.ITEM_SELECTED);
+                       //setBackground(viewHolder, Colors.ITEM_SELECTED);
                         selectedViewHolder = viewHolder;
                     }
                 }

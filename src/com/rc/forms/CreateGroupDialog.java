@@ -1,70 +1,70 @@
 package com.rc.forms;
 
-import com.rc.adapter.SelectUserItemViewHolder;
-import com.rc.adapter.SelectUserItemsAdapter;
-import com.rc.adapter.SelectedUserItemsAdapter;
+import com.rc.app.Launcher;
 import com.rc.components.*;
-import com.rc.entity.ContactsItem;
-import com.rc.listener.AbstractMouseListener;
-import com.rc.utils.IconUtil;
+import com.rc.db.model.ContactsUser;
+import com.rc.db.service.ContactsUserService;
+import com.rc.utils.FontUtil;
+import com.rc.websocket.WebSocketClient;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import static com.rc.app.Launcher.roomService;
 
 /**
  * Created by song on 07/06/2017.
  */
 public class CreateGroupDialog extends JDialog
 {
-    private JPanel leftPanel;
-    private JPanel rightPanel;
-    private RCListView selectUserListView;
-    private RCListView selectedUserListView;
+    private static CreateGroupDialog context;
+    private JPanel editorPanel;
+    private RCTextField groupNameTextField;
+    private JCheckBox privateCheckBox;
+
+    private SelectUserPanel selectUserPanel;
     private JPanel buttonPanel;
     private JButton cancelButton;
     private JButton okButton;
+    private List<String> userList = new ArrayList<>();
+
+    private ContactsUserService contactsUserService = Launcher.contactsUserService;
+
 
     public static final int DIALOG_WIDTH = 600;
     public static final int DIALOG_HEIGHT = 500;
-
-    private List<ContactsItem> contactsItemList = new ArrayList<>();
-    private List<ContactsItem> selectedUsersList = new ArrayList<>();
-    private SelectUserItemsAdapter selectUserItemsAdapter;
-    private SelectedUserItemsAdapter selectedUserItemsAdapter;
-    private ImageIcon checkIcon;
-    private ImageIcon uncheckIcon;
-    private List<SelectUserItemViewHolder> selectedHolders = new ArrayList<>();
-
 
 
     public CreateGroupDialog(Frame owner, boolean modal)
     {
         super(owner, modal);
+        context = this;
+
         initComponents();
-        setListeners();
+        initData();
+
         initView();
+        setListeners();
     }
 
-    @Override
-    public void paintComponents(Graphics g)
+    private void initData()
     {
-        super.paintComponents(g);
+        List<ContactsUser> contactsUsers = contactsUserService.findAll();
+        for (ContactsUser con : contactsUsers)
+        {
+            userList.add(con.getName());
+        }
 
-        g.setColor(Color.RED);
-        g.drawRect(getX(), getY(), getWidth() - 1, getHeight() - 1);
+        selectUserPanel = new SelectUserPanel(userList);
     }
 
 
     private void initComponents()
     {
-        checkIcon = IconUtil.getIcon(this, "/image/check.png");
-        uncheckIcon = IconUtil.getIcon(this, "/image/uncheck.png");
-
         int posX = MainFrame.getContext().getX();
         int posY = MainFrame.getContext().getY();
 
@@ -73,71 +73,19 @@ public class CreateGroupDialog extends JDialog
         setBounds(posX, posY, DIALOG_WIDTH, DIALOG_HEIGHT);
         setUndecorated(true);
 
+        // 输入面板
+        editorPanel = new JPanel();
 
-        leftPanel = new JPanel();
-        leftPanel.setPreferredSize(new Dimension(DIALOG_WIDTH / 2 - 1, DIALOG_HEIGHT - 13));
-        leftPanel.setBorder(new RCBorder(RCBorder.RIGHT, Colors.LIGHT_GRAY));
-        //leftPanel.setBorder(new LineBorder(Colors.RED));
+        groupNameTextField = new RCTextField();
+        groupNameTextField.setPlaceholder("群聊名称");
+        groupNameTextField.setPreferredSize(new Dimension(DIALOG_WIDTH / 2, 35));
+        groupNameTextField.setFont(FontUtil.getDefaultFont(14));
+        groupNameTextField.setForeground(Colors.FONT_BLACK);
+        groupNameTextField.setMargin(new Insets(0, 15, 0, 0));
 
-        rightPanel = new JPanel();
-        rightPanel.setPreferredSize(new Dimension(DIALOG_WIDTH / 2 - 1, DIALOG_HEIGHT - 13));
-
-
-        // 选择用户列表
-        selectUserListView = new RCListView();
-        getContacts();
-        selectUserItemsAdapter = new SelectUserItemsAdapter(contactsItemList);
-        selectUserItemsAdapter.setMouseListener(new AbstractMouseListener()
-        {
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                SelectUserItemViewHolder holder = (SelectUserItemViewHolder) e.getSource();
-
-                String username = holder.username.getText();
-                if (unSelectUser(username))
-                {
-                    holder.icon.setIcon(uncheckIcon);
-                    selectedHolders.remove(holder);
-                }
-                else
-                {
-                    selectUser(username);
-                    holder.icon.setIcon(checkIcon);
-                    selectedHolders.add(holder);
-                }
-
-
-
-
-            }
-        });
-        selectUserListView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
-        selectUserListView.setAdapter(selectUserItemsAdapter);
-
-        // 已选中用户列表
-        selectedUserListView = new RCListView();
-        selectedUserItemsAdapter = new SelectedUserItemsAdapter(selectedUsersList);
-        selectedUserItemsAdapter.setItemRemoveListener(new SelectedUserItemsAdapter.ItemRemoveListener()
-        {
-            @Override
-            public void onRemove(String username)
-            {
-                if (unSelectUser(username))
-                {
-                    for (SelectUserItemViewHolder holder : selectedHolders)
-                    {
-                        if (holder.username.getText().equals(username))
-                        {
-                            holder.icon.setIcon(uncheckIcon);
-                            break;
-                        }
-                    }
-                }
-            }
-        });
-        selectedUserListView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
-        selectedUserListView.setAdapter(selectedUserItemsAdapter);
+        privateCheckBox = new JCheckBox("私有");
+        privateCheckBox.setToolTipText("私有群聊对外不可见，聊天内容无法被非群成员浏览，只有创建者才有权限添加成员，建议勾选此项");
+        privateCheckBox.setSelected(true);
 
 
         // 按钮组
@@ -152,9 +100,24 @@ public class CreateGroupDialog extends JDialog
     }
 
 
+    private void initView()
+    {
+        editorPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 10, 10));
+        editorPanel.add(groupNameTextField);
+        editorPanel.add(privateCheckBox);
+
+        buttonPanel.add(cancelButton, new GBC(0, 0).setWeight(1, 1).setInsets(15, 0, 0, 0));
+        buttonPanel.add(okButton, new GBC(1, 0).setWeight(1, 1));
+
+
+        add(editorPanel, BorderLayout.NORTH);
+        add(selectUserPanel, BorderLayout.CENTER);
+        add(buttonPanel, BorderLayout.SOUTH);
+    }
+
     private void setListeners()
     {
-        cancelButton.addMouseListener(new AbstractMouseListener()
+        cancelButton.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseClicked(MouseEvent e)
@@ -164,102 +127,99 @@ public class CreateGroupDialog extends JDialog
                 super.mouseClicked(e);
             }
         });
-    }
 
-    private void initView()
-    {
-        JPanel panel = new JPanel();
-        panel.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 10));
-        panel.add(leftPanel);
-        panel.add(rightPanel);
-        panel.setBorder(new LineBorder(Colors.FONT_GRAY));
-        add(panel);
-
-
-        leftPanel.setLayout(new GridBagLayout());
-        leftPanel.add(selectUserListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0, 0, 5, 0));
-
-
-        buttonPanel.add(cancelButton, new GBC(0, 0).setWeight(1, 1));
-        buttonPanel.add(okButton, new GBC(1, 0).setWeight(1, 1));
-
-        rightPanel.setLayout(new GridBagLayout());
-        rightPanel.add(selectedUserListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 60));
-        rightPanel.add(buttonPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(5, 0, 0, 0));
-
-
-        //leftPanel.add(selectUserListView);
-        //rightPanel.add(selectedUserListView);
-    }
-
-    private void getContacts()
-    {
-        ContactsItem item = new ContactsItem();
-        item.setName("阿哥");
-        contactsItemList.add(item);
-
-        ContactsItem item2 = new ContactsItem();
-        item2.setName("讨论组");
-        contactsItemList.add(item2);
-
-        ContactsItem item3 = new ContactsItem();
-        item3.setName("波哥");
-        contactsItemList.add(item3);
-
-        ContactsItem item4 = new ContactsItem();
-        item4.setName("不好");
-        contactsItemList.add(item4);
-
-        ContactsItem item5 = new ContactsItem();
-        item5.setName("123");
-        contactsItemList.add(item5);
-
-        for (int i = 0; i < 10; i++)
+        okButton.addMouseListener(new MouseAdapter()
         {
-            ContactsItem contactsItem = new ContactsItem();
-            contactsItem.setName("User " + i);
-            contactsItemList.add(contactsItem);
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                String roomName = groupNameTextField.getText();
+                if (roomName == null || roomName.isEmpty())
+                {
+                    JOptionPane.showMessageDialog(null, "请输入群聊名称", "请输入群聊名称", JOptionPane.WARNING_MESSAGE);
+                    groupNameTextField.requestFocus();
+                    return;
+                }
+
+                checkRoomExists(roomName);
+
+                System.out.println(selectUserPanel.getSelectedUser());
+                super.mouseClicked(e);
+            }
+        });
+    }
+
+    private void checkRoomExists(String name)
+    {
+        if (roomService.findByName(name) != null)
+        {
+            showRoomExistMessage(name);
+        }
+        else
+        {
+
+            createChannelOrGroup(name, privateCheckBox.isSelected(), selectUserPanel.getSelectedUser().toArray(new String[]{}));
+
+            /*HttpGetTask task = new HttpGetTask();
+            task.setListener(new HttpResponseListener()
+            {
+                @Override
+                public void onResult(Object ret)
+                {
+                    System.out.println(ret);
+                }
+            });
+
+            CurrentUser currentUser = currentUserService.findAll().get(0);
+            task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+            task.addHeader("X-User-Id", currentUser.getUserId());
+            task.execute(Launcher.HOSTNAME + "/api/v1/channels.list?count=" + Integer.MAX_VALUE);*/
         }
     }
 
     /**
-     * 选择一位用户
+     * 创建Channel或Group
      *
-     * @param username
+     * @param name
+     * @param privateGroup
+     * @param usernames
      */
-    private void selectUser(String username)
+    private void createChannelOrGroup(String name, boolean privateGroup, String[] usernames)
     {
-        for (ContactsItem item : contactsItemList)
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        for (int i = 0; i < usernames.length; i++)
         {
-            if (item.getName().equals(username))
+            sb.append("\"" + usernames[i] + "\"");
+            if (i < usernames.length - 1)
             {
-                selectedUsersList.add(item);
-                selectedUserListView.notifyDataSetChanged(false);
-
+                sb.append(",");
             }
         }
+        sb.append("]");
+
+        WebSocketClient.getContext().createChannelOrGroup(name, sb.toString(), privateGroup);
+
+
+       /* Intent intent = new Intent();
+        intent.setAction(WebSocketService.ACTIVITY_TO_WEBSOCKET_ACTION);
+        intent.putExtra("event", WebSocketService.EVENT_CREATE_CHANNEL_OR_GROUP);
+        intent.putExtra("name", name);
+        intent.putExtra("members", sb.toString());
+        intent.putExtra("private", privateGroup);
+        sendBroadcast(intent);*/
     }
 
-    private boolean unSelectUser(String username)
+    public static CreateGroupDialog getContext()
     {
-        Iterator<ContactsItem> itemIterator = selectedUsersList.iterator();
-        boolean dataChanged = false;
-        while (itemIterator.hasNext())
-        {
-            ContactsItem item = itemIterator.next();
-            if (item.getName().equals(username))
-            {
-                dataChanged = true;
-                itemIterator.remove();
-                break;
-            }
-        }
-
-        if (dataChanged)
-        {
-            selectedUserListView.notifyDataSetChanged(false);
-        }
-
-        return dataChanged;
+        return context;
     }
+
+    public void showRoomExistMessage(String roomName)
+    {
+        JOptionPane.showMessageDialog(null, "群组\"" + roomName + "\"已存在", "群组已存在", JOptionPane.WARNING_MESSAGE);
+        groupNameTextField.setText("");
+        groupNameTextField.requestFocus();
+    }
+
 }

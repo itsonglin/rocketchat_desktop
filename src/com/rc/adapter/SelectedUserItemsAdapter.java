@@ -2,8 +2,8 @@ package com.rc.adapter;
 
 import com.rc.entity.ContactsItem;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.AvatarUtil;
 import com.rc.utils.CharacterParser;
-import com.rc.utils.IconUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,15 +16,15 @@ import java.util.List;
  */
 public class SelectedUserItemsAdapter extends BaseAdapter<SelectedUserItemViewHolder>
 {
-    private List<ContactsItem> contactsItems;
+    private List<String> userList;
     Map<Integer, String> positionMap = new HashMap<>();
     private ItemRemoveListener itemRemoveListener;
 
-    public SelectedUserItemsAdapter(List<ContactsItem> contactsItems)
+    public SelectedUserItemsAdapter(List<String> userList)
     {
-        this.contactsItems = contactsItems;
+        this.userList = userList;
 
-        if (contactsItems != null)
+        if (userList != null)
         {
             processData();
         }
@@ -33,7 +33,7 @@ public class SelectedUserItemsAdapter extends BaseAdapter<SelectedUserItemViewHo
     @Override
     public int getCount()
     {
-        return contactsItems.size();
+        return userList.size();
     }
 
     @Override
@@ -46,15 +46,14 @@ public class SelectedUserItemsAdapter extends BaseAdapter<SelectedUserItemViewHo
     public void onBindViewHolder(SelectedUserItemViewHolder viewHolder, int position)
     {
 
-        ContactsItem item = contactsItems.get(position);
+        String user = userList.get(position);
 
         // 头像
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        imageIcon.setImage(imageIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+        ImageIcon imageIcon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(user).getScaledInstance(30,30,Image.SCALE_SMOOTH));
         viewHolder.avatar.setIcon(imageIcon);
 
         // 名字
-        viewHolder.username.setText(item.getName());
+        viewHolder.username.setText(user);
 
         /*viewHolder.icon.setIcon(IconUtil.getIcon(this, "/image/remove.png", 18, 18));
         viewHolder.icon.setToolTipText("移除");*/
@@ -76,13 +75,13 @@ public class SelectedUserItemsAdapter extends BaseAdapter<SelectedUserItemViewHo
 
     private void processData()
     {
-        Collections.sort(contactsItems);
+        Collections.sort(userList);
 
         int index = 0;
         String lastChara = "";
-        for (ContactsItem item : contactsItems)
+        for (String user : userList)
         {
-            String ch = CharacterParser.getSelling(item.getName()).substring(0, 1);
+            String ch = CharacterParser.getSelling(user).substring(0, 1);
             if (!ch.equals(lastChara))
             {
                 lastChara = ch;

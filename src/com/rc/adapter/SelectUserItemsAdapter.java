@@ -2,8 +2,8 @@ package com.rc.adapter;
 
 import com.rc.components.Colors;
 import com.rc.components.RCBorder;
-import com.rc.entity.ContactsItem;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.utils.AvatarUtil;
 import com.rc.utils.CharacterParser;
 
 import javax.swing.*;
@@ -16,16 +16,16 @@ import java.util.List;
  */
 public class SelectUserItemsAdapter extends BaseAdapter<SelectUserItemViewHolder>
 {
-    private List<ContactsItem> contactsItems;
+    private List<String> userList;
     private List<SelectUserItemViewHolder> viewHolders = new ArrayList<>();
     Map<Integer, String> positionMap = new HashMap<>();
     private AbstractMouseListener mouseListener;
 
-    public SelectUserItemsAdapter(List<ContactsItem> contactsItems)
+    public SelectUserItemsAdapter(List<String> userList)
     {
-        this.contactsItems = contactsItems;
+        this.userList = userList;
 
-        if (contactsItems != null)
+        if (userList != null)
         {
             processData();
         }
@@ -34,7 +34,7 @@ public class SelectUserItemsAdapter extends BaseAdapter<SelectUserItemViewHolder
     @Override
     public int getCount()
     {
-        return contactsItems.size();
+        return userList.size();
     }
 
     @Override
@@ -80,15 +80,14 @@ public class SelectUserItemsAdapter extends BaseAdapter<SelectUserItemViewHolder
     public void onBindViewHolder(SelectUserItemViewHolder viewHolder, int position)
     {
         viewHolders.add(position, viewHolder);
-        ContactsItem item = contactsItems.get(position);
+        String name  = userList.get(position);
 
         // 头像
-        ImageIcon imageIcon = new ImageIcon(getClass().getResource("/image/avatar.jpg"));
-        imageIcon.setImage(imageIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH));
+        ImageIcon imageIcon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(name).getScaledInstance(30,30,Image.SCALE_SMOOTH));
         viewHolder.avatar.setIcon(imageIcon);
 
         // 名字
-        viewHolder.username.setText(item.getName());
+        viewHolder.username.setText(name);
 
         viewHolder.addMouseListener(mouseListener);
     }
@@ -96,13 +95,13 @@ public class SelectUserItemsAdapter extends BaseAdapter<SelectUserItemViewHolder
 
     private void processData()
     {
-        Collections.sort(contactsItems);
+        Collections.sort(userList);
 
         int index = 0;
         String lastChara = "";
-        for (ContactsItem item : contactsItems)
+        for (String name : userList)
         {
-            String ch = CharacterParser.getSelling(item.getName()).substring(0, 1);
+            String ch = CharacterParser.getSelling(name).substring(0, 1);
             if (!ch.equals(lastChara))
             {
                 lastChara = ch;
@@ -115,7 +114,6 @@ public class SelectUserItemsAdapter extends BaseAdapter<SelectUserItemViewHolder
 
     public void setMouseListener(AbstractMouseListener mouseListener)
     {
-
         this.mouseListener = mouseListener;
     }
 }

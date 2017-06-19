@@ -9,6 +9,7 @@ import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
 import com.rc.forms.ChatPanel;
 import com.rc.forms.ContactsPanel;
+import com.rc.forms.CreateGroupDialog;
 import com.rc.forms.RoomsPanel;
 import com.rc.websocket.handler.StreamNotifyUserCollectionHandler;
 import com.rc.websocket.handler.StreamRoomMessagesHandler;
@@ -226,7 +227,7 @@ public class WebSocketClient
      */
     private void handleMessage(String text)
     {
-        //Log.d("收到消息", text);
+       //System.out.println(("收到消息  " + text));
 
         try
         {
@@ -246,7 +247,7 @@ public class WebSocketClient
                         && !id.startsWith("SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE"))*/
                 {
 
-                    //logger.debug("收到消息  " + text);
+                    logger.debug("收到消息  " + text);
                 }
 
 
@@ -351,6 +352,27 @@ public class WebSocketClient
         else if (msgId.equals(SubscriptionHelper.METHOD_CHANNELS_LIST))
         {
             //processChannelsList(jsonText);
+        }
+        else if (msgId.equals(SubscriptionHelper.METHOD_SEND_CREATE_CHANNEL_OR_GROUP_MESSAGE))
+        {
+            processCreateChanelOrGroupMessage(jsonText);
+        }
+    }
+
+    /**
+     * 处理创建群聊返回消息
+     * @param jsonText
+     */
+    private void processCreateChanelOrGroupMessage(JSONObject jsonText)
+    {
+        if (jsonText.has("error"))
+        {
+            String ret = jsonText.getJSONObject("error").getString("reason");
+            String roomName = ret.substring(ret.indexOf("'") + 1, ret.lastIndexOf("'"));
+            if (CreateGroupDialog.getContext() != null)
+            {
+                CreateGroupDialog.getContext().showRoomExistMessage(roomName);
+            }
         }
     }
 
@@ -1129,5 +1151,10 @@ public class WebSocketClient
     public void createDirectChat(String username)
     {
         subscriptionHelper.sendCreateDirectMessage(username);
+    }
+
+    public void createChannelOrGroup(String name, String members, boolean privateGroup)
+    {
+        subscriptionHelper.sendCreateChannelOrGroupMessage(name, members, privateGroup, false);
     }
 }

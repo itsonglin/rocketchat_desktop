@@ -102,34 +102,32 @@ public class RoomsPanel extends ParentAvailablePanel
                     item.setTimestamp(room.getLastChatAt());
                     item.setUnreadCount(room.getUnreadCount());
                     roomItemsListView.notifyItemChanged(i);
-                    /*RoomItemViewHolder holder = (RoomItemViewHolder) roomItemsListView.getItem(i);
-
-                    item.setLastMessage(room.getLastMessage());
-                    item.setTimestamp(room.getLastChatAt());
-                    item.setUnreadCount(room.getUnreadCount());
-
-                    if (item.getLastMessage() != null && item.getLastMessage().length() > 15)
-                    {
-                        holder.brief.setText(item.getLastMessage().substring(0, 15) + "...");
-                    }else
-                    {
-                        holder.brief.setText(item.getLastMessage());
-                    }
-
-                    holder.time.setText(TimeUtil.diff(item.getTimestamp()));
-                    //holder.brief.setText(item.getLastMessage());
-                    if (item.getUnreadCount() > 0)
-                    {
-                        holder.unreadCount.setVisible(true);
-                        holder.unreadCount.setText(item.getUnreadCount() + "");
-                    } else
-                    {
-                        holder.unreadCount.setVisible(false);
-                    }*/
                 }
                 break;
             }
         }
+    }
+
+    /**
+     * 激活指定的房间项目
+     * @param position
+     */
+    public void activeItem(int position)
+    {
+        RoomItemViewHolder holder = (RoomItemViewHolder) roomItemsListView.getItem(position);
+        setItemBackground(holder, Colors.ITEM_SELECTED);
+    }
+
+    /**
+     * 设置每个房间项目的背影色
+     * @param holder
+     * @param color
+     */
+    private void setItemBackground(RoomItemViewHolder holder, Color color)
+    {
+        holder.setBackground(color);
+        holder.nameBrief.setBackground(color);
+        holder.timeUnread.setBackground(color);
     }
 
 

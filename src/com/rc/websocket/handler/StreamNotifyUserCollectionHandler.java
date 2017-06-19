@@ -8,6 +8,7 @@ import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
 import com.rc.forms.ChatPanel;
+import com.rc.forms.CreateGroupDialog;
 import com.rc.forms.RoomsPanel;
 import com.rc.websocket.SubscriptionHelper;
 import com.rc.websocket.WebSocketClient;
@@ -52,26 +53,32 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
             {
                 logger.debug("stream-notify-user  ==== notification");
                 processNotification(data);
-            } else if (eventName.equals("message"))
+            }
+            else if (eventName.equals("message"))
             {
                 logger.debug("stream-notify-user  ==== message");
                 processRoomMessage(data);
-            } else if (eventName.equals("webrtc"))
+            }
+            else if (eventName.equals("webrtc"))
             {
                 logger.debug("stream-notify-user  ==== webrtc");
-            } else if (eventName.equals("otr"))
+            }
+            else if (eventName.equals("otr"))
             {
                 logger.debug("stream-notify-user  ==== otr");
-            } else if (eventName.equals("rooms-changed"))
+            }
+            else if (eventName.equals("rooms-changed"))
             {
                 logger.debug("stream-notify-user  ==== rooms-changed");
                 processRoomChanged(data);
-            } else if (eventName.equals("subscriptions-changed")) // 创建群、发起直接聊天、被邀请入群
+            }
+            else if (eventName.equals("subscriptions-changed")) // 创建群、发起直接聊天、被邀请入群
             {
                 logger.debug("stream-notify-user  ==== subscriptions-changed");
                 processSubscriptionsChange(data);
             }
-        } catch (JSONException ee)
+        }
+        catch (JSONException ee)
         {
             ee.printStackTrace();
         }
@@ -280,11 +287,13 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
                                 handleNewUserAdded(mutedUser);
                             }
                             room.setMuted(mutedUser.join(","));
-                        } else
+                        }
+                        else
                         {
                             room.setMuted(null);
                         }
-                    } else
+                    }
+                    else
                     {
                         room.setMuted(null);
                     }
@@ -366,12 +375,20 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
      */
     private void checkAndOpenChatRoomActivity(Room room)
     {
+        // 如果已打开创建群聊窗口，关闭
+        if (CreateGroupDialog.getContext() != null && CreateGroupDialog.getContext().isVisible())
+        {
+            CreateGroupDialog.getContext().setVisible(false);
+        }
         // 如果是我创建的群聊，打打开窗口
         if (room.getCreatorName().equals(currentUserService.findAll().get(0).getUsername()))
         {
             // 通知UI打开聊天窗口
             logger.debug("通知UI打开聊天窗口");
             ChatPanel.getContext().enterRoom(room.getRoomId());
+
+            // 激活左侧房间列表
+            //RoomsPanel.getContext().activeItem(0);
         }
 
     }

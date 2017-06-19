@@ -35,4 +35,14 @@ public class RoomService extends BasicService<RoomDao, Room>
     {
         return dao.findRelativeRoomIdByUserId(userId);
     }
+
+    public Room findByName(String name)
+    {
+        List list = dao.find("name", name);
+        if (list.size() > 0)
+        {
+            return (Room) list.get(0);
+        }
+        return null;
+    }
 }
