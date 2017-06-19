@@ -71,7 +71,7 @@ public class WebSocketClient
         logger = Logger.getLogger(this.getClass());
 
         streamRoomMessagesHandler = new StreamRoomMessagesHandler();
-        streamNotifyUserCollectionHandler = new StreamNotifyUserCollectionHandler(subscriptionHelper, WebSocketClient.this);
+        streamNotifyUserCollectionHandler = new StreamNotifyUserCollectionHandler(WebSocketClient.this);
     }
 
     public static WebSocketClient getContext()
@@ -111,6 +111,7 @@ public class WebSocketClient
             else
             {
                 subscriptionHelper = new SubscriptionHelper(webSocket);
+                streamNotifyUserCollectionHandler.setSubscriptionHelper(subscriptionHelper);
             }
 
             LAST_RECONNECT_TIME = System.currentTimeMillis();
@@ -1123,5 +1124,10 @@ public class WebSocketClient
     public void sendReadMessage(String roomId)
     {
         subscriptionHelper.sendReadMessages(roomId);
+    }
+
+    public void createDirectChat(String username)
+    {
+        subscriptionHelper.sendCreateDirectMessage(username);
     }
 }

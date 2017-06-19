@@ -85,16 +85,16 @@ public class TitlePanel extends ParentAvailablePanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                JPanel roomMemberPanel = ((RightPanel) getParentPanel()).getRoomMembersPanel();
+                RoomMembersPanel roomMemberPanel = ((RightPanel) getParentPanel()).getRoomMembersPanel();
                 if (roomMemberPanel.isVisible())
                 {
                     roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
-                    roomMemberPanel.setVisible(false);
+                    roomMemberPanel.setVisibleAndUpdateUI(false);
                 }
                 else
                 {
                     roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options_restore.png")));
-                    roomMemberPanel.setVisible(true);
+                    roomMemberPanel.setVisibleAndUpdateUI(true);
                 }
             }
         });
@@ -106,8 +106,11 @@ public class TitlePanel extends ParentAvailablePanel
     public void hideRoomMembersPanel()
     {
         JPanel roomMemberPanel = ((RightPanel) getParentPanel()).getRoomMembersPanel();
-        roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
-        roomMemberPanel.setVisible(false);
+        if (roomMemberPanel.isVisible())
+        {
+            roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
+            roomMemberPanel.setVisible(false);
+        }
     }
 
     /**

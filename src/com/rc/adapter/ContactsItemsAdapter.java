@@ -4,6 +4,7 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.entity.ContactsItem;
+import com.rc.forms.RightPanel;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.CharacterParser;
@@ -99,6 +100,9 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
             @Override
             public void mouseClicked(MouseEvent e)
             {
+                RightPanel.getContext().getUserInfoPanel().setUsername(item.getName());
+                RightPanel.getContext().showPanel(RightPanel.USER_INFO);
+
                 setBackground(viewHolder, Colors.ITEM_SELECTED);
                 selectedViewHolder = viewHolder;
 
@@ -136,7 +140,7 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
         holder.setBackground(color);
     }
 
-    private void processData()
+    public void processData()
     {
         Collections.sort(contactsItems);
 

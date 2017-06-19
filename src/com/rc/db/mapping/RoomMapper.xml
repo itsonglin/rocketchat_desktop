@@ -18,6 +18,11 @@
 		SELECT * FROM room where roomId = #{id}
 	</select>
 
+    <select id="findRelativeRoomIdByUserId" resultType="Room" statementType="STATEMENT" parameterType="map">
+        SELECT * FROM room where roomId like ${condition}
+    </select>
+
+
     <select id="findAll" resultType="Room">
 		SELECT * FROM room ORDER BY lastChatAt DESC
 	</select>

@@ -31,4 +31,8 @@ public class RoomService extends BasicService<RoomDao, Room>
         }
     }
 
+    public Room findRelativeRoomIdByUserId(String userId)
+    {
+        return dao.findRelativeRoomIdByUserId(userId);
+    }
 }

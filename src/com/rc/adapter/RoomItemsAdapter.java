@@ -163,8 +163,12 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         // 加载房间消息
         ChatPanel.getContext().enterRoom(roomId);
 
-        RoomMembersPanel.getContext().setRoomId(roomId);
-        TitlePanel.getContext().hideRoomMembersPanel();
+        //TitlePanel.getContext().hideRoomMembersPanel();
+        /*RoomMembersPanel.getContext().setRoomId(roomId);
+        if (RoomMembersPanel.getContext().isVisible())
+        {
+            RoomMembersPanel.getContext().updateUI();
+        }*/
     }
 
 }

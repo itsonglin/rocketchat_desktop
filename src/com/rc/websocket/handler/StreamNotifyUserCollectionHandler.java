@@ -7,6 +7,7 @@ import com.rc.db.service.ContactsUserService;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
+import com.rc.forms.ChatPanel;
 import com.rc.forms.RoomsPanel;
 import com.rc.websocket.SubscriptionHelper;
 import com.rc.websocket.WebSocketClient;
@@ -34,11 +35,10 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
 
     private Logger logger;
 
-    public StreamNotifyUserCollectionHandler(SubscriptionHelper helper, WebSocketClient webSocketService)
+    public StreamNotifyUserCollectionHandler(WebSocketClient webSocketService)
     {
         logger = Logger.getLogger(this.getClass());
 
-        this.subscriptionHelper = helper;
         this.webSocketService = webSocketService;
     }
 
@@ -159,7 +159,7 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
                     room.setCreatorName(room.getName());
                 }
 
-                room.setUpdatedAt(obj.getJSONObject("_updatedAt").getString("$date"));
+                room.setUpdatedAt(String.valueOf(obj.getJSONObject("_updatedAt").getLong("$date")));
 
                 //roomService.insertOrUpdate(Realm.getDefaultInstance(), room);
                 roomService.insertOrUpdate(room);
@@ -340,10 +340,18 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
 
     private void subscription(Room room)
     {
-        subscriptionHelper.subscriptionStreamNotifyRoomDeleteMessage(room.getRoomId());
-        subscriptionHelper.subscriptionStreamNotifyRoomTyping(room.getRoomId());
-        subscriptionHelper.subscriptionStreamNotifyRoomWebrtc(room.getRoomId());
-        subscriptionHelper.subscriptionStreamRoomMessages(room.getRoomId());
+        try
+        {
+            subscriptionHelper.subscriptionStreamNotifyRoomDeleteMessage(room.getRoomId());
+            subscriptionHelper.subscriptionStreamNotifyRoomTyping(room.getRoomId());
+            subscriptionHelper.subscriptionStreamNotifyRoomWebrtc(room.getRoomId());
+            subscriptionHelper.subscriptionStreamRoomMessages(room.getRoomId());
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -353,23 +361,12 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
      */
     private void checkAndOpenChatRoomActivity(Room room)
     {
-        //Realm realm = Realm.getDefaultInstance();
-        Map<String, String> param = new HashMap<>();
-        param.put("roomId", room.getRoomId());
-        param.put("type", room.getType());
-
         // 如果是我创建的群聊，打打开窗口
-        /*if (room.getCreatorName().equals(currentUserService.find(realm).getUsername()))
-        {
-            // 通知UI打开聊天窗口
-            ((WebSocketService) WebSocketService.context).sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION,
-                    WebSocketService.EVENT_OPEN_CHAT_ROOM, param);
-        }
-        realm.close();*/
         if (room.getCreatorName().equals(currentUserService.findAll().get(0).getUsername()))
         {
             // 通知UI打开聊天窗口
             logger.debug("通知UI打开聊天窗口");
+            ChatPanel.getContext().enterRoom(room.getRoomId());
         }
 
     }
@@ -403,5 +400,10 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
     private boolean isForeground()
     {
         return false;
+    }
+
+    public void setSubscriptionHelper(SubscriptionHelper subscriptionHelper)
+    {
+        this.subscriptionHelper = subscriptionHelper;
     }
 }

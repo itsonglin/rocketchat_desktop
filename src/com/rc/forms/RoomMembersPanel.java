@@ -2,10 +2,7 @@ package com.rc.forms;
 
 import com.rc.adapter.RoomMembersAdapter;
 import com.rc.app.Launcher;
-import com.rc.components.Colors;
-import com.rc.components.GBC;
-import com.rc.components.RCButton;
-import com.rc.components.RCListView;
+import com.rc.components.*;
 import com.rc.db.model.CurrentUser;
 import com.rc.db.model.Room;
 import com.rc.db.service.CurrentUserService;
@@ -28,7 +25,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
 
     private RCListView listView = new RCListView();
     private JPanel operationPanel = new JPanel();
-    private JButton leaveButton = new RCButton();
+    private JButton leaveButton;
 
     private List<String> members = new ArrayList<>();
     private String roomId;
@@ -57,13 +54,13 @@ public class RoomMembersPanel extends ParentAvailablePanel
         setVisible(false);
         listView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
         listView.setContentPanelBackground(Colors.FONT_WHITE);
+        listView.getContentPanel().setBackground(Colors.FONT_WHITE);
 
         operationPanel.setPreferredSize(new Dimension(60, 80));
         operationPanel.setBackground(Colors.FONT_WHITE);
 
 
-
-        leaveButton.setText("退出群聊");
+        leaveButton = new RCButton("退出群聊", Colors.WINDOW_BACKGROUND_LIGHT, Colors.WINDOW_BACKGROUND, Colors.SCROLL_BAR_TRACK_LIGHT);
         leaveButton.setForeground(Colors.RED);
         leaveButton.setPreferredSize(new Dimension(180, 30));
 
@@ -74,10 +71,14 @@ public class RoomMembersPanel extends ParentAvailablePanel
         operationPanel.add(leaveButton);
 
         setLayout(new GridBagLayout());
-        add(listView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 70));
-        add(operationPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(5, 0, 0, 0));
+        add(listView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1000));
+        add(operationPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(10, 0, 5, 0));
 
         listView.setAdapter(new RoomMembersAdapter(members));
+
+        /*setLayout(new VerticalFlowLayout(FlowLayout.CENTER, 0, 10, true, false));
+        add(listView);
+        add(operationPanel);*/
     }
 
     public void setRoomId(String roomId)
@@ -86,30 +87,44 @@ public class RoomMembersPanel extends ParentAvailablePanel
         room = roomService.findById(roomId);
     }
 
-    @Override
-    public void setVisible(boolean aFlag)
+    public void setVisibleAndUpdateUI(boolean aFlag)
     {
         if (aFlag)
         {
-            if (roomId != null)
-            {
-                getRoomMembers();
-
-                // 单独聊天，不显示退出按钮
-                if (room.getType().equals("d"))
-                {
-                    leaveButton.setVisible(false);
-                }else
-                {
-                    leaveButton.setVisible(true);
-                }
-
-                super.setVisible(aFlag);
-                listView.notifyDataSetChanged(false);
-            }
+            updateUI();
+            setVisible(aFlag);
         }
 
-        super.setVisible(aFlag);
+        setVisible(aFlag);
+    }
+
+    public void updateUI()
+    {
+        if (roomId != null)
+        {
+            getRoomMembers();
+
+            // 单独聊天，不显示退出按钮
+            if (room.getType().equals("d"))
+            {
+                leaveButton.setVisible(false);
+            }else
+            {
+                leaveButton.setVisible(true);
+            }
+
+            listView.notifyDataSetChanged(false);
+
+            // 如果是公告，则不允许退出
+            if (room.getRoomId().equals("GENERAL"))
+            {
+                setLeaveButtonVisibility(false);
+            }
+            else
+            {
+                setLeaveButtonVisibility(true);
+            }
+        }
     }
 
     private void getRoomMembers()
@@ -171,5 +186,10 @@ public class RoomMembersPanel extends ParentAvailablePanel
     public static RoomMembersPanel getContext()
     {
         return roomMembersPanel;
+    }
+
+    public void setLeaveButtonVisibility(boolean visible)
+    {
+        operationPanel.setVisible(visible);
     }
 }

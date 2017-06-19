@@ -275,6 +275,7 @@ public class ChatPanel extends ParentAvailablePanel
         CHAT_ROOM_OPEN_ID = roomId;
         this.room = roomService.findById(roomId);
 
+
         // 更新房间标题，尤其是成员数
         updateRoomTitle();
 
@@ -282,6 +283,9 @@ public class ChatPanel extends ParentAvailablePanel
         this.notifyDataSetChanged();
 
         sendReadMessage();
+
+        //TitlePanel.getContext().hideRoomMembersPanel();
+        RoomMembersPanel.getContext().setRoomId(roomId);
     }
 
     private void updateRoomTitle()
@@ -798,6 +802,8 @@ public class ChatPanel extends ParentAvailablePanel
                 messagePanel.setVisible(true);
                 messageEditorPanel.setVisible(true);
                 messagePanel.getMessageListView().setVisible(true);
+
+                TitlePanel.getContext().hideRoomMembersPanel();
             }
         }).start();
     }

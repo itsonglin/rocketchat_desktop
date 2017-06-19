@@ -1,9 +1,13 @@
 package com.rc.app;
 
 
+import com.rc.utils.IconUtil;
 import com.vdurmont.emoji.EmojiParser;
 
 import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * Created by song on 14/06/2017.
@@ -11,7 +15,7 @@ import javax.swing.*;
 
 class Test extends JFrame
 {
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException, FontFormatException
     {
         JFrame frame = new Frame();
         frame.setBounds(100, 100, 300, 400);
@@ -23,7 +27,7 @@ class Frame extends JFrame
 {
     private JTextArea textPane;
 
-    public Frame()
+    public Frame() throws IOException, FontFormatException
     {
         textPane = new JTextArea();
         add(textPane);
@@ -41,10 +45,14 @@ class Frame extends JFrame
         //设置编辑器关联的一个文档。*/
 
 
-        String text = "A :cat:, :dog: and a :mouse: became friends<3. For :dog:'s birthday party, they all had :hamburger:s, :fries:s, :cookie:s and :cake:.";
+        String text = "\n\nA :cat:, :dog: and a :mouse: became friends<3. For :dog:'s birthday party, they all had :hamburger:s, :fries:s, :cookie:s and :cake:.";
 
        // String  str = EmojiUtils.emojify(text); //returns A 🐱, 🐶 and a 🐭 became friends❤️. For 🐶's birthday party, they all had 🍔s, 🍟s, 🍪s and 🍰.
 
+        InputStream is = getClass().getResourceAsStream("/fonts/yahei.ttf");
+        Font font = Font.createFont(Font.TRUETYPE_FONT, is);
+        Font font2 = font.deriveFont(14);
+        textPane.setFont(font2);
         String str = EmojiParser.parseToUnicode(text);
         textPane.setText(str);
         System.out.println(str);

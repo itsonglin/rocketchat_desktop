@@ -68,11 +68,14 @@ public class ContactsPanel extends ParentAvailablePanel
 
             contactsItemList.add(item);
         }
+
+        System.out.println(contactsItemList);
     }
 
     public void notifyDataSetChanged()
     {
         initData();
+        ((ContactsItemsAdapter) contactsListView.getAdapter()).processData();
         contactsListView.notifyDataSetChanged(false);
 
         // 通讯录更新后，获取头像
