@@ -284,6 +284,7 @@ public class ChatPanel extends ParentAvailablePanel
 
         sendReadMessage();
 
+
         //TitlePanel.getContext().hideRoomMembersPanel();
         RoomMembersPanel.getContext().setRoomId(roomId);
     }
@@ -804,6 +805,7 @@ public class ChatPanel extends ParentAvailablePanel
                 messagePanel.getMessageListView().setVisible(true);
 
                 TitlePanel.getContext().hideRoomMembersPanel();
+                checkIsMuted();
             }
         }).start();
     }
@@ -1693,6 +1695,22 @@ public class ChatPanel extends ParentAvailablePanel
         //room = roomService.findById(realm, room.getRoomId());
         //System.out.println(room);
 
+    }
+
+    /**
+     * 检查是否被禁言，如果已被禁言，输入框与发送按钮不可用
+     */
+    public void checkIsMuted()
+    {
+        room = roomService.findById(roomId);
+        if (room.getMuted() != null && room.getMuted().indexOf("\"" + currentUser.getUsername() + "\"") > -1)
+        {
+            messageEditorPanel.setVisible(false);
+        }
+        else
+        {
+            messageEditorPanel.setVisible(true);
+        }
     }
 
 }

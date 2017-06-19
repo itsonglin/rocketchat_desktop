@@ -297,6 +297,11 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
                     //roomService.insertOrUpdate(Realm.getDefaultInstance(), room);
                     roomService.insertOrUpdate(room);
                     //this.webSocketService.sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, WebSocketService.EVENT_MUTED);
+
+                    if (room.getRoomId().equals(ChatPanel.CHAT_ROOM_OPEN_ID))
+                    {
+                        ChatPanel.getContext().checkIsMuted();
+                    }
                 }
                 //realm.close();
             }
