@@ -1,5 +1,6 @@
 package com.rc.components.message;
 
+import com.rc.app.ShadowBorder;
 import com.rc.components.Colors;
 import com.rc.components.RCMainOperationMenuItemUI;
 import com.rc.components.RCMenuItemUI;
@@ -69,7 +70,10 @@ public class MainOperationPopupMenu extends JPopupMenu
      */
     private void showCreateGroupDialog()
     {
-        CreateGroupDialog dialog = new CreateGroupDialog(MainFrame.getContext(), true);
-        dialog.setVisible(true);
+        CreateGroupDialog dialog = new CreateGroupDialog(null, true);
+        //dialog.setVisible(true);
+
+        ShadowBorderDialog shadowBorderDialog = new ShadowBorderDialog(MainFrame.getContext(), true, dialog);
+        shadowBorderDialog.setVisible(true);
     }
 }

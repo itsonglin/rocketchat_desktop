@@ -1,13 +1,17 @@
 package com.rc.forms;
 
 import com.rc.app.Launcher;
+import com.rc.app.ShadowBorder;
 import com.rc.components.*;
 import com.rc.db.model.ContactsUser;
 import com.rc.db.service.ContactsUserService;
 import com.rc.utils.FontUtil;
+import com.rc.utils.OSUtil;
 import com.rc.websocket.WebSocketClient;
+import com.sun.awt.AWTUtilities;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -35,7 +39,7 @@ public class CreateGroupDialog extends JDialog
     private ContactsUserService contactsUserService = Launcher.contactsUserService;
 
 
-    public static final int DIALOG_WIDTH = 600;
+    public static final int DIALOG_WIDTH = 580;
     public static final int DIALOG_HEIGHT = 500;
 
 
@@ -65,17 +69,26 @@ public class CreateGroupDialog extends JDialog
 
     private void initComponents()
     {
-        int posX = MainFrame.getContext().getX();
+        /*int posX = MainFrame.getContext().getX();
         int posY = MainFrame.getContext().getY();
 
         posX = posX + (MainFrame.getContext().currentWindowWidth - DIALOG_WIDTH) / 2;
         posY = posY + (MainFrame.getContext().currentWindowHeight - DIALOG_HEIGHT) / 2;
         setBounds(posX, posY, DIALOG_WIDTH, DIALOG_HEIGHT);
-        setUndecorated(true);
+        setUndecorated(true);*/
+
+       // getRootPane().setBorder(new LineBorder(Colors.LIGHT_GRAY));
+
+       /* if (OSUtil.getOsType() != OSUtil.Mac_OS)
+        {
+            // 边框阴影，但是会导致字体失真
+            AWTUtilities.setWindowOpaque(this, false);
+            //getRootPane().setOpaque(false);
+            getRootPane().setBorder(ShadowBorder.newInstance());
+        }*/
 
         // 输入面板
         editorPanel = new JPanel();
-
         groupNameTextField = new RCTextField();
         groupNameTextField.setPlaceholder("群聊名称");
         groupNameTextField.setPreferredSize(new Dimension(DIALOG_WIDTH / 2, 35));
@@ -84,7 +97,8 @@ public class CreateGroupDialog extends JDialog
         groupNameTextField.setMargin(new Insets(0, 15, 0, 0));
 
         privateCheckBox = new JCheckBox("私有");
-        privateCheckBox.setToolTipText("私有群聊对外不可见，聊天内容无法被非群成员浏览，只有创建者才有权限添加成员，建议勾选此项");
+        privateCheckBox.setFont(FontUtil.getDefaultFont(14));
+        privateCheckBox.setToolTipText("私有群组对外不可见，聊天内容无法被非群成员浏览，只有创建者才有权限添加成员，建议勾选此项");
         privateCheckBox.setSelected(true);
 
 

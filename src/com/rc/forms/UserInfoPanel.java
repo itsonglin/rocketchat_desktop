@@ -14,7 +14,6 @@ import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 import com.rc.websocket.WebSocketClient;
-import com.sun.tools.javac.comp.Flow;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

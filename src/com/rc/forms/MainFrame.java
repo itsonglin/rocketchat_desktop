@@ -1,6 +1,7 @@
 package com.rc.forms;
 
 
+import com.rc.app.ShadowBorder;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.utils.FontUtil;
@@ -76,8 +77,7 @@ public class MainFrame extends JFrame
         {
             InputStream inputStream = getClass().getResourceAsStream("/wav/msg.wav");
             messageSound = new AudioStream(inputStream);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -93,8 +93,7 @@ public class MainFrame extends JFrame
             InputStream inputStream = getClass().getResourceAsStream("/wav/msg.wav");
             messageSound = new AudioStream(inputStream);
             AudioPlayer.player.start(messageSound);
-        }
-        catch (Exception e)
+        } catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -112,8 +111,7 @@ public class MainFrame extends JFrame
             if (OSUtil.getOsType() == OSUtil.Mac_OS)
             {
                 normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher_dark.png", 20, 20).getImage();
-            }
-            else
+            } else
             {
                 normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher.png", 20, 20).getImage();
             }
@@ -143,8 +141,7 @@ public class MainFrame extends JFrame
 
 
             systemTray.add(trayIcon);
-        }
-        catch (AWTException e)
+        } catch (AWTException e)
         {
             e.printStackTrace();
         }
@@ -171,8 +168,7 @@ public class MainFrame extends JFrame
                         trayIcon.setImage(normalTrayIcon);
                         Thread.sleep(800);
 
-                    }
-                    catch (InterruptedException e)
+                    } catch (InterruptedException e)
                     {
                         e.printStackTrace();
                     }
@@ -198,13 +194,15 @@ public class MainFrame extends JFrame
     {
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
+        // 任务栏图标
+        setIconImage(IconUtil.getIcon(this, "/image/ic_launcher.png").getImage());
 
         UIManager.put("Label.font", FontUtil.getDefaultFont());
         UIManager.put("Panel.font", FontUtil.getDefaultFont());
         UIManager.put("TextArea.font", FontUtil.getDefaultFont());
 
-        //UIManager.put("Panel.background", Colors.WINDOW_BACKGROUND);
-
+        UIManager.put("Panel.background", Colors.WINDOW_BACKGROUND);
+        UIManager.put("CheckBox.background", Colors.WINDOW_BACKGROUND);
 
 
         leftPanel = new LeftPanel();
@@ -233,16 +231,19 @@ public class MainFrame extends JFrame
             try
             {
                 UIManager.setLookAndFeel(windows);
-            }
-            catch (Exception e)
+            } catch (Exception e)
             {
                 e.printStackTrace();
             }
+
+            // 边框阴影
+/*            AWTUtilities.setWindowOpaque(this, false);
+            getRootPane().setBorder(ShadowBorder.newInstance());
+            getRootPane().setOpaque(true);*/
         }
 
         addListener();
 
-        // getRootPane().setBorder(new LineBorder(Colors.LIGHT_GRAY));
 
         add(leftPanel, BorderLayout.WEST);
         add(rightPanel, BorderLayout.CENTER);
