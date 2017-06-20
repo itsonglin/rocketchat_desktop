@@ -40,8 +40,8 @@ public class SelectUserItemViewHolder extends ViewHolder
 
         setLayout(new GridBagLayout());
         add(avatar, new GBC(0, 0).setWeight(1, 1).setFill(GBC.BOTH).setInsets(0,5,0,0));
-        add(username, new GBC(1, 0).setWeight(20, 1).setFill(GBC.BOTH));
-        add(icon, new GBC(2, 0).setWeight(1, 1).setFill(GBC.BOTH));
+        add(username, new GBC(1, 0).setWeight(100, 1).setFill(GBC.BOTH).setInsets(0,5,0,0));
+        add(icon, new GBC(2, 0).setWeight(1, 1).setFill(GBC.BOTH).setInsets(0,0,0,5));
     }
 
     private void initView()

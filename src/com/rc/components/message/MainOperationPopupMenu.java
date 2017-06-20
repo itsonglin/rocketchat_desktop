@@ -71,9 +71,9 @@ public class MainOperationPopupMenu extends JPopupMenu
     private void showCreateGroupDialog()
     {
         CreateGroupDialog dialog = new CreateGroupDialog(null, true);
-        //dialog.setVisible(true);
+        dialog.setVisible(true);
 
-        ShadowBorderDialog shadowBorderDialog = new ShadowBorderDialog(MainFrame.getContext(), true, dialog);
-        shadowBorderDialog.setVisible(true);
+        /*ShadowBorderDialog shadowBorderDialog = new ShadowBorderDialog(MainFrame.getContext(), true, dialog);
+        shadowBorderDialog.setVisible(true);*/
     }
 }
