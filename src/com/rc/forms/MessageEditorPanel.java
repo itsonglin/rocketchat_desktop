@@ -27,6 +27,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
     private RCButton sendButton;
     private ImageIcon fileNormalIcon;
     private ImageIcon fileActiveIcon;
+    private ChatEditorPopupMenu chatEditorPopupMenu;
 
 
     public MessageEditorPanel(JPanel parent)
@@ -70,6 +71,8 @@ public class MessageEditorPanel extends ParentAvailablePanel
         sendButton.setForeground(Colors.DARKER);
         sendButton.setFont(FontUtil.getDefaultFont(13));
         sendButton.setPreferredSize(new Dimension(75,23));
+
+        chatEditorPopupMenu = new ChatEditorPopupMenu();
     }
 
     private void initView()
@@ -103,13 +106,11 @@ public class MessageEditorPanel extends ParentAvailablePanel
         textEditor.addMouseListener(new MouseAdapter()
         {
             @Override
-            public void mouseClicked(MouseEvent e)
+            public void mouseReleased(MouseEvent e)
             {
                 if (e.getButton() == MouseEvent.BUTTON3)
                 {
-                    ChatEditorPopupMenu menu = new ChatEditorPopupMenu();
-                    menu.show((Component) e.getSource(), e.getX(), e.getY());
-
+                    chatEditorPopupMenu.show((Component) e.getSource(), e.getX(), e.getY());
                 }
                 super.mouseClicked(e);
             }

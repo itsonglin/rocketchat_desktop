@@ -68,7 +68,7 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
         text.addMouseListener(new MouseAdapter()
         {
             @Override
-            public void mouseReleased(MouseEvent e)
+            public void mouseExited(MouseEvent e)
             {
                 if (e.getX() > text.getWidth() || e.getY() > text.getHeight())
                 {
@@ -85,7 +85,7 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
             }
 
             @Override
-            public void mouseClicked(MouseEvent e)
+            public void mouseReleased(MouseEvent e)
             {
                 if (e.getButton() == MouseEvent.BUTTON3)
                 {
@@ -94,7 +94,17 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
             }
         });
 
-
+        messageBubble.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON3)
+                {
+                    popupMenu.show(text, e.getX(), e.getY());
+                }
+            }
+        });
     }
 
     private void initView()

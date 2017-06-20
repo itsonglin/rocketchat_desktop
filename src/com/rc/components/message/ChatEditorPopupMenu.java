@@ -51,7 +51,7 @@ public class ChatEditorPopupMenu extends JPopupMenu
             {
                 JTextPane textPane = (JTextPane) getInvoker();
 
-                String text = textPane.getSelectedText() == null ? textPane.getText() : textPane.getSelectedText();
+                String text = textPane.getSelectedText();
                 if (text != null)
                 {
                     ClipboardUtil.copyString(text);
