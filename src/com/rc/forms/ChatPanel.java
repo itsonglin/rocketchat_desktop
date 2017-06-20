@@ -275,12 +275,14 @@ public class ChatPanel extends ParentAvailablePanel
         CHAT_ROOM_OPEN_ID = roomId;
         this.room = roomService.findById(roomId);
 
+        // 更新消息列表
+        this.notifyDataSetChanged();
 
         // 更新房间标题，尤其是成员数
         updateRoomTitle();
 
-        // 更新消息列表
-        this.notifyDataSetChanged();
+        System.out.println(roomMembers);
+
 
         sendReadMessage();
 
@@ -386,10 +388,12 @@ public class ChatPanel extends ParentAvailablePanel
                         {
                             System.out.println("一个月内没有消息或拿到的消息少于10条，继续拿");
                             loadRemoteHistory(loadRemoteStartTime, lastStartTime, false, firstRequest, this);
+
+                            //System.out.println("start = " + loadRemoteStartTime + ",  " + room.getCreatedAt());
                         }
                         else
                         {
-                            System.out.println("年代太久远，不拿了");
+                            System.out.println("距离现在时间过长，放弃获取历史消息");
                         }
                     }
                 }
@@ -1655,7 +1659,10 @@ public class ChatPanel extends ParentAvailablePanel
                         updateLocalMembers(roomMembers);
 
                         // 更新房间名中的成员数
-                        updateRoomTitle();
+                        String title = room.getName() + " (" + (roomMembers.size()) + ")";
+
+                        // 更新房间标题
+                        TitlePanel.getContext().updateRoomTitle(title);
                     }
 
                     roomMembers.remove(creator);

@@ -83,7 +83,7 @@ public class TitlePanel extends ParentAvailablePanel
         roomInfoButton.addMouseListener(new AbstractMouseListener()
         {
             @Override
-            public void mouseClicked(MouseEvent e)
+            public void mouseReleased(MouseEvent e)
             {
                 RoomMembersPanel roomMemberPanel = ((RightPanel) getParentPanel()).getRoomMembersPanel();
                 if (roomMemberPanel.isVisible())

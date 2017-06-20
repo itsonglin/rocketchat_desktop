@@ -173,21 +173,6 @@ public class CreateGroupDialog extends JDialog
         {
 
             createChannelOrGroup(name, privateCheckBox.isSelected(), selectUserPanel.getSelectedUser().toArray(new String[]{}));
-
-            /*HttpGetTask task = new HttpGetTask();
-            task.setListener(new HttpResponseListener()
-            {
-                @Override
-                public void onResult(Object ret)
-                {
-                    System.out.println(ret);
-                }
-            });
-
-            CurrentUser currentUser = currentUserService.findAll().get(0);
-            task.addHeader("X-Auth-Token", currentUser.getAuthToken());
-            task.addHeader("X-User-Id", currentUser.getUserId());
-            task.execute(Launcher.HOSTNAME + "/api/v1/channels.list?count=" + Integer.MAX_VALUE);*/
         }
     }
 
@@ -213,15 +198,6 @@ public class CreateGroupDialog extends JDialog
         sb.append("]");
 
         WebSocketClient.getContext().createChannelOrGroup(name, sb.toString(), privateGroup);
-
-
-       /* Intent intent = new Intent();
-        intent.setAction(WebSocketService.ACTIVITY_TO_WEBSOCKET_ACTION);
-        intent.putExtra("event", WebSocketService.EVENT_CREATE_CHANNEL_OR_GROUP);
-        intent.putExtra("name", name);
-        intent.putExtra("members", sb.toString());
-        intent.putExtra("private", privateGroup);
-        sendBroadcast(intent);*/
     }
 
     public static CreateGroupDialog getContext()

@@ -102,6 +102,8 @@ public class RoomMembersPanel extends ParentAvailablePanel
     {
         if (roomId != null)
         {
+            room = roomService.findById(roomId);
+
             getRoomMembers();
 
             // 单独聊天，不显示退出按钮

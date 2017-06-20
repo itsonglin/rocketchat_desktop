@@ -41,7 +41,6 @@ public class SelectUserPanel extends JPanel
     private List<SelectUserItemViewHolder> selectedHolders = new ArrayList<>();
 
 
-
     public SelectUserPanel(List<String> leftUserList)
     {
         this.leftUserList = leftUserList;
@@ -65,7 +64,6 @@ public class SelectUserPanel extends JPanel
 
         // 选择用户列表
         selectUserListView = new RCListView();
-        getContacts();
 
         selectUserItemsAdapter = new SelectUserItemsAdapter(leftUserList);
         selectUserItemsAdapter.setMouseListener(new AbstractMouseListener()
@@ -87,8 +85,6 @@ public class SelectUserPanel extends JPanel
                     holder.icon.setIcon(checkIcon);
                     selectedHolders.add(holder);
                 }
-
-
 
 
             }
@@ -134,24 +130,7 @@ public class SelectUserPanel extends JPanel
         leftPanel.add(selectUserListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0, 0, 5, 0));
 
         rightPanel.setLayout(new GridBagLayout());
-        rightPanel.add(selectedUserListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 60));
-    }
-
-    private void getContacts()
-    {
-        leftUserList.add("阿哥");
-
-        leftUserList.add("讨论组");
-
-        leftUserList.add("波哥");
-
-        leftUserList.add("不好");
-
-
-        for (int i = 0; i < 10; i++)
-        {
-            leftUserList.add("User " + i);
-        }
+        rightPanel.add(selectedUserListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
     }
 
     /**
