@@ -420,28 +420,32 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                imageCache.requestOriginalAsynchronously(item.getImageAttachment().getId(), item.getImageAttachment().getImageUrl(), new ImageCache.ImageCacheRequestListener()
+                if (e.getButton() == MouseEvent.BUTTON1)
                 {
-                    @Override
-                    public void onSuccess(ImageIcon icon, String path)
-                    {
-                        try
-                        {
-                            Desktop.getDesktop().open(new File(path));
-                        }
-                        catch (IOException e1)
-                        {
-                            JOptionPane.showMessageDialog(null, "图像不存在", "图像不存在", JOptionPane.ERROR_MESSAGE);
-                            e1.printStackTrace();
-                        }
-                    }
 
-                    @Override
-                    public void onFailed(String why)
+                    imageCache.requestOriginalAsynchronously(item.getImageAttachment().getId(), item.getImageAttachment().getImageUrl(), new ImageCache.ImageCacheRequestListener()
                     {
+                        @Override
+                        public void onSuccess(ImageIcon icon, String path)
+                        {
+                            try
+                            {
+                                Desktop.getDesktop().open(new File(path));
+                            }
+                            catch (IOException e1)
+                            {
+                                JOptionPane.showMessageDialog(null, "图像不存在", "图像不存在", JOptionPane.ERROR_MESSAGE);
+                                e1.printStackTrace();
+                            }
+                        }
 
-                    }
-                });
+                        @Override
+                        public void onFailed(String why)
+                        {
+
+                        }
+                    });
+                }
                 super.mouseClicked(e);
             }
         });

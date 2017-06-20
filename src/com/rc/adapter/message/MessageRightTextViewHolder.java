@@ -70,9 +70,6 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
             @Override
             public void mouseReleased(MouseEvent e)
             {
-                System.out.println(e);
-                System.out.println(e.getX() + ", " + e.getY() + ", " + text.getWidth() + ", " + text.getHeight());
-
                 if (e.getX() > text.getWidth() || e.getY() > text.getHeight())
                 {
                     messageBubble.setBackgroundIcon(messageBubble.getBackgroundNormalIcon());
@@ -92,7 +89,7 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
             {
                 if (e.getButton() == MouseEvent.BUTTON3)
                 {
-                    popupMenu.show(e.getComponent(), e.getX(), e.getY());
+                    popupMenu.show((Component) e.getSource(), e.getX(), e.getY());
                 }
             }
         });

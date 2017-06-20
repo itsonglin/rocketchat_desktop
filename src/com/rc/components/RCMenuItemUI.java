@@ -11,12 +11,28 @@ import java.awt.*;
  */
 public class RCMenuItemUI extends BasicMenuItemUI
 {
+
+    private int width;
+    private int height;
+
+    public RCMenuItemUI()
+    {
+        this(70, 30);
+    }
+
+    public RCMenuItemUI(int width, int height)
+    {
+
+        this.width = width;
+        this.height = height;
+    }
+
     @Override
     public void installUI(JComponent c)
     {
         super.installUI(c);
 
-        c.setPreferredSize(new Dimension(70, 30));
+        c.setPreferredSize(new Dimension(width, height));
         c.setBackground(Colors.FONT_WHITE);
         c.setFont(FontUtil.getDefaultFont(12));
         c.setBorder(null);

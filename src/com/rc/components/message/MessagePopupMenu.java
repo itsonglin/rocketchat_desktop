@@ -2,9 +2,15 @@ package com.rc.components.message;
 
 import com.rc.components.Colors;
 import com.rc.components.RCMenuItemUI;
+import com.rc.components.SizeAutoAdjustTextArea;
+import com.rc.utils.ClipboardUtil;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 
 /**
@@ -29,7 +35,14 @@ public class MessagePopupMenu extends JPopupMenu
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                System.out.println("复制");
+                SizeAutoAdjustTextArea textArea = (SizeAutoAdjustTextArea) getInvoker();
+
+                String text = textArea.getSelectedText() == null ? textArea.getText() : textArea.getSelectedText();
+                if (text != null)
+                {
+                    ClipboardUtil.copyString(text);
+                }
+
             }
         });
 

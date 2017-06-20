@@ -3,6 +3,7 @@ package com.rc.forms;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.ScrollUI;
+import com.rc.components.message.ChatEditorPopupMenu;
 import com.rc.components.message.JIMSendTextPane;
 import com.rc.components.RCButton;
 import com.rc.utils.FontUtil;
@@ -53,7 +54,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
 
         textEditor = new JTextPane();
         textEditor.setBackground(Colors.WINDOW_BACKGROUND);
-        textEditor.setFont(FontUtil.getDefaultFont(16));
+        textEditor.setFont(FontUtil.getDefaultFont(14));
         textEditor.setMargin(new Insets(0,15,0,0));
         textScrollPane = new JScrollPane(textEditor);
         textScrollPane.getVerticalScrollBar().setUI(new ScrollUI(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND));
@@ -96,6 +97,21 @@ public class MessageEditorPanel extends ParentAvailablePanel
             {
                 fileLabel.setIcon(fileNormalIcon);
                 super.mouseExited(e);
+            }
+        });
+
+        textEditor.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON3)
+                {
+                    ChatEditorPopupMenu menu = new ChatEditorPopupMenu();
+                    menu.show((Component) e.getSource(), e.getX(), e.getY());
+
+                }
+                super.mouseClicked(e);
             }
         });
     }
