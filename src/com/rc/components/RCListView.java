@@ -2,6 +2,7 @@ package com.rc.components;
 
 import com.rc.adapter.BaseAdapter;
 import com.rc.adapter.HeaderViewHolder;
+import com.rc.adapter.SelectUserItemViewHolder;
 import com.rc.adapter.ViewHolder;
 
 import javax.swing.*;
@@ -9,6 +10,7 @@ import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by song on 17-5-30.
@@ -342,6 +344,25 @@ public class RCListView extends JScrollPane
     {
         contentPanel.remove(position);
         //contentPanel.revalidate();
+    }
+
+    /**
+     * 获取列表中所有的ViewHolder项目，不包括HeaderViewHolder
+     * @return
+     */
+    public List<Component> getItems()
+    {
+        Component[] components = contentPanel.getComponents();
+        List<Component> viewHolders = new ArrayList<>();
+        for (Component com : components)
+        {
+            if (!(com instanceof HeaderViewHolder))
+            {
+                viewHolders.add(com);
+            }
+        }
+
+        return viewHolders;
     }
 
 

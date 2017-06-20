@@ -1,24 +1,21 @@
 package com.rc.forms;
 
-import com.rc.app.Launcher;
 import com.rc.app.ShadowBorder;
 import com.rc.components.*;
-import com.rc.db.model.ContactsUser;
-import com.rc.db.service.ContactsUserService;
+import com.rc.entity.SelectUserData;
 import com.rc.utils.FontUtil;
 import com.rc.utils.OSUtil;
-import com.rc.websocket.WebSocketClient;
 import com.sun.awt.AWTUtilities;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.rc.app.Launcher.roomService;
 
 /**
  * Created by song on 06/20/2017.
@@ -33,16 +30,18 @@ public class AddOrRemoveMemberDialog extends JDialog
     private JPanel buttonPanel;
     private JButton cancelButton;
     private JButton okButton;
-    private List<String> userList = new ArrayList<>();
+    private List<SelectUserData> userList = new ArrayList<>();
+    private List<SelectUserData> userListClone;
 
     public static final int DIALOG_WIDTH = 600;
     public static final int DIALOG_HEIGHT = 500;
 
 
-    public AddOrRemoveMemberDialog(Frame owner, boolean modal, List<String> userList)
+    public AddOrRemoveMemberDialog(Frame owner, boolean modal, List<SelectUserData> userList)
     {
         super(owner, modal);
         this.userList = userList;
+        userListClone = userList;
 
         initComponents();
 
@@ -70,12 +69,12 @@ public class AddOrRemoveMemberDialog extends JDialog
             getRootPane().setBorder(ShadowBorder.newInstance());
         }
 
-        selectUserPanel = new SelectUserPanel(userList);
+        selectUserPanel = new SelectUserPanel(DIALOG_WIDTH, DIALOG_HEIGHT - 100, userList);
 
         // 输入面板
         editorPanel = new JPanel();
         searchTextField = new RCTextField();
-        searchTextField.setPlaceholder("群聊名称");
+        searchTextField.setPlaceholder("搜索");
         searchTextField.setPreferredSize(new Dimension(DIALOG_WIDTH / 2, 35));
         searchTextField.setFont(FontUtil.getDefaultFont(14));
         searchTextField.setForeground(Colors.FONT_BLACK);
@@ -138,11 +137,62 @@ public class AddOrRemoveMemberDialog extends JDialog
                 super.mouseClicked(e);
             }
         });
+
+        searchTextField.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyReleased(KeyEvent e)
+            {
+                searchUsers(searchTextField.getText());
+                super.keyTyped(e);
+            }
+        });
     }
 
-    public List<String> getSelectedUser()
+    private void searchUsers(String key)
+    {
+        if (key == null || key.isEmpty())
+        {
+            for (SelectUserData item : userListClone)
+            {
+                List<SelectUserData> selectUserDataList = selectUserPanel.getSelectedUser();
+                if (selectUserDataList.contains(item))
+                {
+                    item.setSelected(true);
+                }
+                else
+                {
+                    item.setSelected(false);
+                }
+            }
+            selectUserPanel.notifyDataSetChanged(userListClone);
+            return;
+        }
+
+        key = key.toLowerCase();
+        List<SelectUserData> users = new ArrayList<>();
+
+        for (SelectUserData item : userList)
+        {
+            if (item.getName().toLowerCase().indexOf(key) > -1 && (!selectUserPanel.getSelectedUser().contains(item)))
+            {
+                users.add(item);
+            }
+        }
+
+        selectUserPanel.notifyDataSetChanged(users);
+    }
+
+    public List<SelectUserData> getSelectedUser()
     {
         return selectUserPanel.getSelectedUser();
     }
+
+    public JButton getOkButton()
+    {
+        return okButton;
+    }
+
+
 
 }

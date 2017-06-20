@@ -3,15 +3,24 @@ package com.rc.forms;
 import com.rc.adapter.RoomMembersAdapter;
 import com.rc.app.Launcher;
 import com.rc.components.*;
+import com.rc.db.model.ContactsUser;
 import com.rc.db.model.CurrentUser;
 import com.rc.db.model.Room;
+import com.rc.db.service.ContactsUserService;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.RoomService;
-import com.sun.javaws.jnl.LaunchDesc;
+import com.rc.entity.SelectUserData;
+import com.rc.tasks.HttpPostTask;
+import com.rc.tasks.HttpResponseListener;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +42,9 @@ public class RoomMembersPanel extends ParentAvailablePanel
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private CurrentUser currentUser;
     private Room room;
+    private ContactsUserService contactsUserService = Launcher.contactsUserService;
+    private RoomMembersAdapter adapter;
+    private AddOrRemoveMemberDialog addOrRemoveMemberDialog;
 
     public RoomMembersPanel(JPanel parent)
     {
@@ -41,6 +53,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
 
         initComponents();
         initView();
+        setListener();
 
         currentUser = currentUserService.findAll().get(0);
     }
@@ -74,7 +87,8 @@ public class RoomMembersPanel extends ParentAvailablePanel
         add(listView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1000));
         add(operationPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(10, 0, 5, 0));
 
-        listView.setAdapter(new RoomMembersAdapter(members));
+        adapter = new RoomMembersAdapter(members);
+        listView.setAdapter(adapter);
 
         /*setLayout(new VerticalFlowLayout(FlowLayout.CENTER, 0, 10, true, false));
         add(listView);
@@ -197,4 +211,211 @@ public class RoomMembersPanel extends ParentAvailablePanel
     {
         operationPanel.setVisible(visible);
     }
+
+    private void setListener()
+    {
+        adapter.setAddMemberButtonMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                selectAndAddRoomMember();
+                super.mouseClicked(e);
+            }
+        });
+
+        adapter.setRemoveMemberButtonMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                selectAndRemoveRoomMember();
+                super.mouseClicked(e);
+            }
+        });
+    }
+
+
+    /**
+     * 选择并添加群成员
+     */
+    private void selectAndAddRoomMember()
+    {
+        List<ContactsUser> contactsUsers = contactsUserService.findAll();
+        List<SelectUserData> selectUsers = new ArrayList<>();
+
+        for (ContactsUser contactsUser : contactsUsers)
+        {
+            if (!members.contains(contactsUser.getUsername()))
+            {
+                selectUsers.add(new SelectUserData(contactsUser.getUsername(), false));
+            }
+        }
+        addOrRemoveMemberDialog = new AddOrRemoveMemberDialog(MainFrame.getContext(), true, selectUsers);
+        addOrRemoveMemberDialog.getOkButton().setText("添加");
+        addOrRemoveMemberDialog.getOkButton().addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                List<SelectUserData> selectedUsers = addOrRemoveMemberDialog.getSelectedUser();
+                String[] userArr = new String[selectedUsers.size()];
+                for (int i = 0; i < selectedUsers.size(); i++)
+                {
+                    userArr[i] = selectedUsers.get(i).getName();
+                }
+
+                inviteOrKick(userArr, "invite");
+                super.mouseClicked(e);
+            }
+        });
+        addOrRemoveMemberDialog.setVisible(true);
+    }
+
+    /**
+     * 选择并移除群成员
+     */
+    private void selectAndRemoveRoomMember()
+    {
+        List<SelectUserData> userDataList = new ArrayList<>();
+        for (String member : members)
+        {
+            if (member.equals(room.getCreatorName()) || member.equals("添加成员") || member.equals("删除成员"))
+            {
+                continue;
+            }
+            userDataList.add(new SelectUserData(member, false));
+        }
+
+        addOrRemoveMemberDialog = new AddOrRemoveMemberDialog(MainFrame.getContext(), true, userDataList);
+        addOrRemoveMemberDialog.getOkButton().setText("移除");
+        addOrRemoveMemberDialog.getOkButton().addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                List<SelectUserData> selectedUsers = addOrRemoveMemberDialog.getSelectedUser();
+                String[] userArr = new String[selectedUsers.size()];
+                for (int i = 0; i < selectedUsers.size(); i++)
+                {
+                    userArr[i] = selectedUsers.get(i).getName();
+                }
+
+                inviteOrKick(userArr, "kick");
+                super.mouseClicked(e);
+            }
+        });
+        addOrRemoveMemberDialog.setVisible(true);
+    }
+
+
+    private void inviteOrKick(final String[] usernames, String type)
+    {
+        final int[] count = {0};
+        HttpResponseListener callback = new HttpResponseListener<JSONObject>()
+        {
+            @Override
+            public void onResult(JSONObject retJson)
+            {
+                if (++count[0] == usernames.length)
+                {
+                    addOrRemoveMemberDialog.setVisible(false);
+                    updateRoomMembers(retJson);
+                }
+            }
+        };
+
+        for (String username : usernames)
+        {
+            String t = getRoomType();
+            String url = Launcher.HOSTNAME + "/api/v1/" + t + "." + type;
+            String userId = contactsUserService.findByUsername(username).getUserId();
+
+            HttpPostTask task = new HttpPostTask();
+            task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+            task.addHeader("X-User-Id", currentUser.getUserId());
+            task.addRequestParam("roomId", room.getRoomId());
+            task.addRequestParam("userId", userId);
+            task.setListener(callback);
+
+            task.execute(url);
+        }
+    }
+
+    private String getRoomType()
+    {
+        String t;
+        if (room.getType().equals("c"))
+        {
+            t = "channels";
+        }
+        else if (room.getType().equals("p"))
+        {
+            t = "groups";
+        }
+        else
+        {
+            throw new RuntimeException("房间类型不正确");
+        }
+
+        return t;
+    }
+
+    /**
+     * 更新房间成员
+     *
+     * @param retJson
+     */
+    private void updateRoomMembers(JSONObject retJson)
+    {
+        try
+        {
+            String type;
+            if (retJson.has("channel"))
+            {
+                type = "channel";
+            }
+            else if (retJson.has("group"))
+            {
+                type = "group";
+            }
+            else
+            {
+                // 移除成员时，只收到成员通知
+                if (retJson.has("success"))
+                {
+                    ChatPanel.getContext().loadRemoteRoomMembers();
+                }
+                return;
+            }
+
+            JSONObject obj = retJson.getJSONObject(type);
+            JSONArray usernames = obj.getJSONArray("usernames");
+            List<String> users = new ArrayList<>();
+            for (int i = 0; i < usernames.length(); i++)
+            {
+                if (!users.contains(usernames.get(i)))
+                {
+                    users.add(usernames.get(i).toString());
+                }
+            }
+
+            ChatPanel.getContext().updateLocalDBRoomMembers(users);
+            //ChatPanel.getContext().loadLocalRoomMembers();
+            ChatPanel.getContext().updateRoomTitle();
+
+            // 如果已打开成员面板，则更新
+            if (isVisible())
+            {
+                updateUI();
+            }
+
+        }
+        catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+
 }

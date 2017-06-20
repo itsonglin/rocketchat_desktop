@@ -2,9 +2,11 @@ package com.rc.adapter;
 
 import com.rc.components.Colors;
 import com.rc.components.RCBorder;
+import com.rc.entity.SelectUserData;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.CharacterParser;
+import com.rc.utils.IconUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,12 +18,21 @@ import java.util.List;
  */
 public class SelectUserItemsAdapter extends BaseAdapter<SelectUserItemViewHolder>
 {
-    private List<String> userList;
+    private final ImageIcon checkIcon;
+    private final ImageIcon uncheckIcon;
+    private List<SelectUserData> userList;
     private List<SelectUserItemViewHolder> viewHolders = new ArrayList<>();
     Map<Integer, String> positionMap = new HashMap<>();
     private AbstractMouseListener mouseListener;
 
-    public SelectUserItemsAdapter(List<String> userList)
+    public SelectUserItemsAdapter(List<SelectUserData> userList)
+    {
+        checkIcon = IconUtil.getIcon(this, "/image/check.png");
+        uncheckIcon = IconUtil.getIcon(this, "/image/uncheck.png");
+        setUserList(userList);
+    }
+
+    public void setUserList(List<SelectUserData> userList)
     {
         this.userList = userList;
 
@@ -80,7 +91,7 @@ public class SelectUserItemsAdapter extends BaseAdapter<SelectUserItemViewHolder
     public void onBindViewHolder(SelectUserItemViewHolder viewHolder, int position)
     {
         viewHolders.add(position, viewHolder);
-        String name  = userList.get(position);
+        String name  = userList.get(position).getName();
 
         // 头像
         ImageIcon imageIcon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(name).getScaledInstance(30,30,Image.SCALE_SMOOTH));
@@ -89,19 +100,37 @@ public class SelectUserItemsAdapter extends BaseAdapter<SelectUserItemViewHolder
         // 名字
         viewHolder.username.setText(name);
 
+        if (userList.get(position).isSelected())
+        {
+            viewHolder.icon.setIcon(checkIcon);
+        }
+        else
+        {
+            viewHolder.icon.setIcon(uncheckIcon);
+        }
+
         viewHolder.addMouseListener(mouseListener);
     }
 
 
     private void processData()
     {
-        Collections.sort(userList);
+        Collections.sort(userList, new Comparator<SelectUserData>()
+        {
+            @Override
+            public int compare(SelectUserData o1, SelectUserData o2)
+            {
+                String tc = CharacterParser.getSelling(o1.getName().toUpperCase());
+                String oc = CharacterParser.getSelling(o2.getName().toUpperCase());
+                return tc.compareTo(oc);
+            }
+        });
 
         int index = 0;
         String lastChara = "";
-        for (String name : userList)
+        for (SelectUserData item : userList)
         {
-            String ch = CharacterParser.getSelling(name).substring(0, 1);
+            String ch = CharacterParser.getSelling(item.getName()).substring(0, 1).toUpperCase();
             if (!ch.equals(lastChara))
             {
                 lastChara = ch;

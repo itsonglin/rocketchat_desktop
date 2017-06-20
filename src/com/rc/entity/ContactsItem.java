@@ -65,8 +65,8 @@ public class ContactsItem implements Comparable<ContactsItem>
     @Override
     public int compareTo(ContactsItem o)
     {
-        String tc = CharacterParser.getSelling(this.getName());
-        String oc = CharacterParser.getSelling(o.getName());
+        String tc = CharacterParser.getSelling(this.getName()).toUpperCase();
+        String oc = CharacterParser.getSelling(o.getName()).toUpperCase();
         return tc.compareTo(oc);
     }
 }

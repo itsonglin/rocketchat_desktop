@@ -5,6 +5,7 @@ import com.rc.app.ShadowBorder;
 import com.rc.components.*;
 import com.rc.db.model.ContactsUser;
 import com.rc.db.service.ContactsUserService;
+import com.rc.entity.SelectUserData;
 import com.rc.utils.FontUtil;
 import com.rc.utils.OSUtil;
 import com.rc.websocket.WebSocketClient;
@@ -34,7 +35,7 @@ public class CreateGroupDialog extends JDialog
     private JPanel buttonPanel;
     private JButton cancelButton;
     private JButton okButton;
-    private List<String> userList = new ArrayList<>();
+    private List<SelectUserData> userList = new ArrayList<>();
 
     private ContactsUserService contactsUserService = Launcher.contactsUserService;
 
@@ -60,10 +61,15 @@ public class CreateGroupDialog extends JDialog
         List<ContactsUser> contactsUsers = contactsUserService.findAll();
         for (ContactsUser con : contactsUsers)
         {
-            userList.add(con.getName());
+            /*if (con.getUsername().equals("admin") || con.getUsername().equals("appStoreTest"))
+            {
+                continue;
+            }*/
+            userList.add(new SelectUserData(con.getUsername(), false));
         }
 
-        selectUserPanel = new SelectUserPanel(userList);
+        selectUserPanel = new SelectUserPanel(DIALOG_WIDTH, DIALOG_HEIGHT - 100, userList);
+
     }
 
 
@@ -157,7 +163,6 @@ public class CreateGroupDialog extends JDialog
 
                 checkRoomExists(roomName);
 
-                System.out.println(selectUserPanel.getSelectedUser());
                 super.mouseClicked(e);
             }
         });

@@ -15,7 +15,6 @@ import com.rc.utils.FileCache;
 import com.rc.utils.HttpUtil;
 import com.rc.utils.MimeTypeUtil;
 import com.rc.websocket.WebSocketClient;
-import okhttp3.OkHttpClient;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,7 +36,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
-import java.util.logging.Level;
 
 /**
  * 右侧聊天面板
@@ -281,8 +279,6 @@ public class ChatPanel extends ParentAvailablePanel
         // 更新房间标题，尤其是成员数
         updateRoomTitle();
 
-        System.out.println(roomMembers);
-
 
         sendReadMessage();
 
@@ -291,7 +287,7 @@ public class ChatPanel extends ParentAvailablePanel
         RoomMembersPanel.getContext().setRoomId(roomId);
     }
 
-    private void updateRoomTitle()
+    public void updateRoomTitle()
     {
         String title = room.getName();
         if (!room.getType().equals("d"))
@@ -1555,7 +1551,7 @@ public class ChatPanel extends ParentAvailablePanel
     /**
      * 加载本地房间用户
      */
-    private void loadLocalRoomMembers()
+    public void loadLocalRoomMembers()
     {
         roomMembers.clear();
         String members = room.getMember();
@@ -1577,9 +1573,12 @@ public class ChatPanel extends ParentAvailablePanel
     /**
      * 加载远程房间用户
      */
-    private void loadRemoteRoomMembers()
+    public void loadRemoteRoomMembers()
     {
-        remoteRoomMemberLoadedRooms.add(roomId);
+        if (!remoteRoomMemberLoadedRooms.contains(roomId))
+        {
+            remoteRoomMemberLoadedRooms.add(roomId);
+        }
 
         logger.debug("远程获取房间 " + room.getName() + " 的群成员");
         String url = null;
@@ -1656,13 +1655,19 @@ public class ChatPanel extends ParentAvailablePanel
                     if (newUserAdded || userRemoved)
                     {
                         // 更新本地members
-                        updateLocalMembers(roomMembers);
+                        updateLocalDBRoomMembers(roomMembers);
 
                         // 更新房间名中的成员数
                         String title = room.getName() + " (" + (roomMembers.size()) + ")";
 
                         // 更新房间标题
                         TitlePanel.getContext().updateRoomTitle(title);
+
+                        // 如果成员面板打开，则更新
+                        if (RoomMembersPanel.getContext().isVisible())
+                        {
+                            RoomMembersPanel.getContext().updateUI();
+                        }
                     }
 
                     roomMembers.remove(creator);
@@ -1680,11 +1685,11 @@ public class ChatPanel extends ParentAvailablePanel
     }
 
     /**
-     * 更新本地房间成员
+     * 更新本地数据库中的房间成员
      *
      * @param users
      */
-    private void updateLocalMembers(List<String> users)
+    public void updateLocalDBRoomMembers(List<String> users)
     {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < users.size(); i++)

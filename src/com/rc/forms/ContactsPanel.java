@@ -69,7 +69,6 @@ public class ContactsPanel extends ParentAvailablePanel
             contactsItemList.add(item);
         }
 
-        System.out.println(contactsItemList);
     }
 
     public void notifyDataSetChanged()

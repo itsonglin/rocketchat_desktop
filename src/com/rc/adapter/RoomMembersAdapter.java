@@ -7,16 +7,20 @@ import com.rc.db.model.ContactsUser;
 import com.rc.db.model.CurrentUser;
 import com.rc.db.service.ContactsUserService;
 import com.rc.db.service.CurrentUserService;
+import com.rc.entity.SelectUserData;
 import com.rc.forms.AddOrRemoveMemberDialog;
 import com.rc.forms.MainFrame;
 import com.rc.forms.UserInfoPopup;
 import com.rc.listener.AbstractMouseListener;
+import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.AvatarUtil;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import javax.swing.plaf.basic.BasicPopupMenuUI;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
@@ -32,6 +36,8 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
     private CurrentUser currentUser;
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private ContactsUserService contactsUserService = Launcher.contactsUserService;
+    private MouseAdapter addMemberButtonMouseListener;
+    private MouseAdapter removeMemberButtonMouseListener;
 
 
     public RoomMembersAdapter(List<String> members)
@@ -71,7 +77,11 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
                 public void mouseClicked(MouseEvent e)
                 {
                     //System.out.println("添加/刪除用戶");
-                    selectAndAddRoomMember();
+                    //selectAndAddRoomMember();
+                    if (addMemberButtonMouseListener != null)
+                    {
+                        addMemberButtonMouseListener.mouseClicked(e);
+                    }
                 }
 
                 @Override
@@ -115,7 +125,10 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
                 @Override
                 public void mouseClicked(MouseEvent e)
                 {
-                    System.out.println("添加/刪除用戶");
+                    if (removeMemberButtonMouseListener != null)
+                    {
+                        removeMemberButtonMouseListener.mouseClicked(e);
+                    }
                 }
             });
         } else
@@ -158,30 +171,20 @@ public class RoomMembersAdapter extends BaseAdapter<RoomMembersItemViewHolder>
 
     }
 
-    /**
-     * 选择并添加群成员
-     */
-    private void selectAndAddRoomMember()
-    {
-        List<ContactsUser> contactsUsers = contactsUserService.findAll();
-        List<String> selectUsers = new ArrayList<>();
-
-        for (ContactsUser contactsUser : contactsUsers)
-        {
-            if (!members.contains(contactsUser.getUsername()))
-            {
-                selectUsers.add(contactsUser.getUsername());
-            }
-        }
-        AddOrRemoveMemberDialog dialog = new AddOrRemoveMemberDialog(MainFrame.getContext(), true, selectUsers);
-        dialog.setVisible(true);
-
-        System.out.println(dialog.getSelectedUser());
-    }
 
     @Override
     public int getCount()
     {
         return members.size();
+    }
+
+    public void setAddMemberButtonMouseListener(MouseAdapter addMemberButtonMouseListener)
+    {
+        this.addMemberButtonMouseListener = addMemberButtonMouseListener;
+    }
+
+    public void setRemoveMemberButtonMouseListener(MouseAdapter removeMemberButtonMouseListener)
+    {
+        this.removeMemberButtonMouseListener = removeMemberButtonMouseListener;
     }
 }

@@ -148,7 +148,7 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
         String lastChara = "";
         for (ContactsItem item : contactsItems)
         {
-            String ch = CharacterParser.getSelling(item.getName()).substring(0, 1);
+            String ch = CharacterParser.getSelling(item.getName()).substring(0, 1).toUpperCase();
             if (!ch.equals(lastChara))
             {
                 lastChara = ch;

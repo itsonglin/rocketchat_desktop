@@ -17,7 +17,7 @@ public class HttpPostTask extends HttpTask
             @Override
             public void run()
             {
-                String ret = HttpUtil.post(url, requestParams, requestParams);
+                String ret = HttpUtil.post(url, headers, requestParams);
                 JSONObject retJson = new JSONObject(ret);
                 if (listener != null)
                 {
