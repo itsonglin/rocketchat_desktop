@@ -153,15 +153,22 @@ public class CreateGroupDialog extends JDialog
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                String roomName = groupNameTextField.getText();
-                if (roomName == null || roomName.isEmpty())
+                if (okButton.isEnabled())
                 {
-                    JOptionPane.showMessageDialog(null, "请输入群聊名称", "请输入群聊名称", JOptionPane.WARNING_MESSAGE);
-                    groupNameTextField.requestFocus();
-                    return;
+                    okButton.setEnabled(false);
+
+                    String roomName = groupNameTextField.getText();
+                    if (roomName == null || roomName.isEmpty())
+                    {
+                        JOptionPane.showMessageDialog(null, "请输入群聊名称", "请输入群聊名称", JOptionPane.WARNING_MESSAGE);
+                        groupNameTextField.requestFocus();
+                        okButton.setEnabled(true);
+                        return;
+                    }
+
+                    checkRoomExists(roomName);
                 }
 
-                checkRoomExists(roomName);
 
                 super.mouseClicked(e);
             }
@@ -173,10 +180,10 @@ public class CreateGroupDialog extends JDialog
         if (roomService.findByName(name) != null)
         {
             showRoomExistMessage(name);
+            okButton.setEnabled(true);
         }
         else
         {
-
             createChannelOrGroup(name, privateCheckBox.isSelected(), selectUserPanel.getSelectedUser().toArray(new String[]{}));
         }
     }

@@ -34,7 +34,6 @@ public class MainOperationPopupMenu extends JPopupMenu
             public void actionPerformed(ActionEvent e)
             {
                 showCreateGroupDialog();
-                System.out.println("创建群聊");
             }
         });
         ImageIcon icon1 = new ImageIcon(getClass().getResource("/image/chat.png"));

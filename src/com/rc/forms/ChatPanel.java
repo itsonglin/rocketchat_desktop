@@ -15,6 +15,7 @@ import com.rc.utils.FileCache;
 import com.rc.utils.HttpUtil;
 import com.rc.utils.MimeTypeUtil;
 import com.rc.websocket.WebSocketClient;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -279,12 +280,13 @@ public class ChatPanel extends ParentAvailablePanel
         // 更新房间标题，尤其是成员数
         updateRoomTitle();
 
-
         sendReadMessage();
 
 
         //TitlePanel.getContext().hideRoomMembersPanel();
         RoomMembersPanel.getContext().setRoomId(roomId);
+
+        messageEditorPanel.getEditor().setText("");
     }
 
     public void updateRoomTitle()
@@ -931,6 +933,8 @@ public class ChatPanel extends ParentAvailablePanel
             }
 
         }
+
+        content = StringEscapeUtils.escapeJava(content);
 
         // 发送
         WebSocketClient.getContext().sendTextMessage(roomId, messageId, content);

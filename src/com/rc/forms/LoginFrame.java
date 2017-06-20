@@ -205,8 +205,12 @@ public class LoginFrame extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
+                if (loginButton.isEnabled())
+                {
+                    doLogin();
+                }
+
                 super.mouseClicked(e);
-                doLogin();
             }
         });
 

@@ -26,5 +26,7 @@
     <orderEntry type="library" name="emoji-java-3.2.0" level="project" />
     <orderEntry type="library" name="filters-2.0.235-1" level="project" />
     <orderEntry type="library" name="filters-2.0.235-1" level="project" />
+    <orderEntry type="library" name="org.apache.commons.lang-2.6" level="project" />
+    <orderEntry type="library" name="commons-lang3-3.4" level="project" />
   </component>
 </module>

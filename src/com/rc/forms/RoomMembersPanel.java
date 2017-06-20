@@ -180,7 +180,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 members.remove("添加成员");
                 members.add("添加成员");
 
-                if (userArr.length > 2)
+                if (userArr.length > 1)
                 {
                     members.remove("删除成员");
                     members.add("删除成员");
@@ -295,14 +295,18 @@ public class RoomMembersPanel extends ParentAvailablePanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                List<SelectUserData> selectedUsers = addOrRemoveMemberDialog.getSelectedUser();
-                String[] userArr = new String[selectedUsers.size()];
-                for (int i = 0; i < selectedUsers.size(); i++)
+                if (((JButton) e.getSource()).isEnabled())
                 {
-                    userArr[i] = selectedUsers.get(i).getName();
-                }
+                    ((JButton) e.getSource()).setEnabled(false);
+                    List<SelectUserData> selectedUsers = addOrRemoveMemberDialog.getSelectedUser();
+                    String[] userArr = new String[selectedUsers.size()];
+                    for (int i = 0; i < selectedUsers.size(); i++)
+                    {
+                        userArr[i] = selectedUsers.get(i).getName();
+                    }
 
-                inviteOrKick(userArr, "invite");
+                    inviteOrKick(userArr, "invite");
+                }
                 super.mouseClicked(e);
             }
         });
@@ -331,14 +335,19 @@ public class RoomMembersPanel extends ParentAvailablePanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                List<SelectUserData> selectedUsers = addOrRemoveMemberDialog.getSelectedUser();
-                String[] userArr = new String[selectedUsers.size()];
-                for (int i = 0; i < selectedUsers.size(); i++)
+                if (((JButton) e.getSource()).isEnabled())
                 {
-                    userArr[i] = selectedUsers.get(i).getName();
+                    ((JButton) e.getSource()).setEnabled(false);
+                    List<SelectUserData> selectedUsers = addOrRemoveMemberDialog.getSelectedUser();
+                    String[] userArr = new String[selectedUsers.size()];
+                    for (int i = 0; i < selectedUsers.size(); i++)
+                    {
+                        userArr[i] = selectedUsers.get(i).getName();
+                    }
+
+                    inviteOrKick(userArr, "kick");
                 }
 
-                inviteOrKick(userArr, "kick");
                 super.mouseClicked(e);
             }
         });
