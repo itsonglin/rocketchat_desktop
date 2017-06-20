@@ -78,10 +78,10 @@ public class RoomsPanel extends ParentAvailablePanel
     /**
      * 重绘整个列表
      */
-    public void notifyDataSetChanged()
+    public void notifyDataSetChanged(boolean keepSize)
     {
         initData();
-        roomItemsListView.notifyDataSetChanged(true);
+        roomItemsListView.notifyDataSetChanged(keepSize);
     }
 
     /**

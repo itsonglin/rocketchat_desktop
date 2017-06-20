@@ -222,6 +222,12 @@ public class TitlePanel extends ParentAvailablePanel
         parent.showPanel(RightPanel.MESSAGE);
     }
 
+    public void showAppTitle()
+    {
+        this.titleLabel.setText("和理通");
+        roomInfoButton.setVisible(false);
+    }
+
     private class ControlLabelMouseListener extends AbstractMouseListener
     {
         @Override

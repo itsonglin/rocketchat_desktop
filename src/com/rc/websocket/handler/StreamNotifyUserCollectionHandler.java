@@ -179,7 +179,7 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
 
 
                 // 通知UI更新Rooms列表
-                notifyUpdateRoomsUI();
+                notifyUpdateRoomsUI(false);
             }
         }
         // 从房间移除
@@ -187,7 +187,7 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
         {
             String roomId = obj.getString("rid");
             removeRoom(roomId);
-            notifyUpdateRoomsUI();
+            notifyUpdateRoomsUI(false);
 
             // 如果是IM
             if (obj.getString("t").equals("d"))
@@ -248,7 +248,7 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
             checkAndOpenChatRoomActivity(room);
 
             // 通知UI更新Rooms列表
-            notifyUpdateRoomsUI();
+            notifyUpdateRoomsUI(false);
 
             /*Realm realm = Realm.getDefaultInstance();
             if (!room.getCreatorName().equals(currentUserService.find(realm).getUsername()))
@@ -349,7 +349,7 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
 
         roomService.delete(roomId);
         messageService.deleteByRoomId(roomId);
-        notifyUpdateRoomsUI();
+        //notifyUpdateRoomsUI(false);
     }
 
     private void subscription(Room room)
@@ -396,10 +396,10 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
     /**
      * 通知UI更新Rooms列表
      */
-    private void notifyUpdateRoomsUI()
+    private void notifyUpdateRoomsUI(boolean keepSize)
     {
         //((WebSocketService) WebSocketService.context).sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, WebSocketService.EVENT_UPDATE_ROOM_ITEMS);
-        RoomsPanel.getContext().notifyDataSetChanged();
+        RoomsPanel.getContext().notifyDataSetChanged(keepSize);
     }
 
 

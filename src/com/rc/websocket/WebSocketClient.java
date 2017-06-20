@@ -877,7 +877,7 @@ public class WebSocketClient
         {
             logger.debug("通知UI更新未读数及最后一条消息");
 
-            RoomsPanel.getContext().notifyDataSetChanged();
+            RoomsPanel.getContext().notifyDataSetChanged(true);
             // 通知UI更新未读数及最后一条消息
             //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_UPDATE_ROOM_ITEMS);
         }

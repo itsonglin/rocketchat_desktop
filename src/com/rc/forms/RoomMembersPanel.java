@@ -24,6 +24,8 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.rc.app.Launcher.messageService;
+
 /**
  * Created by song on 07/06/2017.
  */
@@ -53,7 +55,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
 
         initComponents();
         initView();
-        setListener();
+        setListeners();
 
         currentUser = currentUserService.findAll().get(0);
     }
@@ -140,7 +142,17 @@ public class RoomMembersPanel extends ParentAvailablePanel
             else
             {
                 setLeaveButtonVisibility(true);
+
+                if (isRoomCreator())
+                {
+                    leaveButton.setText("解散群聊");
+                }
+                else
+                {
+                    leaveButton.setText("退出群聊");
+                }
             }
+
         }
     }
 
@@ -212,7 +224,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         operationPanel.setVisible(visible);
     }
 
-    private void setListener()
+    private void setListeners()
     {
         adapter.setAddMemberButtonMouseListener(new MouseAdapter()
         {
@@ -230,6 +242,31 @@ public class RoomMembersPanel extends ParentAvailablePanel
             public void mouseClicked(MouseEvent e)
             {
                 selectAndRemoveRoomMember();
+                super.mouseClicked(e);
+            }
+        });
+
+        leaveButton.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                if (isRoomCreator())
+                {
+                    int ret = JOptionPane.showConfirmDialog(MainFrame.getContext(), "确认解散群聊？", "确认解散群聊", JOptionPane.YES_NO_OPTION);
+                    if (ret == JOptionPane.YES_OPTION)
+                    {
+                        deleteChannelOrGroup(room.getRoomId());
+                    }
+                }
+                else
+                {
+                    int ret = JOptionPane.showConfirmDialog(MainFrame.getContext(), "退出群聊，并从聊天列表中删除该群聊", "确认退出群聊", JOptionPane.YES_NO_OPTION);
+                    if (ret == JOptionPane.YES_OPTION)
+                    {
+                        leaveChannelOrGroup(room.getRoomId());
+                    }
+                }
                 super.mouseClicked(e);
             }
         });
@@ -417,5 +454,73 @@ public class RoomMembersPanel extends ParentAvailablePanel
         }
     }
 
+    /**
+     * 删除Channel或Group
+     *
+     * @param roomId
+     */
+    private void deleteChannelOrGroup(final String roomId)
+    {
+        HttpPostTask task = new HttpPostTask();
+        task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+        task.addHeader("X-User-Id", currentUser.getUserId());
+        task.addRequestParam("roomId", room.getRoomId());
+        task.setListener(new HttpResponseListener<JSONObject>()
+        {
+            @Override
+            public void onResult(JSONObject retJson)
+            {
+                if (retJson.has("success"))
+                {
+                    RightPanel.getContext().showPanel(RightPanel.TIP);
+                    TitlePanel.getContext().showAppTitle();
+                    RoomMembersPanel.getContext().setVisible(false);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(MainFrame.getContext(), "删除失败", "删除失败", JOptionPane.ERROR_MESSAGE);
+                }
+
+            }
+        });
+
+        String t = getRoomType();
+        String url = Launcher.HOSTNAME + "/api/v1/" + t + ".delete";
+        task.execute(url);
+    }
+
+    /**
+     * 退出Channel或Group
+     *
+     * @param roomId
+     */
+    private void leaveChannelOrGroup(final String roomId)
+    {
+        HttpPostTask task = new HttpPostTask();
+        task.addHeader("X-Auth-Token", currentUser.getAuthToken());
+        task.addHeader("X-User-Id", currentUser.getUserId());
+        task.addRequestParam("roomId", roomId);
+        task.setListener(new HttpResponseListener<JSONObject>()
+        {
+            @Override
+            public void onResult(JSONObject retJson)
+            {
+                if (retJson.has("success"))
+                {
+                    RightPanel.getContext().showPanel(RightPanel.TIP);
+                    TitlePanel.getContext().showAppTitle();
+                    RoomMembersPanel.getContext().setVisible(false);
+                }
+                else
+                {
+                    JOptionPane.showMessageDialog(MainFrame.getContext(), "退出失败", "退出失败", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+
+        String t = getRoomType();
+        String url = Launcher.HOSTNAME + "/api/v1/" + t + ".leave";
+        task.execute(url);
+    }
 
 }
