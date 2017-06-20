@@ -8,25 +8,7 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="rocketchat_desktop" level="project" />
     <orderEntry type="library" exported="" name="lib" level="project" />
-    <orderEntry type="library" name="android.ninepatch (4)" level="project" />
-    <orderEntry type="module-library">
-      <library>
-        <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/gwt-dev-1.4.62-mac.jar!/" />
-        </CLASSES>
-        <JAVADOC />
-        <SOURCES />
-      </library>
-    </orderEntry>
-    <orderEntry type="library" name="okhttp-3.6.0" level="project" />
-    <orderEntry type="library" name="okhttp-3.6.0" level="project" />
-    <orderEntry type="library" name="emoji-java-3.2.0" level="project" />
-    <orderEntry type="library" name="emoji-java-3.2.0" level="project" />
-    <orderEntry type="library" name="filters-2.0.235-1" level="project" />
-    <orderEntry type="library" name="filters-2.0.235-1" level="project" />
-    <orderEntry type="library" name="org.apache.commons.lang-2.6" level="project" />
-    <orderEntry type="library" name="commons-lang3-3.4" level="project" />
+    <orderEntry type="library" name="android.ninepatch" level="project" />
   </component>
 </module>

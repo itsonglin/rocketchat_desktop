@@ -18,6 +18,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.RoundRectangle2D;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by song on 17-5-28.
@@ -138,6 +139,22 @@ public class MainFrame extends JFrame
                     super.mouseClicked(e);
                 }
             });
+
+            String str = "Exit";
+            PopupMenu menu = new PopupMenu();
+
+            MenuItem item = new MenuItem(str);
+            item.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    System.exit(1);
+                }
+            });
+            menu.add(item);
+
+            trayIcon.setPopupMenu(menu);
 
 
             systemTray.add(trayIcon);
