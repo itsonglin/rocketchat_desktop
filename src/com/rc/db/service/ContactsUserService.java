@@ -45,4 +45,9 @@ public class ContactsUserService extends BasicService<ContactsUserDao, ContactsU
 
         return null;
     }
+
+    public List<ContactsUser> searchByUsernameOrName(String username, String name)
+    {
+        return dao.searchByUsernameOrName(username, name);
+    }
 }

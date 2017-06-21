@@ -17,9 +17,18 @@ class Test extends JFrame
 {
     public static void main(String[] args) throws IOException, FontFormatException
     {
-        JFrame frame = new Frame();
+        /*JFrame frame = new Frame();
         frame.setBounds(100, 100, 300, 400);
-        frame.setVisible(true);
+        frame.setVisible(true);*/
+
+        String str = "12a345678a";
+
+        int a = str.indexOf("a");//*第一个出现的索引位置
+        while (a != -1)
+        {
+            System.out.print(a + "\t");
+            a = str.indexOf("a", a + 1);//*从这个索引往后开始第一个出现的位置
+        }
     }
 }
 
@@ -47,7 +56,7 @@ class Frame extends JFrame
 
         String text = "\n\nA :cat:, :dog: and a :mouse: became friends<3. For :dog:'s birthday party, they all had :hamburger:s, :fries:s, :cookie:s and :cake:.";
 
-       // String  str = EmojiUtils.emojify(text); //returns A 🐱, 🐶 and a 🐭 became friends❤️. For 🐶's birthday party, they all had 🍔s, 🍟s, 🍪s and 🍰.
+        // String  str = EmojiUtils.emojify(text); //returns A 🐱, 🐶 and a 🐭 became friends❤️. For 🐶's birthday party, they all had 🍔s, 🍟s, 🍪s and 🍰.
 
         InputStream is = getClass().getResourceAsStream("/fonts/yahei.ttf");
         Font font = Font.createFont(Font.TRUETYPE_FONT, is);

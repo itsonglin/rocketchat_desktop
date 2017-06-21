@@ -22,6 +22,9 @@
         SELECT * FROM room where roomId like ${condition}
     </select>
 
+    <select id="searchByName" resultType="Room" statementType="STATEMENT" parameterType="map">
+        SELECT * FROM room where name like ${condition} and type != 'd'
+    </select>
 
     <select id="findAll" resultType="Room">
 		SELECT * FROM room ORDER BY lastChatAt DESC

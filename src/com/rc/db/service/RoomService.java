@@ -45,4 +45,9 @@ public class RoomService extends BasicService<RoomDao, Room>
         }
         return null;
     }
+
+    public List<Room> searchByName(String name)
+    {
+        return dao.searchByName(name);
+    }
 }

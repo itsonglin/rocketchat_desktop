@@ -21,6 +21,11 @@
         SELECT * FROM contacts_user where ${field} = ${val}
     </select>
 
+
+    <select id="searchByUsernameOrName" resultType="ContactsUser" statementType="STATEMENT" parameterType="map">
+        SELECT * FROM contacts_user where username like ${usernameCondition} or name like ${nameCondition}
+    </select>
+
     <select id="count" resultType="java.lang.Integer">
 		SELECT count(1) FROM contacts_user
 	</select>

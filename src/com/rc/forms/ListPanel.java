@@ -8,13 +8,16 @@ import java.awt.*;
  */
 public class ListPanel extends ParentAvailablePanel
 {
+    private static ListPanel context;
     private RoomsPanel roomsPanel;
     private ContactsPanel contactsPanel;
     private CollectionsPanel collectionPanel;
+    private SearchResultPanel searchResultPanel;
 
     public static final String CHAT = "CHAT";
     public static final String CONTACTS = "CONTACTS";
     public static final String COLLECTIONS = "COLLECTIONS";
+    public static final String SEARCH = "SEARCH";
 
     private CardLayout cardLayout = new CardLayout();
 
@@ -22,6 +25,7 @@ public class ListPanel extends ParentAvailablePanel
     public ListPanel(JPanel parent)
     {
         super(parent);
+        context = this;
 
         initComponents();
         initView();
@@ -36,6 +40,8 @@ public class ListPanel extends ParentAvailablePanel
 
         collectionPanel = new CollectionsPanel(this);
 
+        searchResultPanel = new SearchResultPanel(this);
+
     }
 
     private void initView()
@@ -44,6 +50,7 @@ public class ListPanel extends ParentAvailablePanel
         add(roomsPanel, CHAT);
         add(contactsPanel, CONTACTS);
         add(collectionPanel, COLLECTIONS);
+        add(searchResultPanel, SEARCH);
     }
 
     /**
@@ -54,6 +61,11 @@ public class ListPanel extends ParentAvailablePanel
     public void showPanel(String who)
     {
         cardLayout.show(this, who);
+    }
+
+    public static ListPanel getContext()
+    {
+        return context;
     }
 
 }

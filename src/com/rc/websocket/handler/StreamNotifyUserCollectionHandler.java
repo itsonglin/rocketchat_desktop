@@ -125,7 +125,7 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
         Log.e("NOTIFY", "isMainFrameActivityBackground = " + isMainFrameActivityBackground + ", isChatRoomActivityBackground = " + isChatRoomActivityBackground + ", isCurrentRoom = " + isCurrentRoom);
         if ((isMainFrameActivityBackground && isChatRoomActivityBackground && !isCurrentRoom) || MainFrameActivity.SCREEN_OFF)
         {
-            showDefaultNotification(roomId, roomType, roomName, content);
+            showDefaultNotification(roomId, roomType, name, content);
         }
         else if (!isCurrentRoom)
         {
@@ -407,7 +407,7 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
     {
         logger.debug("发送通知：roomId = " + roomId
                 + ", roomType = " + roomType
-                + ", roomName = " + roomName
+                + ", name = " + roomName
                 + ", content = " + content);
     }
 

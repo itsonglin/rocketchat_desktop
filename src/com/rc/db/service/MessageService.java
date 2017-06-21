@@ -84,4 +84,9 @@ public class MessageService extends BasicService<MessageDao, Message>
     {
         return dao.updateProgress(id, progress);
     }
+
+    public List<Message> search(String key)
+    {
+        return dao.search(key);
+    }
 }

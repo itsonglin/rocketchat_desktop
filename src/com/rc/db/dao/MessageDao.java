@@ -94,4 +94,11 @@ public class MessageDao extends BasicDao
         map.put("progress", progress);
         return session.update("updateProgress", map);
     }
+
+    public List<Message> search(String key)
+    {
+        Map map = new HashMap();
+        map.put("condition", "'%" + key + "%'");
+        return session.selectList("search", map);
+    }
 }
