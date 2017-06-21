@@ -309,6 +309,8 @@ public class RCListView extends JScrollPane
         //ViewHolder holder = adapter.onCreateViewHolder(viewType);
         ViewHolder holder = (ViewHolder) getItem(position);
         adapter.onBindViewHolder(holder, position);
+        contentPanel.revalidate();
+
         /*contentPanel.getComponent(position).setBackground(Color.red);
         contentPanel.getComponent(position).revalidate();*/
     }

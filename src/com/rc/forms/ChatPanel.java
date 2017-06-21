@@ -6,6 +6,7 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.components.RCListView;
+import com.rc.components.message.RemindUserPopup;
 import com.rc.db.model.*;
 import com.rc.db.service.*;
 import com.rc.entity.FileAttachmentItem;
@@ -15,6 +16,7 @@ import com.rc.utils.FileCache;
 import com.rc.utils.HttpUtil;
 import com.rc.utils.MimeTypeUtil;
 import com.rc.websocket.WebSocketClient;
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -87,6 +89,7 @@ public class ChatPanel extends ParentAvailablePanel
     private Logger logger = Logger.getLogger(this.getClass());
 
     private List<String> remoteRoomMemberLoadedRooms = new ArrayList<>();
+    private RemindUserPopup remindUserPopup = new RemindUserPopup();
 
 
     public ChatPanel(JPanel parent)
@@ -199,6 +202,7 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void keyPressed(KeyEvent e)
             {
+                // CTRL + 回车换行
                 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_ENTER)
                 {
                     try
@@ -210,6 +214,8 @@ public class ChatPanel extends ParentAvailablePanel
                         e1.printStackTrace();
                     }
                 }
+
+                // 回车发送消息
                 else if (!e.isControlDown() && e.getKeyCode() == KeyEvent.VK_ENTER)
                 {
                     if (editor.getText() == null || editor.getText().isEmpty())
@@ -220,6 +226,47 @@ public class ChatPanel extends ParentAvailablePanel
                     sendTextMessage(null, editor.getText());
                     e.consume();
                 }
+
+               // 输入@，弹出选择用户菜单
+                else if (e.getKeyChar() == '@')
+                {
+                    Point point = editor.getCaret().getMagicCaretPosition();
+                    point = point == null ? new Point(10, 0) : point;
+                    List<String> users = exceptSelf();
+                    users.add(0, "all");
+                    remindUserPopup.setUsers(users);
+                    remindUserPopup.show((Component) e.getSource(), point.x, point.y, roomId);
+                }
+
+                // 输入退格键，删除最后一个@user
+                else if (e.getKeyCode() == KeyEvent.VK_BACK_SPACE)
+                {
+                    String str = editor.getText();
+                    if (str.matches(".*@\\w+\\s"))
+                    {
+                        try
+                        {
+                            int startPos = str.lastIndexOf("@");
+                            String rmStr = str.substring(startPos);
+                            editor.getDocument().remove(startPos + 1, rmStr.length() - 1);
+                        }
+                        catch (BadLocationException e1)
+                        {
+                            e1.printStackTrace();
+                        }
+                    }
+                }
+            }
+
+        });
+
+        remindUserPopup.setSelectedCallBack(new RemindUserPopup.UserSelectedCallBack()
+        {
+            @Override
+            public void onSelected(String username)
+            {
+                JTextPane editor = messageEditorPanel.getEditor();
+                editor.replaceSelection(username + " ");
             }
         });
 
@@ -261,6 +308,14 @@ public class ChatPanel extends ParentAvailablePanel
         });
 
 
+    }
+
+    private List<String> exceptSelf()
+    {
+        List<String> users = new ArrayList<>();
+        users.addAll(roomMembers);
+        users.remove(currentUser.getUsername());
+        return users;
     }
 
     /**
@@ -1707,10 +1762,12 @@ public class ChatPanel extends ParentAvailablePanel
 
         room.setMember(sb.toString());
         roomService.update(room);
+
+        loadLocalRoomMembers();
+
         //roomService.updateMembers(Realm.getDefaultInstance(), room.getRoomId(), sb.toString());
         //room = roomService.findById(realm, room.getRoomId());
         //System.out.println(room);
-
     }
 
     /**

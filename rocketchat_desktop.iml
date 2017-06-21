@@ -10,5 +10,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" exported="" name="lib" level="project" />
     <orderEntry type="library" name="android.ninepatch" level="project" />
+    <orderEntry type="library" name="commons-lang3-3.4 (2)" level="project" />
   </component>
 </module>

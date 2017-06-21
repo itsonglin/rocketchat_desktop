@@ -31,7 +31,7 @@ public class ChatEditorPopupMenu extends JPopupMenu
         JMenuItem deleteItem = new JMenuItem("删除");
 
 
-        selectAllItem.setUI(new RCMenuItemUI(80, 30));
+        selectAllItem.setUI(new RCMenuItemUI(80, 25));
         selectAllItem.addActionListener(new AbstractAction()
         {
             @Override
@@ -43,7 +43,7 @@ public class ChatEditorPopupMenu extends JPopupMenu
         });
 
 
-        copyItem.setUI(new RCMenuItemUI(80, 30));
+        copyItem.setUI(new RCMenuItemUI(80, 25));
         copyItem.addActionListener(new AbstractAction()
         {
             @Override
@@ -60,7 +60,7 @@ public class ChatEditorPopupMenu extends JPopupMenu
         });
 
 
-        cutItem.setUI(new RCMenuItemUI(80, 30));
+        cutItem.setUI(new RCMenuItemUI(80, 25));
         cutItem.addActionListener(new AbstractAction()
         {
             @Override
@@ -76,7 +76,7 @@ public class ChatEditorPopupMenu extends JPopupMenu
             }
         });
 
-        pasteItem.setUI(new RCMenuItemUI(80, 30));
+        pasteItem.setUI(new RCMenuItemUI(80, 25));
         pasteItem.addActionListener(new AbstractAction()
         {
             @Override
@@ -90,7 +90,7 @@ public class ChatEditorPopupMenu extends JPopupMenu
             }
         });
 
-        deleteItem.setUI(new RCMenuItemUI(80, 30));
+        deleteItem.setUI(new RCMenuItemUI(80, 25));
         deleteItem.addActionListener(new AbstractAction()
         {
             @Override
