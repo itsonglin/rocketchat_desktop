@@ -140,11 +140,10 @@ public class MainFrame extends JFrame
                 }
             });
 
-            String str = "Exit";
             PopupMenu menu = new PopupMenu();
 
-            MenuItem item = new MenuItem(str);
-            item.addActionListener(new ActionListener()
+            MenuItem exitItem = new MenuItem("Exit");
+            exitItem.addActionListener(new ActionListener()
             {
                 @Override
                 public void actionPerformed(ActionEvent e)
@@ -152,7 +151,18 @@ public class MainFrame extends JFrame
                     System.exit(1);
                 }
             });
-            menu.add(item);
+
+            MenuItem showItem = new MenuItem("Open Helichat");
+            showItem.addActionListener(new ActionListener()
+            {
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    setVisible(true);
+                }
+            });
+            menu.add(showItem);
+            menu.add(exitItem);
 
             trayIcon.setPopupMenu(menu);
 
