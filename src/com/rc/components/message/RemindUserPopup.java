@@ -39,14 +39,8 @@ public class RemindUserPopup extends JPopupMenu
 
     public void show(Component invoker, int x, int y, String roomId)
     {
-
-        if (roomId.equals(this.roomId))
+        if (!roomId.equals(this.roomId))
         {
-            System.out.println("当前房间");
-        }
-        else
-        {
-            System.out.println("非当前房间");
             this.removeAll();
             this.initComponents();
             this.revalidate();
@@ -54,6 +48,11 @@ public class RemindUserPopup extends JPopupMenu
         }
 
         super.show(invoker, x, y);
+    }
+
+    public void reset()
+    {
+        this.roomId = "";
     }
 
     public void setUsers(List<String> users)

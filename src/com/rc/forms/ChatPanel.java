@@ -1717,10 +1717,11 @@ public class ChatPanel extends ParentAvailablePanel
                         updateLocalDBRoomMembers(roomMembers);
 
                         // 更新房间名中的成员数
-                        String title = room.getName() + " (" + (roomMembers.size()) + ")";
+                        //String title = room.getName() + " (" + (roomMembers.size()) + ")";
 
                         // 更新房间标题
-                        TitlePanel.getContext().updateRoomTitle(title);
+                        //TitlePanel.getContext().updateRoomTitle(title);
+                        updateRoomTitle();
 
                         // 如果成员面板打开，则更新
                         if (RoomMembersPanel.getContext().isVisible())
@@ -1763,7 +1764,9 @@ public class ChatPanel extends ParentAvailablePanel
         room.setMember(sb.toString());
         roomService.update(room);
 
-        loadLocalRoomMembers();
+        //loadLocalRoomMembers();
+
+        remindUserPopup.reset();
 
         //roomService.updateMembers(Realm.getDefaultInstance(), room.getRoomId(), sb.toString());
         //room = roomService.findById(realm, room.getRoomId());
