@@ -1,6 +1,7 @@
 package com.rc.app;
 
 
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import com.vdurmont.emoji.EmojiParser;
 
 import javax.swing.*;
@@ -18,7 +19,59 @@ class Test extends JFrame
 {
     public static void main(String[] args) throws IOException, FontFormatException
     {
+        /*JFrame frame = new Frame();
+        frame.setBounds(100, 100, 300, 400);
+        frame.setVisible(true);*/
 
+        //String regx = "(.)\\1+";
+        //System.out.println("aaaaaaaaaaaaaaaaa".matches(regx));
+
+        String str = "aaa";
+        String key = "aa";
+
+        int keyLen = key.length();
+        boolean IsReduplication = key.matches("(.)\\1+");
+
+        int pos = str.indexOf(key);//*第一个出现的索引位置
+        List<Integer> posArr = new ArrayList<>();
+        while (pos != -1)
+        {
+            posArr.add(pos);
+            if (IsReduplication)
+            {
+                pos = str.indexOf(key, pos + keyLen); // 如果遇到关键字是叠词的情况，则间距为一个关键字
+            }
+            else
+            {
+                pos = str.indexOf(key, pos + 1);// 从这个索引往后开始第一个出现的位置
+            }
+        }
+
+        System.out.println(posArr);
+
+        int strIndex = 0;
+        int posIndex = 0;
+        while (strIndex < str.length())
+        {
+            if (posIndex >= posArr.size())
+            {
+                String s = str.substring(strIndex);
+                System.out.println("out -- " + s);
+                break;
+            }
+
+            String s = str.substring(strIndex, posArr.get(posIndex));
+            System.out.println("out -- " + s);
+            strIndex += s.length();
+
+            System.out.println("out -- " + key);
+            strIndex += keyLen;
+
+            posIndex++;
+
+        }
+
+        //String[] strArr = new String[]
     }
 }
 

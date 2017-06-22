@@ -23,7 +23,7 @@ import java.awt.geom.RoundRectangle2D;
  */
 public class MessageSystemMessageViewHolder extends BaseMessageViewHolder
 {
-    //public JLabel time = new JLabel();
+    //public JLabel size = new JLabel();
     public JLabel text = new JLabel();
     private JPanel timePanel = new JPanel();
     private JPanel textPanel;

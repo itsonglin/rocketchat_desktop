@@ -99,6 +99,6 @@ public class MessageDao extends BasicDao
     {
         Map map = new HashMap();
         map.put("condition", "'%" + key + "%'");
-        return session.selectList("search", map);
+        return session.selectList(MessageDao.class.getName() + ".search", map);
     }
 }

@@ -50,64 +50,59 @@ public class HighLightLabel extends JLabel
         int y = (int) (fm.getHeight() + lm.getAscent() - lm.getDescent());
         int x = 0;
 
-        // 未提供关键字或关键字为空，则正常绘制
-        List<String> strs = splitKeyWord(getText(), keyWord);
-        for (String s : strs)
+        String str = getText();
+        List<Integer> posArr = keyWordPositions(str, keyWord);
+        int keyLen = keyWord.length();
+        int strIndex = 0;
+        int posIndex = 0;
+        while (strIndex < str.length())
         {
-            if (s.equals("\0"))
+            if (posIndex >= posArr.size())
             {
-                g2d.setColor(highLightColor);
-                g2d.drawString(keyWord, x , y);
-                x += fm.stringWidth(keyWord);
-            }
-            else
-            {
+                String s = str.substring(strIndex);
                 g2d.setColor(getForeground());
                 g2d.drawString(s, x , y);
                 x += fm.stringWidth(s);
+                break;
             }
+
+            String s = str.substring(strIndex, posArr.get(posIndex));
+            g2d.setColor(getForeground());
+            g2d.drawString(s, x , y);
+            x += fm.stringWidth(s);
+            strIndex += s.length();
+
+            g2d.setColor(highLightColor);
+            g2d.drawString(keyWord, x , y);
+            x += fm.stringWidth(keyWord);
+            strIndex += keyLen;
+
+            posIndex++;
         }
+
+
     }
 
-    private List<String> splitKeyWord(String str, String key)
+    private List<Integer> keyWordPositions(String str, String key)
     {
-        List<String> strs = new ArrayList<>();
+        int keyLen = key.length();
+        boolean IsReduplication = key.matches("(.)\\1+"); // 关键字是否是叠，如aa、aaa
 
-        if (key.isEmpty())
-        {
-            strs.add(str);
-            return strs;
-        }
-
-        int pos = str.indexOf(key);//*第一个出现的索引位置
-        int startPos = -key.length();
+        int pos = str.indexOf(key); //第一个出现的索引位置
+        List<Integer> posArr = new ArrayList<>();
         while (pos != -1)
         {
-            String s = str.substring(startPos + key.length(), pos);
-            if (s.length() > 0)
+            posArr.add(pos);
+            if (IsReduplication)
             {
-                strs.add(s);
+                pos = str.indexOf(key, pos + keyLen); // 如果遇到关键字是叠词的情况，则间距为一个关键字
             }
-
-            startPos = pos;
-            pos = str.indexOf(key, pos + 1);// 从这个索引往后开始第一个出现的位置
-
-            strs.add("\0");
-        }
-
-        if (pos == -1)
-        {
-            pos = str.length();
-            String s = str.substring(startPos + key.length(), pos);
-
-            if (s.length() > 0)
+            else
             {
-                strs.add(s);
+                pos = str.indexOf(key, pos + 1);// 从这个索引往后开始第一个出现的位置
             }
         }
 
-        return strs;
+        return posArr;
     }
-
-
 }

@@ -25,7 +25,7 @@ public class MessageLeftTextViewHolder extends BaseMessageViewHolder
 {
     public JLabel sender = new JLabel();
     //public JLabel avatar = new JLabel();
-    //public JLabel time = new JLabel();
+    //public JLabel size = new JLabel();
     //public RCLeftTextMessageBubble text = new RCLeftTextMessageBubble();
 
     public SizeAutoAdjustTextArea text;

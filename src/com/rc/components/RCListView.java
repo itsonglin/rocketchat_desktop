@@ -184,7 +184,10 @@ public class RCListView extends JScrollPane
                     else
                     {
                         System.out.println("鼠标滚轮到顶，自动加载");
-                        scrollToTopListener.onScrollToTop();
+                        if (scrollToTopListener != null)
+                        {
+                            scrollToTopListener.onScrollToTop();
+                        }
                     }
 
                 }

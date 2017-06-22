@@ -23,7 +23,7 @@ import java.awt.event.MouseEvent;
 public class MessageRightTextViewHolder extends BaseMessageViewHolder
 {
     //public JLabel avatar = new JLabel();
-    //public JLabel time = new JLabel();
+    //public JLabel size = new JLabel();
     public SizeAutoAdjustTextArea text;
     public RCRightImageMessageBubble messageBubble = new RCRightImageMessageBubble();
     //public RCRightTextMessageBubble text = new RCRightTextMessageBubble();

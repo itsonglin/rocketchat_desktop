@@ -35,8 +35,8 @@ public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolde
         /*timePanel.setBackground(Colors.WINDOW_BACKGROUND);
         messageAvatarPanel.setBackground(Colors.WINDOW_BACKGROUND);
 
-        time.setForeground(Colors.FONT_GRAY);
-        time.setFont(FontUtil.getDefaultFont(12));*/
+        size.setForeground(Colors.FONT_GRAY);
+        size.setFont(FontUtil.getDefaultFont(12));*/
 
         ImageIcon resendIcon = new ImageIcon(getClass().getResource("/image/resend.png"));
         resendIcon.setImage(resendIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));

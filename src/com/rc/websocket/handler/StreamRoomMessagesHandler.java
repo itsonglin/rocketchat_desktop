@@ -271,7 +271,7 @@ public class StreamRoomMessagesHandler implements CollectionHandler
             Map<String, String> param = new HashMap();
             param.put("roomId", message.getRoomId());
             param.put("message", message.getMessageContent());
-            param.put("time", message.getTimestamp() + "");
+            param.put("size", message.getTimestamp() + "");
             param.put("unreadCount", room.getUnreadCount() + "");
 
             // 如果是刚刚自己上传的文件，提示UI不要再把这条消息加入到消息列表中，防止消息重复出现

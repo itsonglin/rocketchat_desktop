@@ -2,7 +2,10 @@ package com.rc.db.service;
 
 import com.rc.db.dao.FileAttachmentDao;
 import com.rc.db.model.FileAttachment;
+import com.rc.db.model.Message;
 import org.apache.ibatis.session.SqlSession;
+
+import java.util.List;
 
 /**
  * Created by song on 08/06/2017.
@@ -26,4 +29,8 @@ public class FileAttachmentService extends BasicService<FileAttachmentDao, FileA
         }
     }
 
+    public List<FileAttachment> search(String key)
+    {
+        return dao.search(key);
+    }
 }

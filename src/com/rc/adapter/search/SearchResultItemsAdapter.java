@@ -3,26 +3,32 @@ package com.rc.adapter.search;
 import com.rc.adapter.BaseAdapter;
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
+import com.rc.db.model.CurrentUser;
+import com.rc.db.model.FileAttachment;
 import com.rc.db.model.Message;
 import com.rc.db.model.Room;
+import com.rc.db.service.CurrentUserService;
+import com.rc.db.service.FileAttachmentService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
 import com.rc.entity.SearchResultItem;
 import com.rc.forms.ChatPanel;
 import com.rc.forms.ListPanel;
 import com.rc.forms.SearchPanel;
+import com.rc.helper.AttachmentIconHelper;
 import com.rc.listener.AbstractMouseListener;
-import com.rc.utils.AvatarUtil;
-import com.rc.utils.IconUtil;
-import com.rc.utils.TimeUtil;
+import com.rc.tasks.DownloadTask;
+import com.rc.tasks.HttpResponseListener;
+import com.rc.utils.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 搜索结果适配器
@@ -39,6 +45,16 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
     public static final int VIEW_TYPE_MESSAGE = 1;
     public static final int VIEW_TYPE_FILE = 2;
     private MessageService messageService = Launcher.messageService;
+    private AttachmentIconHelper attachmentIconHelper = new AttachmentIconHelper();
+    private FileCache fileCache = new FileCache();
+    private FileAttachmentService fileAttachmentService = Launcher.fileAttachmentService;
+    private CurrentUser currentUser;
+    private CurrentUserService currentUserService = Launcher.currentUserService;
+
+    private List<String> downloadingFiles = new ArrayList<>(); // 正在下载的文件
+
+    //private List<SearchResultFileItemViewHolder> fileItemViewHolders = new ArrayList<>();
+    private Map<String, SearchResultFileItemViewHolder> fileItemViewHolders = new HashMap<>();
 
 
     public SearchResultItemsAdapter(List<SearchResultItem> searchResultItems)
@@ -89,6 +105,10 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
             {
                 return new SearchResultMessageItemViewHolder();
             }
+            case VIEW_TYPE_FILE:
+            {
+                return new SearchResultFileItemViewHolder();
+            }
             default:
             {
                 return null;
@@ -109,6 +129,10 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
         {
             processMessageResult(viewHolder, item);
         }
+        else if (viewHolder instanceof SearchResultFileItemViewHolder)
+        {
+            processFileResult(viewHolder, item);
+        }
 
 //        if (!viewHolders.contains(viewHolder))
 //        {
@@ -122,6 +146,69 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
     }
 
     /**
+     * 处理文件搜索结果
+     * @param viewHolder
+     * @param item
+     */
+    private void processFileResult(SearchResultItemViewHolder viewHolder, SearchResultItem item)
+    {
+        SearchResultFileItemViewHolder holder = (SearchResultFileItemViewHolder) viewHolder;
+        //fileItemViewHolders.add(holder);
+        fileItemViewHolders.put(item.getId(), holder);
+
+        ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getName());
+        attachmentTypeIcon.setImage(attachmentTypeIcon.getImage().getScaledInstance(30,30,Image.SCALE_SMOOTH));
+        holder.avatar.setIcon(attachmentTypeIcon);
+        holder.name.setKeyWord(keyWord);
+
+        String filename = item.getName();
+        if (item.getName().length() > 20)
+        {
+            String suffix = filename.substring(filename.lastIndexOf("."));
+            filename = item.getName().substring(0, 15) + "..." + suffix;
+        }
+
+        holder.name.setText(filename);
+
+        String filePath = fileCache.tryGetFileCache(item.getId(), item.getName());
+        if (filePath != null)
+        {
+            holder.size.setText(fileCache.fileSizeString(filePath));
+        }
+        else
+        {
+            holder.size.setText("未下载");
+        }
+
+        holder.setToolTipText(item.getName());
+
+        holder.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                setBackground(holder, Colors.ITEM_SELECTED_DARK);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                setBackground(holder, Colors.DARK);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON1)
+                {
+                    downloadOrOpenFile(item.getId(), holder);
+                }
+                super.mouseReleased(e);
+            }
+        });
+    }
+
+    /**
      * 处理消息搜索结果
      *
      * @param viewHolder
@@ -130,9 +217,8 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
     private void processMessageResult(SearchResultItemViewHolder viewHolder, SearchResultItem item)
     {
         SearchResultMessageItemViewHolder holder = (SearchResultMessageItemViewHolder) viewHolder;
-        Map map = (Map) item.getTag();
-        Room room = roomService.findById((String) map.get("roomId"));
-        Message message = messageService.findById((String) map.get("messageId"));
+        Room room = roomService.findById((String) item.getTag());
+        Message message = messageService.findById(item.getId());
 
         holder.avatar.setIcon(new ImageIcon(getRoomAvatar(room.getType(), room.getName())));
         holder.brief.setKeyWord(keyWord);
@@ -151,6 +237,18 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
                     clearSearchText();
                 }
                 super.mouseReleased(e);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                setBackground(holder, Colors.ITEM_SELECTED_DARK);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                setBackground(holder, Colors.DARK);
             }
         });
     }
@@ -245,14 +343,14 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
             {
                 icon.setImage(IconUtil.getIcon(this, "/image/file_icon.png").getImage().getScaledInstance(25, 25, Image.SCALE_SMOOTH));
             }
-            else if (type.equals("message"))
+            /*else if (type.equals("message"))
             {
                 Room room = roomService.findById((String) ((Map) item.getTag()).get("roomId"));
                 if (room != null)
                 {
                     icon.setImage(getRoomAvatar(room.getType(), room.getName()));
                 }
-            }
+            }*/
         }
         holder.avatar.setIcon(icon);
 
@@ -302,6 +400,10 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
         {
             ((SearchResultMessageItemViewHolder) holder).nameBrief.setBackground(color);
         }
+        else if (holder instanceof SearchResultFileItemViewHolder)
+        {
+            ((SearchResultFileItemViewHolder) holder).nameProgressPanel.setBackground(color);
+        }
     }
 
     public void setKeyWord(String keyWord)
@@ -317,6 +419,153 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
     public void setSearchMessageOrFileListener(SearchMessageOrFileListener searchMessageOrFileListener)
     {
         this.searchMessageOrFileListener = searchMessageOrFileListener;
+    }
+
+    /**
+     * 打开文件，如果文件不存在，则下载
+     *
+     * @param fileId
+     * @param holder
+     */
+    public void downloadOrOpenFile(String fileId, SearchResultFileItemViewHolder holder)
+    {
+        FileAttachment fileAttachment = fileAttachmentService.findById(fileId);
+
+        if (fileAttachment == null)
+        {
+            JOptionPane.showMessageDialog(null, "无效的附件", "附件无效", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String filepath = fileCache.tryGetFileCache(fileAttachment.getId(), fileAttachment.getTitle());
+        if (filepath == null)
+        {
+            // 服务器上的文件
+            if (fileAttachment.getLink().startsWith("/file-upload"))
+            {
+                // 如果当前文件正在下载，则不下载
+                if (downloadingFiles.contains(fileId))
+                {
+                    holder.progressBar.setVisible(true);
+                    holder.size.setText("下载中...");
+                }
+                else
+                {
+                    downloadFile(fileAttachment);
+                }
+            }
+            // 本地的文件
+            else
+            {
+                openFileWithDefaultApplication(fileAttachment.getLink());
+            }
+        }
+        else
+        {
+            openFileWithDefaultApplication(filepath);
+        }
+    }
+
+    /**
+     * 下载文件
+     *  @param fileAttachment
+     */
+    private void downloadFile(FileAttachment fileAttachment)
+    {
+        downloadingFiles.add(fileAttachment.getId());
+        //holder.fileId = fileAttachment.getId();
+
+        final DownloadTask task = new DownloadTask(new HttpUtil.ProgressListener()
+        {
+            @Override
+            public void onProgress(int progress)
+            {
+                SearchResultFileItemViewHolder holder = fileItemViewHolders.get(fileAttachment.getId());
+                if (progress >= 0 && progress < 100)
+                {
+
+                    if (holder.size.isVisible())
+                    {
+                        holder.size.setVisible(false);
+                    }
+                    if (!holder.progressBar.isVisible())
+                    {
+                        holder.progressBar.setVisible(true);
+                    }
+
+                    holder.progressBar.setValue(progress);
+                }
+                else if (progress >= 100)
+                {
+                    holder.progressBar.setVisible(false);
+                    holder.size.setVisible(true);
+                }
+            }
+        });
+
+        task.setListener(new HttpResponseListener<byte[]>()
+        {
+            @Override
+            public void onResult(byte[] data)
+            {
+                SearchResultFileItemViewHolder holder = fileItemViewHolders.get(fileAttachment.getId());
+
+                String path = fileCache.cacheFile(fileAttachment.getId(), fileAttachment.getTitle(), data);
+
+                if (path == null)
+                {
+                    holder.size.setVisible(true);
+                    holder.size.setText("文件获取失败");
+                    holder.progressBar.setVisible(false);
+                }
+                else
+                {
+                    holder.size.setVisible(true);
+                    System.out.println("文件已缓存在 " + path);
+                    holder.size.setText(fileCache.fileSizeString(path));
+                    downloadingFiles.remove(fileAttachment.getId());
+
+                    /*for (SearchResultFileItemViewHolder h : fileItemViewHolders)
+                    {
+                        if (h.fileId.equals(fileAttachment.getId()))
+                        {
+                            h.progressBar.setVisible(false);
+                            h.size.setVisible(true);
+                            h.size.setText(fileCache.fileSizeString(fileCache.tryGetFileCache(fileAttachment.getId(), fileAttachment.getTitle())));
+                            //break;
+                            //fileItemViewHolders.remove(h);
+                        }
+                    }*/
+
+                    /*SearchResultFileItemViewHolder h = fileItemViewHolders.get(fileAttachment.getId());
+                    h.progressBar.setVisible(false);
+                    h.size.setVisible(true);
+                    h.size.setText(fileCache.fileSizeString(fileCache.tryGetFileCache(fileAttachment.getId(), fileAttachment.getTitle())));*/
+                }
+            }
+        });
+
+        currentUser = currentUserService.findAll().get(0);
+        String url = Launcher.HOSTNAME + fileAttachment.getLink() + "?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
+        task.execute(url);
+    }
+
+    /**
+     * 使用默认程序打开文件
+     *
+     * @param path
+     */
+    private void openFileWithDefaultApplication(String path)
+    {
+        try
+        {
+            Desktop.getDesktop().open(new File(path));
+        }
+        catch (IOException e1)
+        {
+            JOptionPane.showMessageDialog(null, "文件打开失败，没有找到关联的应用程序", "打开失败", JOptionPane.ERROR_MESSAGE);
+            e1.printStackTrace();
+        }
     }
 
 

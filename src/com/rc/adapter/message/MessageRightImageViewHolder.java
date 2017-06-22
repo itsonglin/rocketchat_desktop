@@ -17,7 +17,7 @@ public class MessageRightImageViewHolder extends BaseMessageViewHolder
 {
     public JLabel image = new JLabel();
     //public JLabel avatar = new JLabel();
-    //public JLabel time = new JLabel();
+    //public JLabel size = new JLabel();
     public JLabel resend = new JLabel(); // 重发按钮
     public JLabel sendingProgress = new JLabel(); // 正在发送
 

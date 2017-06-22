@@ -87,7 +87,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
 
         // 时间
         viewHolder.time.setText(TimeUtil.diff(item.getTimestamp()));
-        //viewHolder.time.setText("14:30");
+        //viewHolder.size.setText("14:30");
 
 
         // 未读消息数

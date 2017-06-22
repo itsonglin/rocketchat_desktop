@@ -6,9 +6,11 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCSearchTextField;
 import com.rc.db.model.ContactsUser;
+import com.rc.db.model.FileAttachment;
 import com.rc.db.model.Message;
 import com.rc.db.model.Room;
 import com.rc.db.service.ContactsUserService;
+import com.rc.db.service.FileAttachmentService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
 import com.rc.entity.SearchResultItem;
@@ -37,6 +39,8 @@ public class SearchPanel extends ParentAvailablePanel
 
     private ContactsUserService contactsUserService = Launcher.contactsUserService;
     private MessageService messageService = Launcher.messageService;
+    private FileAttachmentService fileAttachmentService = Launcher.fileAttachmentService;
+
 
     public SearchPanel(JPanel parent)
     {
@@ -121,11 +125,11 @@ public class SearchPanel extends ParentAvailablePanel
             @Override
             public void keyPressed(KeyEvent e)
             {
-                if (e.getKeyCode() == KeyEvent.VK_DOWN)
+                /*if (e.getKeyCode() == KeyEvent.VK_DOWN)
                 {
                     System.out.println("下");
                     SearchResultPanel.getContext().moveToNextItem();
-                }
+                }*/
                 // ESC清除已输入内容
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
                 {
@@ -174,6 +178,7 @@ public class SearchPanel extends ParentAvailablePanel
                 public void onSearchFile()
                 {
                     System.out.println("搜索文件");
+                    searchAndListFile(searchTextField.getText());
                 }
             });
 
@@ -185,6 +190,7 @@ public class SearchPanel extends ParentAvailablePanel
 
     /**
      * 搜索并展示消息
+     *
      * @param key
      */
     private void searchAndListMessage(String key)
@@ -209,10 +215,34 @@ public class SearchPanel extends ParentAvailablePanel
             }
 
             item = new SearchResultItem(msg.getId(), content, "message");
-            Map map = new HashMap();
-            map.put("roomId", msg.getRoomId());
-            map.put("messageId", msg.getId());
-            item.setTag(map);
+            item.setTag(msg.getRoomId());
+
+            searchResultItems.add(item);
+        }
+
+        SearchResultPanel searchResultPanel = SearchResultPanel.getContext();
+        searchResultPanel.setData(searchResultItems);
+        searchResultPanel.setKeyWord(key);
+        searchResultPanel.notifyDataSetChanged(false);
+    }
+
+    /**
+     * 搜索并展示文件
+     *
+     * @param key
+     */
+    private void searchAndListFile(String key)
+    {
+        List<FileAttachment> fileAttachments = fileAttachmentService.search(key);
+        List<SearchResultItem> searchResultItems = new ArrayList<>();
+        SearchResultItem item;
+        for (FileAttachment file : fileAttachments)
+        {
+            String content = file.getTitle();
+           //content = content.length() > 10 ? content.substring(0, 10) : content;
+
+            item = new SearchResultItem(file.getId(), content, "file");
+            //item.setTag(msg.getRoomId());
 
             searchResultItems.add(item);
         }
@@ -225,6 +255,7 @@ public class SearchPanel extends ParentAvailablePanel
 
     /**
      * 搜索房间，但不包含直接聊天
+     *
      * @param key
      * @return
      */
@@ -244,6 +275,7 @@ public class SearchPanel extends ParentAvailablePanel
 
     /**
      * 搜索通讯录
+     *
      * @param key
      * @return
      */
