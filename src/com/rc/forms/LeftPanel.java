@@ -2,9 +2,13 @@ package com.rc.forms;
 
 import com.rc.components.Colors;
 import com.rc.components.GBC;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
+import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 /**
  * Created by song on 17-5-29.
@@ -45,11 +49,13 @@ public class LeftPanel extends JPanel
         add(searchPanel, new GBC(0, 1).setAnchor(GBC.CENTER).setFill(GBC.HORIZONTAL).setWeight(1, 1));
         add(mainOperationPanel, new GBC(0, 2).setAnchor(GBC.CENTER).setFill(GBC.BOTH).setWeight(1, 1));
         add(listPanel, new GBC(0, 3).setAnchor(GBC.CENTER).setFill(GBC.BOTH).setWeight(1, 60));
+
     }
 
     public ListPanel getListPanel()
     {
         return this.listPanel;
     }
+
 
 }

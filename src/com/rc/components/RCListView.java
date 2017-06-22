@@ -35,6 +35,8 @@ public class RCListView extends JScrollPane
     private static int lastItemCount = 0;
     private MouseAdapter scrollMouseListener;
     private boolean scrollAttachMouseListener = false;
+    private boolean messageLoading = false;
+    private long lastWeelTime = 0;
 
     public RCListView()
     {
@@ -131,6 +133,7 @@ public class RCListView extends JScrollPane
                 if (evt.getValue() == 0 && evt.getValue() != lastScrollValue && scrollToTopListener != null && !scrollBarPressed && !scrollToBottom)
                 {
                     System.out.println("到顶啦~");
+                    messageLoading = true;
                     scrollToTopListener.onScrollToTop();
                 }
 
@@ -165,7 +168,31 @@ public class RCListView extends JScrollPane
             @Override
             public void mouseWheelMoved(MouseWheelEvent e)
             {
+                // 如果两次鼠标滚轮间隔小于1秒，则忽略
+                if (System.currentTimeMillis() - lastWeelTime < 1000)
+                {
+                    lastWeelTime = System.currentTimeMillis();
+                    return;
+                }
+
+                if (getVerticalScrollBar().getValue() == 0)
+                {
+                    if (messageLoading)
+                    {
+                        messageLoading = false;
+                    }
+                    else
+                    {
+                        System.out.println("鼠标滚轮到顶，自动加载");
+                        scrollToTopListener.onScrollToTop();
+                    }
+
+                }
+
                 scrollToBottom = false;
+
+                lastWeelTime = System.currentTimeMillis();
+
                 super.mouseWheelMoved(e);
             }
         };
@@ -368,7 +395,6 @@ public class RCListView extends JScrollPane
 
         return viewHolders;
     }
-
 
     public interface ScrollToTopListener
     {

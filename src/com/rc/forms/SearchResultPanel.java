@@ -26,6 +26,7 @@ public class SearchResultPanel extends ParentAvailablePanel
     private RCListView resultItemsListView;
     private List<SearchResultItem> searchResultItems = new ArrayList<>();
     private RoomService roomService = Launcher.roomService;
+    private int selectedItemIndex = 0;
 
 
     public SearchResultPanel(JPanel parent)
@@ -107,5 +108,10 @@ public class SearchResultPanel extends ParentAvailablePanel
         }
 
         this.searchResultItemsAdapter.setSearchMessageOrFileListener(searchMessageOrFileListener);
+    }
+
+    public void moveToNextItem()
+    {
+
     }
 }

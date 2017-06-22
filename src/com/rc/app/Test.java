@@ -1,13 +1,14 @@
 package com.rc.app;
 
 
-import com.rc.utils.IconUtil;
 import com.vdurmont.emoji.EmojiParser;
 
 import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by song on 14/06/2017.
@@ -17,18 +18,7 @@ class Test extends JFrame
 {
     public static void main(String[] args) throws IOException, FontFormatException
     {
-        /*JFrame frame = new Frame();
-        frame.setBounds(100, 100, 300, 400);
-        frame.setVisible(true);*/
 
-        String str = "12a345678a";
-
-        int a = str.indexOf("a");//*第一个出现的索引位置
-        while (a != -1)
-        {
-            System.out.print(a + "\t");
-            a = str.indexOf("a", a + 1);//*从这个索引往后开始第一个出现的位置
-        }
     }
 }
 

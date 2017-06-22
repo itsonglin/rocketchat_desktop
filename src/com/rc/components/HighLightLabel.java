@@ -2,6 +2,8 @@ package com.rc.components;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.awt.font.LineMetrics;
 
 /**
@@ -46,39 +48,65 @@ public class HighLightLabel extends JLabel
 
         // 文本于容器垂直居中
         int y = (int) (fm.getHeight() + lm.getAscent() - lm.getDescent());
+        int x = 0;
 
         // 未提供关键字或关键字为空，则正常绘制
-        if (keyWord == null || keyWord.isEmpty())
+        List<String> strs = splitKeyWord(getText(), keyWord);
+        for (String s : strs)
         {
-            g2d.drawString(getText(), 0 , y);
-        }
-        else
-        {
-            int x = 0;
-
-            String[] strArr = getText().split(keyWord);
-            for (int i = 0; i < strArr.length; i++)
-            {
-                g2d.setColor(getForeground());
-                g2d.drawString(strArr[i], x , y);
-                x += fm.stringWidth(strArr[i]);
-
-                if (i < strArr.length - 1)
-                {
-                    g2d.setColor(highLightColor);
-                    g2d.drawString(keyWord, x , y);
-                    x += fm.stringWidth(keyWord);
-                }
-            }
-
-            if (strArr.length == 0 && getText().length() > 0)
+            if (s.equals("\0"))
             {
                 g2d.setColor(highLightColor);
-                g2d.drawString(getText(), x , y);
-                return;
+                g2d.drawString(keyWord, x , y);
+                x += fm.stringWidth(keyWord);
+            }
+            else
+            {
+                g2d.setColor(getForeground());
+                g2d.drawString(s, x , y);
+                x += fm.stringWidth(s);
+            }
+        }
+    }
+
+    private List<String> splitKeyWord(String str, String key)
+    {
+        List<String> strs = new ArrayList<>();
+
+        if (key.isEmpty())
+        {
+            strs.add(str);
+            return strs;
+        }
+
+        int pos = str.indexOf(key);//*第一个出现的索引位置
+        int startPos = -key.length();
+        while (pos != -1)
+        {
+            String s = str.substring(startPos + key.length(), pos);
+            if (s.length() > 0)
+            {
+                strs.add(s);
             }
 
+            startPos = pos;
+            pos = str.indexOf(key, pos + 1);// 从这个索引往后开始第一个出现的位置
+
+            strs.add("\0");
         }
+
+        if (pos == -1)
+        {
+            pos = str.length();
+            String s = str.substring(startPos + key.length(), pos);
+
+            if (s.length() > 0)
+            {
+                strs.add(s);
+            }
+        }
+
+        return strs;
     }
 
 

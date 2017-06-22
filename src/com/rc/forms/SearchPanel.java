@@ -121,6 +121,11 @@ public class SearchPanel extends ParentAvailablePanel
             @Override
             public void keyPressed(KeyEvent e)
             {
+                if (e.getKeyCode() == KeyEvent.VK_DOWN)
+                {
+                    System.out.println("下");
+                    SearchResultPanel.getContext().moveToNextItem();
+                }
                 // ESC清除已输入内容
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
                 {
@@ -155,7 +160,6 @@ public class SearchPanel extends ParentAvailablePanel
 
         if (!setSearchMessageOrFileListener)
         {
-            System.out.println("setSearchMessageOrFileListener");
             // 查找消息、文件
             SearchResultPanel.getContext().setSearchMessageOrFileListener(new SearchResultItemsAdapter.SearchMessageOrFileListener()
             {

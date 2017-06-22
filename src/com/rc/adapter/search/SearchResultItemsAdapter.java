@@ -286,6 +286,11 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
         return null;
     }
 
+    /**
+     * 设置item的背影色
+     * @param holder
+     * @param color
+     */
     private void setBackground(SearchResultItemViewHolder holder, Color color)
     {
         holder.setBackground(color);
