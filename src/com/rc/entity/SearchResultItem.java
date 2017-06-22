@@ -10,6 +10,7 @@ public class SearchResultItem implements Comparable<SearchResultItem>
     private String id;
     private String name;
     private String type;
+    private Object tag;
 
     public SearchResultItem()
     {
@@ -66,5 +67,15 @@ public class SearchResultItem implements Comparable<SearchResultItem>
     public int compareTo(SearchResultItem o)
     {
         return 0;
+    }
+
+    public Object getTag()
+    {
+        return tag;
+    }
+
+    public void setTag(Object tag)
+    {
+        this.tag = tag;
     }
 }

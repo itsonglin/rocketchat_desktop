@@ -1,55 +1,13 @@
-package com.rc.adapter;
-
-import com.rc.components.Colors;
-import com.rc.components.GBC;
-import com.rc.components.RCBorder;
-import com.rc.utils.FontUtil;
+package com.rc.components;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.font.LineMetrics;
 
 /**
- * 搜索结果每一个项目的UI
- * Created by song on 17-5-30.
+ * Created by song on 22/06/2017.
  */
-public class SearchResultItemViewHolder extends ViewHolder
-{
-    public JLabel avatar = new JLabel();
-    public HighLightLabel name = new HighLightLabel();
-
-    public SearchResultItemViewHolder()
-    {
-        initComponents();
-        initView();
-    }
-
-    private void initComponents()
-    {
-        setPreferredSize(new Dimension(100, 50));
-        setBackground(Colors.DARK);
-        setBorder(new RCBorder(RCBorder.BOTTOM));
-        setOpaque(true);
-        setForeground(Colors.FONT_WHITE);
-
-
-        name.setFont(FontUtil.getDefaultFont(14));
-        name.setForeground(Colors.FONT_WHITE);
-
-    }
-
-    private void initView()
-    {
-        setLayout(new GridBagLayout());
-        add(avatar, new GBC(0, 0).setWeight(2, 1).setFill(GBC.BOTH).setInsets(0, 5, 0, 0));
-        add(name, new GBC(1, 0).setWeight(100, 1).setFill(GBC.BOTH).setInsets(3, 5, 0, 0));
-
-    }
-
-
-}
-
-class HighLightLabel extends JLabel
+public class HighLightLabel extends JLabel
 {
     private String keyWord;
     private Color highLightColor;
@@ -84,7 +42,7 @@ class HighLightLabel extends JLabel
         g2d.setFont(getFont());
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
         FontMetrics fm = getFontMetrics(getFont());
-        LineMetrics  lm = getFont().getLineMetrics(getText(), g2d.getFontRenderContext());
+        LineMetrics lm = getFont().getLineMetrics(getText(), g2d.getFontRenderContext());
 
         // 文本于容器垂直居中
         int y = (int) (fm.getHeight() + lm.getAscent() - lm.getDescent());

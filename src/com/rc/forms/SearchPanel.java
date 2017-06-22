@@ -1,6 +1,6 @@
 package com.rc.forms;
 
-import com.rc.adapter.SearchResultItemsAdapter;
+import com.rc.adapter.search.SearchResultItemsAdapter;
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
@@ -21,7 +21,9 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by song on 17-5-29.
@@ -142,8 +144,8 @@ public class SearchPanel extends ParentAvailablePanel
     {
         List<SearchResultItem> list = new ArrayList<>();
 
-        list.add(new SearchResultItem("searchAndListMessage", "搜索 \"" + key + "\" 相关消息", "message"));
-        list.add(new SearchResultItem("searchFile", "搜索 \"" + key + "\" 相关文件", "file"));
+        list.add(new SearchResultItem("searchAndListMessage", "搜索 \"" + key + "\" 相关消息", "searchMessage"));
+        list.add(new SearchResultItem("searchFile", "搜索 \"" + key + "\" 相关文件", "searchFile"));
 
         //搜索通讯录
         list.addAll(searchContacts(key));
@@ -189,11 +191,24 @@ public class SearchPanel extends ParentAvailablePanel
         for (Message msg : messages)
         {
             String content = msg.getMessageContent();
-            int startPos = content.indexOf(key);
+            int startPos = content.toLowerCase().indexOf(key.toLowerCase());
             int endPos = startPos + 10;
-            endPos = endPos > content.length() ? content.length() : endPos;
-            content = content.substring(startPos, endPos);
-            item = new SearchResultItem(msg.getId(), content, msg.getRoomId());
+            //endPos = endPos > content.length() ? content.length() : endPos;
+            if (endPos > content.length())
+            {
+                endPos = content.length();
+                content = content.substring(startPos, endPos);
+            }
+            else
+            {
+                content = content.substring(startPos, endPos) + "...";
+            }
+
+            item = new SearchResultItem(msg.getId(), content, "message");
+            Map map = new HashMap();
+            map.put("roomId", msg.getRoomId());
+            map.put("messageId", msg.getId());
+            item.setTag(map);
 
             searchResultItems.add(item);
         }
