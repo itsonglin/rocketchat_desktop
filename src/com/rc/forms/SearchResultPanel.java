@@ -25,9 +25,7 @@ public class SearchResultPanel extends ParentAvailablePanel
 
     private RCListView resultItemsListView;
     private List<SearchResultItem> searchResultItems = new ArrayList<>();
-    private RoomService roomService = Launcher.roomService;
-    private int selectedItemIndex = 0;
-
+    private JLabel tipLabel;
 
     public SearchResultPanel(JPanel parent)
     {
@@ -44,13 +42,26 @@ public class SearchResultPanel extends ParentAvailablePanel
     private void initComponents()
     {
         resultItemsListView = new RCListView();
+        this.setBackground(Colors.DARK);
+
+        tipLabel = new JLabel("无搜索结果");
+        tipLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        tipLabel.setForeground(Colors.FONT_GRAY);
+        tipLabel.setVisible(false);
     }
 
     private void initView()
     {
         setLayout(new GridBagLayout());
         resultItemsListView.setContentPanelBackground(Colors.DARK);
-        add(resultItemsListView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
+        add(tipLabel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(10, 0, 0, 0));
+        add(resultItemsListView, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1000));
+    }
+
+
+    public JLabel getTipLabel()
+    {
+        return tipLabel;
     }
 
     public void setData(List<SearchResultItem> data)
@@ -78,6 +89,7 @@ public class SearchResultPanel extends ParentAvailablePanel
 
     /**
      * 设置每个房间项目的背影色
+     *
      * @param holder
      * @param color
      */
@@ -87,7 +99,6 @@ public class SearchResultPanel extends ParentAvailablePanel
         holder.nameBrief.setBackground(color);
         holder.timeUnread.setBackground(color);
     }
-
 
 
     public static SearchResultPanel getContext()

@@ -92,6 +92,7 @@ public class SearchPanel extends ParentAvailablePanel
                 searchResultPanel.setData(data);
                 searchResultPanel.setKeyWord(searchTextField.getText());
                 searchResultPanel.notifyDataSetChanged(false);
+                searchResultPanel.getTipLabel().setVisible(false);
             }
 
             @Override
@@ -112,6 +113,8 @@ public class SearchPanel extends ParentAvailablePanel
                 searchResultPanel.setData(data);
                 searchResultPanel.setKeyWord(searchTextField.getText());
                 searchResultPanel.notifyDataSetChanged(false);
+                searchResultPanel.getTipLabel().setVisible(false);
+
             }
 
             @Override
@@ -195,32 +198,42 @@ public class SearchPanel extends ParentAvailablePanel
      */
     private void searchAndListMessage(String key)
     {
+        SearchResultPanel searchResultPanel = SearchResultPanel.getContext();
         List<Message> messages = messageService.search(key);
         List<SearchResultItem> searchResultItems = new ArrayList<>();
-        SearchResultItem item;
-        for (Message msg : messages)
+
+        if (messages == null || messages.size() < 1)
         {
-            String content = msg.getMessageContent();
-            int startPos = content.toLowerCase().indexOf(key.toLowerCase());
-            int endPos = startPos + 10;
-            //endPos = endPos > content.length() ? content.length() : endPos;
-            if (endPos > content.length())
-            {
-                endPos = content.length();
-                content = content.substring(startPos, endPos);
-            }
-            else
-            {
-                content = content.substring(startPos, endPos) + "...";
-            }
+            searchResultPanel.getTipLabel().setVisible(true);
+        }
+        else
+        {
+            searchResultPanel.getTipLabel().setVisible(false);
 
-            item = new SearchResultItem(msg.getId(), content, "message");
-            item.setTag(msg.getRoomId());
+            SearchResultItem item;
+            for (Message msg : messages)
+            {
+                String content = msg.getMessageContent();
+                int startPos = content.toLowerCase().indexOf(key.toLowerCase());
+                int endPos = startPos + 10;
+                //endPos = endPos > content.length() ? content.length() : endPos;
+                if (endPos > content.length())
+                {
+                    endPos = content.length();
+                    content = content.substring(startPos, endPos);
+                }
+                else
+                {
+                    content = content.substring(startPos, endPos) + "...";
+                }
 
-            searchResultItems.add(item);
+                item = new SearchResultItem(msg.getId(), content, "message");
+                item.setTag(msg.getRoomId());
+
+                searchResultItems.add(item);
+            }
         }
 
-        SearchResultPanel searchResultPanel = SearchResultPanel.getContext();
         searchResultPanel.setData(searchResultItems);
         searchResultPanel.setKeyWord(key);
         searchResultPanel.notifyDataSetChanged(false);
@@ -233,23 +246,32 @@ public class SearchPanel extends ParentAvailablePanel
      */
     private void searchAndListFile(String key)
     {
+        SearchResultPanel searchResultPanel = SearchResultPanel.getContext();
         List<FileAttachment> fileAttachments = fileAttachmentService.search(key);
         List<SearchResultItem> searchResultItems = new ArrayList<>();
-        SearchResultItem item;
-        for (FileAttachment file : fileAttachments)
+
+        if (fileAttachments == null || fileAttachments.size() < 1)
         {
-            String content = file.getTitle();
-           //content = content.length() > 10 ? content.substring(0, 10) : content;
+            searchResultPanel.getTipLabel().setVisible(true);
+        }
+        else
+        {
+            searchResultPanel.getTipLabel().setVisible(false);
+            SearchResultItem item;
+            for (FileAttachment file : fileAttachments)
+            {
+                String content = file.getTitle();
+                //content = content.length() > 10 ? content.substring(0, 10) : content;
 
-            item = new SearchResultItem(file.getId(), content, "file");
-            //item.setTag(msg.getRoomId());
+                item = new SearchResultItem(file.getId(), content, "file");
+                //item.setTag(msg.getRoomId());
 
-            searchResultItems.add(item);
+                searchResultItems.add(item);
+            }
         }
 
-        SearchResultPanel searchResultPanel = SearchResultPanel.getContext();
-        searchResultPanel.setData(searchResultItems);
         searchResultPanel.setKeyWord(key);
+        searchResultPanel.setData(searchResultItems);
         searchResultPanel.notifyDataSetChanged(false);
     }
 

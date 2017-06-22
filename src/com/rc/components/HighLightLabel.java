@@ -86,7 +86,10 @@ public class HighLightLabel extends JLabel
     private List<Integer> keyWordPositions(String str, String key)
     {
         int keyLen = key.length();
-        boolean IsReduplication = key.matches("(.)\\1+"); // 关键字是否是叠，如aa、aaa
+
+        // 关键字是否是叠，第一种情况匹配aa、aaa，第二种情况匹配如asdasd
+        boolean IsReduplication = key.matches("(.)\\1+")
+                || (key.length() % 2 == 0 && key.substring(0, key.length() / 2).equals(key.substring(key.length() / 2)));
 
         int pos = str.indexOf(key); //第一个出现的索引位置
         List<Integer> posArr = new ArrayList<>();

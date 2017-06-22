@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by song on 14/06/2017.
@@ -19,59 +21,25 @@ class Test extends JFrame
 {
     public static void main(String[] args) throws IOException, FontFormatException
     {
-        /*JFrame frame = new Frame();
-        frame.setBounds(100, 100, 300, 400);
-        frame.setVisible(true);*/
 
-        //String regx = "(.)\\1+";
-        //System.out.println("aaaaaaaaaaaaaaaaa".matches(regx));
-
-        String str = "aaa";
-        String key = "aa";
-
-        int keyLen = key.length();
-        boolean IsReduplication = key.matches("(.)\\1+");
-
-        int pos = str.indexOf(key);//*第一个出现的索引位置
-        List<Integer> posArr = new ArrayList<>();
-        while (pos != -1)
+        Pattern p = Pattern.compile("((.)+)+");
+        String str = "asdasd";
+        /*Matcher m = p.matcher(str);
+        if (m.matches())
         {
-            posArr.add(pos);
-            if (IsReduplication)
-            {
-                pos = str.indexOf(key, pos + keyLen); // 如果遇到关键字是叠词的情况，则间距为一个关键字
-            }
-            else
-            {
-                pos = str.indexOf(key, pos + 1);// 从这个索引往后开始第一个出现的位置
-            }
-        }
+            System.out.println("货币金额: " + m.group(1));
+            System.out.println("货币种类: " + m.group(2));
+        }*/
 
-        System.out.println(posArr);
 
-        int strIndex = 0;
-        int posIndex = 0;
-        while (strIndex < str.length())
-        {
-            if (posIndex >= posArr.size())
-            {
-                String s = str.substring(strIndex);
-                System.out.println("out -- " + s);
-                break;
-            }
+        boolean ss = str.length() % 2 == 0 && str.substring(0, str.length() / 2).equals(str.substring(str.length() / 2));
+        System.out.println(ss);
 
-            String s = str.substring(strIndex, posArr.get(posIndex));
-            System.out.println("out -- " + s);
-            strIndex += s.length();
 
-            System.out.println("out -- " + key);
-            strIndex += keyLen;
 
-            posIndex++;
+        //boolean IsReduplication = "asdasd".matches("((.))\\1+\\2+"); // 关键字是否是叠，如aa、aaa
 
-        }
-
-        //String[] strArr = new String[]
+        //System.out.println(IsReduplication);
     }
 }
 
