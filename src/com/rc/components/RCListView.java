@@ -128,8 +128,9 @@ public class RCListView extends JScrollPane
                 // 之所以要加上!scrollBarPressed这个条件，scrollBar在顶部的时间，scrollbar点击和释放都分别会触发adjustmentValueChanged这个事件
                 // 所以只让scrollBar释放的时候触发这个回调
                 // !scrollToBottom 这个条件保证在自动滚动到底部之前，不会调用此回调
-                if (evt.getValue() < 10 && evt.getValue() != lastScrollValue && scrollToTopListener != null && !scrollBarPressed && !scrollToBottom)
+                if (evt.getValue() == 0 && evt.getValue() != lastScrollValue && scrollToTopListener != null && !scrollBarPressed && !scrollToBottom)
                 {
+                    System.out.println("到顶啦~");
                     scrollToTopListener.onScrollToTop();
                 }
 
@@ -182,6 +183,7 @@ public class RCListView extends JScrollPane
 
     public void setAutoScrollToTop()
     {
+        scrollToBottom = false;
         getVerticalScrollBar().setValue(1);
     }
 

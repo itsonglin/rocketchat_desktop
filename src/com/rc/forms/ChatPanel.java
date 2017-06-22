@@ -63,7 +63,9 @@ public class ChatPanel extends ParentAvailablePanel
     private CurrentUser currentUser;
     private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
     private Room room; // 当前房间
-    private long firstMessageTimestamp = 0L;
+
+    private long firstMessageTimestamp = 0L; // 如果是从消息搜索列表中进入房间的，这个属性不为0
+
     // 房间的用户
     public List<String> roomMembers = new ArrayList<>();
 
@@ -141,15 +143,23 @@ public class ChatPanel extends ParentAvailablePanel
     {
         if (roomId != null)
         {
-            // 加载本地消息
-            loadLocalHistory(); // 初次打开房间时加载历史消息
-
-            // 从服务器获取本地最后一条消息以后的消息
-            if (!remoteHistoryLoadedRooms.contains(roomId))
+            // 如果是从搜索列表进入房间的
+            if (firstMessageTimestamp != 0L)
             {
-                long startTs = messageService.findLastMessageTime(roomId) + 1;
-                logger.debug("startTs = " + startTs);
-                loadRemoteHistory(startTs - TIMESTAMP_8_HOURS, 0, true, false, null);
+                loadMessageWithEarliestTime(firstMessageTimestamp);
+            }
+            else
+            {
+                // 加载本地消息
+                loadLocalHistory(); // 初次打开房间时加载历史消息
+
+                // 从服务器获取本地最后一条消息以后的消息
+                if (!remoteHistoryLoadedRooms.contains(roomId))
+                {
+                    long startTs = messageService.findLastMessageTime(roomId) + 1;
+                    logger.debug("startTs = " + startTs);
+                    loadRemoteHistory(startTs - TIMESTAMP_8_HOURS, 0, true, false, null);
+                }
             }
 
             updateUnreadCount(0);
@@ -318,13 +328,10 @@ public class ChatPanel extends ParentAvailablePanel
         return users;
     }
 
-    /**
-     * 进入指定房间
-     *
-     * @param roomId
-     */
-    public void enterRoom(String roomId)
+    public void enterRoom(String roomId, long firstMessageTimestamp)
     {
+        this.firstMessageTimestamp = firstMessageTimestamp;
+
         this.roomId = roomId;
         CHAT_ROOM_OPEN_ID = roomId;
         this.room = roomService.findById(roomId);
@@ -342,6 +349,16 @@ public class ChatPanel extends ParentAvailablePanel
         RoomMembersPanel.getContext().setRoomId(roomId);
 
         messageEditorPanel.getEditor().setText("");
+    }
+
+    /**
+     * 进入指定房间
+     *
+     * @param roomId
+     */
+    public void enterRoom(String roomId)
+    {
+        enterRoom(roomId, 0L);
     }
 
     public void updateRoomTitle()
@@ -364,6 +381,39 @@ public class ChatPanel extends ParentAvailablePanel
 
         // 更新房间标题
         TitlePanel.getContext().updateRoomTitle(title);
+    }
+
+
+    /**
+     * 加载指定 firstMessageTimestamp 以后的消息
+     *
+     * @param firstMessageTimestamp
+     */
+    private void loadMessageWithEarliestTime(long firstMessageTimestamp)
+    {
+        List<Message> messages = messageService.findBetween(roomId, firstMessageTimestamp, System.currentTimeMillis());
+        if (messages.size() > 0)
+        {
+            for (Message message : messages)
+            {
+                if (!message.isDeleted())
+                {
+                    MessageItem item = new MessageItem(message, currentUser.getUserId());
+                    this.messageItems.add(item);
+                }
+            }
+
+            messagePanel.getMessageListView().notifyDataSetChanged(false);
+            messagePanel.getMessageListView().setAutoScrollToTop();
+        }
+
+        // 从服务器获取本地最后一条消息以后的消息
+        if (!remoteHistoryLoadedRooms.contains(roomId))
+        {
+            long startTs = messageService.findLastMessageTime(roomId) + 1;
+            logger.debug("startTs = " + startTs);
+            loadRemoteHistory(startTs - TIMESTAMP_8_HOURS, 0, false, false, null);
+        }
     }
 
     /**
@@ -481,8 +531,16 @@ public class ChatPanel extends ParentAvailablePanel
         RoomsPanel.getContext().updateRoomItem(room.getRoomId());
     }
 
+
     /**
      * 加载远程历史记录
+     *
+     * @param startTime 最早一条消息的时间
+     * @param endTime 最后一条消息的时间
+     * @param loadUnread 是否是加载未读消息，如果loadUnread = true，加载的消息会追加到现有消息列表后面，并滚动到底部。
+     * @param firstRequest 是否是第一次加载，即加载第一页的消息，firstRequest = true，会清空消息列表已有的消息，只从数据库获取 {@linkplain this#PAGE_LENGTH}条消息,
+     *                     如果firstRequest = true且第一次从本地拿到的消息数小于10条，则会继续从服务器中获取历史消息
+     * @param listener 远程加载完成后的回调，可选
      */
     private void loadRemoteHistory(final long startTime, final long endTime, boolean loadUnread, boolean firstRequest, RemoteHistoryReceivedListener listener)
     {
@@ -770,7 +828,7 @@ public class ChatPanel extends ParentAvailablePanel
             //long utcCurr = System.currentTimeMillis();
             long utcCurr = 9999999999999L;
 
-            // 如果是加載未读消息，则新的消息追回到现有消息后
+            // 如果是加載未读消息，则新的消息追加到现有消息后
             if (loadUnread)
             {
                 // 已有消息，追加
@@ -793,7 +851,7 @@ public class ChatPanel extends ParentAvailablePanel
                     {
                         messagePanel.getMessageListView().notifyDataSetChanged(false);
 
-                        if (page <= 2)
+                        //if (page <= 2)
                         {
                             messagePanel.getMessageListView().setAutoScrollToBottom();
                         }

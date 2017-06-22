@@ -18,6 +18,7 @@ import com.rc.utils.TimeUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,7 +31,6 @@ import java.util.Map;
 public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHolder>
 {
     private List<SearchResultItem> searchResultItems;
-    private List<SearchResultItemViewHolder> viewHolders = new ArrayList<>();
     private String keyWord;
     private RoomService roomService = Launcher.roomService;
     private SearchMessageOrFileListener searchMessageOrFileListener;
@@ -119,13 +119,11 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
 
         //SearchResultItem item = searchResultItems.get(position);
 
-
-        processMouseListeners(viewHolder, item);
-
     }
 
     /**
      * 处理消息搜索结果
+     *
      * @param viewHolder
      * @param item
      */
@@ -141,6 +139,20 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
         holder.brief.setText(item.getName());
         holder.roomName.setText(room.getName());
         holder.time.setText(TimeUtil.diff(message.getTimestamp()));
+
+        holder.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON1)
+                {
+                    enterRoom(room.getRoomId(), message.getTimestamp());
+                    clearSearchText();
+                }
+                super.mouseReleased(e);
+            }
+        });
     }
 
     private void processMouseListeners(SearchResultItemViewHolder viewHolder, SearchResultItem item)
@@ -156,15 +168,13 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
                     if (item.getType().equals("d"))
                     {
                         String roomId = roomService.findRelativeRoomIdByUserId(item.getId()).getRoomId();
-                        enterRoom(roomId);
-                        ListPanel.getContext().showPanel(ListPanel.CHAT);
-                        SearchPanel.getContext().clearSearchText();
+                        enterRoom(roomId, 0L);
+                        clearSearchText();
                     }
                     else if (item.getType().equals("c") || item.getType().equals("p"))
                     {
-                        enterRoom(item.getId());
-                        ListPanel.getContext().showPanel(ListPanel.CHAT);
-                        SearchPanel.getContext().clearSearchText();
+                        enterRoom(item.getId(), 0L);
+                        clearSearchText();
                     }
                     else if (item.getType().equals("searchMessage"))
                     {
@@ -196,6 +206,12 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
                 setBackground(viewHolder, Colors.DARK);
             }
         });
+    }
+
+    private void clearSearchText()
+    {
+        ListPanel.getContext().showPanel(ListPanel.CHAT);
+        SearchPanel.getContext().clearSearchText();
     }
 
     /**
@@ -231,7 +247,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
             }
             else if (type.equals("message"))
             {
-                Room room = roomService.findById((String) ((Map)item.getTag()).get("roomId"));
+                Room room = roomService.findById((String) ((Map) item.getTag()).get("roomId"));
                 if (room != null)
                 {
                     icon.setImage(getRoomAvatar(room.getType(), room.getName()));
@@ -239,6 +255,8 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
             }
         }
         holder.avatar.setIcon(icon);
+
+        processMouseListeners(viewHolder, item);
     }
 
 
@@ -286,9 +304,9 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
         this.keyWord = keyWord;
     }
 
-    private void enterRoom(String roomId)
+    private void enterRoom(String roomId, long firstMessageTimestamp)
     {
-        ChatPanel.getContext().enterRoom(roomId);
+        ChatPanel.getContext().enterRoom(roomId, firstMessageTimestamp);
     }
 
     public void setSearchMessageOrFileListener(SearchMessageOrFileListener searchMessageOrFileListener)
