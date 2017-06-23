@@ -19,6 +19,9 @@ public class ListPanel extends ParentAvailablePanel
     public static final String COLLECTIONS = "COLLECTIONS";
     public static final String SEARCH = "SEARCH";
 
+    private String previousTab = CHAT;
+    private String currentTab = CHAT;
+
     private CardLayout cardLayout = new CardLayout();
 
 
@@ -60,7 +63,30 @@ public class ListPanel extends ParentAvailablePanel
      */
     public void showPanel(String who)
     {
+        previousTab = currentTab;
+        if (!who.equals(SEARCH))
+        {
+            currentTab = who;
+        }
         cardLayout.show(this, who);
+    }
+
+    /**
+     * 获取上一个tab，如果上一个tab是搜索tab，则返回搜索tab之前的tab
+     * @return
+     */
+    public String getPreviousTab()
+    {
+        return previousTab;
+    }
+
+    /**
+     * 获取当前选中的tab, 如果当前的tab是搜索tab，则返回搜索tab之前的tab
+     * @return
+     */
+    public String getCurrentTab()
+    {
+        return currentTab;
     }
 
     public static ListPanel getContext()

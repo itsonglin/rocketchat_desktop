@@ -101,7 +101,7 @@ public class SearchPanel extends ParentAvailablePanel
                 ListPanel listPanel = ListPanel.getContext();
                 if (searchTextField.getText() == null || searchTextField.getText().isEmpty())
                 {
-                    listPanel.showPanel(ListPanel.CHAT);
+                    listPanel.showPanel(listPanel.getPreviousTab());
                     return;
                 }
 

@@ -797,8 +797,6 @@ public class ChatPanel extends ParentAvailablePanel
                 messageService.insertOrUpdate(msg);
             }
 
-            System.out.println("新增消息数：" + messageList.size());
-
             // 通知UI更新消息列表
             notifyNewMessageLoaded(loadUnread, firstRequest);
 

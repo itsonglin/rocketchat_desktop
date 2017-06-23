@@ -132,7 +132,6 @@ public class RCListView extends JScrollPane
                 // !scrollToBottom 这个条件保证在自动滚动到底部之前，不会调用此回调
                 if (evt.getValue() == 0 && evt.getValue() != lastScrollValue && scrollToTopListener != null && !scrollBarPressed && !scrollToBottom)
                 {
-                    System.out.println("到顶啦~");
                     messageLoading = true;
                     scrollToTopListener.onScrollToTop();
                 }

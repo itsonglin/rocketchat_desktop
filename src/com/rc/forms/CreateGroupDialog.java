@@ -184,7 +184,15 @@ public class CreateGroupDialog extends JDialog
         }
         else
         {
-            createChannelOrGroup(name, privateCheckBox.isSelected(), selectUserPanel.getSelectedUser().toArray(new String[]{}));
+            List<SelectUserData> list = selectUserPanel.getSelectedUser();
+            String[] usernames = new String[list.size()];
+
+            for (int i = 0; i < list.size(); i++)
+            {
+                usernames[i] = list.get(i).getName();
+            }
+
+            createChannelOrGroup(name, privateCheckBox.isSelected(), usernames);
         }
     }
 

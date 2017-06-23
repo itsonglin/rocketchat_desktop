@@ -94,6 +94,9 @@ public class TabOperationPanel extends ParentAvailablePanel
         @Override
         public void mouseClicked(MouseEvent e)
         {
+            // 搜索框内容清空
+            SearchPanel.getContext().clearSearchText();
+
             if (e.getComponent() == chatLabel)
             {
                 chatLabel.setIcon(chatIconActive);
