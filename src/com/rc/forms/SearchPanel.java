@@ -128,17 +128,22 @@ public class SearchPanel extends ParentAvailablePanel
             @Override
             public void keyPressed(KeyEvent e)
             {
-                /*if (e.getKeyCode() == KeyEvent.VK_DOWN)
-                {
-                    System.out.println("下");
-                    SearchResultPanel.getContext().moveToNextItem();
-                }*/
                 // ESC清除已输入内容
                 if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
                 {
                     searchTextField.setText("");
                 }
+
                 super.keyTyped(e);
+            }
+
+            @Override
+            public void keyTyped(KeyEvent e)
+            {
+                if (searchTextField.getText().length() > 8)
+                {
+                    e.consume();
+                }
             }
         });
 
@@ -152,6 +157,12 @@ public class SearchPanel extends ParentAvailablePanel
         searchTextField.setText("");
     }
 
+
+    /**
+     * 搜索用户或房间
+     * @param key
+     * @return
+     */
     private List<SearchResultItem> searchUserOrRoom(String key)
     {
         List<SearchResultItem> list = new ArrayList<>();
@@ -173,14 +184,12 @@ public class SearchPanel extends ParentAvailablePanel
                 @Override
                 public void onSearchMessage()
                 {
-                    System.out.println("搜索消息");
                     searchAndListMessage(searchTextField.getText());
                 }
 
                 @Override
                 public void onSearchFile()
                 {
-                    System.out.println("搜索文件");
                     searchAndListFile(searchTextField.getText());
                 }
             });

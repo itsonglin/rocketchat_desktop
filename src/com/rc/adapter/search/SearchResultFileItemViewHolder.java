@@ -34,6 +34,8 @@ public class SearchResultFileItemViewHolder extends SearchResultItemViewHolder
         setOpaque(true);
         setForeground(Colors.FONT_WHITE);
 
+        avatar.setBackground(Color.white);
+        avatar.setForeground(Color.white);
 
         name.setFont(FontUtil.getDefaultFont(12));
         name.setForeground(Colors.FONT_WHITE);
