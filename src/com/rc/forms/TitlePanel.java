@@ -8,16 +8,14 @@ import com.rc.components.VerticalFlowLayout;
 import com.rc.db.model.Room;
 import com.rc.db.service.RoomService;
 import com.rc.listener.AbstractMouseListener;
-import com.rc.utils.AvatarUtil;
-import com.rc.utils.FontUtil;
-import com.rc.utils.ImageCache;
-import com.rc.utils.OSUtil;
+import com.rc.utils.*;
 import com.sun.awt.AWTUtilities;
 import com.sun.imageio.plugins.common.ImageUtil;
 import com.sun.javaws.Main;
 import com.sun.javaws.jnl.LaunchDesc;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -30,6 +28,7 @@ public class TitlePanel extends ParentAvailablePanel
 
     private JPanel titlePanel;
     private JLabel titleLabel;
+    private JLabel statusLabel;
 
     private JPanel controlPanel;
     private JLabel closeLabel;
@@ -43,8 +42,6 @@ public class TitlePanel extends ParentAvailablePanel
     private Rectangle desktopBounds; // 去除任务栏后窗口的大小
     private Rectangle normalBounds;
 
-    private RoomService roomService = Launcher.roomService;
-    private Room room;
 
 
     public TitlePanel(JPanel parent)
@@ -133,7 +130,15 @@ public class TitlePanel extends ParentAvailablePanel
 
         titlePanel = new JPanel();
         titlePanel.setLayout(new GridBagLayout());
-        //titlePanel.setVisible(false);
+
+        statusLabel = new JLabel();
+        statusLabel.setFont(FontUtil.getDefaultFont(16));
+        statusLabel.setForeground(Colors.ITEM_SELECTED);
+        statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
+        statusLabel.setText("正在连接中...");
+        statusLabel.setIcon(IconUtil.getIcon(this, "/image/sending.gif"));
+        statusLabel.setVisible(false);
+
 
         roomInfoButton = new JLabel();
         roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
@@ -195,6 +200,7 @@ public class TitlePanel extends ParentAvailablePanel
         {
             add(controlPanel);
             add(titlePanel);
+
             margin = 5;
         }
         else
@@ -203,8 +209,10 @@ public class TitlePanel extends ParentAvailablePanel
             margin = 15;
         }
 
+
         titlePanel.add(titleLabel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(100, 1).setInsets(margin, margin, 0, 0));
-        titlePanel.add(roomInfoButton, new GBC(1, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(margin, 0, 0, margin));
+        titlePanel.add(statusLabel, new GBC(1, 0).setFill(GBC.BOTH).setWeight(500, 1).setInsets(margin, margin, 0, 0));
+        titlePanel.add(roomInfoButton, new GBC(2, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(margin, 0, 0, margin));
     }
 
     public static TitlePanel getContext()
@@ -227,6 +235,25 @@ public class TitlePanel extends ParentAvailablePanel
         this.titleLabel.setText("和理通");
         roomInfoButton.setVisible(false);
     }
+
+    /**
+     * 显示状态栏
+     * @param text
+     */
+    public void showStatusLabel(String text)
+    {
+        this.statusLabel.setText(text);
+        this.statusLabel.setVisible(true);
+    }
+
+    /**
+     * 隐藏状态栏
+     */
+    public void hidestatusLabel()
+    {
+        this.statusLabel.setVisible(false);
+    }
+
 
     private class ControlLabelMouseListener extends AbstractMouseListener
     {

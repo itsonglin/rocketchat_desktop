@@ -7,10 +7,7 @@ import com.rc.db.service.ContactsUserService;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
-import com.rc.forms.ChatPanel;
-import com.rc.forms.ContactsPanel;
-import com.rc.forms.CreateGroupDialog;
-import com.rc.forms.RoomsPanel;
+import com.rc.forms.*;
 import com.rc.websocket.handler.StreamNotifyUserCollectionHandler;
 import com.rc.websocket.handler.StreamRoomMessagesHandler;
 import com.rc.websocket.handler.WebSocketListenerAdapter;
@@ -85,12 +82,13 @@ public class WebSocketClient
         startWebSocketClient();
     }
 
-    private void startWebSocketClient()
+    private synchronized void startWebSocketClient()
     {
+        TitlePanel.getContext().showStatusLabel("服务器连接中");
+
         if (System.currentTimeMillis() - LAST_RECONNECT_TIME < TIMESTAMP_ONE_MINUTES / 2)
         {
-            logger.debug("两次发送 重新连接 请求的时间间隔小于30秒，放弃连接");
-            //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_ABANDON_CONNECTION);
+            System.out.println("两次发送 重新连接 请求的时间间隔小于30秒，放弃连接");
             return;
         }
 
@@ -169,21 +167,30 @@ public class WebSocketClient
                         public void onConnectError(WebSocket websocket, WebSocketException cause) throws Exception
                         {
                             ConnectionStatus = "disconnected";
-                            LAST_RECONNECT_TIME = 0;
+                            //LAST_RECONNECT_TIME = 0;
                             System.out.println("+++++++onConnectError: " + cause.getMessage());
-                           /* if (cause.getMessage().startsWith("Failed to connect to") && !networkDisabled)
+
+                            new Thread(new Runnable()
                             {
-                                Log.e("restartApplication", "restartApplication");
-                                restartApplication();
-                            }
-                            else if (!networkDisabled)
-                            {
-                                sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_CONNECT_ERROR);
-                            }
-                            else if (networkDisabled)
-                            {
-                                sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_NETWORK_DISABLED);
-                            }*/
+                                @Override
+                                public void run()
+                                {
+                                    while(ConnectionStatus.equals("disconnected"))
+                                    {
+                                        System.out.println("连接出错，自动重连中...");
+                                        startWebSocketClient();
+                                        try
+                                        {
+                                            Thread.sleep(10000);
+                                        }
+                                        catch (InterruptedException e)
+                                        {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }).start();
+
                         }
 
                         @Override
@@ -191,24 +198,16 @@ public class WebSocketClient
                         {
                             System.out.println("+++++++onDisconnected");
                             ConnectionStatus = "disconnected";
+                            TitlePanel.getContext().showStatusLabel("与服务器连接已断开");
 
-                            /*if (!networkDisabled)
-                            {
-                                System.out.println("==========重新连接。。。。");
-                                sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_RECONNECTING);
-                                startWebSocketClient();
-                            }
-                            else
-                            {
-                                Log.e("onDisconnected", "连接已断开，网络不可用，放弃重连");
-                            }*/
+                            System.out.println("连接断开，自动重连中...");
+                            startWebSocketClient();
                         }
 
                         @Override
                         public void onTextMessage(WebSocket websocket, String text) throws Exception
                         {
                             handleMessage(text);
-                            //System.out.println(text);
                         }
                     });
 
@@ -396,6 +395,9 @@ public class WebSocketClient
             {
                 // 重复登录失败，重新连接
                 logger.debug("重复登录失败，需要重新连接");
+                ConnectionStatus = "disconnected";
+                startWebSocketClient();
+
                 //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_WEBSOCKET_DISCONNECT);
                 //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_LOGIN);
                 //throw new RuntimeException("WebSocket登录次数达到" + LOGIN_RETRIES + ", 登录失败，重新连接");
@@ -406,6 +408,8 @@ public class WebSocketClient
             //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_LOGIN_SUCCESS);
             try
             {
+                TitlePanel.getContext().hidestatusLabel();
+
                 if (!sentPingMessage)
                 {
                     subscriptionHelper.sendPingMessage();
