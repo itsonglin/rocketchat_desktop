@@ -6,6 +6,7 @@ import com.rc.components.RCMainOperationMenuItemUI;
 import com.rc.components.RCMenuItemUI;
 import com.rc.forms.CreateGroupDialog;
 import com.rc.forms.MainFrame;
+import com.rc.websocket.WebSocketClient;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -49,6 +50,7 @@ public class MainOperationPopupMenu extends JPopupMenu
             public void actionPerformed(ActionEvent e)
             {
                 System.out.println("系统设置");
+                WebSocketClient.getContext().setAvatar();
             }
         });
         ImageIcon icon2 = new ImageIcon(getClass().getResource("/image/setting.png"));

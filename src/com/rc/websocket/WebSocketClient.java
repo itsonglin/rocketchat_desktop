@@ -170,27 +170,8 @@ public class WebSocketClient
                             //LAST_RECONNECT_TIME = 0;
                             System.out.println("+++++++onConnectError: " + cause.getMessage());
 
-                            new Thread(new Runnable()
-                            {
-                                @Override
-                                public void run()
-                                {
-                                    while(ConnectionStatus.equals("disconnected"))
-                                    {
-                                        System.out.println("连接出错，自动重连中...");
-                                        startWebSocketClient();
-                                        try
-                                        {
-                                            Thread.sleep(10000);
-                                        }
-                                        catch (InterruptedException e)
-                                        {
-                                            e.printStackTrace();
-                                        }
-                                    }
-                                }
-                            }).start();
-
+                            System.out.println("连接出错，自动重连中...");
+                            connectPersistently();
                         }
 
                         @Override
@@ -201,7 +182,7 @@ public class WebSocketClient
                             TitlePanel.getContext().showStatusLabel("与服务器连接已断开");
 
                             System.out.println("连接断开，自动重连中...");
-                            startWebSocketClient();
+                            connectPersistently();
                         }
 
                         @Override
@@ -217,6 +198,30 @@ public class WebSocketClient
         {
             e.printStackTrace();
         }
+    }
+
+    private void connectPersistently()
+    {
+
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                while(ConnectionStatus.equals("disconnected"))
+                {
+                    startWebSocketClient();
+                    try
+                    {
+                        Thread.sleep(10000);
+                    }
+                    catch (InterruptedException e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }).start();
     }
 
     /**
@@ -449,6 +454,8 @@ public class WebSocketClient
 
     private void updateRoomList()
     {
+        updatedUnreadMessageRoomsCount = 0;
+
         getRooms("channels");
         getRooms("groups");
         getRooms("ims");
@@ -1160,5 +1167,10 @@ public class WebSocketClient
     public void createChannelOrGroup(String name, String members, boolean privateGroup)
     {
         subscriptionHelper.sendCreateChannelOrGroupMessage(name, members, privateGroup, false);
+    }
+
+    public void setAvatar()
+    {
+        subscriptionHelper.setAvatar();
     }
 }
