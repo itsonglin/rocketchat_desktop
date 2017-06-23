@@ -102,17 +102,7 @@ public class ContactsPanel extends ParentAvailablePanel
                     {
                         final String username = user.getName();
                         //logger.debug("获取头像:" + username);
-                        HttpBytesGetTask task = new HttpBytesGetTask();
-                        task.setListener(new HttpResponseListener<byte[]>()
-                        {
-                            @Override
-                            public void onResult(byte[] data)
-                            {
-                                processAvatarData(data, username);
-
-                            }
-                        });
-                        task.execute(Launcher.HOSTNAME + "/avatar/" + username);
+                        getUserAvatar(username, false);
                     }
                 }
 
@@ -120,20 +110,30 @@ public class ContactsPanel extends ParentAvailablePanel
                 final String currentUsername = currentUserService.findAll().get(0).getUsername();
                 if (!AvatarUtil.customAvatarExist(currentUsername))
                 {
-                    HttpBytesGetTask task = new HttpBytesGetTask();
-                    task.setListener(new HttpResponseListener<byte[]>()
-                    {
-                        @Override
-                        public void onResult(byte[] data)
-                        {
-                            processAvatarData(data, currentUsername);
-                        }
-                    });
-                    task.execute(Launcher.HOSTNAME + "/avatar/" + currentUsername);
+                    getUserAvatar(currentUsername, true);
                 }
             }
         }).start();
 
+    }
+
+    public void getUserAvatar(String username, boolean myAvatar)
+    {
+        HttpBytesGetTask task = new HttpBytesGetTask();
+        task.setListener(new HttpResponseListener<byte[]>()
+        {
+            @Override
+            public void onResult(byte[] data)
+            {
+                processAvatarData(data, username);
+                if (myAvatar)
+                {
+                    MyInfoPanel.getContext().reloadAvatar();
+                }
+
+            }
+        });
+        task.execute(Launcher.HOSTNAME + "/avatar/" + username);
     }
 
     /**
@@ -152,4 +152,5 @@ public class ContactsPanel extends ParentAvailablePanel
             AvatarUtil.deleteCustomAvatar(username);
         }
     }
+
 }

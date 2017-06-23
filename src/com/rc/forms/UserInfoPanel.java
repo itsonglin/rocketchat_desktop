@@ -6,6 +6,7 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCButton;
 import com.rc.components.VerticalFlowLayout;
+import com.rc.components.message.SystemMessagePanel;
 import com.rc.db.model.ContactsUser;
 import com.rc.db.model.Room;
 import com.rc.db.service.ContactsUserService;

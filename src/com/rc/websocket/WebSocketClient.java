@@ -24,6 +24,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.TimerTask;
 
 /**
  * Created by song on 09/06/2017.
@@ -231,7 +232,7 @@ public class WebSocketClient
      */
     private void handleMessage(String text)
     {
-       //System.out.println(("收到消息  " + text));
+       System.out.println(("收到消息  " + text));
 
         try
         {
@@ -247,12 +248,11 @@ public class WebSocketClient
                     id = jsonText.getString("id");
                 }
 
-                /*if (!msg.equals("ping") && !msg.equals("updated") && !msg.equals("ready")
-                        && !id.startsWith("SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE"))*/
+                /*if (!msg.equals("ping") && !msg.equals("updated") && !msg.equals("ready") && !id.startsWith("SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE"))
                 {
 
                     logger.debug("收到消息  " + text);
-                }
+                }*/
 
 
                 if (msg.equals("ping"))
@@ -314,6 +314,9 @@ public class WebSocketClient
         }
     }
 
+
+
+
     /**
      * 处理“msg”为“result”类型的消息
      *
@@ -361,6 +364,31 @@ public class WebSocketClient
         {
             processCreateChanelOrGroupMessage(jsonText);
         }
+        else if (msgId.equals(SubscriptionHelper.METHOD_SET_AVATAR_FROM_SERVUCE))
+        {
+            // 用户更新头像后会收到此消息
+            processUserAvatar();
+        }
+    }
+
+    private void processUserAvatar()
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Thread.sleep(1000);
+                }
+                catch (InterruptedException e)
+                {
+                    e.printStackTrace();
+                }
+                ContactsPanel.getContext().getUserAvatar(currentUser.getUsername(), true);
+            }
+        }).start();
     }
 
     /**
@@ -1169,8 +1197,8 @@ public class WebSocketClient
         subscriptionHelper.sendCreateChannelOrGroupMessage(name, members, privateGroup, false);
     }
 
-    public void setAvatar()
+    public void setAvatar(String base64Data)
     {
-        subscriptionHelper.setAvatar();
+        subscriptionHelper.setAvatar(base64Data);
     }
 }

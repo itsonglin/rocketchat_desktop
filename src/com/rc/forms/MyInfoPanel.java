@@ -13,6 +13,7 @@ import com.rc.utils.FontUtil;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
 
@@ -21,17 +22,21 @@ import java.io.IOException;
  */
 public class MyInfoPanel extends ParentAvailablePanel
 {
+    private static MyInfoPanel context;
+
     private ImagePanel avatar;
     private JLabel username;
     private JLabel menuIcon;
     private CurrentUserService currentUserService = Launcher.currentUserService;
 
     MainOperationPopupMenu mainOperationPopupMenu;
+    private String currentUsername;
 
 
     public MyInfoPanel(JPanel parent)
     {
         super(parent);
+        context = this;
 
         initComponents();
         setListeners();
@@ -43,10 +48,8 @@ public class MyInfoPanel extends ParentAvailablePanel
     {
 
         //GImage.setBorder(new SubtleSquareBorder(true));
-        String currentUsername = currentUserService.findAll().get(0).getUsername();
+        currentUsername = currentUserService.findAll().get(0).getUsername();
         Image image = AvatarUtil.createOrLoadUserAvatar(currentUsername);
-
-        //avatar = new ImagePanel(ImageIO.read(getClass().getResourceAsStream("/image/avatar.jpg")));
         avatar = new ImagePanel(image);
 
         avatar.setPreferredSize(new Dimension(50, 50));
@@ -73,11 +76,29 @@ public class MyInfoPanel extends ParentAvailablePanel
         menuIcon.addMouseListener(new AbstractMouseListener()
         {
             @Override
-            public void mouseClicked(MouseEvent e)
+            public void mouseReleased(MouseEvent e)
             {
-                Component component = e.getComponent();
-                mainOperationPopupMenu.show(component, -112, 50);
-                super.mouseClicked(e);
+                if (e.getButton() == MouseEvent.BUTTON1)
+                {
+                    Component component = e.getComponent();
+                    mainOperationPopupMenu.show(component, -112, 50);
+                    super.mouseClicked(e);
+                }
+
+            }
+        });
+
+        avatar.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON1)
+                {
+                    SystemConfigDialog dialog = new SystemConfigDialog(MainFrame.getContext(), true);
+                    dialog.setVisible(true);
+                    super.mouseClicked(e);
+                }
             }
         });
     }
@@ -90,5 +111,19 @@ public class MyInfoPanel extends ParentAvailablePanel
         add(avatar, new GBC(0, 0).setFill(GBC.NONE).setWeight(2, 1));
         add(username, new GBC(1, 0).setFill(GBC.BOTH).setWeight(7, 1));
         add(menuIcon, new GBC(2, 0).setFill(GBC.BOTH).setWeight(1, 1));
+    }
+
+    public void reloadAvatar()
+    {
+        currentUsername = currentUserService.findAll().get(0).getUsername();
+        Image image = AvatarUtil.createOrLoadUserAvatar(currentUsername);
+        avatar.setImage(image);
+        avatar.revalidate();
+        avatar.repaint();
+    }
+
+    public static MyInfoPanel getContext()
+    {
+        return context;
     }
 }

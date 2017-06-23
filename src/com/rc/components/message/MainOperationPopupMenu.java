@@ -50,7 +50,6 @@ public class MainOperationPopupMenu extends JPopupMenu
             public void actionPerformed(ActionEvent e)
             {
                 System.out.println("系统设置");
-                WebSocketClient.getContext().setAvatar();
             }
         });
         ImageIcon icon2 = new ImageIcon(getClass().getResource("/image/setting.png"));
