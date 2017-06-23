@@ -16,7 +16,6 @@ import com.rc.utils.FileCache;
 import com.rc.utils.HttpUtil;
 import com.rc.utils.MimeTypeUtil;
 import com.rc.websocket.WebSocketClient;
-import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -237,7 +236,7 @@ public class ChatPanel extends ParentAvailablePanel
                     e.consume();
                 }
 
-               // 输入@，弹出选择用户菜单
+                // 输入@，弹出选择用户菜单
                 else if (e.getKeyChar() == '@')
                 {
                     Point point = editor.getCaret().getMagicCaretPosition();
@@ -535,12 +534,12 @@ public class ChatPanel extends ParentAvailablePanel
     /**
      * 加载远程历史记录
      *
-     * @param startTime 最早一条消息的时间
-     * @param endTime 最后一条消息的时间
-     * @param loadUnread 是否是加载未读消息，如果loadUnread = true，加载的消息会追加到现有消息列表后面，并滚动到底部。
+     * @param startTime    最早一条消息的时间
+     * @param endTime      最后一条消息的时间
+     * @param loadUnread   是否是加载未读消息，如果loadUnread = true，加载的消息会追加到现有消息列表后面，并滚动到底部。
      * @param firstRequest 是否是第一次加载，即加载第一页的消息，firstRequest = true，会清空消息列表已有的消息，只从数据库获取 {@linkplain this#PAGE_LENGTH}条消息,
      *                     如果firstRequest = true且第一次从本地拿到的消息数小于10条，则会继续从服务器中获取历史消息
-     * @param listener 远程加载完成后的回调，可选
+     * @param listener     远程加载完成后的回调，可选
      */
     private void loadRemoteHistory(final long startTime, final long endTime, boolean loadUnread, boolean firstRequest, RemoteHistoryReceivedListener listener)
     {
@@ -936,13 +935,16 @@ public class ChatPanel extends ParentAvailablePanel
             return;
         }
 
-        int pos = findMessageItemReverse(message.getId());
-        if (pos > -1)
+        //int pos = findMessageItemPositionInViewReverse(message.getId());
+        for (int i = messageItems.size() - 1; i >= 0; i--)
         {
-            messageItems.get(pos).setUpdatedAt(message.getTimestamp());
-            messagePanel.getMessageListView().notifyItemChanged(pos);
-            updateUnreadCount(0);
-            return;
+            if (messageItems.get(i).getId().equals(message.getId()))
+            {
+                messageItems.get(i).setUpdatedAt(message.getTimestamp());
+                messagePanel.getMessageListView().notifyItemChanged(i);
+                updateUnreadCount(0);
+                return;
+            }
         }
 
 
@@ -1036,13 +1038,24 @@ public class ChatPanel extends ParentAvailablePanel
 
             content = msg.getMessageContent();
 
-            int pos = findMessageItemReverse(msg.getId());
+            /*int pos = findMessageItemPositionInViewReverse(msg.getId());
             if (pos > -1)
             {
                 messageItems.get(pos).setNeedToResend(false);
                 messageItems.get(pos).setUpdatedAt(0);
                 messageItems.get(pos).setTimestamp(System.currentTimeMillis());
                 messagePanel.getMessageListView().notifyItemChanged(pos);
+            }*/
+
+            for (int i = messageItems.size() - 1; i >= 0; i--)
+            {
+                if (messageItems.get(i).getId().equals(msg.getId()))
+                {
+                    messageItems.get(i).setNeedToResend(false);
+                    messageItems.get(i).setUpdatedAt(0);
+                    messageItems.get(i).setTimestamp(System.currentTimeMillis());
+                    messagePanel.getMessageListView().notifyItemChanged(i);
+                }
             }
 
         }
@@ -1065,14 +1078,25 @@ public class ChatPanel extends ParentAvailablePanel
                 if (msg.getUpdatedAt() == 0)
                 {
                     // 更新消息列表
-                    int pos = findMessageItemReverse(messageId);
+                    for (int i = messageItems.size() - 1; i >= 0; i--)
+                    {
+                        if (messageItems.get(i).getId().equals(messageId))
+                        {
+                            messageItems.get(i).setNeedToResend(true);
+                            msg.setNeedToResend(true);
+                            messageService.update(msg);
+                            messagePanel.getMessageListView().notifyItemChanged(i);
+                        }
+                    }
+
+                    /*int pos = findMessageItemPositionInViewReverse(messageId);
                     if (pos > -1)
                     {
                         messageItems.get(pos).setNeedToResend(true);
                         msg.setNeedToResend(true);
                         messageService.update(msg);
                         messagePanel.getMessageListView().notifyItemChanged(pos);
-                    }
+                    }*/
 
 
                     // 更新房间列表
@@ -1100,12 +1124,12 @@ public class ChatPanel extends ParentAvailablePanel
     }
 
     /**
-     * 倒序查找指定的消息在messageItems中的位置
+     * 倒序查找指定的消息在消息列表中的位置中的位置
      *
      * @param messageId
-     * @return 查找成功，返回该消息在messageItems中的位置，否则返回-1
+     * @return 查找成功，返回该消息在消息列表中的位置，否则返回-1
      */
-    private int findMessageItemReverse(String messageId)
+    private int findMessageItemPositionInViewReverse(String messageId)
     {
         // 浅复制一份messageItems来排序，因为原本messageItems顺序并不是按照时间顺序排列的
         List<MessageItem> tmpItems = new ArrayList<>();
@@ -1199,7 +1223,7 @@ public class ChatPanel extends ParentAvailablePanel
                 }
             }*/
 
-            int index = findMessageItemReverse(messageId);
+            int index = findMessageItemPositionInViewReverse(messageId);
 
             if (index > -1)
             {
@@ -1583,7 +1607,7 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void onProgress(int progress)
             {
-                int pos = findMessageItemReverse(messageId);
+                int pos = findMessageItemPositionInViewReverse(messageId);
                 MessageAttachmentViewHolder holder = (MessageAttachmentViewHolder) getViewHolderByPosition(pos);
 
                 logger.debug("文件下载进度：" + progress);
@@ -1621,7 +1645,7 @@ public class ChatPanel extends ParentAvailablePanel
                 //System.out.println(data);
                 String path = fileCache.cacheFile(fileAttachment.getId(), fileAttachment.getTitle(), data);
 
-                int pos = findMessageItemReverse(messageId);
+                int pos = findMessageItemPositionInViewReverse(messageId);
                 MessageAttachmentViewHolder holder = (MessageAttachmentViewHolder) getViewHolderByPosition(pos);
 
                 if (pos < 0 || holder == null)
