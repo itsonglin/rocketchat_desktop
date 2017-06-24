@@ -91,7 +91,6 @@ public class ChatPanel extends ParentAvailablePanel
     private List<String> remoteRoomMemberLoadedRooms = new ArrayList<>();
     private RemindUserPopup remindUserPopup = new RemindUserPopup();
 
-
     public ChatPanel(JPanel parent)
     {
 
@@ -436,12 +435,14 @@ public class ChatPanel extends ParentAvailablePanel
             loadMoreHistoryFromRemote(true);
         }
 
+
         messagePanel.getMessageListView().notifyDataSetChanged(false);
 
         if (messageItems.size() <= PAGE_LENGTH)
         {
             messagePanel.getMessageListView().setAutoScrollToBottom();
         }
+
     }
 
     private long loadRemoteStartTime = 0;
@@ -917,6 +918,8 @@ public class ChatPanel extends ParentAvailablePanel
 
                 TitlePanel.getContext().hideRoomMembersPanel();
                 checkIsMuted();
+
+                //System.out.println("加载完成 ，用时 " + (System.currentTimeMillis() - startTime));
             }
         }).start();
     }

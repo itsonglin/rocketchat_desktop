@@ -5,9 +5,12 @@ import com.rc.app.Launcher;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.font.LineMetrics;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -47,6 +50,8 @@ public class AvatarUtil
     private static final int DEFAULT_AVATAR = 0;
     private static final int CUSTOM_AVATAR = 1;
 
+    private static Map<String, Image> avatarCache = new HashMap<>();
+
     static
     {
         //AVATAR_CACHE_ROOT = new Object().getClass().getResource("/cache").getPath() + "/avatar";
@@ -71,11 +76,19 @@ public class AvatarUtil
 
     public static Image createOrLoadGroupAvatar(String sign, String name)
     {
-        Image avatar = getCachedImageAvatar(sign);
+        Image avatar;
+        avatar = avatarCache.get(sign);
+
         if (avatar == null)
         {
-            System.out.println("创建群组头像");
-            return createAvatar(sign, name);
+            avatar = getCachedImageAvatar(sign);
+            if (avatar == null)
+            {
+                System.out.println("创建群组头像");
+                avatar =  createAvatar(sign, name);
+            }
+
+            avatarCache.put(sign, avatar);
         }
 
         return avatar;
@@ -84,10 +97,18 @@ public class AvatarUtil
 
     public static Image createOrLoadUserAvatar(String username)
     {
-        Image avatar = getCachedImageAvatar(username);
+        Image avatar;
+
+        avatar = avatarCache.get(username);
         if (avatar == null)
         {
-            return createAvatar(username, username);
+            avatar = getCachedImageAvatar(username);
+            if (avatar == null)
+            {
+                avatar =  createAvatar(username, username);
+            }
+
+            avatarCache.put(username, avatar);
         }
 
         return avatar;
@@ -107,11 +128,11 @@ public class AvatarUtil
 
         try
         {
-            int width = 150;
-            int height = 150;
+            int width = 200;
+            int height = 200;
 
             // 创建BufferedImage对象
-            Font font = FontUtil.getDefaultFont(76, Font.PLAIN);
+            Font font = FontUtil.getDefaultFont(96, Font.PLAIN);
             BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             // 获取Graphics2D
             Graphics2D g2d = image.createGraphics();
@@ -129,6 +150,7 @@ public class AvatarUtil
             int strWidth = fm.stringWidth(drawString);
             int strHeight = fm.getHeight();
             int x = (width - strWidth) / 2;
+
             g2d.drawString(drawString, x, strHeight);
 
             BufferedImage roundImage = ImageUtil.setRadius(image, width, height, 35);
