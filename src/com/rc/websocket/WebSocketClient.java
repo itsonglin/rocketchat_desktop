@@ -394,6 +394,7 @@ public class WebSocketClient
                 if (avatarPanel != null && avatarPanel.isVisible())
                 {
                     avatarPanel.restoreOKButton();
+                    avatarPanel.showSuccessMessage();
                 }
 
             }

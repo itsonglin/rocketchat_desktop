@@ -33,6 +33,7 @@ public class ChangeAvatarPanel extends JPanel
     private RCButton okButton;
     private JPanel contentPanel;
     private File selectedFile;
+    private JLabel statusLabel;
 
     public ChangeAvatarPanel()
     {
@@ -56,6 +57,12 @@ public class ChangeAvatarPanel extends JPanel
         okButton = new RCButton("使用头像", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
         okButton.setPreferredSize(new Dimension(100, 35));
 
+        statusLabel = new JLabel();
+        statusLabel.setText("头像应用成功");
+        statusLabel.setForeground(Colors.FONT_GRAY_DARKER);
+        statusLabel.setIcon(IconUtil.getIcon(this, "/image/check.png"));
+        statusLabel.setVisible(false);
+
         contentPanel = new JPanel();
     }
 
@@ -64,6 +71,7 @@ public class ChangeAvatarPanel extends JPanel
         contentPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 10, true, false));
         contentPanel.add(imageLabel);
         contentPanel.add(okButton);
+        contentPanel.add(statusLabel);
 
 
         add(contentPanel);
@@ -217,9 +225,15 @@ public class ChangeAvatarPanel extends JPanel
 
     public void restoreOKButton()
     {
-        okButton.setText("应用头像");
+        okButton.setText("使用头像");
         okButton.setIcon(null);
         okButton.setEnabled(true);
+        selectedFile = null;
+    }
+
+    public void showSuccessMessage()
+    {
+        statusLabel.setVisible(true);
     }
 
     public static ChangeAvatarPanel getContext()
