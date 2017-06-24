@@ -1,6 +1,7 @@
 package com.rc.app;
 
 
+import com.rc.utils.AvatarUtil;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import com.vdurmont.emoji.EmojiParser;
 import sun.misc.BASE64Encoder;
@@ -19,13 +20,22 @@ import java.util.regex.Pattern;
  * Created by song on 14/06/2017.
  */
 
-class Test extends JFrame
+class Test
 {
     public static void main(String[] args) throws IOException, FontFormatException
     {
 
         //String strImg = getImageStr("/Users/song/Pictures/ubuntu.png");
         //System.out.println(strImg);
+
+/*        JFrame frame = new JFrame();
+        frame.setSize(new Dimension(800, 600));
+        JLabel label = new JLabel();
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setIcon(new ImageIcon(AvatarUtil.createGroupAvatar("song")));
+        frame.add(label);
+        frame.setVisible(true);*/
+
     }
 }
 

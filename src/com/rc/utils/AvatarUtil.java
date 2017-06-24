@@ -1,6 +1,7 @@
 package com.rc.utils;
 
 import com.rc.app.Launcher;
+import com.rc.components.Colors;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -74,7 +75,37 @@ public class AvatarUtil
     }
 
 
-    public static Image createOrLoadGroupAvatar(String sign, String name)
+    public static Image createOrLoadGroupAvatar(String groupName, String[] members, String type)
+    {
+        Image avatar;
+        avatar = avatarCache.get(groupName);
+
+        if (avatar == null)
+        {
+            avatar = getCachedImageAvatar(groupName);
+            if (avatar == null)
+            {
+                System.out.println("创建群组头像 : " + groupName);
+
+                if (members == null)
+                {
+                    String sign = type.equals("p") ? "#" : "##";
+                    avatar = createAvatar(sign, groupName);
+                }
+                else
+                {
+                    avatar = createGroupAvatar(members);
+                }
+            }
+
+            avatarCache.put(groupName, avatar);
+        }
+
+        return avatar;
+    }
+
+
+    /*public static Image createOrLoadGroupAvatar(String sign, String name)
     {
         Image avatar;
         avatar = avatarCache.get(sign);
@@ -85,14 +116,14 @@ public class AvatarUtil
             if (avatar == null)
             {
                 System.out.println("创建群组头像");
-                avatar =  createAvatar(sign, name);
+                avatar = createAvatar(sign, name);
             }
 
             avatarCache.put(sign, avatar);
         }
 
         return avatar;
-    }
+    }*/
 
 
     public static Image createOrLoadUserAvatar(String username)
@@ -105,7 +136,7 @@ public class AvatarUtil
             avatar = getCachedImageAvatar(username);
             if (avatar == null)
             {
-                avatar =  createAvatar(username, username);
+                avatar = createAvatar(username, username);
             }
 
             avatarCache.put(username, avatar);
@@ -121,7 +152,8 @@ public class AvatarUtil
         if (sign.length() > 1)
         {
             drawString = sign.substring(0, 1).toUpperCase() + sign.substring(1, 2).toLowerCase();
-        } else
+        }
+        else
         {
             drawString = sign;
         }
@@ -186,10 +218,12 @@ public class AvatarUtil
         if (type == DEFAULT_AVATAR)
         {
             path = AVATAR_CACHE_ROOT + "/" + username + ".jpg";
-        } else if (type == CUSTOM_AVATAR)
+        }
+        else if (type == CUSTOM_AVATAR)
         {
             path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".jpg";
-        } else
+        }
+        else
         {
             throw new RuntimeException("类型不存在");
         }
@@ -228,12 +262,14 @@ public class AvatarUtil
             String path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".jpg";
             ImageIcon imageIcon = new ImageIcon(path);
             return imageIcon.getImage();
-        } else if (defaultAvatarExist(username))
+        }
+        else if (defaultAvatarExist(username))
         {
             String path = AVATAR_CACHE_ROOT + "/" + username + ".jpg";
             ImageIcon imageIcon = new ImageIcon(path);
             return imageIcon.getImage();
-        } else
+        }
+        else
         {
             return null;
         }
@@ -264,6 +300,312 @@ public class AvatarUtil
             file.delete();
         }
     }
+
+
+    public static Image createGroupAvatar(String[] users)
+    {
+
+        try
+        {
+            int width = 200;
+            int height = 200;
+
+            // 创建BufferedImage对象
+            // 选择TYPE_INT_ARGB目的在于可创建透明背景的图，否则圆角外的地方会变成黑色
+            BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+
+            // 获取Graphics2D
+            Graphics2D g2d = image.createGraphics();
+
+            // 绘制一个圆角的灰色背景
+            g2d.setComposite(AlphaComposite.Src);
+            g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            g2d.setColor(Colors.GROUP_AVATAR_BACKGROUND);
+            g2d.fill(new RoundRectangle2D.Float(0, 0, width, height, 35, 35));
+            g2d.setComposite(AlphaComposite.SrcAtop);
+
+            Rectangle[] rectangles = getSubAvatarPoints(users);
+            int max = users.length > 9 ? 9 : users.length;
+            for (int i = 0; i < max; i++)
+            {
+                Image avatar = AvatarUtil.createOrLoadUserAvatar(users[i]);
+                g2d.drawImage(avatar, rectangles[i].x, rectangles[i].y, rectangles[i].width, rectangles[i].height, null);
+            }
+
+            g2d.dispose();
+            return image;
+        } catch (Exception ex)
+        {
+            ex.printStackTrace();
+        }
+
+        return null;
+    }
+
+    private static Rectangle[] getSubAvatarPoints(String[] users)
+    {
+        int gap = 8;
+        int parentWidth = 200;
+
+        Rectangle[] rectangles = new Rectangle[users.length];
+
+        int x;
+        int y;
+
+        if (users.length == 1)
+        {
+            int childWidth = parentWidth - gap * 2;
+            rectangles[0] = new Rectangle(gap, gap, childWidth, childWidth);
+        }
+        else if (users.length == 2)
+        {
+            int childWidth = (parentWidth - gap * 2) / 2;
+
+            // 第一个
+            y = (parentWidth - childWidth) / 2;
+            Rectangle r1 = new Rectangle(gap, y, childWidth, childWidth);
+
+            // 第二个
+            x = gap;
+            Rectangle r2 = new Rectangle(x, y, childWidth, childWidth);
+
+            rectangles[0] = r1;
+            rectangles[1] = r2;
+        }
+        else if (users.length == 3)
+        {
+            int childWidth = (parentWidth - gap * 3) / 2;
+            System.out.println("每个子头像的宽度是：" + childWidth);
+
+            // 第一个
+            x = (parentWidth - childWidth) / 2;
+            y = gap;
+            Rectangle r1 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第二个
+            x = gap;
+            y = childWidth + gap * 2;
+            Rectangle r2 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第三个
+            x = childWidth + gap * 2;
+            Rectangle r3 = new Rectangle(x, y, childWidth, childWidth);
+
+
+            rectangles[0] = r1;
+            rectangles[1] = r2;
+            rectangles[2] = r3;
+        }
+        else if (users.length == 4)
+        {
+            int childWidth = (parentWidth - gap * 3) / 2;
+            System.out.println("每个子头像的宽度是：" + childWidth);
+
+            // 第一个
+            Rectangle r1 = new Rectangle(gap, gap, childWidth, childWidth);
+
+            // 第二个
+            x = childWidth + gap * 2;
+            Rectangle r2 = new Rectangle(x, gap, childWidth, childWidth);
+
+            // 第三个
+            x = gap;
+            y = childWidth + gap * 2;
+            Rectangle r3 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第四个
+            x = childWidth + gap * 2;
+            Rectangle r4 = new Rectangle(x, y, childWidth, childWidth);
+
+
+            rectangles[0] = r1;
+            rectangles[1] = r2;
+            rectangles[2] = r3;
+            rectangles[3] = r4;
+        }
+        else if (users.length == 5)
+        {
+            int childWidth = (parentWidth - gap * 4) / 3;
+            System.out.println("每个子头像的宽度是：" + childWidth);
+
+            // 第一个
+            x = (parentWidth - childWidth * 2 - gap) / 2;
+            Rectangle r1 = new Rectangle(x, x, childWidth, childWidth);
+
+            // 第二个
+            y = x;
+            x = x + gap + childWidth;
+            Rectangle r2 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第三个
+            y = r1.y + gap + childWidth;
+            Rectangle r3 = new Rectangle(gap, y, childWidth, childWidth);
+
+            // 第四个
+            x = gap * 2 + childWidth;
+            Rectangle r4 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第五个
+            x = gap *3 + childWidth * 2;
+            Rectangle r5 = new Rectangle(x, y, childWidth, childWidth);
+
+            rectangles[0] = r1;
+            rectangles[1] = r2;
+            rectangles[2] = r3;
+            rectangles[3] = r4;
+            rectangles[4] = r5;
+        }
+        else if (users.length == 6)
+        {
+            int childWidth = (parentWidth - gap * 4) / 3;
+            System.out.println("每个子头像的宽度是：" + childWidth);
+
+            // 第一个
+            y = (parentWidth - childWidth * 2 - gap) / 2;
+            Rectangle r1 = new Rectangle(gap, y, childWidth, childWidth);
+
+            // 第二个
+            x = gap * 2 + childWidth;
+            Rectangle r2 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第三个
+            x = gap * 3 + childWidth * 2;
+            Rectangle r3 = new Rectangle(x, y, childWidth, childWidth);
+
+
+            // 第四个
+            y = r1.y + gap + childWidth;
+            Rectangle r4 = new Rectangle(gap, y, childWidth, childWidth);
+
+            // 第五个
+            x = gap * 2 + childWidth;
+            Rectangle r5 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第六个
+            x = gap *3 + childWidth * 2;
+            Rectangle r6 = new Rectangle(x, y, childWidth, childWidth);
+
+            rectangles[0] = r1;
+            rectangles[1] = r2;
+            rectangles[2] = r3;
+            rectangles[3] = r4;
+            rectangles[4] = r5;
+            rectangles[5] = r6;
+        }
+        else if (users.length == 7)
+        {
+            int childWidth = (parentWidth - gap * 4) / 3;
+            System.out.println("每个子头像的宽度是：" + childWidth);
+
+            // 第一个
+            x = (parentWidth - childWidth) / 2;
+            Rectangle r1 = new Rectangle(x, gap, childWidth, childWidth);
+
+            // 第二个
+            y = gap * 2 + childWidth;
+            Rectangle r2 = new Rectangle(gap, y, childWidth, childWidth);
+
+            // 第三个
+            x = gap * 2 + childWidth;
+            Rectangle r3 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第四个
+            x = gap * 3 + childWidth * 2;
+            Rectangle r4 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第五个
+            y = r2.y + childWidth + gap;
+            Rectangle r5 = new Rectangle(gap, y, childWidth, childWidth);
+
+            // 第六个
+            x = gap * 2 + childWidth;
+            Rectangle r6 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第七个
+            x = gap * 3 + childWidth * 2;
+            Rectangle r7 = new Rectangle(x, y, childWidth, childWidth);
+
+            rectangles[0] = r1;
+            rectangles[1] = r2;
+            rectangles[2] = r3;
+            rectangles[3] = r4;
+            rectangles[4] = r5;
+            rectangles[5] = r6;
+            rectangles[6] = r7;
+        }
+        else if (users.length == 8)
+        {
+            int childWidth = (parentWidth - gap * 4) / 3;
+            System.out.println("每个子头像的宽度是：" + childWidth);
+
+            // 第一个
+            x = (parentWidth - childWidth * 2 - gap) / 2;
+            Rectangle r1 = new Rectangle(x, gap, childWidth, childWidth);
+
+            // 第二个
+            x = x + gap + childWidth;
+            Rectangle r2 = new Rectangle(x, gap, childWidth, childWidth);
+
+            // 第三个
+            y = gap * 2 + childWidth;
+            Rectangle r3 = new Rectangle(gap, y, childWidth, childWidth);
+
+            // 第四个
+            x = gap * 2 + childWidth;
+            Rectangle r4 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第五个
+            x = gap * 3 + childWidth * 2;
+            Rectangle r5 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第六个
+            y = r3.y + childWidth + gap;
+            Rectangle r6 = new Rectangle(gap, y, childWidth, childWidth);
+
+            // 第七个
+            x = gap * 2 + childWidth;
+            Rectangle r7 = new Rectangle(x, y, childWidth, childWidth);
+
+            // 第八个
+            x = gap * 3 + childWidth * 2;
+            Rectangle r8 = new Rectangle(x, y, childWidth, childWidth);
+
+
+
+            rectangles[0] = r1;
+            rectangles[1] = r2;
+            rectangles[2] = r3;
+            rectangles[3] = r4;
+            rectangles[4] = r5;
+            rectangles[5] = r6;
+            rectangles[6] = r7;
+            rectangles[7] = r8;
+        }
+
+        else if (users.length >= 9)
+        {
+            int childWidth = (parentWidth - gap * 4) / 3;
+            System.out.println("每个子头像的宽度是：" + childWidth);
+
+            int index = 0;
+            for (int i = 1; i <= 3; i++)
+            {
+                y = gap * i + (i - 1) * childWidth;
+
+                for (int j = 1; j <= 3;j++)
+                {
+                    x = gap * j + (j - 1) * childWidth;
+                    Rectangle r = new Rectangle(x, y, childWidth, childWidth);
+
+                    rectangles[index++] = r;
+                }
+
+            }
+        }
+
+        return rectangles;
+    }
+
 
     public static void main(String[] a)
     {

@@ -220,7 +220,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
         Room room = roomService.findById((String) item.getTag());
         Message message = messageService.findById(item.getId());
 
-        holder.avatar.setIcon(new ImageIcon(getRoomAvatar(room.getType(), room.getName())));
+        holder.avatar.setIcon(new ImageIcon(getRoomAvatar(room.getType(), room.getName(), null)));
         holder.brief.setKeyWord(keyWord);
         holder.brief.setText(item.getName());
         holder.roomName.setText(room.getName());
@@ -331,7 +331,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
 
         if (type.equals("c") || type.equals("p") || type.equals("d"))
         {
-            icon.setImage(getRoomAvatar(type, item.getName()));
+            icon.setImage(getRoomAvatar(type, item.getName(), null));
         }
         else
         {
@@ -365,7 +365,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
      * @param name
      * @return
      */
-    private Image getRoomAvatar(String type, String name)
+    /*private Image getRoomAvatar(String type, String name)
     {
         if (type.equals("c"))
         {
@@ -374,6 +374,28 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
         else if (type.equals("p"))
         {
             return AvatarUtil.createOrLoadGroupAvatar("#", name).getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        }
+        // 私聊头像
+        else if (type.equals("d"))
+        {
+            return AvatarUtil.createOrLoadUserAvatar(name).getScaledInstance(35, 35, Image.SCALE_SMOOTH);
+        }
+
+        return null;
+    }*/
+
+    /**
+     * 根据房间类型获取对应的头像
+     *
+     * @param type
+     * @param name
+     * @return
+     */
+    private Image getRoomAvatar(String type, String name, String[] members)
+    {
+        if (type.equals("c") || type.equals("p"))
+        {
+            return AvatarUtil.createOrLoadGroupAvatar(name, members, type).getScaledInstance(35, 35, Image.SCALE_SMOOTH);
         }
         // 私聊头像
         else if (type.equals("d"))

@@ -3,10 +3,12 @@ package com.rc.app;
 import com.rc.db.service.*;
 import com.rc.forms.LoginFrame;
 import com.rc.forms.MainFrame;
+import com.rc.utils.AvatarUtil;
 import com.rc.utils.DbUtils;
 import org.apache.ibatis.session.SqlSession;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -48,6 +50,16 @@ public class Launcher
     public void launch()
     {
         config();
+
+        /*JFrame frame = new JFrame();
+        frame.setSize(new Dimension(800, 600));
+        JLabel label = new JLabel();
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setIcon(new ImageIcon(AvatarUtil.createGroupAvatar(
+                new String[]{"song", "winnie", "ubuntu", "admin", "jason", "songlin", "moxx", "ubuntu", "song"})));
+        frame.add(label);
+        frame.setVisible(true);
+*/
 
         if (!isApplicationRunning())
         {

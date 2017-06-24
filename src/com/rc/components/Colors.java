@@ -10,6 +10,7 @@ public class Colors
     public static final Color RED = new Color(228, 74, 47);
     public static final Color FONT_BLACK = new Color(0,0,0);
     public static final Color SHADOW = new Color(221, 221, 221);
+    public static final Color GROUP_AVATAR_BACKGROUND = new Color(221, 221, 221);
     public static Color DARK = new Color(46, 50, 56);
     //public static Color WINDOW_BACKGROUND = new Color(245, 245, 245);
     public static Color WINDOW_BACKGROUND = new Color(238, 238, 238);

@@ -1,6 +1,9 @@
 package com.rc.adapter;
 
+import com.rc.app.Launcher;
 import com.rc.components.Colors;
+import com.rc.db.model.Room;
+import com.rc.db.service.RoomService;
 import com.rc.entity.RoomItem;
 import com.rc.forms.ChatPanel;
 import com.rc.forms.RoomMembersPanel;
@@ -23,6 +26,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
     private List<RoomItem> roomItems;
     private List<RoomItemViewHolder> viewHolders = new ArrayList<>();
     private RoomItemViewHolder selectedViewHolder; // 当前选中的viewHolder
+    private RoomService roomService = Launcher.roomService;
 
     public RoomItemsAdapter(List<RoomItem> roomItems)
     {
@@ -53,16 +57,22 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         RoomItem item = roomItems.get(position);
         viewHolder.roomName.setText(item.getTitle());
 
+
         ImageIcon icon = new ImageIcon();
         // 群组头像
         String type = item.getType();
-        if (type.equals("c"))
+        if (type.equals("c") || type.equals("p"))
         {
-            icon.setImage(AvatarUtil.createOrLoadGroupAvatar("##", item.getTitle())
-                    .getScaledInstance(40,40, Image.SCALE_SMOOTH));
-        } else if (type.equals("p"))
-        {
-            icon.setImage(AvatarUtil.createOrLoadGroupAvatar("#", item.getTitle())
+            // 新的群头像
+            Room room = roomService.findById(item.getRoomId());
+            String memberStr = room.getMember();
+            String[] roomMember = null;
+            if (memberStr != null)
+            {
+                roomMember = room.getMember().split(",");
+            }
+
+            icon.setImage(AvatarUtil.createOrLoadGroupAvatar(item.getTitle(), roomMember, type)
                     .getScaledInstance(40,40, Image.SCALE_SMOOTH));
         }
         // 私聊头像
