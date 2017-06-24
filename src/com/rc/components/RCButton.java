@@ -1,5 +1,7 @@
 package com.rc.components;
 
+import com.rc.utils.FontUtil;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -34,7 +36,7 @@ public class RCButton extends JButton
     public RCButton(String name)
     {
         this.setText(name);
-        setFont(new Font("YaHei Consolas Hybrid", Font.PLAIN, 14));
+        setFont(FontUtil.getDefaultFont(14));
         setBorderPainted(false);
         setForeground(BUTTON_FOREGROUND_COLOR);
         setFocusPainted(false);

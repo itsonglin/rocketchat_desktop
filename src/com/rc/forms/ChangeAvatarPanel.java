@@ -28,6 +28,7 @@ import java.util.Iterator;
  */
 public class ChangeAvatarPanel extends JPanel
 {
+    private static ChangeAvatarPanel context;
     private JLabel imageLabel;
     private RCButton okButton;
     private JPanel contentPanel;
@@ -35,6 +36,8 @@ public class ChangeAvatarPanel extends JPanel
 
     public ChangeAvatarPanel()
     {
+        context = this;
+
         initComponents();
         initView();
         setListener();
@@ -82,13 +85,22 @@ public class ChangeAvatarPanel extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                if (selectedFile == null)
+                if (okButton.isEnabled())
                 {
-                    JOptionPane.showMessageDialog(MainFrame.getContext(), "请选择图像文件", "选择图片", JOptionPane.WARNING_MESSAGE);
-                    return;
+                    okButton.setEnabled(false);
+
+                    if (selectedFile == null)
+                    {
+                        JOptionPane.showMessageDialog(MainFrame.getContext(), "请选择图像文件", "选择图片", JOptionPane.WARNING_MESSAGE);
+                        okButton.setEnabled(true);
+                        return;
+                    }
+
+                    okButton.setIcon(IconUtil.getIcon(this, "/image/sending.gif"));
+                    okButton.setText("应用中...");
+                    WebSocketClient.getContext().setAvatar(base64EncodeImage(selectedFile.getAbsolutePath()));
                 }
 
-                WebSocketClient.getContext().setAvatar(base64EncodeImage(selectedFile.getAbsolutePath()));
                 super.mouseClicked(e);
             }
         });
@@ -111,9 +123,6 @@ public class ChangeAvatarPanel extends JPanel
                 JOptionPane.showMessageDialog(MainFrame.getContext(), "请选择图像文件", "文件类型不正确", JOptionPane.WARNING_MESSAGE);
                 return;
             }
-
-            /*ImageIcon imageIcon = new ImageIcon(selectedFile.getAbsolutePath());
-            imageIcon.setImage(imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));*/
 
             try
             {
@@ -204,5 +213,17 @@ public class ChangeAvatarPanel extends JPanel
             e.printStackTrace();
         }
         return new String(Base64.encodeBase64(data));
+    }
+
+    public void restoreOKButton()
+    {
+        okButton.setText("应用头像");
+        okButton.setIcon(null);
+        okButton.setEnabled(true);
+    }
+
+    public static ChangeAvatarPanel getContext()
+    {
+        return context;
     }
 }

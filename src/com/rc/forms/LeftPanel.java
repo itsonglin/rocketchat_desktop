@@ -2,13 +2,9 @@ package com.rc.forms;
 
 import com.rc.components.Colors;
 import com.rc.components.GBC;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
-import com.sun.tools.doclets.formats.html.SourceToHTMLConverter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 /**
  * Created by song on 17-5-29.

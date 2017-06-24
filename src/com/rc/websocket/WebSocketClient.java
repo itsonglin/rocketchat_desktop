@@ -232,7 +232,7 @@ public class WebSocketClient
      */
     private void handleMessage(String text)
     {
-       System.out.println(("收到消息  " + text));
+       //System.out.println(("收到消息  " + text));
 
         try
         {
@@ -386,7 +386,16 @@ public class WebSocketClient
                 {
                     e.printStackTrace();
                 }
+
+                // 更新本地头像
                 ContactsPanel.getContext().getUserAvatar(currentUser.getUsername(), true);
+
+                ChangeAvatarPanel avatarPanel = ChangeAvatarPanel.getContext();
+                if (avatarPanel != null && avatarPanel.isVisible())
+                {
+                    avatarPanel.restoreOKButton();
+                }
+
             }
         }).start();
     }

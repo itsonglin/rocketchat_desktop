@@ -21,7 +21,7 @@ public class SystemConfigDialog extends JDialog
 {
     private static SystemConfigDialog context;
     private JPanel buttonPanel;
-    private JButton cancelButton;
+    //private JButton cancelButton;
     private JButton okButton;
 
     private JPanel settingPanel;
@@ -75,22 +75,23 @@ public class SystemConfigDialog extends JDialog
         setBounds(posX, posY, DIALOG_WIDTH, DIALOG_HEIGHT);
         setUndecorated(true);
 
-        getRootPane().setBorder(new LineBorder(Colors.LIGHT_GRAY));
+        getRootPane().setBorder(new LineBorder(Colors.DIALOG_BORDER));
 
-        if (OSUtil.getOsType() != OSUtil.Mac_OS)
+       /* if (OSUtil.getOsType() != OSUtil.Mac_OS)
         {
             // 边框阴影，但是会导致字体失真
             AWTUtilities.setWindowOpaque(this, false);
             //getRootPane().setOpaque(false);
             getRootPane().setBorder(ShadowBorder.newInstance());
-        }
+        }*/
 
         // 按钮组
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
-        cancelButton = new RCButton("取消");
-        cancelButton.setForeground(Colors.FONT_BLACK);
-        okButton = new RCButton("确定", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
+        /*cancelButton = new RCButton("取消");
+        cancelButton.setForeground(Colors.FONT_BLACK);*/
+        okButton = new RCButton("关闭", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
+        okButton.setPreferredSize(new Dimension(75, 30));
 
         // 设置面板
         settingPanel = new JPanel();
@@ -133,7 +134,7 @@ public class SystemConfigDialog extends JDialog
 
     private void initView()
     {
-        buttonPanel.add(cancelButton, new GBC(0, 0).setWeight(1, 1).setInsets(15, 0, 0, 0));
+        //buttonPanel.add(cancelButton, new GBC(0, 0).setWeight(1, 1).setInsets(15, 0, 0, 0));
         buttonPanel.add(okButton, new GBC(1, 0).setWeight(1, 1));
 
         settingPanel.setLayout(new GridBagLayout());
@@ -156,7 +157,7 @@ public class SystemConfigDialog extends JDialog
 
     private void setListeners()
     {
-        cancelButton.addMouseListener(new MouseAdapter()
+        okButton.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseClicked(MouseEvent e)

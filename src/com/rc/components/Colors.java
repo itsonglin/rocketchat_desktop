@@ -24,6 +24,7 @@ public class Colors
     public static Color ITEM_SELECTED = new Color(65, 71, 78);
     public static Color ITEM_SELECTED_LIGHT = new Color(228, 228, 228);
     public static Color LIGHT_GRAY = new Color(222, 222, 222);
+    public static Color DIALOG_BORDER = new Color(204, 204, 204);
     public static Color PROGRESS_BAR_START = new Color(178, 226, 129);
     public static Color PROGRESS_BAR_END = new Color(133, 194, 97);
     public static Color MAIN_COLOR = new Color(54, 172, 72);
