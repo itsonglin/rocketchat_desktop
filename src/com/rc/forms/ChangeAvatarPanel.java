@@ -119,14 +119,14 @@ public class ChangeAvatarPanel extends JPanel
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("请选择图片");
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-        fileChooser.setFileFilter(new FileNameExtensionFilter("图像", "jpg", "jpeg", "png", "bmp"));
+        fileChooser.setFileFilter(new FileNameExtensionFilter("图像", "jpg", "jpeg", "png"));
 
         fileChooser.showDialog(MainFrame.getContext(), "上传");
         selectedFile = fileChooser.getSelectedFile();
         if (selectedFile != null)
         {
             String extension = selectedFile.getName();
-            if (!extension.endsWith(".jpg") && !extension.endsWith(".jpeg") & !extension.endsWith(".png") & !extension.endsWith(".bmp"))
+            if (!extension.endsWith(".jpg") && !extension.endsWith(".jpeg") && !extension.endsWith(".png"))
             {
                 JOptionPane.showMessageDialog(MainFrame.getContext(), "请选择图像文件", "文件类型不正确", JOptionPane.WARNING_MESSAGE);
                 return;

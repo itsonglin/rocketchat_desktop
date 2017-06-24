@@ -5,6 +5,7 @@ import com.rc.app.Launcher;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
 
@@ -110,7 +111,7 @@ public class AvatarUtil
             int height = 150;
 
             // 创建BufferedImage对象
-            Font font = FontUtil.getDefaultFont(86, Font.PLAIN);
+            Font font = FontUtil.getDefaultFont(76, Font.PLAIN);
             BufferedImage image = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
             // 获取Graphics2D
             Graphics2D g2d = image.createGraphics();
@@ -129,10 +130,12 @@ public class AvatarUtil
             int strHeight = fm.getHeight();
             int x = (width - strWidth) / 2;
             g2d.drawString(drawString, x, strHeight);
-            g2d.dispose();
 
+            BufferedImage roundImage = ImageUtil.setRadius(image, width, height, 35);
+
+            g2d.dispose();
             File file = new File(AVATAR_CACHE_ROOT + "/" + sign + ".jpg");
-            ImageIO.write(image, "jpg", file);
+            ImageIO.write(roundImage, "jpg", file);
 
             return image;
         } catch (Exception ex)
@@ -164,8 +167,7 @@ public class AvatarUtil
         } else if (type == CUSTOM_AVATAR)
         {
             path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".jpg";
-        }
-        else
+        } else
         {
             throw new RuntimeException("类型不存在");
         }
@@ -174,9 +176,20 @@ public class AvatarUtil
 
         try
         {
-            FileOutputStream outputStream = new FileOutputStream(avatarPath);
-            outputStream.write(data);
-            outputStream.close();
+            if (data.length > 0)
+            {
+                BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(data));
+                bufferedImage = ImageUtil.setRadius(bufferedImage, bufferedImage.getWidth(), bufferedImage.getHeight(), 35);
+                ImageIO.write(bufferedImage, "jpg", avatarPath);
+                /*FileOutputStream outputStream = new FileOutputStream(avatarPath);
+                outputStream.write(data);
+                outputStream.close();*/
+            }
+            else
+            {
+                throw new RuntimeException("头像保存失败，数据为空");
+            }
+
         } catch (FileNotFoundException e)
         {
             e.printStackTrace();
@@ -232,6 +245,6 @@ public class AvatarUtil
 
     public static void main(String[] a)
     {
-        System.out.println(AvatarUtil.customAvatarExist("song"));
+        System.out.println(AvatarUtil.createAvatar("song", "song"));
     }
 }

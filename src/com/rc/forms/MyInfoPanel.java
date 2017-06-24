@@ -24,7 +24,7 @@ public class MyInfoPanel extends ParentAvailablePanel
 {
     private static MyInfoPanel context;
 
-    private ImagePanel avatar;
+    private JLabel avatar;
     private JLabel username;
     private JLabel menuIcon;
     private CurrentUserService currentUserService = Launcher.currentUserService;
@@ -49,8 +49,8 @@ public class MyInfoPanel extends ParentAvailablePanel
 
         //GImage.setBorder(new SubtleSquareBorder(true));
         currentUsername = currentUserService.findAll().get(0).getUsername();
-        Image image = AvatarUtil.createOrLoadUserAvatar(currentUsername);
-        avatar = new ImagePanel(image);
+        avatar = new JLabel();
+        avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUsername).getScaledInstance(50,50,Image.SCALE_SMOOTH)));
 
         avatar.setPreferredSize(new Dimension(50, 50));
         avatar.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -116,10 +116,14 @@ public class MyInfoPanel extends ParentAvailablePanel
     public void reloadAvatar()
     {
         currentUsername = currentUserService.findAll().get(0).getUsername();
-        Image image = AvatarUtil.createOrLoadUserAvatar(currentUsername);
-        avatar.setImage(image);
-        avatar.revalidate();
-        avatar.repaint();
+        //Image image = AvatarUtil.createOrLoadUserAvatar(currentUsername);
+        //avatar.setImage(image);
+        avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUsername).getScaledInstance(50,50,Image.SCALE_SMOOTH)));
+
+
+
+        //avatar.revalidate();
+        //avatar.repaint();
     }
 
     public static MyInfoPanel getContext()

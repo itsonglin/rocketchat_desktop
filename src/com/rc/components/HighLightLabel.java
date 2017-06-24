@@ -80,6 +80,8 @@ public class HighLightLabel extends JLabel
             posIndex++;
         }
 
+        g2d.dispose();
+
 
     }
 
