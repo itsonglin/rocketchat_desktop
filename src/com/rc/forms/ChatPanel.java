@@ -12,6 +12,7 @@ import com.rc.db.service.*;
 import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.ImageAttachmentItem;
 import com.rc.entity.MessageItem;
+import com.rc.helper.MessageHolderCacheHelper;
 import com.rc.utils.FileCache;
 import com.rc.utils.HttpUtil;
 import com.rc.utils.MimeTypeUtil;
@@ -91,17 +92,23 @@ public class ChatPanel extends ParentAvailablePanel
     private List<String> remoteRoomMemberLoadedRooms = new ArrayList<>();
     private RemindUserPopup remindUserPopup = new RemindUserPopup();
 
+    private MessageHolderCacheHelper messageHolderCacheHelper;
+
+    public long startTime;
+
     public ChatPanel(JPanel parent)
     {
 
         super(parent);
         context = this;
         currentUser = currentUserService.findAll().get(0);
+        messageHolderCacheHelper = new MessageHolderCacheHelper();
 
         initComponents();
         initView();
-        initData();
         setListeners();
+
+        initData();
 
         fileCache = new FileCache();
     }
@@ -110,7 +117,7 @@ public class ChatPanel extends ParentAvailablePanel
     {
         messagePanel = new MessagePanel(this);
         messagePanel.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.LIGHT_GRAY));
-        adapter = new MessageAdapter(messageItems, messagePanel.getMessageListView());
+        adapter = new MessageAdapter(messageItems, messagePanel.getMessageListView(), messageHolderCacheHelper);
         messagePanel.getMessageListView().setAdapter(adapter);
 
         messageEditorPanel = new MessageEditorPanel(this);
@@ -327,6 +334,9 @@ public class ChatPanel extends ParentAvailablePanel
 
     public void enterRoom(String roomId, long firstMessageTimestamp)
     {
+        // 重置ViewHolder缓存
+        messageHolderCacheHelper.reset();
+
         this.firstMessageTimestamp = firstMessageTimestamp;
 
         this.roomId = roomId;
@@ -918,8 +928,6 @@ public class ChatPanel extends ParentAvailablePanel
 
                 TitlePanel.getContext().hideRoomMembersPanel();
                 checkIsMuted();
-
-                //System.out.println("加载完成 ，用时 " + (System.currentTimeMillis() - startTime));
             }
         }).start();
     }

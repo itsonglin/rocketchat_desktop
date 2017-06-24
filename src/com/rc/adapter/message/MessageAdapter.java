@@ -15,6 +15,7 @@ import com.rc.forms.ChatPanel;
 import com.rc.forms.MainFrame;
 import com.rc.forms.UserInfoPopup;
 import com.rc.helper.AttachmentIconHelper;
+import com.rc.helper.MessageHolderCacheHelper;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.*;
 import org.apache.log4j.Logger;
@@ -42,8 +43,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     private Logger logger = Logger.getLogger(this.getClass());
     private FileCache fileCache;
 
+    MessageHolderCacheHelper messageHolderCacheHelper;
 
-    public MessageAdapter(List<MessageItem> messageItems, RCListView listView)
+    public MessageAdapter(List<MessageItem> messageItems, RCListView listView, MessageHolderCacheHelper messageHolderCacheHelper)
     {
         this.messageItems = messageItems;
         this.listView = listView;
@@ -51,6 +53,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         currentUser = currentUserService.findAll().get(0);
         imageCache = new ImageCache();
         fileCache = new FileCache();
+        this.messageHolderCacheHelper =  messageHolderCacheHelper;
     }
 
     @Override
@@ -66,31 +69,73 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         {
             case MessageItem.SYSTEM_MESSAGE:
             {
-                return new MessageSystemMessageViewHolder();
+                MessageSystemMessageViewHolder holder = messageHolderCacheHelper.tryGetSystemMessageViewHolder();
+                if (holder == null)
+                {
+                    holder = new MessageSystemMessageViewHolder();
+                }
+
+                return holder;
             }
             case MessageItem.RIGHT_TEXT:
             {
-                return new MessageRightTextViewHolder();
+                MessageRightTextViewHolder holder = messageHolderCacheHelper.tryGetRightTextViewHolder();
+                if (holder == null)
+                {
+                    holder = new MessageRightTextViewHolder();
+                }
+
+                return holder;
             }
             case MessageItem.LEFT_TEXT:
             {
-                return new MessageLeftTextViewHolder();
+                MessageLeftTextViewHolder holder = messageHolderCacheHelper.tryGetLeftTextViewHolder();
+                if (holder == null)
+                {
+                    holder = new MessageLeftTextViewHolder();
+                }
+
+                return holder;
             }
             case MessageItem.RIGHT_IMAGE:
             {
-                return new MessageRightImageViewHolder();
+                MessageRightImageViewHolder holder = messageHolderCacheHelper.tryGetRightImageViewHolder();
+                if (holder == null)
+                {
+                    holder = new MessageRightImageViewHolder();
+                }
+
+                return holder;
             }
             case MessageItem.LEFT_IMAGE:
             {
-                return new MessageLeftImageViewHolder();
+                MessageLeftImageViewHolder holder = messageHolderCacheHelper.tryGetLeftImageViewHolder();
+                if (holder == null)
+                {
+                    holder = new MessageLeftImageViewHolder();
+                }
+
+                return holder;
             }
             case MessageItem.RIGHT_ATTACHMENT:
             {
-                return new MessageRightAttachmentViewHolder();
+                MessageRightAttachmentViewHolder holder = messageHolderCacheHelper.tryGetRightAttachmentViewHolder();
+                if (holder == null)
+                {
+                    holder = new MessageRightAttachmentViewHolder();
+                }
+
+                return holder;
             }
             case MessageItem.LEFT_ATTACHMENT:
             {
-                return new MessageLeftAttachmentViewHolder();
+                MessageLeftAttachmentViewHolder holder = messageHolderCacheHelper.tryGetLeftAttachmentViewHolder();
+                if (holder == null)
+                {
+                    holder = new MessageLeftAttachmentViewHolder();
+                }
+
+                return holder;
             }
         }
 

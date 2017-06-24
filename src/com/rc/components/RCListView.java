@@ -235,9 +235,11 @@ public class RCListView extends JScrollPane
                 rectangleList.add(headerViewHolder.getBounds());
             }
 
+            //long startTime = System.currentTimeMillis();
             ViewHolder holder = adapter.onCreateViewHolder(viewType);
             adapter.onBindViewHolder(holder, i);
             contentPanel.add(holder);
+            //System.out.println("加载完成 ，用时 " + (System.currentTimeMillis() - startTime));
         }
     }
 
@@ -307,7 +309,7 @@ public class RCListView extends JScrollPane
         contentPanel.removeAll();
         contentPanel.repaint();
         fillComponents();
-        contentPanel.revalidate();
+        //contentPanel.revalidate();
 
     }
 
