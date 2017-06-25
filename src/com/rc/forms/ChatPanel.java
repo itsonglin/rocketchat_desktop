@@ -13,6 +13,7 @@ import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.ImageAttachmentItem;
 import com.rc.entity.MessageItem;
 import com.rc.helper.MessageHolderCacheHelper;
+import com.rc.utils.AvatarUtil;
 import com.rc.utils.FileCache;
 import com.rc.utils.HttpUtil;
 import com.rc.utils.MimeTypeUtil;
@@ -1818,6 +1819,10 @@ public class ChatPanel extends ParentAvailablePanel
                         {
                             RoomMembersPanel.getContext().updateUI();
                         }
+
+                        // 重新生成群头像
+                        System.out.println("删除原来群头像: " + room.getName());
+                        AvatarUtil.deleteGroupAvatar(room.getName());
                     }
 
                     roomMembers.remove(creator);

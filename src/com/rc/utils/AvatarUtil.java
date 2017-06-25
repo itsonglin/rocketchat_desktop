@@ -80,21 +80,32 @@ public class AvatarUtil
         Image avatar;
         avatar = avatarCache.get(groupName);
 
+        // 如果在内存中的缓存
         if (avatar == null)
         {
             avatar = getCachedImageAvatar(groupName);
+
+            // 如果在硬盘中有缓存的文件
             if (avatar == null)
             {
-                System.out.println("创建群组头像 : " + groupName);
-
+                // 如果尚未从服务器获取群成员，则获取默认群组头像
                 if (members == null)
                 {
                     String sign = type.equals("p") ? "#" : "##";
-                    avatar = createAvatar(sign, groupName);
+                    avatar = getCachedImageAvatar(sign);
+
+                    // 默认群组头像不存在，则生成
+                    if (avatar == null)
+                    {
+                        System.out.println("创建群组默认头像 : " + groupName);
+                        avatar = createAvatar(sign, groupName);
+                    }
                 }
+                // 有群成员，根据群成员的头像合成群头像
                 else
                 {
-                    avatar = createGroupAvatar(members);
+                    System.out.println("创建群组个性头像 : " + groupName);
+                    avatar = createGroupAvatar(groupName, members);
                 }
             }
 
@@ -301,8 +312,18 @@ public class AvatarUtil
         }
     }
 
+    public static void deleteGroupAvatar(String groupName)
+    {
+        String path = AVATAR_CACHE_ROOT + "/" + groupName + ".jpg";
+        File file = new File(path);
+        if (file.exists())
+        {
+            file.delete();
+        }
+    }
 
-    public static Image createGroupAvatar(String[] users)
+
+    public static Image createGroupAvatar(String groupName, String[] users)
     {
 
         try
@@ -333,6 +354,11 @@ public class AvatarUtil
             }
 
             g2d.dispose();
+
+            // 缓存到磁盘
+            File file = new File(AVATAR_CACHE_ROOT + "/" + groupName + ".jpg");
+            ImageIO.write(image, "jpg", file);
+
             return image;
         } catch (Exception ex)
         {
@@ -354,19 +380,20 @@ public class AvatarUtil
 
         if (users.length == 1)
         {
-            int childWidth = parentWidth - gap * 2;
-            rectangles[0] = new Rectangle(gap, gap, childWidth, childWidth);
+            int childWidth = parentWidth / 2;
+            x = (parentWidth - childWidth) / 2;
+            rectangles[0] = new Rectangle(x, x, childWidth, childWidth);
         }
         else if (users.length == 2)
         {
-            int childWidth = (parentWidth - gap * 2) / 2;
+            int childWidth = (parentWidth - gap * 3) / 2;
 
             // 第一个
             y = (parentWidth - childWidth) / 2;
             Rectangle r1 = new Rectangle(gap, y, childWidth, childWidth);
 
             // 第二个
-            x = gap;
+            x = gap * 2 + childWidth;
             Rectangle r2 = new Rectangle(x, y, childWidth, childWidth);
 
             rectangles[0] = r1;
@@ -375,7 +402,7 @@ public class AvatarUtil
         else if (users.length == 3)
         {
             int childWidth = (parentWidth - gap * 3) / 2;
-            System.out.println("每个子头像的宽度是：" + childWidth);
+
 
             // 第一个
             x = (parentWidth - childWidth) / 2;
@@ -399,7 +426,7 @@ public class AvatarUtil
         else if (users.length == 4)
         {
             int childWidth = (parentWidth - gap * 3) / 2;
-            System.out.println("每个子头像的宽度是：" + childWidth);
+
 
             // 第一个
             Rectangle r1 = new Rectangle(gap, gap, childWidth, childWidth);
@@ -426,7 +453,6 @@ public class AvatarUtil
         else if (users.length == 5)
         {
             int childWidth = (parentWidth - gap * 4) / 3;
-            System.out.println("每个子头像的宽度是：" + childWidth);
 
             // 第一个
             x = (parentWidth - childWidth * 2 - gap) / 2;
@@ -446,7 +472,7 @@ public class AvatarUtil
             Rectangle r4 = new Rectangle(x, y, childWidth, childWidth);
 
             // 第五个
-            x = gap *3 + childWidth * 2;
+            x = gap * 3 + childWidth * 2;
             Rectangle r5 = new Rectangle(x, y, childWidth, childWidth);
 
             rectangles[0] = r1;
@@ -458,7 +484,6 @@ public class AvatarUtil
         else if (users.length == 6)
         {
             int childWidth = (parentWidth - gap * 4) / 3;
-            System.out.println("每个子头像的宽度是：" + childWidth);
 
             // 第一个
             y = (parentWidth - childWidth * 2 - gap) / 2;
@@ -482,7 +507,7 @@ public class AvatarUtil
             Rectangle r5 = new Rectangle(x, y, childWidth, childWidth);
 
             // 第六个
-            x = gap *3 + childWidth * 2;
+            x = gap * 3 + childWidth * 2;
             Rectangle r6 = new Rectangle(x, y, childWidth, childWidth);
 
             rectangles[0] = r1;
@@ -495,7 +520,6 @@ public class AvatarUtil
         else if (users.length == 7)
         {
             int childWidth = (parentWidth - gap * 4) / 3;
-            System.out.println("每个子头像的宽度是：" + childWidth);
 
             // 第一个
             x = (parentWidth - childWidth) / 2;
@@ -536,7 +560,6 @@ public class AvatarUtil
         else if (users.length == 8)
         {
             int childWidth = (parentWidth - gap * 4) / 3;
-            System.out.println("每个子头像的宽度是：" + childWidth);
 
             // 第一个
             x = (parentWidth - childWidth * 2 - gap) / 2;
@@ -571,7 +594,6 @@ public class AvatarUtil
             Rectangle r8 = new Rectangle(x, y, childWidth, childWidth);
 
 
-
             rectangles[0] = r1;
             rectangles[1] = r2;
             rectangles[2] = r3;
@@ -585,14 +607,13 @@ public class AvatarUtil
         else if (users.length >= 9)
         {
             int childWidth = (parentWidth - gap * 4) / 3;
-            System.out.println("每个子头像的宽度是：" + childWidth);
 
             int index = 0;
             for (int i = 1; i <= 3; i++)
             {
                 y = gap * i + (i - 1) * childWidth;
 
-                for (int j = 1; j <= 3;j++)
+                for (int j = 1; j <= 3; j++)
                 {
                     x = gap * j + (j - 1) * childWidth;
                     Rectangle r = new Rectangle(x, y, childWidth, childWidth);

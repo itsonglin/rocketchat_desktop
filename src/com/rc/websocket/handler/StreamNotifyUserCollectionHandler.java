@@ -311,6 +311,9 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
                     {
                         ChatPanel.getContext().checkIsMuted();
                     }
+
+                    // 重新获取群成员
+                    ChatPanel.getContext().loadRemoteRoomMembers();
                 }
                 //realm.close();
             }

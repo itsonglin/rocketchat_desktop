@@ -309,7 +309,7 @@ public class RCListView extends JScrollPane
         contentPanel.removeAll();
         contentPanel.repaint();
         fillComponents();
-        //contentPanel.revalidate();
+        contentPanel.revalidate();
 
     }
 

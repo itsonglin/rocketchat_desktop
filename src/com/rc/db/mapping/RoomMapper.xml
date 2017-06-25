@@ -15,7 +15,7 @@
 
 
     <select id="findById" resultType="Room">
-		SELECT * FROM room where roomId = #{id}
+		SELECT * FROM room where roomId = #{id} limit 1
 	</select>
 
     <select id="findRelativeRoomIdByUserId" resultType="Room" statementType="STATEMENT" parameterType="map">

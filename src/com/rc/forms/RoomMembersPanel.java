@@ -12,6 +12,7 @@ import com.rc.db.service.RoomService;
 import com.rc.entity.SelectUserData;
 import com.rc.tasks.HttpPostTask;
 import com.rc.tasks.HttpResponseListener;
+import com.rc.utils.AvatarUtil;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -118,7 +119,21 @@ public class RoomMembersPanel extends ParentAvailablePanel
     {
         if (roomId != null)
         {
-            room = roomService.findById(roomId);
+            try
+            {
+                room = roomService.findById(roomId);
+            } catch (Exception e)
+            {
+                try
+                {
+                    Thread.sleep(200);
+                } catch (InterruptedException e1)
+                {
+                    e1.printStackTrace();
+                }
+                System.out.println("roomService.findById(roomId)获取失败，200ms后重新获取");
+                room = roomService.findById(roomId);
+            }
 
             getRoomMembers();
 
@@ -416,7 +431,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
     {
         try
         {
-            String type;
+            String type = "";
             if (retJson.has("channel"))
             {
                 type = "channel";
@@ -424,6 +439,11 @@ public class RoomMembersPanel extends ParentAvailablePanel
             else if (retJson.has("group"))
             {
                 type = "group";
+            }
+            else if (retJson.has("error"))
+            {
+                JOptionPane.showMessageDialog(null, "添加成员失败！", "添加成员失败", JOptionPane.ERROR_MESSAGE);
+                return;
             }
             else
             {
@@ -447,7 +467,6 @@ public class RoomMembersPanel extends ParentAvailablePanel
             }
 
             ChatPanel.getContext().updateLocalDBRoomMembers(users);
-            //ChatPanel.getContext().loadLocalRoomMembers();
             ChatPanel.getContext().updateRoomTitle();
 
             // 如果已打开成员面板，则更新
@@ -455,6 +474,10 @@ public class RoomMembersPanel extends ParentAvailablePanel
             {
                 updateUI();
             }
+
+            // 重新生成群头像
+            System.out.println("删除原来群头像: " + room.getName());
+            AvatarUtil.deleteGroupAvatar(room.getName());
 
         }
         catch (JSONException e)
