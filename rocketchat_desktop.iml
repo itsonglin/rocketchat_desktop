@@ -13,5 +13,6 @@
     <orderEntry type="library" name="commons-lang3-3.4 (2)" level="project" />
     <orderEntry type="library" name="commons-codec-1.6" level="project" />
     <orderEntry type="library" name="commons-codec-1.6" level="project" />
+    <orderEntry type="module" module-name="ImageViewer" exported="" />
   </component>
 </module>

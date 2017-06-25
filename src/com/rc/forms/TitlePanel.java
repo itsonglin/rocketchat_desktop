@@ -77,24 +77,31 @@ public class TitlePanel extends ParentAvailablePanel
 
     private void addListeners()
     {
-        roomInfoButton.addMouseListener(new AbstractMouseListener()
+        MouseListener mouseListener = new AbstractMouseListener()
         {
             @Override
             public void mouseReleased(MouseEvent e)
             {
-                RoomMembersPanel roomMemberPanel = ((RightPanel) getParentPanel()).getRoomMembersPanel();
-                if (roomMemberPanel.isVisible())
+                //if (roomInfoButton.isVisible())
                 {
-                    roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
-                    roomMemberPanel.setVisibleAndUpdateUI(false);
+                    RoomMembersPanel roomMemberPanel = ((RightPanel) getParentPanel()).getRoomMembersPanel();
+                    if (roomMemberPanel.isVisible())
+                    {
+                        roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options.png")));
+                        roomMemberPanel.setVisibleAndUpdateUI(false);
+                    }
+                    else
+                    {
+                        roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options_restore.png")));
+                        roomMemberPanel.setVisibleAndUpdateUI(true);
+                    }
                 }
-                else
-                {
-                    roomInfoButton.setIcon(new ImageIcon(getClass().getResource("/image/options_restore.png")));
-                    roomMemberPanel.setVisibleAndUpdateUI(true);
-                }
+
             }
-        });
+        };
+
+        roomInfoButton.addMouseListener(mouseListener);
+        //titleLabel.addMouseListener(mouseListener);
     }
 
     /**
@@ -150,6 +157,7 @@ public class TitlePanel extends ParentAvailablePanel
         titleLabel = new JLabel();
         titleLabel.setFont(FontUtil.getDefaultFont(16));
         titleLabel.setText("和理通");
+        //titleLabel.setCursor(handCursor);
 
 
         ControlLabelMouseListener listener = new ControlLabelMouseListener();

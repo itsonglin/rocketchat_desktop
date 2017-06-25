@@ -1,6 +1,7 @@
 package com.rc.app;
 
 
+import com.rc.forms.ImageViewerFrame;
 import com.rc.utils.AvatarUtil;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import com.vdurmont.emoji.EmojiParser;
@@ -36,6 +37,8 @@ class Test
         frame.add(label);
         frame.setVisible(true);*/
 
+        ImageViewerFrame frame = new ImageViewerFrame();
+        frame.setVisible(true);
     }
 }
 
