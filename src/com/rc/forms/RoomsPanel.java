@@ -90,6 +90,7 @@ public class RoomsPanel extends ParentAvailablePanel
      */
     public void updateRoomItem(String roomId)
     {
+
         for (int i = 0; i < roomItemList.size(); i++)
         {
             RoomItem item = roomItemList.get(i);

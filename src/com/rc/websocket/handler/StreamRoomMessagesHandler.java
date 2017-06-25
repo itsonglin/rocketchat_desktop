@@ -268,16 +268,16 @@ public class StreamRoomMessagesHandler implements CollectionHandler
             roomService.update(room);
 
             // 通知UI更新
-            Map<String, String> param = new HashMap();
+            /*Map<String, String> param = new HashMap();
             param.put("roomId", message.getRoomId());
             param.put("message", message.getMessageContent());
             param.put("size", message.getTimestamp() + "");
-            param.put("unreadCount", room.getUnreadCount() + "");
+            param.put("unreadCount", room.getUnreadCount() + "");*/
 
             // 如果是刚刚自己上传的文件，提示UI不要再把这条消息加入到消息列表中，防止消息重复出现
             if (myUploadFile)
             {
-                param.put("doNotAddToMessageList", "true");
+                //param.put("doNotAddToMessageList", "true");
 
                 // 继续上传后面的文件
                 /*((WebSocketService) context).sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION,

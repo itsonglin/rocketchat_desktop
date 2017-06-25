@@ -313,7 +313,7 @@ public class StreamNotifyUserCollectionHandler implements CollectionHandler
                     }
 
                     // 重新获取群成员
-                    ChatPanel.getContext().loadRemoteRoomMembers();
+                    //ChatPanel.getContext().loadRemoteRoomMembers();
                 }
                 //realm.close();
             }

@@ -2,6 +2,9 @@ package com.rc.db.dao;
 
 import com.rc.db.model.BasicModel;
 import com.rc.db.model.CurrentUser;
+import org.apache.ibatis.exceptions.PersistenceException;
+import org.apache.ibatis.session.ResultContext;
+import org.apache.ibatis.session.ResultHandler;
 import org.apache.ibatis.session.SqlSession;
 
 import java.util.HashMap;
@@ -11,7 +14,7 @@ import java.util.Map;
 /**
  * Created by song on 08/06/2017.
  */
-public abstract  class BasicDao
+public abstract class BasicDao
 {
     protected SqlSession session;
     private String className;
@@ -35,7 +38,25 @@ public abstract  class BasicDao
 
     public BasicModel findById(String id)
     {
-        return (BasicModel) session.selectOne(className + ".findById", id);
+        return _findById(id, 0);
+    }
+
+    private BasicModel _findById(String id, int time)
+    {
+        if (time > 10)
+        {
+            System.out.println("查询到 BasicModel 对象失败次数>10，放弃查询");
+            return null;
+        }
+
+        try
+        {
+            return (BasicModel) session.selectOne(className + ".findById", id);
+        } catch (PersistenceException exception)
+        {
+            System.out.println("没有查询到 BasicModel 对象，继续查询");
+            return _findById(id, ++time);
+        }
     }
 
     public List find(String field, Object val)
@@ -99,7 +120,7 @@ public abstract  class BasicDao
 
     public boolean exist(String id)
     {
-        return ((int)(session.selectOne(className + ".exist", id))) > 0;
+        return ((int) (session.selectOne(className + ".exist", id))) > 0;
     }
 
 }

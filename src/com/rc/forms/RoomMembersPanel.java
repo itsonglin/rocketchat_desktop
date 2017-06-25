@@ -124,13 +124,14 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 room = roomService.findById(roomId);
             } catch (Exception e)
             {
-                try
+                /*try
                 {
                     Thread.sleep(200);
                 } catch (InterruptedException e1)
                 {
                     e1.printStackTrace();
-                }
+                }*/
+                e.printStackTrace();
                 System.out.println("roomService.findById(roomId)获取失败，200ms后重新获取");
                 room = roomService.findById(roomId);
             }

@@ -5,7 +5,6 @@ import com.rc.adapter.ViewHolder;
 import com.rc.app.Launcher;
 import com.rc.components.RCListView;
 import com.rc.db.model.CurrentUser;
-import com.rc.db.model.FileAttachment;
 import com.rc.db.model.Message;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
@@ -18,12 +17,14 @@ import com.rc.helper.AttachmentIconHelper;
 import com.rc.helper.MessageHolderCacheHelper;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.*;
+import com.rc.websocket.WebSocketClient;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -255,13 +256,26 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             holder.resend.setVisible(false);
         }
 
+        for (MouseListener l : holder.resend.getMouseListeners())
+        {
+            holder.resend.removeMouseListener(l);
+        }
         holder.resend.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                //System.out.println(item.getMessageContent() + "正在重发");
-                ChatPanel.getContext().resendFileMessage(item.getId(), "file");
+                if (item.getUpdatedAt() > 0)
+                {
+                    holder.resend.setVisible(false);
+                    System.out.println("这条消息其实已经发送出去了");
+                }
+
+                if (WebSocketClient.getContext().loginAndInitFinish())
+                {
+                    ChatPanel.getContext().resendFileMessage(item.getId(), "file");
+                }
+
                 super.mouseClicked(e);
             }
         });
@@ -400,13 +414,27 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             holder.resend.setVisible(false);
         }
 
+        for (MouseListener l : holder.resend.getMouseListeners())
+        {
+            holder.resend.removeMouseListener(l);
+        }
+
         holder.resend.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                //System.out.println(item.getMessageContent() + "正在重发");
-                ChatPanel.getContext().resendFileMessage(item.getId(), "image");
+                if (item.getUpdatedAt() > 0)
+                {
+                    holder.resend.setVisible(false);
+                    System.out.println("这条消息其实已经发送出去了");
+                }
+
+                if (WebSocketClient.getContext().loginAndInitFinish())
+                {
+                    ChatPanel.getContext().resendFileMessage(item.getId(), "image");
+                }
+
                 super.mouseClicked(e);
             }
         });
@@ -563,13 +591,27 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             }
         }
 
+
+        for (MouseListener l : holder.resend.getMouseListeners())
+        {
+            holder.resend.removeMouseListener(l);
+        }
+
         holder.resend.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                //System.out.println(item.getMessageContent() + "正在重发");
-                ChatPanel.getContext().sendTextMessage(item.getId(), null);
+                if (item.getUpdatedAt() > 0)
+                {
+                    holder.resend.setVisible(false);
+                    System.out.println("这条消息其实已经发送出去了");
+                }
+
+                if (WebSocketClient.getContext().loginAndInitFinish())
+                {
+                    ChatPanel.getContext().sendTextMessage(item.getId(), null);
+                }
                 super.mouseClicked(e);
             }
         });

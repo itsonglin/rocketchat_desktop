@@ -8,6 +8,7 @@ import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
 import com.rc.forms.*;
+import com.rc.utils.AvatarUtil;
 import com.rc.websocket.handler.StreamNotifyUserCollectionHandler;
 import com.rc.websocket.handler.StreamRoomMessagesHandler;
 import com.rc.websocket.handler.WebSocketListenerAdapter;
@@ -19,6 +20,7 @@ import com.rc.tasks.HttpGetTask;
 import com.rc.tasks.HttpResponseListener;
 
 import javax.net.ssl.SSLContext;
+import javax.swing.*;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -62,6 +64,7 @@ public class WebSocketClient
     private StreamRoomMessagesHandler streamRoomMessagesHandler;
     private StreamNotifyUserCollectionHandler streamNotifyUserCollectionHandler;
     private String uploadFilename = null;
+    public long loginSuccessTime;
 
 
     public WebSocketClient()
@@ -120,6 +123,11 @@ public class WebSocketClient
         {
             logger.debug("*************ConnectionStatus不等于disconnected， 放弃重新连接*****************");
         }
+    }
+
+    public WebSocket getWebSocket()
+    {
+        return webSocket;
     }
 
     /**
@@ -366,7 +374,7 @@ public class WebSocketClient
         }
         else if (msgId.equals(SubscriptionHelper.METHOD_SET_AVATAR_FROM_SERVUCE))
         {
-            // 用户更新头像后会收到此消息
+            // 用户在本地更新头像后会收到此消息
             processUserAvatar();
         }
     }
@@ -452,6 +460,7 @@ public class WebSocketClient
             try
             {
                 TitlePanel.getContext().hidestatusLabel();
+                loginSuccessTime = System.currentTimeMillis();
 
                 if (!sentPingMessage)
                 {
@@ -1024,23 +1033,42 @@ public class WebSocketClient
     private void processChangedMessage(JSONObject jsonText) throws JSONException
     {
         String collection = jsonText.getString("collection");
-        JSONObject fields = jsonText.getJSONObject("fields");
-        if (collection.equals("stream-notify-user"))
+        if (jsonText.has("fields"))
         {
-            String eventName = fields.getString("eventName");
-            eventName = eventName.substring(eventName.indexOf("/") + 1);
-            streamNotifyUserCollectionHandler.handle(eventName, jsonText.getJSONObject("fields").getJSONArray("args"));
+            JSONObject fields = jsonText.getJSONObject("fields");
+            if (collection.equals("stream-notify-user"))
+            {
+                String eventName = fields.getString("eventName");
+                eventName = eventName.substring(eventName.indexOf("/") + 1);
+                streamNotifyUserCollectionHandler.handle(eventName, jsonText.getJSONObject("fields").getJSONArray("args"));
+            }
+            else if (collection.equals("stream-room-messages"))
+            {
+                String eventName = fields.getString("eventName");
+                eventName = eventName.substring(eventName.indexOf("/") + 1);
+                streamRoomMessagesHandler.handle(eventName, jsonText.getJSONObject("fields").getJSONArray("args"));
+            }
+            else if (collection.equals("users"))
+            {
+                updateCurrentUser(fields);
+            }
         }
-        else if (collection.equals("stream-room-messages"))
+        else
         {
-            String eventName = fields.getString("eventName");
-            eventName = eventName.substring(eventName.indexOf("/") + 1);
-            streamRoomMessagesHandler.handle(eventName, jsonText.getJSONObject("fields").getJSONArray("args"));
+            if (jsonText.has("cleared"))
+            {
+
+                JSONArray arr = jsonText.getJSONArray("cleared");
+                if (arr.get(0).equals("avatarOrigin"))
+                {
+                    System.out.println("头像被清空");
+                    AvatarUtil.deleteCustomAvatar(currentUser.getUsername());
+                }
+            }
+            System.out.println(jsonText);
+            //{"msg":"changed","collection":"users","id":"Ni7bJcX3W8yExKSa3","cleared":["avatarOrigin"]}
         }
-        else if (collection.equals("users"))
-        {
-            updateCurrentUser(fields);
-        }
+
     }
 
     private void processUsfCreate(JSONObject jsonText) throws JSONException
@@ -1087,11 +1115,13 @@ public class WebSocketClient
         // 上传文件过大
         if (errorType.equals("error-file-too-large"))
         {
-            String reason = error.getString("reason");
+            JOptionPane.showMessageDialog(null, "上传文件大小不能超过20M", "文件过大", JOptionPane.WARNING_MESSAGE);
+
+            /*String reason = error.getString("reason");
             String size = reason.substring(reason.indexOf("of ") + 3);
             size = size.substring(0, size.length() - 1);
 
-            System.out.println("上传文件大小不能超过" + size);
+            System.out.println("上传文件大小不能超过" + size);*/
             //TODO
             /*Map<String, String> param = new HashMap<>();
             param.put("message", "上传文件大小不能超过" + size);
@@ -1148,8 +1178,7 @@ public class WebSocketClient
                 user.setBcrypt(bcript);
 
             }
-
-            if (fields.has("name"))
+            else if (fields.has("name"))
             {
                 String name = fields.getString("name");
                 user.setRealName(name);
@@ -1163,6 +1192,11 @@ public class WebSocketClient
                 //currentUserService.insertOrUpdate(Realm.getDefaultInstance(), user);
                 currentUserService.insertOrUpdate(user);
             }
+            // 其他客户端更改了头像
+            else if (fields.has("avatarOrigin"))
+            {
+                ContactsPanel.getContext().getUserAvatar(currentUser.getUsername(), true);
+            }
 
             //realm.close();
 
@@ -1171,6 +1205,12 @@ public class WebSocketClient
             e.printStackTrace();
         }
     }
+
+    public boolean loginAndInitFinish()
+    {
+        return System.currentTimeMillis() - loginSuccessTime > 5000;
+    }
+
 
     /**
      * 发送文本消息

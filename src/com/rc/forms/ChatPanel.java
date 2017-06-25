@@ -1064,6 +1064,7 @@ public class ChatPanel extends ParentAvailablePanel
                     messageItems.get(i).setUpdatedAt(0);
                     messageItems.get(i).setTimestamp(System.currentTimeMillis());
                     messagePanel.getMessageListView().notifyItemChanged(i);
+                    break;
                 }
             }
 
