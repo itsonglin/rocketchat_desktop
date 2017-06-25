@@ -256,10 +256,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             holder.resend.setVisible(false);
         }
 
-        for (MouseListener l : holder.resend.getMouseListeners())
-        {
-            holder.resend.removeMouseListener(l);
-        }
+        clearMouseListener(holder.resend);
         holder.resend.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -315,6 +312,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 }
             }
         };
+
+        clearMouseListener(viewHolder.attachmentPanel);
+        clearMouseListener(viewHolder.attachmentTitle);
 
         viewHolder.attachmentPanel.addMouseListener(listener);
         viewHolder.attachmentTitle.addMouseListener(listener);
@@ -414,11 +414,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             holder.resend.setVisible(false);
         }
 
-        for (MouseListener l : holder.resend.getMouseListeners())
-        {
-            holder.resend.removeMouseListener(l);
-        }
-
+        clearMouseListener(holder.resend);
         holder.resend.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -488,6 +484,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         }
 
         // 当点击图片时，使用默认程序打开图片
+
+        clearMouseListener(imageLabel);
+
         imageLabel.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -592,11 +591,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         }
 
 
-        for (MouseListener l : holder.resend.getMouseListeners())
-        {
-            holder.resend.removeMouseListener(l);
-        }
-
+        clearMouseListener(holder.resend);
         holder.resend.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -690,6 +685,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
     private void bindAvatarAction(JLabel avatarLabel, String username)
     {
+        clearMouseListener(avatarLabel);
+
         avatarLabel.addMouseListener(new AbstractMouseListener()
         {
             @Override
@@ -707,5 +704,13 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     public int getCount()
     {
         return messageItems.size();
+    }
+
+    private void clearMouseListener(JComponent component)
+    {
+        for (MouseListener l : component.getMouseListeners())
+        {
+            component.removeMouseListener(l);
+        }
     }
 }

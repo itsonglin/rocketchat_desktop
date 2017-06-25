@@ -31,6 +31,7 @@ public class ContactsPanel extends ParentAvailablePanel
     private ContactsUserService contactsUserService = Launcher.contactsUserService;
     private Logger logger = Logger.getLogger(this.getClass());
     private CurrentUserService currentUserService = Launcher.currentUserService;
+    private String currentUsername;
 
     public ContactsPanel(JPanel parent)
     {
@@ -102,12 +103,12 @@ public class ContactsPanel extends ParentAvailablePanel
                     {
                         final String username = user.getName();
                         //logger.debug("获取头像:" + username);
-                        getUserAvatar(username, false);
+                        getUserAvatar(username, true);
                     }
                 }
 
                 // 获取头像
-                final String currentUsername = currentUserService.findAll().get(0).getUsername();
+                currentUsername = currentUserService.findAll().get(0).getUsername();
                 if (!AvatarUtil.customAvatarExist(currentUsername))
                 {
                     getUserAvatar(currentUsername, true);
@@ -117,7 +118,12 @@ public class ContactsPanel extends ParentAvailablePanel
 
     }
 
-    public void getUserAvatar(String username, boolean myAvatar)
+    /**
+     * 更新指定用户头像
+     * @param username 用户名
+     * @param hotRefresh 是否热更新，hotRefresh = true， 将刷新该用户的头像缓存
+     */
+    public void getUserAvatar(String username, boolean hotRefresh)
     {
         HttpBytesGetTask task = new HttpBytesGetTask();
         task.setListener(new HttpResponseListener<byte[]>()
@@ -126,9 +132,15 @@ public class ContactsPanel extends ParentAvailablePanel
             public void onResult(byte[] data)
             {
                 processAvatarData(data, username);
-                if (myAvatar)
+                if (hotRefresh)
                 {
-                    MyInfoPanel.getContext().reloadAvatar();
+                    //MyInfoPanel.getContext().reloadAvatar();
+                    AvatarUtil.refreshUserAvatarCache(username);
+
+                    if (username.equals(currentUsername))
+                    {
+                        MyInfoPanel.getContext().reloadAvatar();
+                    }
                 }
 
             }

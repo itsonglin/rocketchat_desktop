@@ -156,6 +156,15 @@ public class AvatarUtil
         return avatar;
     }
 
+    /**
+     * 刷新用户头像缓存
+     * @param username
+     */
+    public static void refreshUserAvatarCache(String username)
+    {
+        avatarCache.put(username, createOrLoadUserAvatar(username));
+    }
+
 
     private static Image createAvatar(String sign, String name)
     {

@@ -6,6 +6,7 @@ import com.rc.components.RCMainOperationMenuItemUI;
 import com.rc.components.RCMenuItemUI;
 import com.rc.forms.CreateGroupDialog;
 import com.rc.forms.MainFrame;
+import com.rc.forms.SystemConfigDialog;
 import com.rc.websocket.WebSocketClient;
 
 import javax.swing.*;
@@ -26,7 +27,7 @@ public class MainOperationPopupMenu extends JPopupMenu
     private void initMenuItem()
     {
         JMenuItem item1 = new JMenuItem("创建群聊");
-        JMenuItem item2 = new JMenuItem("系统设置");
+        JMenuItem item2 = new JMenuItem("设置");
 
         item1.setUI(new RCMainOperationMenuItemUI());
         item1.addActionListener(new AbstractAction()
@@ -49,7 +50,9 @@ public class MainOperationPopupMenu extends JPopupMenu
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                System.out.println("系统设置");
+                //System.out.println("系统设置");
+                SystemConfigDialog dialog = new SystemConfigDialog(MainFrame.getContext(), true);
+                dialog.setVisible(true);
             }
         });
         ImageIcon icon2 = new ImageIcon(getClass().getResource("/image/setting.png"));

@@ -33,7 +33,26 @@ public abstract class BasicDao
 
     public List findAll()
     {
-        return session.selectList(className + ".findAll");
+        //return session.selectList(className + ".findAll");
+        return _findAll(0);
+    }
+
+    private List _findAll(int time)
+    {
+        if (time > 10)
+        {
+            System.out.println("查询到 BasicModelList 对象失败次数>10，放弃查询");
+            return null;
+        }
+
+        try
+        {
+            return session.selectList(className + ".findAll");
+        } catch (PersistenceException exception)
+        {
+            System.out.println("没有查询到 BasicModelList 对象，继续查询");
+            return _findAll(++time);
+        }
     }
 
     public BasicModel findById(String id)

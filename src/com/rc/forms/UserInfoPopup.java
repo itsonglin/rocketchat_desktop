@@ -35,6 +35,14 @@ public class UserInfoPopup extends JPopupMenu
         initComponents();
         initView();
         setListener();
+
+        // 更新对方头像
+        updateAvatar();
+    }
+
+    private void updateAvatar()
+    {
+        ContactsPanel.getContext().getUserAvatar(this.username, true);
     }
 
 
