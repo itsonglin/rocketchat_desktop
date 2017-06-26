@@ -158,7 +158,7 @@ public class ImageViewerFrame extends JFrame
         //imageLabel.setIcon(imageIcon);
         imageLabel.setImage(image);
 
-        this.setSize(new Dimension(actualWidth, actualHeight));
+        this.setSize(new Dimension(actualWidth, actualHeight + 22));
         this.setLocation((tooKit.getScreenSize().width - actualWidth) / 2, (tooKit.getScreenSize().height - actualHeight) / 2);
     }
 
