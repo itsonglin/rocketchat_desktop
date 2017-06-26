@@ -29,14 +29,18 @@ public class SystemConfigDialog extends JDialog
     private JPanel settingAreaPanel;
     private JLabel changeAvatarLabel;
     private JLabel changePasswordLabel;
+    private JLabel meLabel;
+
     private ChangeAvatarPanel changeAvatarPanel;
     private ChangePasswordPanel changePasswordPanel;
+    private MePanel mePanel;
 
 
     private JLabel selectedLabel;
 
     public static final String CHANGE_AVATAR = "CHANGE_AVATAR";
     public static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
+    public static final String ME = "ME";
 
     private CardLayout cardLayout = new CardLayout();
 
@@ -45,6 +49,7 @@ public class SystemConfigDialog extends JDialog
 
     public static final int DIALOG_WIDTH = 580;
     public static final int DIALOG_HEIGHT = 500;
+    private Cursor handCursor;
 
 
     public SystemConfigDialog(Frame owner, boolean modal)
@@ -101,33 +106,29 @@ public class SystemConfigDialog extends JDialog
         settingAreaPanel.setBorder(new RCBorder(RCBorder.LEFT, Colors.SCROLL_BAR_TRACK_LIGHT));
 
 
-        Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
+        handCursor = new Cursor(Cursor.HAND_CURSOR);
 
         // 设置头像按钮
         changeAvatarLabel = new JLabel("更改头像");
-        changeAvatarLabel.setFont(FontUtil.getDefaultFont(13));
-        changeAvatarLabel.setForeground(Colors.DARKER);
-        changeAvatarLabel.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.SHADOW));
-        changeAvatarLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        changeAvatarLabel.setPreferredSize(new Dimension(40, 25));
-        changeAvatarLabel.setCursor(handCursor);
-        changeAvatarLabel.setOpaque(true);
+        processButtonLabel(changeAvatarLabel);
 
         // 更改密码按钮
         changePasswordLabel = new JLabel("修改密码");
-        changePasswordLabel.setFont(FontUtil.getDefaultFont(13));
-        changePasswordLabel.setForeground(Colors.DARKER);
-        changePasswordLabel.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.SHADOW));
-        changePasswordLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        changePasswordLabel.setPreferredSize(new Dimension(40, 25));
-        changePasswordLabel.setCursor(handCursor);
-        changePasswordLabel.setOpaque(true);
+        processButtonLabel(changePasswordLabel);
+
+        // "我" 按钮
+        meLabel = new JLabel("我");
+        processButtonLabel(meLabel);
 
 
         // 更改头像面板
         changeAvatarPanel = new ChangeAvatarPanel();
+
         // 更改密码面板
         changePasswordPanel = new ChangePasswordPanel();
+
+        // "我" 面板
+        mePanel = new MePanel();
 
     }
 
@@ -144,10 +145,12 @@ public class SystemConfigDialog extends JDialog
         settingMenuPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
         settingMenuPanel.add(changeAvatarLabel);
         settingMenuPanel.add(changePasswordLabel);
+        settingMenuPanel.add(meLabel);
 
         settingAreaPanel.setLayout(cardLayout);
         settingAreaPanel.add(changeAvatarPanel, CHANGE_AVATAR);
         settingAreaPanel.add(changePasswordPanel, CHANGE_PASSWORD);
+        settingAreaPanel.add(mePanel, ME);
 
         add(settingPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
@@ -209,6 +212,10 @@ public class SystemConfigDialog extends JDialog
                     {
                         cardLayout.show(settingAreaPanel, CHANGE_PASSWORD);
                     }
+                    else if (source.getText().equals("我"))
+                    {
+                        cardLayout.show(settingAreaPanel, ME);
+                    }
                 }
 
 
@@ -218,6 +225,7 @@ public class SystemConfigDialog extends JDialog
 
         changeAvatarLabel.addMouseListener(itemMouseListener);
         changePasswordLabel.addMouseListener(itemMouseListener);
+        meLabel.addMouseListener(itemMouseListener);
     }
 
     private void selectedLabel(JLabel label)
@@ -236,5 +244,16 @@ public class SystemConfigDialog extends JDialog
     public static SystemConfigDialog getContext()
     {
         return context;
+    }
+
+    private void processButtonLabel(JLabel label)
+    {
+        label.setFont(FontUtil.getDefaultFont(13));
+        label.setForeground(Colors.DARKER);
+        label.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.SHADOW));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        label.setPreferredSize(new Dimension(40, 30));
+        label.setCursor(handCursor);
+        label.setOpaque(true);
     }
 }

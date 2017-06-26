@@ -65,6 +65,7 @@ public class WebSocketClient
     private StreamNotifyUserCollectionHandler streamNotifyUserCollectionHandler;
     private String uploadFilename = null;
     public long loginSuccessTime;
+    private boolean isLogout = false;
 
 
     public WebSocketClient()
@@ -167,7 +168,6 @@ public class WebSocketClient
                         public void onConnected(WebSocket websocket, Map<String, List<String>> headers) throws Exception
                         {
                             System.out.println("+++++++onConnected: ");
-
                             subscriptionHelper.sendConnectRequest();
                         }
 
@@ -176,10 +176,9 @@ public class WebSocketClient
                         public void onConnectError(WebSocket websocket, WebSocketException cause) throws Exception
                         {
                             ConnectionStatus = "disconnected";
-                            //LAST_RECONNECT_TIME = 0;
                             System.out.println("+++++++onConnectError: " + cause.getMessage());
 
-                            System.out.println("连接出错，自动重连中...");
+                            System.out.println("连接出错");
                             connectPersistently();
                         }
 
@@ -190,7 +189,7 @@ public class WebSocketClient
                             ConnectionStatus = "disconnected";
                             TitlePanel.getContext().showStatusLabel("与服务器连接已断开");
 
-                            System.out.println("连接断开，自动重连中...");
+                            System.out.println("连接断开");
                             connectPersistently();
                         }
 
@@ -217,8 +216,9 @@ public class WebSocketClient
             @Override
             public void run()
             {
-                while(ConnectionStatus.equals("disconnected"))
+                while(ConnectionStatus.equals("disconnected") && !isLogout)
                 {
+                    System.out.println("自动重连中...");
                     startWebSocketClient();
                     try
                     {
@@ -240,7 +240,7 @@ public class WebSocketClient
      */
     private void handleMessage(String text)
     {
-       //System.out.println(("收到消息  " + text));
+       System.out.println(("收到消息  " + text));
 
         try
         {
@@ -358,6 +358,7 @@ public class WebSocketClient
         }
         else if (msgId.equals(SubscriptionHelper.METHOD_LOGOUT))
         {
+            processLogoutMessage();
             /*currentUserService.delete(Realm.getDefaultInstance());
             contactsUserService.deleteAll(Realm.getDefaultInstance(), ContactsUser.class);
             roomService.deleteAll(Realm.getDefaultInstance(), Room.class);
@@ -377,6 +378,25 @@ public class WebSocketClient
             // 用户在本地更新头像后会收到此消息
             processUserAvatar();
         }
+    }
+
+    /**
+     * 处理退出登录消息
+     */
+    private void processLogoutMessage()
+    {
+        currentUserService.deleteAll();
+        contactsUserService.deleteAll();
+        roomService.deleteAll();
+
+        LAST_RECONNECT_TIME = 0;
+        LAST_PING_PONG_TIME = 0;
+        LOGIN_RETRIES = 0;
+
+        isLogout = true;
+        webSocket.sendClose();
+
+        Launcher.getContext().reLogin();
     }
 
     private void processUserAvatar()
@@ -1250,5 +1270,13 @@ public class WebSocketClient
     public void setAvatar(String base64Data)
     {
         subscriptionHelper.setAvatar(base64Data);
+    }
+
+    /**
+     * 发送退出登录消息
+     */
+    public void sendLogoutMessage()
+    {
+        subscriptionHelper.sendLogoutMessage();
     }
 }

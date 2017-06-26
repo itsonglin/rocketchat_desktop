@@ -1823,7 +1823,8 @@ public class ChatPanel extends ParentAvailablePanel
 
                         // 重新生成群头像
                         System.out.println("删除原来群头像: " + room.getName());
-                        AvatarUtil.deleteGroupAvatar(room.getName());
+                        //AvatarUtil.deleteGroupAvatar(room.getName());
+                        AvatarUtil.createGroupAvatar(room.getName(), roomMembers.toArray(new String[]{}));
                     }
 
                     roomMembers.remove(creator);

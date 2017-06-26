@@ -3,12 +3,10 @@ package com.rc.app;
 import com.rc.db.service.*;
 import com.rc.forms.LoginFrame;
 import com.rc.forms.MainFrame;
-import com.rc.utils.AvatarUtil;
 import com.rc.utils.DbUtils;
 import org.apache.ibatis.session.SqlSession;
 
 import javax.swing.*;
-import java.awt.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,6 +19,8 @@ import java.nio.channels.FileLock;
  */
 public class Launcher
 {
+    private static Launcher context;
+
     public static SqlSession sqlSession;
     public static RoomService roomService;
     public static CurrentUserService currentUserService;
@@ -46,20 +46,17 @@ public class Launcher
         fileAttachmentService = new FileAttachmentService(sqlSession);
     }
 
+    private JFrame currentFrame;
+
+
+    public Launcher()
+    {
+        context = this;
+    }
 
     public void launch()
     {
         config();
-
-        /*JFrame frame = new JFrame();
-        frame.setSize(new Dimension(800, 600));
-        JLabel label = new JLabel();
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setIcon(new ImageIcon(AvatarUtil.createGroupAvatar(
-                new String[]{"song", "winnie", "ubuntu", "admin", "jason", "songlin", "moxx", "ubuntu", "song"})));
-        frame.add(label);
-        frame.setVisible(true);
-*/
 
         if (!isApplicationRunning())
         {
@@ -74,19 +71,18 @@ public class Launcher
 
     private void openFrame()
     {
-        JFrame frame;
         // 原来登录过
         if (checkLoginInfo())
         {
-            frame = new MainFrame();
+            currentFrame = new MainFrame();
         }
         // 从未登录过
         else
         {
-            frame = new LoginFrame();
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            currentFrame = new LoginFrame();
+            currentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         }
-        frame.setVisible(true);
+        currentFrame.setVisible(true);
     }
 
     private void config()
@@ -143,6 +139,22 @@ public class Launcher
             e.printStackTrace();
         }
         return rv;
+    }
+
+    public void reLogin()
+    {
+        MainFrame.getContext().setVisible(false);
+        MainFrame.getContext().dispose();
+
+        currentFrame = new LoginFrame();
+        currentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        currentFrame.setVisible(true);
+    }
+
+
+    public static Launcher getContext()
+    {
+        return context;
     }
 
 
