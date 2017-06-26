@@ -166,8 +166,8 @@ public class MainFrame extends JFrame
 
             trayIcon.setPopupMenu(menu);
 
-
             systemTray.add(trayIcon);
+
         } catch (AWTException e)
         {
             e.printStackTrace();
@@ -333,6 +333,14 @@ public class MainFrame extends JFrame
     {
         WebSocketClient webSocketClient = new WebSocketClient();
         webSocketClient.startClient();
+    }
+
+    @Override
+    public void dispose()
+    {
+        // 移除托盘图标
+        SystemTray.getSystemTray().remove(trayIcon);
+        super.dispose();
     }
 }
 

@@ -57,6 +57,7 @@ public class RCPasswordField extends JPasswordField
         Graphics2D g2 = (Graphics2D) g ;
         if (getPassword().length < 1)
         {
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setBackground(Color.gray);
             g2.setFont(FontUtil.getDefaultFont());
             g2.setColor(Color.GRAY);

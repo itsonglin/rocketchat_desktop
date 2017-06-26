@@ -26,7 +26,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TimerTask;
 
 /**
  * Created by song on 09/06/2017.
@@ -240,7 +239,7 @@ public class WebSocketClient
      */
     private void handleMessage(String text)
     {
-       System.out.println(("收到消息  " + text));
+       //System.out.println(("收到消息  " + text));
 
         try
         {
@@ -396,7 +395,7 @@ public class WebSocketClient
         isLogout = true;
         webSocket.sendClose();
 
-        Launcher.getContext().reLogin();
+        Launcher.getContext().reLogin(currentUser.getUsername());
     }
 
     private void processUserAvatar()
@@ -1142,7 +1141,6 @@ public class WebSocketClient
             size = size.substring(0, size.length() - 1);
 
             System.out.println("上传文件大小不能超过" + size);*/
-            //TODO
             /*Map<String, String> param = new HashMap<>();
             param.put("message", "上传文件大小不能超过" + size);
             sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, WebSocketService.EVENT_UPLOAD_FILE_TOO_LARGE_ERROR, param);*/
@@ -1188,11 +1186,22 @@ public class WebSocketClient
                 // 修改了密码，要重新登录
                 if (!bcript.equals(user.getBcrypt()) && user.getBcrypt() != null)
                 {
-                    //currentUserService.delete(Realm.getDefaultInstance());
-                    currentUserService.deleteAll();
 
-                    //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_LOGIN);
-                    // // TODO: 2017/6/10
+                    // 如果已打开修改窗口
+                    if (ChangePasswordPanel.getContext() != null && ChangePasswordPanel.getContext().isVisible())
+                    {
+                        ChangePasswordPanel.getContext().showSuccessMessage();
+                        Thread.sleep(1500);
+                    }
+
+
+                    currentUserService.deleteAll();
+                    LAST_RECONNECT_TIME = 0;
+                    LAST_PING_PONG_TIME = 0;
+                    LOGIN_RETRIES = 0;
+                    isLogout = true;
+                    webSocket.sendClose();
+                    Launcher.getContext().reLogin(currentUser.getUsername());
                     return;
                 }
                 user.setBcrypt(bcript);
@@ -1210,7 +1219,6 @@ public class WebSocketClient
                 }
 
                 //currentUserService.insertOrUpdate(Realm.getDefaultInstance(), user);
-                currentUserService.insertOrUpdate(user);
             }
             // 其他客户端更改了头像
             else if (fields.has("avatarOrigin"))
@@ -1218,9 +1226,14 @@ public class WebSocketClient
                 ContactsPanel.getContext().getUserAvatar(currentUser.getUsername(), true);
             }
 
+            currentUserService.insertOrUpdate(user);
             //realm.close();
 
         } catch (JSONException e)
+        {
+            e.printStackTrace();
+        }
+        catch (InterruptedException e)
         {
             e.printStackTrace();
         }
@@ -1278,5 +1291,14 @@ public class WebSocketClient
     public void sendLogoutMessage()
     {
         subscriptionHelper.sendLogoutMessage();
+    }
+
+    /**
+     * 发送修改密码消息
+     * @param password
+     */
+    public void sendChangePasswordMessage(String password)
+    {
+        subscriptionHelper.sendChangePasswordMessage(currentUser.getRealName(), currentUser.getPassword(), password);
     }
 }

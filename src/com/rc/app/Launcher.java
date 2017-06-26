@@ -141,12 +141,12 @@ public class Launcher
         return rv;
     }
 
-    public void reLogin()
+    public void reLogin(String username)
     {
         MainFrame.getContext().setVisible(false);
         MainFrame.getContext().dispose();
 
-        currentFrame = new LoginFrame();
+        currentFrame = new LoginFrame(username);
         currentFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         currentFrame.setVisible(true);
     }

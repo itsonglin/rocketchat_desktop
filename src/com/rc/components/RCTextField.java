@@ -58,6 +58,7 @@ public class RCTextField extends JTextField
         Graphics2D g2 = (Graphics2D) g ;
         if (getText().isEmpty())
         {
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,RenderingHints.VALUE_ANTIALIAS_ON);
             g2.setBackground(Color.gray);
             g2.setFont(FontUtil.getDefaultFont());
             g2.setColor(Color.GRAY);

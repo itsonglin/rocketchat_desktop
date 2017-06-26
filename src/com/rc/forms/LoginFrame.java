@@ -27,8 +27,8 @@ public class LoginFrame extends JFrame
     private JPanel controlPanel;
     private JLabel closeLabel;
     private JPanel editPanel;
-    private RCTextField username;
-    private RCPasswordField password;
+    private RCTextField usernameField;
+    private RCPasswordField passwordField;
     private RCButton loginButton;
     private JLabel statusLabel;
     private JLabel titleLabel;
@@ -37,6 +37,7 @@ public class LoginFrame extends JFrame
 
     private SqlSession sqlSession;
     private CurrentUserService currentUserService ;
+    private String username;
 
 
     public LoginFrame()
@@ -46,6 +47,16 @@ public class LoginFrame extends JFrame
         initView();
         centerScreen();
         setListeners();
+    }
+
+    public LoginFrame(String username)
+    {
+        this();
+        this.username = username;
+        if (username != null && !username.isEmpty())
+        {
+            usernameField.setText(username);
+        }
     }
 
     private void initService()
@@ -81,20 +92,20 @@ public class LoginFrame extends JFrame
         editPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 5, true, false));
 
         Dimension textFieldDimension = new Dimension(200, 35);
-        username = new RCTextField();
-        username.setPlaceholder("用户名");
-        username.setPreferredSize(textFieldDimension);
-        username.setFont(FontUtil.getDefaultFont(14));
-        username.setForeground(Colors.FONT_BLACK);
-        username.setMargin(new Insets(0, 15, 0, 0));
+        usernameField = new RCTextField();
+        usernameField.setPlaceholder("用户名");
+        usernameField.setPreferredSize(textFieldDimension);
+        usernameField.setFont(FontUtil.getDefaultFont(14));
+        usernameField.setForeground(Colors.FONT_BLACK);
+        usernameField.setMargin(new Insets(0, 15, 0, 0));
 
-        password = new RCPasswordField();
-        password.setPreferredSize(textFieldDimension);
-        password.setPlaceholder("密码");
-        //password.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.LIGHT_GRAY));
-        password.setFont(FontUtil.getDefaultFont(14));
-        password.setForeground(Colors.FONT_BLACK);
-        password.setMargin(new Insets(0, 15, 0, 0));
+        passwordField = new RCPasswordField();
+        passwordField.setPreferredSize(textFieldDimension);
+        passwordField.setPlaceholder("密码");
+        //passwordField.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.LIGHT_GRAY));
+        passwordField.setFont(FontUtil.getDefaultFont(14));
+        passwordField.setForeground(Colors.FONT_BLACK);
+        passwordField.setMargin(new Insets(0, 15, 0, 0));
 
 
         loginButton = new RCButton("登 录", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
@@ -128,8 +139,8 @@ public class LoginFrame extends JFrame
         buttonPanel.setLayout(new GridBagLayout());
         buttonPanel.add(loginButton, new GBC(0, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1).setInsets(10, 0, 0, 0));
 
-        editPanel.add(username);
-        editPanel.add(password);
+        editPanel.add(usernameField);
+        editPanel.add(passwordField);
         editPanel.add(statusLabel);
         editPanel.add(buttonPanel);
 
@@ -236,14 +247,14 @@ public class LoginFrame extends JFrame
 
             }
         };
-        username.addKeyListener(keyListener);
-        password.addKeyListener(keyListener);
+        usernameField.addKeyListener(keyListener);
+        passwordField.addKeyListener(keyListener);
     }
 
     private void doLogin()
     {
-        String name = username.getText();
-        String pwd = new String(password.getPassword());
+        String name = usernameField.getText();
+        String pwd = new String(passwordField.getPassword());
 
         if (name == null || name.isEmpty())
         {
@@ -266,8 +277,8 @@ public class LoginFrame extends JFrame
                 }
             });
 
-            task.addRequestParam("username", username.getText());
-            task.addRequestParam("password", new String(password.getPassword()));
+            task.addRequestParam("username", usernameField.getText());
+            task.addRequestParam("password", new String(passwordField.getPassword()));
             task.execute(Launcher.HOSTNAME + "/api/v1/login");
         }
     }
@@ -284,9 +295,9 @@ public class LoginFrame extends JFrame
             CurrentUser currentUser = new CurrentUser();
             currentUser.setUserId(userId);
             currentUser.setAuthToken(authToken);
-            currentUser.setRawPassword(new String(password.getPassword()));
+            currentUser.setRawPassword(new String(passwordField.getPassword()));
             currentUser.setPassword(PasswordUtil.encryptPassword(currentUser.getRawPassword()));
-            currentUser.setUsername(username.getText());
+            currentUser.setUsername(usernameField.getText());
             currentUserService.insertOrUpdate(currentUser);
 
             this.dispose();
