@@ -1,9 +1,11 @@
 package com.rc.forms;
 
-import com.sun.javaws.IconUtil;
-
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.awt.image.BufferedImage;
+import java.io.*;
 
 /**
  * Created by song on 2017/6/25.
@@ -16,13 +18,31 @@ public class ImageViewerFrame extends JFrame
     private int maxWidth;
     private int maxHeight;
 
-    private JLabel imageLabel;
+    float maxScale = 3.0F;
+    float minScale = 0.2F;
 
+    private ImageLabel imageLabel;
     private String imagePath;
     private Toolkit tooKit;
 
 
-    public ImageViewerFrame()
+    // 图片缩放比例
+    private float scale = 1.0F;
+
+    private Image image;
+
+    private int xDistance;
+    private int yDistance;
+    private int x;
+    private int y;
+
+    private JPopupMenu popupMenu;
+    private JMenuItem saveAsItem;
+    private JMenuItem enlargeItem;
+    private JMenuItem narrowItem;
+
+
+    public ImageViewerFrame(String imagePath)
     {
         tooKit = Toolkit.getDefaultToolkit();
 
@@ -30,13 +50,45 @@ public class ImageViewerFrame extends JFrame
         initView();
         initSize();
 
-        imagePath = "F:\\test.jpg";
+        this.imagePath = imagePath;
+        //imagePath = "/Users/song/aa.jpg";
         //imagePath = "C:\\Users\\song\\Pictures\\user-cover.jpg";
 
-        setImage();
+        try
+        {
+            initImageAndFrameBounds();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+        //setSize(800,600);
 
         setListeners();
+    }
 
+    private void initComponents()
+    {
+        popupMenu = new JPopupMenu();
+        enlargeItem = new JMenuItem("放大");
+        narrowItem = new JMenuItem("缩小");
+        saveAsItem = new JMenuItem("另存为");
+
+        saveAsItem.setUI(new RCMenuItemUI());
+        narrowItem.setUI(new RCMenuItemUI());
+        enlargeItem.setUI(new RCMenuItemUI());
+
+        popupMenu.add(enlargeItem);
+        popupMenu.add(narrowItem);
+        popupMenu.add(saveAsItem);
+
+        imageLabel = new ImageLabel();
+
+    }
+
+    private void initView()
+    {
+        add(imageLabel);
     }
 
 
@@ -55,14 +107,13 @@ public class ImageViewerFrame extends JFrame
         maxHeight = (int) (screenSizeHeight * 0.8);
     }
 
-    private void setImage()
+
+    private void initImageAndFrameBounds() throws IOException
     {
+        image = ImageIO.read(new File(imagePath));
 
-
-        ImageIcon imageIcon = new ImageIcon(imagePath);
-
-        int imageWidth = imageIcon.getIconWidth();
-        int imageHeight = imageIcon.getIconHeight();
+        int imageWidth = image.getWidth(null);
+        int imageHeight = image.getHeight(null);
         float imageScale = imageWidth * 1.0F / imageHeight; // 图像宽高比
 
         int actualWidth = imageWidth;
@@ -101,31 +152,183 @@ public class ImageViewerFrame extends JFrame
 
         if (needScale)
         {
-            imageIcon.setImage(imageIcon.getImage().getScaledInstance(actualWidth, actualHeight, Image.SCALE_SMOOTH));
+            image = image.getScaledInstance(actualWidth, actualHeight, Image.SCALE_SMOOTH);
         }
 
-        imageLabel.setIcon(imageIcon);
+        //imageLabel.setIcon(imageIcon);
+        imageLabel.setImage(image);
 
         this.setSize(new Dimension(actualWidth, actualHeight));
-        this.setLocation((tooKit.getScreenSize().width - actualWidth) / 2,
-                (tooKit.getScreenSize().height - actualHeight) / 2);
+        this.setLocation((tooKit.getScreenSize().width - actualWidth) / 2, (tooKit.getScreenSize().height - actualHeight) / 2);
     }
 
-
-    private void initComponents()
+    public Image scaledImage(float scale)
     {
-        imageLabel = new JLabel();
-        imageLabel.setBackground(new Color(240, 240, 240));
-        imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
-    }
+        int scaledWidth = (int) (image.getWidth(null) * scale);
+        int scaledHeight = (int) (image.getHeight(null) * scale);
 
-    private void initView()
-    {
-        add(imageLabel);
+        Image scaledimage = image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_FAST);
+        return scaledimage;
     }
 
     private void setListeners()
     {
+        MouseAdapter listener = new MouseAdapter()
+        {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e)
+            {
+                // 是否向上滚动
+                boolean up = e.getWheelRotation() < 0;
+                float increment;
+                if (up)
+                {
+                    increment = 0.15F;
+                }
+                else
+                {
+                    increment = -0.15F;
+                }
+                doScale(increment);
 
+                super.mouseWheelMoved(e);
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                x = e.getX();
+                y = e.getY();
+                super.mousePressed(e);
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e)
+            {
+
+                if (e.getButton() == MouseEvent.BUTTON1)
+                {
+                    xDistance = e.getX() - x;
+                    yDistance = e.getY() - y;
+
+                    x = e.getX();
+                    y = e.getY();
+                    imageLabel.moveImage(xDistance, yDistance);
+                }
+
+                super.mouseDragged(e);
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON3)
+                {
+                    popupMenu.show(imageLabel, e.getX(), e.getY());
+                }
+                super.mouseClicked(e);
+            }
+        };
+
+        imageLabel.addMouseWheelListener(listener);
+        imageLabel.addMouseMotionListener(listener);
+        imageLabel.addMouseListener(listener);
+
+        enlargeItem.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                doScale(0.15F);
+            }
+        });
+
+        narrowItem.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                doScale(-0.15F);
+            }
+        });
+
+        saveAsItem.addActionListener(new ActionListener()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                JFileChooser chooser = new JFileChooser();
+                chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
+                chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+                chooser.showDialog(ImageViewerFrame.this, "保存");
+                File file = chooser.getSelectedFile();
+
+                if (file != null)
+                {
+                    // 如果用户没有输入扩展名，自动加上扩展名
+                    String path = file.getAbsolutePath();
+                    int startPos = imagePath.lastIndexOf(".");
+                    String suffix = "";
+                    if (startPos > -1)
+                    {
+                        suffix = imagePath.substring(startPos);
+                    }
+
+                    if (path.indexOf(".") < 0)
+                    {
+                        path  += suffix;
+                    }
+
+                    try
+                    {
+                        FileOutputStream outputStream = new FileOutputStream(path);
+                        FileInputStream inputStream = new FileInputStream(imagePath);
+
+                        byte[] buffer = new byte[2048];
+                        int len = -1;
+                        while ((len = inputStream.read(buffer)) > -1)
+                        {
+                            outputStream.write(buffer, 0, len);
+                        }
+
+                        outputStream.close();
+                        inputStream.close();
+                    }
+                    catch (FileNotFoundException e1)
+                    {
+                        e1.printStackTrace();
+                    }
+                    catch (IOException e1)
+                    {
+                        e1.printStackTrace();
+                    }
+
+                }
+            }
+        });
+    }
+
+    private void doScale(float increment)
+    {
+        scale = scale + increment;
+        //System.out.println("倍率：" + scale);
+
+        if (scale > maxScale)
+        {
+            scale = maxScale;
+        }
+        else if (scale < minScale)
+        {
+            scale = minScale;
+        }
+        else
+        {
+            if (Math.abs(scale - 1.0F) < 0.1F)
+            {
+                scale = 1.0F;
+            }
+            Image scaledImage = scaledImage(scale);
+            imageLabel.scaleImage(scaledImage);
+        }
     }
 }

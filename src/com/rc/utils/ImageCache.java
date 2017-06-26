@@ -84,6 +84,17 @@ public class ImageCache
 
     private void requestImage(int requestType, String identify, String url, ImageCacheRequestListener listener)
     {
+        String suffix = "";
+        int startPos = url.lastIndexOf(".");
+        if (startPos > -1)
+        {
+            int endPos = url.lastIndexOf("?");
+            endPos = endPos == -1 ? url.length() : endPos;
+            suffix = url.substring(startPos,endPos);
+        }
+
+        String finalSuffix = suffix;
+
         new Thread(new Runnable()
         {
             @Override
@@ -96,12 +107,12 @@ public class ImageCache
                 }
                 else
                 {
-                    cacheFile = new File(IMAGE_CACHE_ROOT_PATH + "/" + identify);
+                    cacheFile = new File(IMAGE_CACHE_ROOT_PATH + "/" + identify + finalSuffix);
                 }
 
                 if (cacheFile.exists())
                 {
-                    System.out.println("获取   " + cacheFile.getAbsolutePath());
+                    System.out.println("本地缓存获取图片：" + cacheFile.getAbsolutePath());
                     ImageIcon icon = new ImageIcon(cacheFile.getAbsolutePath());
                     listener.onSuccess(icon, cacheFile.getAbsolutePath());
                 }
@@ -122,7 +133,7 @@ public class ImageCache
                         // 接收的图像，从服务器获取并缓存
                         else
                         {
-                            System.out.println("服务器获取");
+                            System.out.println("服务器获取图片：" + url);
                             data = HttpUtil.download(url);
                         }
 
@@ -144,8 +155,9 @@ public class ImageCache
                         }
 
                         // 缓存原图
-                        FileOutputStream fileOutputStream = new FileOutputStream(new File(IMAGE_CACHE_ROOT_PATH + "/" + identify));
+                        FileOutputStream fileOutputStream = new FileOutputStream(new File(IMAGE_CACHE_ROOT_PATH + "/" + identify + finalSuffix));
                         fileOutputStream.write(data);
+
 
                         if (requestType == ORIGINAL)
                         {

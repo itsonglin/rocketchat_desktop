@@ -11,6 +11,7 @@ import com.rc.db.service.MessageService;
 import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.MessageItem;
 import com.rc.forms.ChatPanel;
+import com.rc.forms.ImageViewerFrame;
 import com.rc.forms.MainFrame;
 import com.rc.forms.UserInfoPopup;
 import com.rc.helper.AttachmentIconHelper;
@@ -445,7 +446,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         String url;
         if (imageUrl.startsWith("/file-upload"))
         {
-            url = Launcher.HOSTNAME + imageUrl + ".jpg?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
+            //url = Launcher.HOSTNAME + imageUrl + ".jpg?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
+            url = Launcher.HOSTNAME + imageUrl + "?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
         }
         else
         {
@@ -494,7 +496,6 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             {
                 if (e.getButton() == MouseEvent.BUTTON1)
                 {
-
                     imageCache.requestOriginalAsynchronously(item.getImageAttachment().getId(), item.getImageAttachment().getImageUrl(), new ImageCache.ImageCacheRequestListener()
                     {
                         @Override
@@ -502,9 +503,11 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                         {
                             try
                             {
-                                Desktop.getDesktop().open(new File(path));
+                                //Desktop.getDesktop().open(new File(path));
+                                ImageViewerFrame frame = new ImageViewerFrame(path);
+                                frame.setVisible(true);
                             }
-                            catch (IOException e1)
+                            catch (Exception e1)
                             {
                                 JOptionPane.showMessageDialog(null, "图像不存在", "图像不存在", JOptionPane.ERROR_MESSAGE);
                                 e1.printStackTrace();
