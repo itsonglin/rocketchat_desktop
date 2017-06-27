@@ -11,15 +11,15 @@ import java.util.List;
 
 /**
  * 提供消息ViewHolder缓存
- *
+ * <p>
  * <p>对消息的ViewHolder进入缓存能大大加速消息列表的加载速度，在刚进入房间时，默认先加载10条消息，
  * 这10条消息的ViewHolder将从缓存中获取，避免了new ViewHolder花费的时间。</p>
- *
+ * <p>
  * <p>在新进入新的房间时，{@link ChatPanel#enterRoom(String)} 方法将会调用本类的{@link MessageViewHolderCacheHelper#reset()} 方法，
  * 对上一个房间所使用的ViewHolder对象进行释放，从而实现循环使用缓存的ViewHolder</p>
- *
+ * <p>
  * <p>默认初始缓存容量为10。</p>
- *
+ * <p>
  * Created by song on 2017/6/24.
  */
 public class MessageViewHolderCacheHelper
@@ -133,7 +133,7 @@ public class MessageViewHolderCacheHelper
         MessageRightTextViewHolder holder = null;
         if (rightTextPosition < CACHE_CAPACITY && rightTextViewHolders.size() > 0)
         {
-            holder =  rightTextViewHolders.get(rightTextPosition);
+            holder = rightTextViewHolders.get(rightTextPosition);
             rightTextPosition++;
         }
 
@@ -145,7 +145,7 @@ public class MessageViewHolderCacheHelper
         MessageRightImageViewHolder holder = null;
         if (rightImagePosition < CACHE_CAPACITY && rightImageViewHolders.size() > 0)
         {
-            holder =  rightImageViewHolders.get(rightImagePosition);
+            holder = rightImageViewHolders.get(rightImagePosition);
             rightImagePosition++;
         }
 
@@ -157,7 +157,7 @@ public class MessageViewHolderCacheHelper
         MessageRightAttachmentViewHolder holder = null;
         if (rightAttachmentPosition < CACHE_CAPACITY && rightAttachmentViewHolders.size() > 0)
         {
-            holder =  rightAttachmentViewHolders.get(rightAttachmentPosition);
+            holder = rightAttachmentViewHolders.get(rightAttachmentPosition);
             rightAttachmentPosition++;
         }
 
@@ -169,7 +169,7 @@ public class MessageViewHolderCacheHelper
         MessageLeftTextViewHolder holder = null;
         if (leftTextPosition < CACHE_CAPACITY && leftTextViewHolders.size() > 0)
         {
-            holder =  leftTextViewHolders.get(leftTextPosition);
+            holder = leftTextViewHolders.get(leftTextPosition);
             leftTextPosition++;
         }
 
@@ -181,7 +181,7 @@ public class MessageViewHolderCacheHelper
         MessageLeftImageViewHolder holder = null;
         if (leftImagePosition < CACHE_CAPACITY && leftImageViewHolders.size() > 0)
         {
-            holder =  leftImageViewHolders.get(leftImagePosition);
+            holder = leftImageViewHolders.get(leftImagePosition);
             leftImagePosition++;
         }
 
@@ -193,7 +193,7 @@ public class MessageViewHolderCacheHelper
         MessageLeftAttachmentViewHolder holder = null;
         if (leftAttachmentPosition < CACHE_CAPACITY && leftAttachmentViewHolders.size() > 0)
         {
-            holder =  leftAttachmentViewHolders.get(leftAttachmentPosition);
+            holder = leftAttachmentViewHolders.get(leftAttachmentPosition);
             leftAttachmentPosition++;
         }
 
@@ -205,7 +205,7 @@ public class MessageViewHolderCacheHelper
         MessageSystemMessageViewHolder holder = null;
         if (systemMessagePosition < CACHE_CAPACITY && systemMessageViewHolders.size() > 0)
         {
-            holder =  systemMessageViewHolders.get(systemMessagePosition);
+            holder = systemMessageViewHolders.get(systemMessagePosition);
             systemMessagePosition++;
         }
 
@@ -270,7 +270,10 @@ public class MessageViewHolderCacheHelper
     {
         for (MouseListener l : component.getMouseListeners())
         {
-            component.removeMouseListener(l);
+            if (l instanceof MessageMouseListener)
+            {
+               component.removeMouseListener(l);
+            }
         }
     }
 

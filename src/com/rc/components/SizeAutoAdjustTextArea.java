@@ -6,6 +6,7 @@ import com.rc.utils.FontUtil;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseListener;
 
 /**
  * Created by song on 17-6-4.
@@ -113,5 +114,20 @@ public class SizeAutoAdjustTextArea extends JTextArea
     public void setTag(Object tag)
     {
         this.tag = tag;
+    }
+
+
+    @Override
+    public synchronized void addMouseListener(MouseListener l)
+    {
+        for (MouseListener listener : getMouseListeners())
+        {
+            if (listener == l)
+            {
+                return;
+            }
+        }
+
+        super.addMouseListener(l);
     }
 }

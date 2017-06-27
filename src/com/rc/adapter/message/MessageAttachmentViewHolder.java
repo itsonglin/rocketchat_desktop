@@ -4,6 +4,7 @@ import com.rc.components.Colors;
 import com.rc.components.GradientProgressBarUI;
 import com.rc.components.RCProgressBar;
 import com.rc.components.SizeAutoAdjustTextArea;
+import com.rc.components.message.AttachmentPanel;
 import com.rc.components.message.RCAttachmentMessageBubble;
 import com.rc.forms.MainFrame;
 import com.rc.utils.FontUtil;
@@ -22,7 +23,7 @@ public class MessageAttachmentViewHolder extends BaseMessageViewHolder
     public RCProgressBar progressBar = new RCProgressBar(); // 进度条
     public JPanel timePanel = new JPanel(); // 时间面板
     public JPanel messageAvatarPanel = new JPanel(); // 消息 + 头像组合面板
-    public JPanel attachmentPanel = new JPanel(); // 附件面板
+    public AttachmentPanel attachmentPanel = new AttachmentPanel(); // 附件面板
     public JLabel attachmentIcon = new JLabel(); // 附件类型icon
     public JLabel sizeLabel = new JLabel();
     public RCAttachmentMessageBubble messageBubble;

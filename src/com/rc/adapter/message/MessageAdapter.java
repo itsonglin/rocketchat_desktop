@@ -3,7 +3,7 @@ package com.rc.adapter.message;
 import com.rc.adapter.BaseAdapter;
 import com.rc.adapter.ViewHolder;
 import com.rc.app.Launcher;
-import com.rc.components.MessageImageLabel;
+import com.rc.components.message.MessageImageLabel;
 import com.rc.components.RCListView;
 import com.rc.components.message.MessagePopupMenu;
 import com.rc.components.message.RCMessageBubble;
@@ -16,15 +16,12 @@ import com.rc.entity.MessageItem;
 import com.rc.forms.*;
 import com.rc.helper.AttachmentIconHelper;
 import com.rc.helper.MessageViewHolderCacheHelper;
-import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.*;
 import com.rc.websocket.WebSocketClient;
-import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 import java.util.List;
@@ -199,6 +196,13 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     {
         MessageLeftAttachmentViewHolder holder = (MessageLeftAttachmentViewHolder) viewHolder;
         holder.attachmentTitle.setText(item.getMessageContent());
+
+        Map map = new HashMap();
+        map.put("attachmentId", item.getFileAttachment().getId());
+        map.put("name", item.getFileAttachment().getTitle());
+        map.put("messageId", item.getId());
+        holder.attachmentPanel.setTag(map);
+
         ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
         holder.sender.setText(item.getSenderUsername());
@@ -218,6 +222,13 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     {
         MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
         holder.attachmentTitle.setText(item.getMessageContent());
+
+        Map map = new HashMap();
+        map.put("attachmentId", item.getFileAttachment().getId());
+        map.put("name", item.getFileAttachment().getTitle());
+        map.put("messageId", item.getId());
+        holder.attachmentPanel.setTag(map);
+
         ImageIcon attachmentTypeIcon = attachmentIconHelper.getImageIcon(item.getFileAttachment().getTitle());
         holder.attachmentIcon.setIcon(attachmentTypeIcon);
 
@@ -262,7 +273,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             holder.resend.setVisible(false);
         }
 
-        holder.resend.addMouseListener(new MouseAdapter()
+        holder.resend.addMouseListener(new MessageMouseListener()
         {
             @Override
             public void mouseClicked(MouseEvent e)
@@ -310,7 +321,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
      */
     private void setAttachmentClickListener(MessageAttachmentViewHolder viewHolder, MessageItem item)
     {
-        MouseAdapter listener = new MouseAdapter()
+        MessageMouseListener listener = new MessageMouseListener()
         {
             @Override
             public void mouseReleased(MouseEvent e)
@@ -424,7 +435,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             holder.resend.setVisible(false);
         }
 
-        holder.resend.addMouseListener(new MouseAdapter()
+        holder.resend.addMouseListener(new MessageMouseListener()
         {
             @Override
             public void mouseClicked(MouseEvent e)
@@ -503,7 +514,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         }
 
         // 当点击图片时，使用默认程序打开图片
-        imageLabel.addMouseListener(new MouseAdapter()
+        imageLabel.addMouseListener(new MessageMouseListener()
         {
             @Override
             public void mouseClicked(MouseEvent e)
@@ -608,7 +619,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         }
 
 
-        holder.resend.addMouseListener(new MouseAdapter()
+        holder.resend.addMouseListener(new MessageMouseListener()
         {
             @Override
             public void mouseClicked(MouseEvent e)
@@ -709,7 +720,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     private void bindAvatarAction(JLabel avatarLabel, String username)
     {
 
-        avatarLabel.addMouseListener(new AbstractMouseListener()
+        avatarLabel.addMouseListener(new MessageMouseListener()
         {
             @Override
             public void mouseClicked(MouseEvent e)
@@ -741,6 +752,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 MessageRightTextViewHolder holder = (MessageRightTextViewHolder) viewHolder;
                 contentComponent = holder.text;
                 messageBubble = holder.messageBubble;
+
                 break;
             }
             case MessageItem.LEFT_TEXT:
@@ -769,6 +781,19 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
                 contentComponent = holder.attachmentPanel;
                 messageBubble = holder.messageBubble;
+
+                holder.attachmentTitle.addMouseListener(new MessageMouseListener()
+                {
+                    @Override
+                    public void mouseReleased(MouseEvent e)
+                    {
+                        if (e.getButton() == MouseEvent.BUTTON3)
+                        {
+                            // 通过holder.attachmentPane.getTag()可以获取文件附件信息
+                            popupMenu.show(holder.attachmentPanel, e.getX(), e.getY(), MessageItem.RIGHT_ATTACHMENT);
+                        }
+                    }
+                });
                 break;
             }
             case MessageItem.LEFT_ATTACHMENT:
@@ -776,6 +801,18 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 MessageLeftAttachmentViewHolder holder = (MessageLeftAttachmentViewHolder) viewHolder;
                 contentComponent = holder.attachmentPanel;
                 messageBubble = holder.messageBubble;
+
+                holder.attachmentTitle.addMouseListener(new MessageMouseListener()
+                {
+                    @Override
+                    public void mouseReleased(MouseEvent e)
+                    {
+                        if (e.getButton() == MouseEvent.BUTTON3)
+                        {
+                            popupMenu.show(holder.attachmentPanel, e.getX(), e.getY(), MessageItem.LEFT_ATTACHMENT);
+                        }
+                    }
+                });
                 break;
             }
         }
@@ -783,7 +820,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         JComponent finalContentComponent = contentComponent;
         RCMessageBubble finalMessageBubble = messageBubble;
 
-        contentComponent.addMouseListener(new MouseAdapter()
+        contentComponent.addMouseListener(new MessageMouseListener()
         {
             @Override
             public void mouseExited(MouseEvent e)
@@ -814,16 +851,18 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             }
         });
 
-        messageBubble.addMouseListener(new MouseAdapter()
+        messageBubble.addMouseListener(new MessageMouseListener()
         {
             @Override
             public void mouseReleased(MouseEvent e)
             {
                 if (e.getButton() == MouseEvent.BUTTON3)
                 {
-                    popupMenu.show(finalContentComponent, e.getX(), e.getY(), MessageItem.RIGHT_TEXT);
+                    popupMenu.show(finalContentComponent, e.getX(), e.getY(), messageType);
                 }
             }
         });
     }
+
+
 }

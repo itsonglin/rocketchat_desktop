@@ -2,7 +2,7 @@ package com.rc.adapter.message;
 
 import com.rc.components.Colors;
 import com.rc.components.GBC;
-import com.rc.components.MessageImageLabel;
+import com.rc.components.message.MessageImageLabel;
 import com.rc.components.VerticalFlowLayout;
 import com.rc.components.message.RCLeftImageMessageBubble;
 import com.rc.utils.FontUtil;

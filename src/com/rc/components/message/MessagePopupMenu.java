@@ -1,20 +1,18 @@
 package com.rc.components.message;
 
 import com.rc.components.Colors;
-import com.rc.components.MessageImageLabel;
 import com.rc.components.RCMenuItemUI;
 import com.rc.components.SizeAutoAdjustTextArea;
 import com.rc.entity.MessageItem;
 import com.rc.forms.ChatPanel;
+import com.rc.forms.MainFrame;
 import com.rc.utils.ClipboardUtil;
+import com.rc.utils.FileCache;
 import com.rc.utils.ImageCache;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.datatransfer.Clipboard;
-import java.awt.datatransfer.StringSelection;
-import java.awt.datatransfer.Transferable;
 import java.awt.event.ActionEvent;
 import java.util.Map;
 
@@ -25,6 +23,7 @@ public class MessagePopupMenu extends JPopupMenu
 {
     private int messageType;
     private ImageCache imageCache = new ImageCache();
+    private FileCache fileCache = new FileCache();
 
     public MessagePopupMenu()
     {
@@ -90,6 +89,32 @@ public class MessagePopupMenu extends JPopupMenu
                         }
                         break;
                     }
+
+                    case (MessageItem.RIGHT_ATTACHMENT):
+                    case(MessageItem.LEFT_ATTACHMENT):
+                    {
+                        AttachmentPanel attachmentPanel = (AttachmentPanel) getInvoker();
+                        Object obj = attachmentPanel.getTag();
+                        if (obj != null)
+                        {
+                            Map map = (Map) obj;
+                            String id = (String) map.get("attachmentId");
+                            String name = (String) map.get("name");
+
+                            String path = fileCache.tryGetFileCache(id, name);
+                            if (path != null && !path.isEmpty())
+                            {
+                                ClipboardUtil.copyFile(path);
+                            }
+                            else
+                            {
+                                JOptionPane.showMessageDialog(MainFrame.getContext(), "请先下载该文件", "文件未下载", JOptionPane.WARNING_MESSAGE);
+                            }
+
+
+                        }
+                        break;
+                    }
                 }
 
             }
@@ -117,6 +142,18 @@ public class MessagePopupMenu extends JPopupMenu
                     {
                         MessageImageLabel imageLabel = (MessageImageLabel) getInvoker();
                         Object obj = imageLabel.getTag();
+                        if (obj != null)
+                        {
+                            Map map = (Map) obj;
+                            messageId = (String) map.get("messageId");
+                        }
+                        break;
+                    }
+                    case (MessageItem.RIGHT_ATTACHMENT):
+                    case(MessageItem.LEFT_ATTACHMENT):
+                    {
+                        AttachmentPanel attachmentPanel = (AttachmentPanel) getInvoker();
+                        Object obj = attachmentPanel.getTag();
                         if (obj != null)
                         {
                             Map map = (Map) obj;

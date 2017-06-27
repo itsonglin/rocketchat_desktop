@@ -341,9 +341,6 @@ public class ChatPanel extends ParentAvailablePanel
 
     public void enterRoom(String roomId, long firstMessageTimestamp)
     {
-        // 重置ViewHolder缓存
-        messageViewHolderCacheHelper.reset();
-
         this.firstMessageTimestamp = firstMessageTimestamp;
 
         this.roomId = roomId;
@@ -927,6 +924,9 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void run()
             {
+                // 重置ViewHolder缓存
+                messageViewHolderCacheHelper.reset();
+
                 messageItems.clear();
                 initData();
                 messagePanel.setVisible(true);
@@ -1461,7 +1461,7 @@ public class ChatPanel extends ParentAvailablePanel
      *
      * @param viewHolder
      */
-    private void setMyUploadAttachmentClickListener(MessageAttachmentViewHolder viewHolder, String uploadFilePath)
+    /*private void setMyUploadAttachmentClickListener(MessageAttachmentViewHolder viewHolder, String uploadFilePath)
     {
         MouseAdapter listener = new MouseAdapter()
         {
@@ -1477,7 +1477,7 @@ public class ChatPanel extends ParentAvailablePanel
 
         viewHolder.attachmentPanel.addMouseListener(listener);
         viewHolder.attachmentTitle.addMouseListener(listener);
-    }
+    }*/
 
     private void sendDataPart(int partIndex, List<byte[]> dataParts, String baseUploadUrl, String type, UploadTaskCallback callback)
     {

@@ -104,4 +104,18 @@ public class RCAttachmentMessageBubble extends JPanel implements RCMessageBubble
     {
         this.currentBackgroundIcon = currentBackgroundIcon;
     }
+
+    @Override
+    public synchronized void addMouseListener(MouseListener l)
+    {
+        for (MouseListener listener : getMouseListeners())
+        {
+            if (listener == l)
+            {
+                return;
+            }
+        }
+
+        super.addMouseListener(l);
+    }
 }

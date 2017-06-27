@@ -5,6 +5,7 @@ import java.awt.*;
 import java.awt.datatransfer.*;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Created by song on 20/06/2017.
@@ -36,6 +37,48 @@ public class ClipboardUtil
         }
     }
 
+    public static void copyFile(String path)
+    {
+        try
+        {
+            File file = new File(path);
+            //clipboard.setContents(new FileTransferable(file), null);
+            Transferable contents = new Transferable() {
+                DataFlavor[] dataFlavors = new DataFlavor[] { DataFlavor.javaFileListFlavor };
+
+                @Override
+                public Object getTransferData(DataFlavor flavor)
+                        throws UnsupportedFlavorException, IOException {
+                    ArrayList<File> files = new ArrayList<>();
+                    files.add(file);
+                    return files;
+                }
+
+                @Override
+                public DataFlavor[] getTransferDataFlavors() {
+                    return dataFlavors;
+                }
+
+                @Override
+                public boolean isDataFlavorSupported(DataFlavor flavor) {
+                    for (int i = 0; i < dataFlavors.length; i++) {
+                        if (dataFlavors[i].equals(flavor)) {
+                            return true;
+                        }
+                    }
+                    return false;
+                }
+            };
+
+            clipboard.setContents(contents, null);
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     public static String pasteString()
     {
         Transferable transferable = clipboard.getContents(null);
@@ -62,6 +105,8 @@ public class ClipboardUtil
 
         return null;
     }
+
+
 }
 
 class ImageTransferable implements Transferable
@@ -70,9 +115,9 @@ class ImageTransferable implements Transferable
 
     public ImageTransferable(Image image)
     {
-
         this.image = image;
     }
+
     public DataFlavor[] getTransferDataFlavors()
     {
         return new DataFlavor[]{DataFlavor.imageFlavor};
@@ -89,5 +134,42 @@ class ImageTransferable implements Transferable
         if (isDataFlavorSupported(flavor))
             return image;
         throw new UnsupportedFlavorException(flavor);
+    }
+}
+
+class FileTransferable implements Transferable
+{
+    private File file;
+
+    public FileTransferable(File file)
+    {
+        this.file = file;
+    }
+    DataFlavor[] dataFlavors = new DataFlavor[]{DataFlavor.javaFileListFlavor};
+
+    @Override
+    public Object getTransferData(DataFlavor flavor)
+            throws UnsupportedFlavorException, IOException
+    {
+        return new ArrayList<>().add(file);
+    }
+
+    @Override
+    public DataFlavor[] getTransferDataFlavors()
+    {
+        return dataFlavors;
+    }
+
+    @Override
+    public boolean isDataFlavorSupported(DataFlavor flavor)
+    {
+        for (int i = 0; i < dataFlavors.length; i++)
+        {
+            if (dataFlavors[i].equals(flavor))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
