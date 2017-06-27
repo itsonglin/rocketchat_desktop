@@ -84,6 +84,8 @@ public class ImageViewerFrame extends JFrame
 
         imageLabel = new ImageLabel();
 
+        setIconImage(new ImageIcon(getClass().getResource("ic_launcher.png")).getImage());
+
     }
 
     private void initView()
@@ -206,7 +208,7 @@ public class ImageViewerFrame extends JFrame
             public void mouseDragged(MouseEvent e)
             {
 
-                if (e.getButton() == MouseEvent.BUTTON1)
+                if (e.getModifiers() == InputEvent.BUTTON1_MASK)
                 {
                     xDistance = e.getX() - x;
                     yDistance = e.getY() - y;
