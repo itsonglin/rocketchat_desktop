@@ -20,6 +20,8 @@ public class GradientProgressBarUI extends BasicProgressBarUI
 
         int width = progressBar.getWidth();
         int height = progressBar.getHeight();
+
+
         int barRectWidth = width - (b.right + b.left);
         int barRectHeight = height - (b.top + b.bottom);
         //int arcSize = height / 2 - 1;

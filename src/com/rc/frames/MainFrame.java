@@ -265,7 +265,7 @@ public class MainFrame extends JFrame
             getRootPane().setOpaque(true);*/
         }
 
-        addListener();
+        setListeners();
 
 
         add(leftPanel, BorderLayout.WEST);
@@ -285,7 +285,7 @@ public class MainFrame extends JFrame
                 (tk.getScreenSize().height - currentWindowHeight) / 2);
     }
 
-    private void addListener()
+    private void setListeners()
     {
         // MAC OS 下拖动JFrame会出现抖动！
         if (OSUtil.getOsType() != OSUtil.Mac_OS)
