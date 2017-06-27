@@ -170,7 +170,7 @@ public class ChangePasswordPanel extends JPanel
     public void showErrorMessage(String message)
     {
         statusLabel.setText(message);
-        statusLabel.setIcon(new ImageIcon(IconUtil.getIcon(this, "/image/fail.png").getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH)));
+        statusLabel.setIcon(new ImageIcon(IconUtil.getIcon(this, "/image/fail.png").getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH)));
         statusLabel.setVisible(true);
     }
 

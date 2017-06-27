@@ -143,19 +143,19 @@ public class SystemConfigDialog extends JDialog
         settingPanel.add(settingAreaPanel, new GBC(1, 0).setWeight(6, 1).setFill(GBC.BOTH).setInsets(10,0,0,0));
 
         settingMenuPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, true, false));
+        settingMenuPanel.add(meLabel);
         settingMenuPanel.add(changeAvatarLabel);
         settingMenuPanel.add(changePasswordLabel);
-        settingMenuPanel.add(meLabel);
 
         settingAreaPanel.setLayout(cardLayout);
+        settingAreaPanel.add(mePanel, ME);
         settingAreaPanel.add(changeAvatarPanel, CHANGE_AVATAR);
         settingAreaPanel.add(changePasswordPanel, CHANGE_PASSWORD);
-        settingAreaPanel.add(mePanel, ME);
 
         add(settingPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
 
-        selectedLabel(changeAvatarLabel);
+        selectedLabel(meLabel);
     }
 
     private void setListeners()

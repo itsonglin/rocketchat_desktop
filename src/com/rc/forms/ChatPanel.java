@@ -465,7 +465,7 @@ public class ChatPanel extends ParentAvailablePanel
     {
         long firstTime = messageService.findFirstMessageTime(roomId);
 
-        // 再从服务器拿50天前的消息
+        // 再从服务器拿30天前的消息
         loadRemoteStartTime = firstTime;
 
         long end = firstTime - TIMESTAMP_8_HOURS;
