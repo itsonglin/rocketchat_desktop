@@ -7,6 +7,7 @@ import com.rc.components.SizeAutoAdjustTextArea;
 import com.rc.components.VerticalFlowLayout;
 import com.rc.components.message.MessagePopupMenu;
 import com.rc.components.message.RCLeftImageMessageBubble;
+import com.rc.entity.MessageItem;
 import com.rc.forms.MainFrame;
 import com.rc.utils.FontUtil;
 
@@ -51,45 +52,6 @@ public class MessageLeftTextViewHolder extends BaseMessageViewHolder
 
         sender.setFont(FontUtil.getDefaultFont(12));
         sender.setForeground(Colors.FONT_GRAY);
-
-        text.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                messageBubble.setBackgroundIcon(messageBubble.getBackgroundActiveIcon());
-                super.mouseEntered(e);
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                messageBubble.setBackgroundIcon(messageBubble.getBackgroundNormalIcon());
-                super.mouseReleased(e);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e)
-            {
-                if (e.getButton() == MouseEvent.BUTTON3)
-                {
-                    popupMenu.show(text, e.getX(), e.getY());
-                }
-            }
-
-        });
-
-        messageBubble.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseReleased(MouseEvent e)
-            {
-                if (e.getButton() == MouseEvent.BUTTON3)
-                {
-                    popupMenu.show(text, e.getX(), e.getY());
-                }
-            }
-        });
 
         messageAvatarPanel.setBackground(Colors.WINDOW_BACKGROUND);
         timePanel.setBackground(Colors.WINDOW_BACKGROUND);

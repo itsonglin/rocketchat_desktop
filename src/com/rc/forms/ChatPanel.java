@@ -12,7 +12,7 @@ import com.rc.db.service.*;
 import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.ImageAttachmentItem;
 import com.rc.entity.MessageItem;
-import com.rc.helper.MessageHolderCacheHelper;
+import com.rc.helper.MessageViewHolderCacheHelper;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.FileCache;
 import com.rc.utils.HttpUtil;
@@ -93,7 +93,7 @@ public class ChatPanel extends ParentAvailablePanel
     private List<String> remoteRoomMemberLoadedRooms = new ArrayList<>();
     private RemindUserPopup remindUserPopup = new RemindUserPopup();
 
-    private MessageHolderCacheHelper messageHolderCacheHelper;
+    private MessageViewHolderCacheHelper messageViewHolderCacheHelper;
 
     public long startTime;
 
@@ -103,7 +103,7 @@ public class ChatPanel extends ParentAvailablePanel
         super(parent);
         context = this;
         currentUser = currentUserService.findAll().get(0);
-        messageHolderCacheHelper = new MessageHolderCacheHelper();
+        messageViewHolderCacheHelper = new MessageViewHolderCacheHelper();
 
         initComponents();
         initView();
@@ -118,7 +118,7 @@ public class ChatPanel extends ParentAvailablePanel
     {
         messagePanel = new MessagePanel(this);
         messagePanel.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.LIGHT_GRAY));
-        adapter = new MessageAdapter(messageItems, messagePanel.getMessageListView(), messageHolderCacheHelper);
+        adapter = new MessageAdapter(messageItems, messagePanel.getMessageListView(), messageViewHolderCacheHelper);
         messagePanel.getMessageListView().setAdapter(adapter);
 
         messageEditorPanel = new MessageEditorPanel(this);
@@ -342,7 +342,7 @@ public class ChatPanel extends ParentAvailablePanel
     public void enterRoom(String roomId, long firstMessageTimestamp)
     {
         // 重置ViewHolder缓存
-        messageHolderCacheHelper.reset();
+        messageViewHolderCacheHelper.reset();
 
         this.firstMessageTimestamp = firstMessageTimestamp;
 

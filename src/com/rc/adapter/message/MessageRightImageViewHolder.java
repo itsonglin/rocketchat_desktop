@@ -1,10 +1,10 @@
 package com.rc.adapter.message;
 
-import com.rc.adapter.ViewHolder;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
+import com.rc.components.MessageImageLabel;
+import com.rc.components.message.MessagePopupMenu;
 import com.rc.components.message.RCRightImageMessageBubble;
-import com.rc.forms.MainFrame;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
@@ -15,7 +15,7 @@ import java.awt.*;
  */
 public class MessageRightImageViewHolder extends BaseMessageViewHolder
 {
-    public JLabel image = new JLabel();
+    public MessageImageLabel image = new MessageImageLabel();
     //public JLabel avatar = new JLabel();
     //public JLabel size = new JLabel();
     public JLabel resend = new JLabel(); // 重发按钮
@@ -24,6 +24,7 @@ public class MessageRightImageViewHolder extends BaseMessageViewHolder
     public RCRightImageMessageBubble imageBubble = new RCRightImageMessageBubble();
     private JPanel timePanel = new JPanel();
     private JPanel messageAvatarPanel = new JPanel();
+    private MessagePopupMenu popupMenu = new MessagePopupMenu();
 
     public MessageRightImageViewHolder()
     {

@@ -91,6 +91,10 @@ public class ImageCache
             int endPos = url.lastIndexOf("?");
             endPos = endPos == -1 ? url.length() : endPos;
             suffix = url.substring(startPos,endPos);
+            if (suffix.startsWith(".com"))
+            {
+                suffix = "";
+            }
         }
 
         String finalSuffix = suffix;

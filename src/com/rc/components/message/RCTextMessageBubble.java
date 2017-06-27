@@ -14,7 +14,7 @@ import java.awt.event.MouseListener;
  *
  * Created by song on 17-6-3.
  */
-public class RCTextMessageBubble extends JTextArea
+public class RCTextMessageBubble extends JTextArea implements RCMessageBubble
 {
     private  NinePatchImageIcon backgroundNormalIcon;
     private  NinePatchImageIcon backgroundActiveIcon;

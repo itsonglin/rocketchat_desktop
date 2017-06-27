@@ -6,6 +6,7 @@ import com.rc.components.GBC;
 import com.rc.components.SizeAutoAdjustTextArea;
 import com.rc.components.message.MessagePopupMenu;
 import com.rc.components.message.RCRightImageMessageBubble;
+import com.rc.entity.MessageItem;
 import com.rc.forms.MainFrame;
 import com.rc.utils.FontUtil;
 
@@ -32,8 +33,6 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
 
     private JPanel timePanel = new JPanel();
     private JPanel messageAvatarPanel = new JPanel();
-
-    private MessagePopupMenu popupMenu = new MessagePopupMenu();
 
     public MessageRightTextViewHolder()
     {
@@ -66,46 +65,7 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
 
 
         text.setCaretPosition(text.getDocument().getLength());
-        text.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-                if (e.getX() > text.getWidth() || e.getY() > text.getHeight())
-                {
-                    messageBubble.setBackgroundIcon(messageBubble.getBackgroundNormalIcon());
-                }
-                super.mouseReleased(e);
-            }
 
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-                messageBubble.setBackgroundIcon(messageBubble.getBackgroundActiveIcon());
-                super.mouseEntered(e);
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e)
-            {
-                if (e.getButton() == MouseEvent.BUTTON3)
-                {
-                    popupMenu.show((Component) e.getSource(), e.getX(), e.getY());
-                }
-            }
-        });
-
-        messageBubble.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseReleased(MouseEvent e)
-            {
-                if (e.getButton() == MouseEvent.BUTTON3)
-                {
-                    popupMenu.show(text, e.getX(), e.getY());
-                }
-            }
-        });
     }
 
     private void initView()

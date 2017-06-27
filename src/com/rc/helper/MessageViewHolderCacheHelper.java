@@ -3,6 +3,9 @@ package com.rc.helper;
 import com.rc.adapter.message.*;
 import com.rc.forms.ChatPanel;
 
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,14 +15,14 @@ import java.util.List;
  * <p>对消息的ViewHolder进入缓存能大大加速消息列表的加载速度，在刚进入房间时，默认先加载10条消息，
  * 这10条消息的ViewHolder将从缓存中获取，避免了new ViewHolder花费的时间。</p>
  *
- * <p>在新进入新的房间时，{@link ChatPanel#enterRoom(String)} 方法将会调用本类的{@link MessageHolderCacheHelper#reset()} 方法，
+ * <p>在新进入新的房间时，{@link ChatPanel#enterRoom(String)} 方法将会调用本类的{@link MessageViewHolderCacheHelper#reset()} 方法，
  * 对上一个房间所使用的ViewHolder对象进行释放，从而实现循环使用缓存的ViewHolder</p>
  *
  * <p>默认初始缓存容量为10。</p>
  *
  * Created by song on 2017/6/24.
  */
-public class MessageHolderCacheHelper
+public class MessageViewHolderCacheHelper
 {
     private final int CACHE_CAPACITY = 10;
 
@@ -42,7 +45,7 @@ public class MessageHolderCacheHelper
     private int systemMessagePosition = 0;
 
 
-    public MessageHolderCacheHelper()
+    public MessageViewHolderCacheHelper()
     {
         initHolders();
     }
@@ -220,5 +223,55 @@ public class MessageHolderCacheHelper
         leftAttachmentPosition = 0;
 
         systemMessagePosition = 0;
+
+
+        for (MessageRightTextViewHolder viewHolder : rightTextViewHolders)
+        {
+            clearMouseListener(viewHolder.messageBubble);
+            clearMouseListener(viewHolder.resend);
+            clearMouseListener(viewHolder.text);
+        }
+        for (MessageRightImageViewHolder viewHolder : rightImageViewHolders)
+        {
+            clearMouseListener(viewHolder.image);
+            clearMouseListener(viewHolder.imageBubble);
+            clearMouseListener(viewHolder.resend);
+        }
+        for (MessageRightAttachmentViewHolder viewHolder : rightAttachmentViewHolders)
+        {
+            clearMouseListener(viewHolder.resend);
+            clearMouseListener(viewHolder.messageBubble);
+            clearMouseListener(viewHolder.attachmentPanel);
+            clearMouseListener(viewHolder.attachmentTitle);
+        }
+
+        for (MessageLeftTextViewHolder viewHolder : leftTextViewHolders)
+        {
+            clearMouseListener(viewHolder.text);
+            clearMouseListener(viewHolder.messageBubble);
+            clearMouseListener(viewHolder.avatar);
+        }
+        for (MessageLeftImageViewHolder viewHolder : leftImageViewHolders)
+        {
+            clearMouseListener(viewHolder.image);
+            clearMouseListener(viewHolder.imageBubble);
+            clearMouseListener(viewHolder.avatar);
+        }
+        for (MessageLeftAttachmentViewHolder viewHolder : leftAttachmentViewHolders)
+        {
+            clearMouseListener(viewHolder.attachmentPanel);
+            clearMouseListener(viewHolder.attachmentTitle);
+            clearMouseListener(viewHolder.messageBubble);
+            clearMouseListener(viewHolder.avatar);
+        }
     }
+
+    private void clearMouseListener(JComponent component)
+    {
+        for (MouseListener l : component.getMouseListeners())
+        {
+            component.removeMouseListener(l);
+        }
+    }
+
 }

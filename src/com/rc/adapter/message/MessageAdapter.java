@@ -3,32 +3,32 @@ package com.rc.adapter.message;
 import com.rc.adapter.BaseAdapter;
 import com.rc.adapter.ViewHolder;
 import com.rc.app.Launcher;
+import com.rc.components.MessageImageLabel;
 import com.rc.components.RCListView;
+import com.rc.components.message.MessagePopupMenu;
+import com.rc.components.message.RCMessageBubble;
 import com.rc.db.model.CurrentUser;
 import com.rc.db.model.Message;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
 import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.MessageItem;
-import com.rc.forms.ChatPanel;
-import com.rc.forms.ImageViewerFrame;
-import com.rc.forms.MainFrame;
-import com.rc.forms.UserInfoPopup;
+import com.rc.forms.*;
 import com.rc.helper.AttachmentIconHelper;
-import com.rc.helper.MessageHolderCacheHelper;
+import com.rc.helper.MessageViewHolderCacheHelper;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.*;
 import com.rc.websocket.WebSocketClient;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.io.File;
-import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by song on 17-6-2.
@@ -44,10 +44,12 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     private MessageService messageService = Launcher.messageService;
     private Logger logger = Logger.getLogger(this.getClass());
     private FileCache fileCache;
+    private MessagePopupMenu popupMenu = new MessagePopupMenu();
 
-    MessageHolderCacheHelper messageHolderCacheHelper;
 
-    public MessageAdapter(List<MessageItem> messageItems, RCListView listView, MessageHolderCacheHelper messageHolderCacheHelper)
+    MessageViewHolderCacheHelper messageViewHolderCacheHelper;
+
+    public MessageAdapter(List<MessageItem> messageItems, RCListView listView, MessageViewHolderCacheHelper messageViewHolderCacheHelper)
     {
         this.messageItems = messageItems;
         this.listView = listView;
@@ -55,7 +57,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         currentUser = currentUserService.findAll().get(0);
         imageCache = new ImageCache();
         fileCache = new FileCache();
-        this.messageHolderCacheHelper =  messageHolderCacheHelper;
+        this.messageViewHolderCacheHelper = messageViewHolderCacheHelper;
     }
 
     @Override
@@ -71,7 +73,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         {
             case MessageItem.SYSTEM_MESSAGE:
             {
-                MessageSystemMessageViewHolder holder = messageHolderCacheHelper.tryGetSystemMessageViewHolder();
+                MessageSystemMessageViewHolder holder = messageViewHolderCacheHelper.tryGetSystemMessageViewHolder();
                 if (holder == null)
                 {
                     holder = new MessageSystemMessageViewHolder();
@@ -81,7 +83,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             }
             case MessageItem.RIGHT_TEXT:
             {
-                MessageRightTextViewHolder holder = messageHolderCacheHelper.tryGetRightTextViewHolder();
+                MessageRightTextViewHolder holder = messageViewHolderCacheHelper.tryGetRightTextViewHolder();
                 if (holder == null)
                 {
                     holder = new MessageRightTextViewHolder();
@@ -91,7 +93,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             }
             case MessageItem.LEFT_TEXT:
             {
-                MessageLeftTextViewHolder holder = messageHolderCacheHelper.tryGetLeftTextViewHolder();
+                MessageLeftTextViewHolder holder = messageViewHolderCacheHelper.tryGetLeftTextViewHolder();
                 if (holder == null)
                 {
                     holder = new MessageLeftTextViewHolder();
@@ -101,7 +103,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             }
             case MessageItem.RIGHT_IMAGE:
             {
-                MessageRightImageViewHolder holder = messageHolderCacheHelper.tryGetRightImageViewHolder();
+                MessageRightImageViewHolder holder = messageViewHolderCacheHelper.tryGetRightImageViewHolder();
                 if (holder == null)
                 {
                     holder = new MessageRightImageViewHolder();
@@ -111,7 +113,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             }
             case MessageItem.LEFT_IMAGE:
             {
-                MessageLeftImageViewHolder holder = messageHolderCacheHelper.tryGetLeftImageViewHolder();
+                MessageLeftImageViewHolder holder = messageViewHolderCacheHelper.tryGetLeftImageViewHolder();
                 if (holder == null)
                 {
                     holder = new MessageLeftImageViewHolder();
@@ -121,7 +123,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             }
             case MessageItem.RIGHT_ATTACHMENT:
             {
-                MessageRightAttachmentViewHolder holder = messageHolderCacheHelper.tryGetRightAttachmentViewHolder();
+                MessageRightAttachmentViewHolder holder = messageViewHolderCacheHelper.tryGetRightAttachmentViewHolder();
                 if (holder == null)
                 {
                     holder = new MessageRightAttachmentViewHolder();
@@ -131,7 +133,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             }
             case MessageItem.LEFT_ATTACHMENT:
             {
-                MessageLeftAttachmentViewHolder holder = messageHolderCacheHelper.tryGetLeftAttachmentViewHolder();
+                MessageLeftAttachmentViewHolder holder = messageViewHolderCacheHelper.tryGetLeftAttachmentViewHolder();
                 if (holder == null)
                 {
                     holder = new MessageLeftAttachmentViewHolder();
@@ -207,6 +209,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         listView.setScrollHiddenOnMouseLeave(holder.attachmentPanel);
         listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
         listView.setScrollHiddenOnMouseLeave(holder.attachmentTitle);
+
+        // 绑定右键菜单
+        attachPopupMenu(viewHolder, MessageItem.LEFT_ATTACHMENT);
     }
 
     private void processRightAttachmentMessage(ViewHolder viewHolder, MessageItem item)
@@ -257,7 +262,6 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             holder.resend.setVisible(false);
         }
 
-        clearMouseListener(holder.resend);
         holder.resend.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -290,6 +294,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             holder.sizeLabel.setText("等待上传...");
         }
 
+        // 绑定右键菜单
+        attachPopupMenu(viewHolder, MessageItem.RIGHT_ATTACHMENT);
 
         listView.setScrollHiddenOnMouseLeave(holder.attachmentPanel);
         listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
@@ -298,6 +304,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
     /**
      * 设置附件点击监听
+     *
      * @param viewHolder
      * @param item
      */
@@ -315,8 +322,6 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             }
         };
 
-        clearMouseListener(viewHolder.attachmentPanel);
-        clearMouseListener(viewHolder.attachmentTitle);
 
         viewHolder.attachmentPanel.addMouseListener(listener);
         viewHolder.attachmentTitle.addMouseListener(listener);
@@ -359,6 +364,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
         listView.setScrollHiddenOnMouseLeave(holder.image);
         listView.setScrollHiddenOnMouseLeave(holder.imageBubble);
+
+        // 绑定右键菜单
+        attachPopupMenu(viewHolder, MessageItem.LEFT_IMAGE);
     }
 
     /**
@@ -416,7 +424,6 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             holder.resend.setVisible(false);
         }
 
-        clearMouseListener(holder.resend);
         holder.resend.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -438,11 +445,14 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             }
         });
 
+        // 绑定右键菜单
+        attachPopupMenu(viewHolder, MessageItem.RIGHT_IMAGE);
+
         listView.setScrollHiddenOnMouseLeave(holder.image);
         listView.setScrollHiddenOnMouseLeave(holder.imageBubble);
     }
 
-    private void processImage(MessageItem item, JLabel imageLabel, ViewHolder holder)
+    private void processImage(MessageItem item, MessageImageLabel imageLabel, ViewHolder holder)
     {
         String imageUrl = item.getImageAttachment().getImageUrl();
         String url;
@@ -456,6 +466,11 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             url = "file://" + imageUrl;
         }
 
+        Map map = new HashMap();
+        map.put("attachmentId", item.getImageAttachment().getId());
+        map.put("url", url);
+        map.put("messageId", item.getId());
+        imageLabel.setTag(map);
 
         ImageIcon imageIcon = imageCache.tryGetThumbCache(item.getImageAttachment().getId());
 
@@ -488,9 +503,6 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         }
 
         // 当点击图片时，使用默认程序打开图片
-
-        clearMouseListener(imageLabel);
-
         imageLabel.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -596,7 +608,6 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         }
 
 
-        clearMouseListener(holder.resend);
         holder.resend.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -616,6 +627,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 super.mouseClicked(e);
             }
         });
+
+        // 绑定右键菜单
+        attachPopupMenu(viewHolder, MessageItem.RIGHT_TEXT);
 
         listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
         listView.setScrollHiddenOnMouseLeave(holder.text);
@@ -638,6 +652,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
         listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
         listView.setScrollHiddenOnMouseLeave(holder.text);
+        attachPopupMenu(viewHolder, MessageItem.LEFT_TEXT);
     }
 
     /**
@@ -693,13 +708,13 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
     private void bindAvatarAction(JLabel avatarLabel, String username)
     {
-        clearMouseListener(avatarLabel);
 
         avatarLabel.addMouseListener(new AbstractMouseListener()
         {
             @Override
             public void mouseClicked(MouseEvent e)
             {
+                System.out.println(username + " ----------- ");
                 UserInfoPopup popup = new UserInfoPopup(username);
                 popup.show(e.getComponent(), e.getX(), e.getY());
 
@@ -714,11 +729,101 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         return messageItems.size();
     }
 
-    private void clearMouseListener(JComponent component)
+    private void attachPopupMenu(ViewHolder viewHolder, int messageType)
     {
-        for (MouseListener l : component.getMouseListeners())
+        JComponent contentComponent = null;
+        RCMessageBubble messageBubble = null;
+
+        switch (messageType)
         {
-            component.removeMouseListener(l);
+            case MessageItem.RIGHT_TEXT:
+            {
+                MessageRightTextViewHolder holder = (MessageRightTextViewHolder) viewHolder;
+                contentComponent = holder.text;
+                messageBubble = holder.messageBubble;
+                break;
+            }
+            case MessageItem.LEFT_TEXT:
+            {
+                MessageLeftTextViewHolder holder = (MessageLeftTextViewHolder) viewHolder;
+                contentComponent = holder.text;
+                messageBubble = holder.messageBubble;
+                break;
+            }
+            case MessageItem.RIGHT_IMAGE:
+            {
+                MessageRightImageViewHolder holder = (MessageRightImageViewHolder) viewHolder;
+                contentComponent = holder.image;
+                messageBubble = holder.imageBubble;
+                break;
+            }
+            case MessageItem.LEFT_IMAGE:
+            {
+                MessageLeftImageViewHolder holder = (MessageLeftImageViewHolder) viewHolder;
+                contentComponent = holder.image;
+                messageBubble = holder.imageBubble;
+                break;
+            }
+            case MessageItem.RIGHT_ATTACHMENT:
+            {
+                MessageRightAttachmentViewHolder holder = (MessageRightAttachmentViewHolder) viewHolder;
+                contentComponent = holder.attachmentPanel;
+                messageBubble = holder.messageBubble;
+                break;
+            }
+            case MessageItem.LEFT_ATTACHMENT:
+            {
+                MessageLeftAttachmentViewHolder holder = (MessageLeftAttachmentViewHolder) viewHolder;
+                contentComponent = holder.attachmentPanel;
+                messageBubble = holder.messageBubble;
+                break;
+            }
         }
+
+        JComponent finalContentComponent = contentComponent;
+        RCMessageBubble finalMessageBubble = messageBubble;
+
+        contentComponent.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                if (e.getX() > finalContentComponent.getWidth() || e.getY() > finalContentComponent.getHeight())
+                {
+                    finalMessageBubble.setBackgroundIcon(finalMessageBubble.getBackgroundNormalIcon());
+                }
+                super.mouseExited(e);
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                finalMessageBubble.setBackgroundIcon(finalMessageBubble.getBackgroundActiveIcon());
+                super.mouseEntered(e);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON3)
+                {
+                    popupMenu.show((Component) e.getSource(), e.getX(), e.getY(), messageType);
+                }
+
+                super.mouseReleased(e);
+            }
+        });
+
+        messageBubble.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON3)
+                {
+                    popupMenu.show(finalContentComponent, e.getX(), e.getY(), MessageItem.RIGHT_TEXT);
+                }
+            }
+        });
     }
 }

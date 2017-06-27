@@ -1,7 +1,9 @@
 package com.rc.utils;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.datatransfer.*;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -17,6 +19,20 @@ public class ClipboardUtil
         {
             Transferable tText = new StringSelection(content);
             clipboard.setContents(tText, null);
+        }
+    }
+
+    public static void copyImage(String path)
+    {
+        try
+        {
+            Image image = ImageIO.read(new File(path));
+            clipboard.setContents(new ImageTransferable(image), null);
+
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 
@@ -45,5 +61,33 @@ public class ClipboardUtil
         }
 
         return null;
+    }
+}
+
+class ImageTransferable implements Transferable
+{
+    private Image image;
+
+    public ImageTransferable(Image image)
+    {
+
+        this.image = image;
+    }
+    public DataFlavor[] getTransferDataFlavors()
+    {
+        return new DataFlavor[]{DataFlavor.imageFlavor};
+    }
+
+    public boolean isDataFlavorSupported(DataFlavor flavor)
+    {
+        return DataFlavor.imageFlavor.equals(flavor);
+    }
+
+    public Object getTransferData(DataFlavor flavor)
+            throws UnsupportedFlavorException, IOException
+    {
+        if (isDataFlavorSupported(flavor))
+            return image;
+        throw new UnsupportedFlavorException(flavor);
     }
 }

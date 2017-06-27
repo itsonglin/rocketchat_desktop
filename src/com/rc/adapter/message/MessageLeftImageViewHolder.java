@@ -1,8 +1,8 @@
 package com.rc.adapter.message;
 
-import com.rc.adapter.ViewHolder;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
+import com.rc.components.MessageImageLabel;
 import com.rc.components.VerticalFlowLayout;
 import com.rc.components.message.RCLeftImageMessageBubble;
 import com.rc.utils.FontUtil;
@@ -18,7 +18,7 @@ public class MessageLeftImageViewHolder extends BaseMessageViewHolder
     public JLabel sender = new JLabel();
     //public JLabel avatar = new JLabel();
     //public JLabel size = new JLabel();
-    public JLabel image = new JLabel();
+    public MessageImageLabel image = new MessageImageLabel();
     public RCLeftImageMessageBubble imageBubble = new RCLeftImageMessageBubble();
     private JPanel timePanel = new JPanel();
     private JPanel messageAvatarPanel = new JPanel();
