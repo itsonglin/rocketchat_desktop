@@ -321,7 +321,15 @@ public class RCListView extends JScrollPane
      */
     public void notifyItemRangeInserted(int startPosition, int count)
     {
-        for (int i = startPosition; i < count; i++)
+        /*for (int i = startPosition; i < count; i++)
+        {
+            int viewType = adapter.getItemViewType(i);
+            ViewHolder holder = adapter.onCreateViewHolder(viewType);
+            adapter.onBindViewHolder(holder, i);
+            contentPanel.add(holder, startPosition);
+        }*/
+
+        for (int i = count - 1; i >= startPosition; i--)
         {
             int viewType = adapter.getItemViewType(i);
             ViewHolder holder = adapter.onCreateViewHolder(viewType);

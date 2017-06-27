@@ -185,9 +185,15 @@ public class ChatPanel extends ParentAvailablePanel
 
                     if (messages.size() > 0)
                     {
-                        for (Message message : messages)
+                        /*for (Message message : messages)
                         {
                             MessageItem item = new MessageItem(message, currentUser.getUserId());
+                            messageItems.add(0, item);
+                        }*/
+
+                        for (int i  = messages.size() - 1; i >=0; i--)
+                        {
+                            MessageItem item = new MessageItem(messages.get(i), currentUser.getUserId());
                             messageItems.add(0, item);
                         }
                     }
@@ -944,8 +950,16 @@ public class ChatPanel extends ParentAvailablePanel
             return;
         }
 
-        //int pos = findMessageItemPositionInViewReverse(message.getId());
-        for (int i = messageItems.size() - 1; i >= 0; i--)
+        int pos = findMessageItemPositionInViewReverse(message.getId());
+        if (pos > -1)
+        {
+            messageItems.get(pos).setUpdatedAt(message.getTimestamp());
+            messagePanel.getMessageListView().notifyItemChanged(pos);
+            updateUnreadCount(0);
+            return;
+        }
+
+        /*for (int i = messageItems.size() - 1; i >= 0; i--)
         {
             if (messageItems.get(i).getId().equals(message.getId()))
             {
@@ -954,7 +968,7 @@ public class ChatPanel extends ParentAvailablePanel
                 updateUnreadCount(0);
                 return;
             }
-        }
+        }*/
 
 
         MessageItem messageItem = new MessageItem(message, currentUser.getUserId());
@@ -1047,16 +1061,16 @@ public class ChatPanel extends ParentAvailablePanel
 
             content = msg.getMessageContent();
 
-            /*int pos = findMessageItemPositionInViewReverse(msg.getId());
+            int pos = findMessageItemPositionInViewReverse(msg.getId());
             if (pos > -1)
             {
                 messageItems.get(pos).setNeedToResend(false);
                 messageItems.get(pos).setUpdatedAt(0);
                 messageItems.get(pos).setTimestamp(System.currentTimeMillis());
                 messagePanel.getMessageListView().notifyItemChanged(pos);
-            }*/
+            }
 
-            for (int i = messageItems.size() - 1; i >= 0; i--)
+            /*for (int i = messageItems.size() - 1; i >= 0; i--)
             {
                 if (messageItems.get(i).getId().equals(msg.getId()))
                 {
@@ -1066,7 +1080,7 @@ public class ChatPanel extends ParentAvailablePanel
                     messagePanel.getMessageListView().notifyItemChanged(i);
                     break;
                 }
-            }
+            }*/
 
         }
 
@@ -1088,7 +1102,7 @@ public class ChatPanel extends ParentAvailablePanel
                 if (msg.getUpdatedAt() == 0)
                 {
                     // 更新消息列表
-                    for (int i = messageItems.size() - 1; i >= 0; i--)
+                    /*for (int i = messageItems.size() - 1; i >= 0; i--)
                     {
                         if (messageItems.get(i).getId().equals(messageId))
                         {
@@ -1097,16 +1111,16 @@ public class ChatPanel extends ParentAvailablePanel
                             messageService.update(msg);
                             messagePanel.getMessageListView().notifyItemChanged(i);
                         }
-                    }
+                    }*/
 
-                    /*int pos = findMessageItemPositionInViewReverse(messageId);
+                    int pos = findMessageItemPositionInViewReverse(messageId);
                     if (pos > -1)
                     {
                         messageItems.get(pos).setNeedToResend(true);
                         msg.setNeedToResend(true);
                         messageService.update(msg);
                         messagePanel.getMessageListView().notifyItemChanged(pos);
-                    }*/
+                    }
 
 
                     // 更新房间列表
@@ -1142,20 +1156,20 @@ public class ChatPanel extends ParentAvailablePanel
     private int findMessageItemPositionInViewReverse(String messageId)
     {
         // 浅复制一份messageItems来排序，因为原本messageItems顺序并不是按照时间顺序排列的
-        List<MessageItem> tmpItems = new ArrayList<>();
+        /*List<MessageItem> tmpItems = new ArrayList<>();
         tmpItems.addAll(messageItems);
-        Collections.sort(tmpItems);
+        Collections.sort(tmpItems);*/
 
-        for (int i = tmpItems.size() - 1; i >= 0; i--)
+        for (int i = messageItems.size() - 1; i >= 0; i--)
         {
             // 找到消息列表中对应的消息
-            if (tmpItems.get(i).getId().equals(messageId))
+            if (messageItems.get(i).getId().equals(messageId))
             {
                 return i;
             }
         }
 
-        tmpItems = null;
+        //tmpItems = null;
 
         return -1;
     }

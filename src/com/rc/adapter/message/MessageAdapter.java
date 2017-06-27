@@ -267,6 +267,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 {
                     holder.resend.setVisible(false);
                     System.out.println("这条消息其实已经发送出去了");
+                    return;
                 }
 
                 if (WebSocketClient.getContext().loginAndInitFinish())
@@ -425,6 +426,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 {
                     holder.resend.setVisible(false);
                     System.out.println("这条消息其实已经发送出去了");
+                    return;
                 }
 
                 if (WebSocketClient.getContext().loginAndInitFinish())
@@ -604,6 +606,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 {
                     holder.resend.setVisible(false);
                     System.out.println("这条消息其实已经发送出去了");
+                    return;
                 }
 
                 if (WebSocketClient.getContext().loginAndInitFinish())
