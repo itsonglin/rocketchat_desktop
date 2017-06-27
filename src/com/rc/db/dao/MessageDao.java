@@ -101,4 +101,9 @@ public class MessageDao extends BasicDao
         map.put("condition", "'%" + key + "%'");
         return session.selectList(MessageDao.class.getName() + ".search", map);
     }
+
+    public int markDeleted(String id)
+    {
+        return session.update("markDeleted", id);
+    }
 }

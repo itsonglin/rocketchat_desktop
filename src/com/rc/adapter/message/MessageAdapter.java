@@ -562,7 +562,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     {
         MessageRightTextViewHolder holder = (MessageRightTextViewHolder) viewHolder;
         holder.text.setText(item.getMessageContent());
-
+        holder.text.setTag(item.getId());
         //processMessageContent(holder.messageText, item);
         //registerMessageTextListener(holder.messageText, item);
 
@@ -632,6 +632,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         MessageLeftTextViewHolder holder = (MessageLeftTextViewHolder) viewHolder;
 
         holder.text.setText(item.getMessageContent());
+        holder.text.setTag(item.getId());
+
         holder.sender.setText(item.getSenderUsername());
 
         listView.setScrollHiddenOnMouseLeave(holder.messageBubble);

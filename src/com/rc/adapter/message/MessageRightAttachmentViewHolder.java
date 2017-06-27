@@ -42,6 +42,8 @@ public class MessageRightAttachmentViewHolder extends MessageAttachmentViewHolde
         resendIcon.setImage(resendIcon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
         resend.setIcon(resendIcon);
         resend.setToolTipText("文件发送失败，点击重新发送");
+        resend.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
 
         //resend.setVisible(false);
 

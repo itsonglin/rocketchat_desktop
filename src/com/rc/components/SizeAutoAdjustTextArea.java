@@ -14,6 +14,7 @@ public class SizeAutoAdjustTextArea extends JTextArea
 {
     private String[] lineArr;
     private int maxWidth;
+    private Object tag;
 
     public SizeAutoAdjustTextArea(int maxWidth)
     {
@@ -102,5 +103,15 @@ public class SizeAutoAdjustTextArea extends JTextArea
         retArr[1] = position;
 
         return retArr;
+    }
+
+    public Object getTag()
+    {
+        return tag;
+    }
+
+    public void setTag(Object tag)
+    {
+        this.tag = tag;
     }
 }

@@ -29,36 +29,36 @@
 
 
     <select id="findById" resultType="Message">
-		SELECT * FROM message WHERE id = #{id}
+		SELECT * FROM message WHERE id = #{id} AND deleted = 0
 	</select>
 
     <select id="findAll" resultType="Message">
-		SELECT * FROM message
+		SELECT * FROM message  WHERE deleted = 0
 	</select>
 
     <select id="find" resultType="Message" statementType="STATEMENT" parameterType="map">
-        SELECT * FROM message WHERE ${field} = ${val}
+        SELECT * FROM message WHERE ${field} = ${val} AND deleted = 0
     </select>
 
     <select id="findByPage" resultType="Message" statementType="STATEMENT" parameterType="map">
-        SELECT * FROM (SELECT * FROM message WHERE roomId = ${roomId} ORDER BY timestamp DESC limit ${offset}, ${pageLength}) order by timestamp asc
+        SELECT * FROM (SELECT * FROM message WHERE roomId = ${roomId} AND deleted = 0 ORDER BY timestamp DESC limit ${offset}, ${pageLength}) order by timestamp asc
     </select>
 
     <select id="findBetween" resultType="Message" statementType="STATEMENT" parameterType="map">
-        SELECT * FROM message WHERE roomId = ${roomId} AND timestamp BETWEEN ${start} and ${end} order by timestamp asc
+        SELECT * FROM message WHERE roomId = ${roomId} AND timestamp BETWEEN ${start} and ${end} AND deleted = 0 order by timestamp asc
     </select>
 
     <select id="search" resultType="Message" statementType="STATEMENT" parameterType="map">
-        SELECT * FROM message where messageContent like ${condition}
+        SELECT * FROM message WHERE messageContent LIKE ${condition} AND deleted = 0
     </select>
 
 
     <select id="count" resultType="java.lang.Integer">
-		SELECT count(1) FROM message
+		SELECT count(1) FROM message  WHERE deleted = 0
 	</select>
 
     <select id="countByRoom" resultType="java.lang.Integer">
-        SELECT count(1) FROM message WHERE roomId = #{roomId}
+        SELECT count(1) FROM message WHERE roomId = #{roomId} AND deleted = 0
     </select>
 
 
@@ -141,6 +141,11 @@
     <update id="updateProgress" statementType="STATEMENT" parameterType="map">
         UPDATE message SET progress = ${progress} where id= ${id}
     </update>
+
+    <update id="markDeleted">
+        UPDATE message SET deleted = 1 where id = #{id}
+    </update>
+
 
 </mapper>
 

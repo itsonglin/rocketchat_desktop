@@ -89,4 +89,9 @@ public class MessageService extends BasicService<MessageDao, Message>
     {
         return dao.search(key);
     }
+
+    public int markDeleted(String id)
+    {
+        return dao.markDeleted(id);
+    }
 }

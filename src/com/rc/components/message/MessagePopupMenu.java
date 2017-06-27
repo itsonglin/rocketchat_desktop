@@ -3,6 +3,7 @@ package com.rc.components.message;
 import com.rc.components.Colors;
 import com.rc.components.RCMenuItemUI;
 import com.rc.components.SizeAutoAdjustTextArea;
+import com.rc.forms.ChatPanel;
 import com.rc.utils.ClipboardUtil;
 
 import javax.swing.*;
@@ -53,7 +54,13 @@ public class MessagePopupMenu extends JPopupMenu
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                System.out.println("删除");
+               // System.out.println("删除");
+                SizeAutoAdjustTextArea textArea = (SizeAutoAdjustTextArea) getInvoker();
+                String messageId = textArea.getTag().toString();
+                if (messageId != null && !messageId.isEmpty())
+                {
+                    ChatPanel.getContext().deleteMessage(messageId);
+                }
             }
         });
 

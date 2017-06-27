@@ -1900,6 +1900,30 @@ public class ChatPanel extends ParentAvailablePanel
         }
     }
 
+    /**
+     * 删除消息
+     * @param messageId
+     */
+    public void deleteMessage(String messageId)
+    {
+        /*int i = 0;
+        for (; i < messageItems.size(); i++)
+        {
+            if (messageItems.get(i).getId().equals(messageId))
+            {
+                break;
+            }
+        }*/
+
+        int pos = findMessageItemPositionInViewReverse(messageId);
+        if (pos > -1)
+        {
+            messageItems.remove(pos);
+            messagePanel.getMessageListView().notifyItemRemoved(pos);
+            messageService.markDeleted(messageId);
+        }
+    }
+
 }
 
 interface RemoteHistoryReceivedListener
