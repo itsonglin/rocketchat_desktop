@@ -1,21 +1,20 @@
-package com.rc.forms;
+package com.rc.panels;
 
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
-import com.rc.components.ImagePanel;
 import com.rc.components.message.MainOperationPopupMenu;
 import com.rc.db.service.CurrentUserService;
+import com.rc.frames.MainFrame;
+import com.rc.frames.SystemConfigDialog;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.IOException;
 
 /**
  * Created by song on 17-5-29.

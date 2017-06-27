@@ -1,10 +1,9 @@
 package com.rc.components.message;
 
 import com.rc.app.ShadowBorder;
-import com.rc.forms.MainFrame;
+import com.rc.frames.MainFrame;
 import com.rc.utils.OSUtil;
 import com.sun.awt.AWTUtilities;
-import jdk.nashorn.internal.scripts.JD;
 
 import javax.swing.*;
 import java.awt.*;

@@ -1,12 +1,10 @@
-package com.rc.forms;
+package com.rc.panels;
 
 import com.rc.adapter.RoomItemViewHolder;
 import com.rc.adapter.search.SearchResultItemsAdapter;
-import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCListView;
-import com.rc.db.service.RoomService;
 import com.rc.entity.SearchResultItem;
 
 import javax.swing.*;

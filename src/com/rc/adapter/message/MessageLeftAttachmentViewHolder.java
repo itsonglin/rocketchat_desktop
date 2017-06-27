@@ -1,9 +1,7 @@
 package com.rc.adapter.message;
 
-import com.rc.adapter.ViewHolder;
 import com.rc.components.*;
 import com.rc.components.message.RCLeftImageMessageBubble;
-import com.rc.forms.MainFrame;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;

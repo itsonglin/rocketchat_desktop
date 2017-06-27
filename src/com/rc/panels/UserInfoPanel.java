@@ -1,4 +1,4 @@
-package com.rc.forms;
+package com.rc.panels;
 
 
 import com.rc.app.Launcher;
@@ -6,18 +6,15 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCButton;
 import com.rc.components.VerticalFlowLayout;
-import com.rc.components.message.SystemMessagePanel;
 import com.rc.db.model.ContactsUser;
 import com.rc.db.model.Room;
 import com.rc.db.service.ContactsUserService;
 import com.rc.db.service.RoomService;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
-import com.rc.utils.IconUtil;
 import com.rc.websocket.WebSocketClient;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;

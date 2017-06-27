@@ -1,6 +1,5 @@
 package com.rc.helper;
 
-import com.rc.forms.MainFrame;
 import com.rc.utils.MimeTypeUtil;
 
 import javax.swing.*;

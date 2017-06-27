@@ -1,12 +1,12 @@
-package com.rc.forms;
+package com.rc.frames;
 
 import com.rc.app.Launcher;
-import com.rc.app.ShadowBorder;
 import com.rc.components.*;
 import com.rc.db.service.ContactsUserService;
+import com.rc.panels.ChangeAvatarPanel;
+import com.rc.panels.ChangePasswordPanel;
+import com.rc.panels.MePanel;
 import com.rc.utils.FontUtil;
-import com.rc.utils.OSUtil;
-import com.sun.awt.AWTUtilities;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

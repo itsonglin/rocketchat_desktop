@@ -1,15 +1,8 @@
 package com.rc.app;
 
 import com.rc.db.service.TableService;
-import com.rc.forms.CardLayoutDemo;
-import com.rc.forms.LoginFrame;
-import com.rc.forms.MainFrame;
-import com.rc.utils.CharacterParser;
 import com.rc.utils.DbUtils;
-import com.rc.utils.HttpUtil;
 import org.apache.ibatis.session.SqlSession;
-
-import javax.swing.*;
 
 /**
  * Created by song on 17-5-28.

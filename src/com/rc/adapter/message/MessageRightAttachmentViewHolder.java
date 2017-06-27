@@ -1,18 +1,10 @@
 package com.rc.adapter.message;
 
-import com.rc.adapter.ViewHolder;
 import com.rc.components.*;
-import com.rc.components.message.NinePatchImageIcon;
 import com.rc.components.message.RCRightAttachmentMessageBubble;
-import com.rc.components.message.RCRightImageMessageBubble;
-import com.rc.forms.MainFrame;
-import com.rc.helper.AttachmentIconHelper;
-import com.rc.utils.FontUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 /**
  * Created by song on 17-6-3.

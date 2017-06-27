@@ -1,13 +1,10 @@
 package com.rc.components.message;
 
-import com.rc.app.ShadowBorder;
 import com.rc.components.Colors;
 import com.rc.components.RCMainOperationMenuItemUI;
-import com.rc.components.RCMenuItemUI;
-import com.rc.forms.CreateGroupDialog;
-import com.rc.forms.MainFrame;
-import com.rc.forms.SystemConfigDialog;
-import com.rc.websocket.WebSocketClient;
+import com.rc.frames.CreateGroupDialog;
+import com.rc.frames.MainFrame;
+import com.rc.frames.SystemConfigDialog;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

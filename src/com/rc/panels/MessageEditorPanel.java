@@ -1,10 +1,9 @@
-package com.rc.forms;
+package com.rc.panels;
 
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.ScrollUI;
 import com.rc.components.message.ChatEditorPopupMenu;
-import com.rc.components.message.JIMSendTextPane;
 import com.rc.components.RCButton;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;

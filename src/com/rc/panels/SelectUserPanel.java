@@ -1,4 +1,4 @@
-package com.rc.forms;
+package com.rc.panels;
 
 import com.rc.adapter.SelectUserItemViewHolder;
 import com.rc.adapter.SelectUserItemsAdapter;

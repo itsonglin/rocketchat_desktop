@@ -1,4 +1,4 @@
-package com.rc.forms;
+package com.rc.panels;
 
 import com.rc.adapter.search.SearchResultItemsAdapter;
 import com.rc.app.Launcher;
@@ -23,9 +23,7 @@ import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by song on 17-5-29.

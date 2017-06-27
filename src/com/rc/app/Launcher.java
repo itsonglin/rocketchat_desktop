@@ -1,8 +1,8 @@
 package com.rc.app;
 
 import com.rc.db.service.*;
-import com.rc.forms.LoginFrame;
-import com.rc.forms.MainFrame;
+import com.rc.frames.LoginFrame;
+import com.rc.frames.MainFrame;
 import com.rc.utils.DbUtils;
 import org.apache.ibatis.session.SqlSession;
 

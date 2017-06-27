@@ -1,4 +1,4 @@
-package com.rc.forms;
+package com.rc.components;
 
 
 import com.rc.components.Colors;
@@ -6,6 +6,8 @@ import com.rc.components.GBC;
 import com.rc.components.RCButton;
 import com.rc.db.model.ContactsUser;
 import com.rc.db.model.Room;
+import com.rc.panels.ChatPanel;
+import com.rc.panels.ContactsPanel;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
 import com.rc.websocket.WebSocketClient;

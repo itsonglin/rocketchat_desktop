@@ -1,4 +1,4 @@
-package com.rc.forms;
+package com.rc.frames;
 
 import com.rc.app.Launcher;
 import com.rc.app.ShadowBorder;
@@ -6,6 +6,7 @@ import com.rc.components.*;
 import com.rc.db.model.ContactsUser;
 import com.rc.db.service.ContactsUserService;
 import com.rc.entity.SelectUserData;
+import com.rc.panels.SelectUserPanel;
 import com.rc.utils.FontUtil;
 import com.rc.utils.OSUtil;
 import com.rc.websocket.WebSocketClient;

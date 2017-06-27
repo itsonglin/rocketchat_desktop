@@ -1,4 +1,4 @@
-package com.rc.forms;
+package com.rc.panels;
 
 import com.rc.adapter.RoomMembersAdapter;
 import com.rc.app.Launcher;
@@ -10,6 +10,8 @@ import com.rc.db.service.ContactsUserService;
 import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.RoomService;
 import com.rc.entity.SelectUserData;
+import com.rc.frames.AddOrRemoveMemberDialog;
+import com.rc.frames.MainFrame;
 import com.rc.tasks.HttpPostTask;
 import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.AvatarUtil;
@@ -24,8 +26,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.rc.app.Launcher.messageService;
 
 /**
  * Created by song on 07/06/2017.

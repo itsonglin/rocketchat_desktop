@@ -1,7 +1,6 @@
-package com.rc.forms;
+package com.rc.panels;
 
 import com.rc.components.*;
-import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 import com.rc.websocket.WebSocketClient;

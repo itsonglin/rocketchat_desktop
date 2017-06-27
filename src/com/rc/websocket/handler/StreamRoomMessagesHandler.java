@@ -9,17 +9,14 @@ import com.rc.db.service.FileAttachmentService;
 import com.rc.db.service.ImageAttachmentService;
 import com.rc.db.service.MessageService;
 import com.rc.db.service.RoomService;
-import com.rc.forms.ChatPanel;
-import com.rc.forms.MainFrame;
-import com.rc.forms.RoomsPanel;
+import com.rc.panels.ChatPanel;
+import com.rc.frames.MainFrame;
+import com.rc.panels.RoomsPanel;
 import com.rc.utils.OSUtil;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created by song on 27/03/2017.

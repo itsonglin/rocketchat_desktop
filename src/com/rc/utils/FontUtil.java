@@ -1,10 +1,6 @@
 package com.rc.utils;
 
-import com.rc.forms.MainFrame;
-
 import java.awt.*;
-import java.io.BufferedInputStream;
-import java.io.IOException;
 
 /**
  * Created by song on 17-5-29.

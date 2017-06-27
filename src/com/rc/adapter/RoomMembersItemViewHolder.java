@@ -2,13 +2,10 @@ package com.rc.adapter;
 
 
 import com.rc.components.Colors;
-import com.rc.components.GBC;
 import com.rc.components.RCBorder;
-import com.rc.forms.RoomMembersPanel;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**

@@ -1,4 +1,4 @@
-package com.rc.forms;
+package com.rc.panels;
 
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
@@ -7,10 +7,10 @@ import com.rc.components.RCButton;
 import com.rc.components.VerticalFlowLayout;
 import com.rc.db.model.CurrentUser;
 import com.rc.db.service.CurrentUserService;
+import com.rc.frames.MainFrame;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
 import com.rc.websocket.WebSocketClient;
-import sun.util.resources.cldr.rm.CurrencyNames_rm;
 
 import javax.swing.*;
 import java.awt.*;

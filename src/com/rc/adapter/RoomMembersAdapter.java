@@ -2,27 +2,17 @@ package com.rc.adapter;
 
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
-import com.rc.components.message.MessagePopupMenu;
-import com.rc.db.model.ContactsUser;
 import com.rc.db.model.CurrentUser;
 import com.rc.db.service.ContactsUserService;
 import com.rc.db.service.CurrentUserService;
-import com.rc.entity.SelectUserData;
-import com.rc.forms.AddOrRemoveMemberDialog;
-import com.rc.forms.MainFrame;
-import com.rc.forms.UserInfoPopup;
+import com.rc.components.UserInfoPopup;
 import com.rc.listener.AbstractMouseListener;
-import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.AvatarUtil;
-import org.json.JSONObject;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-import javax.swing.plaf.basic.BasicPopupMenuUI;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;
 

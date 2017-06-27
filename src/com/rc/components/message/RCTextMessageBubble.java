@@ -1,6 +1,6 @@
 package com.rc.components.message;
 
-import com.rc.forms.MainFrame;
+import com.rc.frames.MainFrame;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;

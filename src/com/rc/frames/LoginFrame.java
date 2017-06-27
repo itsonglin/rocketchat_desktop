@@ -1,4 +1,4 @@
-package com.rc.forms;
+package com.rc.frames;
 
 import com.rc.app.Launcher;
 import com.rc.components.*;

@@ -1,4 +1,4 @@
-package com.rc.forms;
+package com.rc.panels;
 
 import javax.swing.*;
 import java.awt.*;

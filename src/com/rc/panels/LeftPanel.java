@@ -1,4 +1,4 @@
-package com.rc.forms;
+package com.rc.panels;
 
 import com.rc.components.Colors;
 import com.rc.components.GBC;

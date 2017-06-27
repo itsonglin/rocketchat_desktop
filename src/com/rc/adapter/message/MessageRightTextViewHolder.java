@@ -1,22 +1,14 @@
 package com.rc.adapter.message;
 
-import com.rc.adapter.ViewHolder;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.SizeAutoAdjustTextArea;
-import com.rc.components.message.MessagePopupMenu;
 import com.rc.components.message.RCRightImageMessageBubble;
-import com.rc.entity.MessageItem;
-import com.rc.forms.MainFrame;
+import com.rc.frames.MainFrame;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 /**
  * Created by song on 17-6-2.

@@ -1,11 +1,10 @@
-package com.rc.forms;
+package com.rc.panels;
 
 
 import com.rc.components.GBC;
 import com.rc.utils.IconUtil;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 
 /**

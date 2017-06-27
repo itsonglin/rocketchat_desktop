@@ -1,8 +1,5 @@
 package com.rc.components.message;
 
-import com.rc.forms.MainFrame;
-import com.rc.utils.FontUtil;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;

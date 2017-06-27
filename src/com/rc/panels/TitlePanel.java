@@ -1,21 +1,14 @@
-package com.rc.forms;
+package com.rc.panels;
 
-import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.components.VerticalFlowLayout;
-import com.rc.db.model.Room;
-import com.rc.db.service.RoomService;
+import com.rc.frames.MainFrame;
 import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.*;
-import com.sun.awt.AWTUtilities;
-import com.sun.imageio.plugins.common.ImageUtil;
-import com.sun.javaws.Main;
-import com.sun.javaws.jnl.LaunchDesc;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 

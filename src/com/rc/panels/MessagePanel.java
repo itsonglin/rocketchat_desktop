@@ -1,20 +1,10 @@
-package com.rc.forms;
+package com.rc.panels;
 
-import com.rc.adapter.message.MessageAdapter;
-import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.RCListView;
-import com.rc.db.service.MessageService;
-import com.rc.entity.FileAttachmentItem;
-import com.rc.entity.ImageAttachmentItem;
-import com.rc.entity.MessageItem;
-import com.rc.listener.AbstractMouseListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Created by song on 17-5-30.

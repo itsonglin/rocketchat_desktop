@@ -1,10 +1,9 @@
 package com.rc.helper;
 
 import com.rc.adapter.message.*;
-import com.rc.forms.ChatPanel;
+import com.rc.panels.ChatPanel;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseListener;
 import java.util.ArrayList;
 import java.util.List;

@@ -1,10 +1,8 @@
 package com.rc.components;
 
-import com.rc.forms.MainFrame;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseListener;
 

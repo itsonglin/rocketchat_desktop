@@ -6,11 +6,10 @@ import com.rc.components.RCProgressBar;
 import com.rc.components.SizeAutoAdjustTextArea;
 import com.rc.components.message.AttachmentPanel;
 import com.rc.components.message.RCAttachmentMessageBubble;
-import com.rc.forms.MainFrame;
+import com.rc.frames.MainFrame;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 

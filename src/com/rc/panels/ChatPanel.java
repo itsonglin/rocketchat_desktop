@@ -1,4 +1,4 @@
-package com.rc.forms;
+package com.rc.panels;
 
 import com.rc.adapter.message.*;
 import com.rc.app.Launcher;
@@ -12,6 +12,7 @@ import com.rc.db.service.*;
 import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.ImageAttachmentItem;
 import com.rc.entity.MessageItem;
+import com.rc.frames.MainFrame;
 import com.rc.helper.MessageViewHolderCacheHelper;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.FileCache;

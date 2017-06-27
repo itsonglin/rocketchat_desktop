@@ -1,24 +1,20 @@
-package com.rc.forms;
+package com.rc.frames;
 
 
-import com.rc.app.ShadowBorder;
 import com.rc.components.Colors;
-import com.rc.components.GBC;
+import com.rc.panels.LeftPanel;
+import com.rc.panels.RightPanel;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.OSUtil;
 import com.rc.websocket.WebSocketClient;
-import com.sun.awt.AWTUtilities;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.RoundRectangle2D;
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 
 /**
  * Created by song on 17-5-28.
