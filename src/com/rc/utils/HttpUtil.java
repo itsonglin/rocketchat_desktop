@@ -230,7 +230,8 @@ public class HttpUtil
             {
                 InputStream inputStream = response.body().byteStream();
                 ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-                byte[] buff = new byte[2048000];
+                //byte[] buff = new byte[2048000];
+                byte[] buff = new byte[2048];
 
                 int len;
                 long total = response.body().contentLength();

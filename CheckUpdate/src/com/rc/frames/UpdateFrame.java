@@ -1,7 +1,10 @@
 package com.rc.frames;
 
 import com.rc.components.*;
+import com.rc.tasks.DownloadTask;
+import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.FontUtil;
+import com.rc.utils.HttpUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.OSUtil;
 
@@ -10,6 +13,8 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.io.File;
+import java.io.FileOutputStream;
 
 /**
  * Created by song on 2017/6/27.
@@ -25,6 +30,9 @@ public class UpdateFrame extends JFrame
     private JLabel logoLabel;
     private JLabel messageLabel;
     private RCProgressBar progressBar;
+    private static final String updateServerPath = "http://192.168.1.171:8080/uploads/helichat.jar";
+
+    private UpdateResultListener updateResultListener;
 
     int count = 0;
 
@@ -35,6 +43,86 @@ public class UpdateFrame extends JFrame
         setListeners();
 
         updateTitle();
+        download();
+    }
+
+    private void download()
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                DownloadTask task = new DownloadTask(new HttpUtil.ProgressListener()
+                {
+                    @Override
+                    public void onProgress(int progress)
+                    {
+                        try
+                        {
+                            Thread.sleep(1);
+                        }
+                        catch (InterruptedException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        progressBar.setValue(progress);
+                    }
+                });
+
+                task.setListener(new HttpResponseListener<byte[]>()
+                {
+                    @Override
+                    public void onResult(byte[] ret)
+                    {
+                        System.out.println(ret.length);
+                        saveFile(ret);
+                    }
+                });
+
+                task.execute(updateServerPath);
+            }
+        }).start();
+    }
+
+    /**
+     * 保存下载文件
+     *
+     * @param ret
+     */
+    private void saveFile(byte[] ret)
+    {
+        File oldFile = new File("helichat.jar");
+        if (oldFile.exists())
+        {
+            oldFile.renameTo(new File("helichat_old.jar"));
+        }
+
+        File file = new File("helichat.jar");
+        try
+        {
+            FileOutputStream outputStream = new FileOutputStream(file);
+            outputStream.write(ret);
+            System.out.println("文件保存在：" + file.getAbsolutePath());
+
+            if (updateResultListener != null)
+            {
+                updateResultListener.onSuccess();
+            }
+        }
+        catch (Exception e)
+        {
+            File oFile = new File("helichat_old.jar");
+            oFile.renameTo(new File("helichat.jar"));
+
+            JOptionPane.showMessageDialog(null, "更新失败，正在还原...", "更新失败", JOptionPane.ERROR_MESSAGE);
+            if (updateResultListener != null)
+            {
+                updateResultListener.onFailed();
+            }
+
+            e.printStackTrace();
+        }
     }
 
     private void updateTitle()
@@ -49,14 +137,18 @@ public class UpdateFrame extends JFrame
                     String dot = "";
                     switch (count++ % 4)
                     {
-                        case 0 :
-                            dot = ""; break;
-                        case 1 :
-                            dot = "."; break;
-                        case 2 :
-                            dot = ".."; break;
-                        case 3 :
-                            dot = "..."; break;
+                        case 0:
+                            dot = "";
+                            break;
+                        case 1:
+                            dot = "·";
+                            break;
+                        case 2:
+                            dot = "··";
+                            break;
+                        case 3:
+                            dot = "···";
+                            break;
                     }
 
                     messageLabel.setText("和理通 正在更新中" + dot);
@@ -64,7 +156,8 @@ public class UpdateFrame extends JFrame
                     try
                     {
                         Thread.sleep(1000);
-                    } catch (InterruptedException e)
+                    }
+                    catch (InterruptedException e)
                     {
                         e.printStackTrace();
                     }
@@ -96,7 +189,7 @@ public class UpdateFrame extends JFrame
         progressBar = new RCProgressBar();
         progressBar.setMaximum(100);
         progressBar.setMinimum(0);
-        progressBar.setValue(50);
+        progressBar.setValue(1);
         progressBar.setUI(new GradientProgressBarUI());
 
     }
@@ -157,5 +250,10 @@ public class UpdateFrame extends JFrame
         Toolkit tk = Toolkit.getDefaultToolkit();
         this.setLocation((tk.getScreenSize().width - FRAME_WIDTH) / 2,
                 (tk.getScreenSize().height - FRAME_HEIGHT) / 2);
+    }
+
+    public void setUpdateResultListener(UpdateResultListener updateResultListener)
+    {
+        this.updateResultListener = updateResultListener;
     }
 }
