@@ -3,8 +3,13 @@ package com.rc.app;
 import com.rc.db.service.*;
 import com.rc.frames.LoginFrame;
 import com.rc.frames.MainFrame;
+import com.rc.tasks.HttpGetTask;
+import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.DbUtils;
 import org.apache.ibatis.session.SqlSession;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import javax.swing.*;
 import java.io.File;
@@ -30,6 +35,9 @@ public class Launcher
     public static FileAttachmentService fileAttachmentService;
 
     public static final String HOSTNAME = "https://rc.shls-leasing.com";
+    public static final String UPDATE_HOSTNAME = "http://192.168.1.171:8080";
+
+    public static final String APP_VERSION = "0.0.0";
 
     public static String userHome;
     public static String appFilesBasePath;
@@ -61,6 +69,11 @@ public class Launcher
         if (!isApplicationRunning())
         {
             openFrame();
+
+            System.out.println("检查更新中...");
+
+            // 检查更新
+            checkoutUpdate();
         }
         else
         {
@@ -151,6 +164,59 @@ public class Launcher
         currentFrame.setVisible(true);
     }
 
+    /**
+     * 检查是否有更新
+     */
+    private void checkoutUpdate()
+    {
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                String url = UPDATE_HOSTNAME + "/Update/updateDesktop";
+
+                HttpGetTask task = new HttpGetTask();
+                task.setListener(new HttpResponseListener<JSONObject>()
+                {
+                    @Override
+                    public void onResult(JSONObject retJson)
+                    {
+                        try
+                        {
+                            JSONArray messages = retJson.getJSONArray("message");
+                            StringBuilder sb = new StringBuilder();
+                            for (int i = 0; i < messages.length(); i++)
+                            {
+                                sb.append("* " + messages.get(i) + "\r\n");
+                            }
+
+                            String version = retJson.getString("version");
+                            if (!version.equals(Launcher.APP_VERSION))
+                            {
+                                System.out.println("发现新版：" + version);
+                                File updateSignalFile = new File(appFilesBasePath + System.getProperty("file.separator") + "update.dat");
+                                if (!updateSignalFile.exists())
+                                {
+                                    updateSignalFile.createNewFile();
+                                }
+                            }
+                        }
+                        catch (JSONException e)
+                        {
+                            e.printStackTrace();
+                        }
+                        catch (IOException e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+
+                task.execute(url);
+            }
+        }).start();
+    }
 
     public static Launcher getContext()
     {

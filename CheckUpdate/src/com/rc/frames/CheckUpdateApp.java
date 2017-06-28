@@ -6,7 +6,7 @@ import java.io.IOException;
 /**
  * Created by song on 28/06/2017.
  */
-public class App
+public class CheckUpdateApp
 {
     private static String userHome;
     private static String appFilesBasePath;

@@ -1,19 +1,27 @@
 package com.rc.frames;
 
 
+import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.panels.LeftPanel;
 import com.rc.panels.RightPanel;
+import com.rc.tasks.HttpGetTask;
+import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.OSUtil;
 import com.rc.websocket.WebSocketClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -48,6 +56,7 @@ public class MainFrame extends JFrame
 
         // 连接WebSocket
         startWebSocket();
+
         test();
     }
 
@@ -74,7 +83,8 @@ public class MainFrame extends JFrame
         {
             InputStream inputStream = getClass().getResourceAsStream("/wav/msg.wav");
             messageSound = new AudioStream(inputStream);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -90,7 +100,8 @@ public class MainFrame extends JFrame
             InputStream inputStream = getClass().getResourceAsStream("/wav/msg.wav");
             messageSound = new AudioStream(inputStream);
             AudioPlayer.player.start(messageSound);
-        } catch (Exception e)
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -108,7 +119,8 @@ public class MainFrame extends JFrame
             if (OSUtil.getOsType() == OSUtil.Mac_OS)
             {
                 normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher_dark.png", 20, 20).getImage();
-            } else
+            }
+            else
             {
                 normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher.png", 20, 20).getImage();
             }
@@ -164,7 +176,8 @@ public class MainFrame extends JFrame
 
             systemTray.add(trayIcon);
 
-        } catch (AWTException e)
+        }
+        catch (AWTException e)
         {
             e.printStackTrace();
         }
@@ -191,7 +204,8 @@ public class MainFrame extends JFrame
                         trayIcon.setImage(normalTrayIcon);
                         Thread.sleep(800);
 
-                    } catch (InterruptedException e)
+                    }
+                    catch (InterruptedException e)
                     {
                         e.printStackTrace();
                     }
@@ -254,7 +268,8 @@ public class MainFrame extends JFrame
             try
             {
                 UIManager.setLookAndFeel(windows);
-            } catch (Exception e)
+            }
+            catch (Exception e)
             {
                 e.printStackTrace();
             }
