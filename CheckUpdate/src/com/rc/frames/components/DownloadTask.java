@@ -1,6 +1,4 @@
-package com.rc.tasks;
-
-import com.rc.utils.HttpUtil;
+package com.rc.frames.components;
 
 /**
  * Created by song on 16/06/2017.

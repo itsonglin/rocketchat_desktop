@@ -53,6 +53,7 @@ public class CheckUpdateApp
             @Override
             public void onFailed()
             {
+                System.out.println("更新失败，放弃更新，直接启动APP");
                 exeCmd(START_CMD);
                 System.exit(1);
             }

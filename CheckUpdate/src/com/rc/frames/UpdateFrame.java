@@ -1,12 +1,6 @@
 package com.rc.frames;
 
-import com.rc.components.*;
-import com.rc.tasks.DownloadTask;
-import com.rc.tasks.HttpResponseListener;
-import com.rc.utils.FontUtil;
-import com.rc.utils.HttpUtil;
-import com.rc.utils.IconUtil;
-import com.rc.utils.OSUtil;
+import com.rc.frames.components.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -30,7 +24,7 @@ public class UpdateFrame extends JFrame
     private JLabel logoLabel;
     private JLabel messageLabel;
     private RCProgressBar progressBar;
-    private static final String updateServerPath = "http://192.168.1.171:8080/uploads/helichat.jar";
+    private static final String updateServerPath = "https://apk.shls-leasing.com/uploads/helichat.jar";
 
     private UpdateResultListener updateResultListener;
 
@@ -58,14 +52,14 @@ public class UpdateFrame extends JFrame
                     @Override
                     public void onProgress(int progress)
                     {
-                        try
+                       /* try
                         {
                             Thread.sleep(1);
                         }
                         catch (InterruptedException e)
                         {
                             e.printStackTrace();
-                        }
+                        }*/
                         progressBar.setValue(progress);
                     }
                 });
@@ -75,7 +69,6 @@ public class UpdateFrame extends JFrame
                     @Override
                     public void onResult(byte[] ret)
                     {
-                        System.out.println(ret.length);
                         saveFile(ret);
                     }
                 });
@@ -92,6 +85,12 @@ public class UpdateFrame extends JFrame
      */
     private void saveFile(byte[] ret)
     {
+        if (ret == null)
+        {
+            updateResultListener.onFailed();
+            return;
+        }
+
         File oldFile = new File("helichat.jar");
         if (oldFile.exists())
         {
@@ -174,9 +173,10 @@ public class UpdateFrame extends JFrame
         logoPanel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 0));
 
         logoLabel = new JLabel();
-        ImageIcon icon = IconUtil.getIcon(this, "/image/ic_launcher.png");
+        ImageIcon icon = new ImageIcon(getClass().getResource("ic_launcher.png"));
         icon.setImage(icon.getImage().getScaledInstance(70, 70, Image.SCALE_SMOOTH));
         logoLabel.setIcon(icon);
+        setIconImage(icon.getImage());
 
         messageLabel = new JLabel("和理通 正在更新中...");
         messageLabel.setFont(FontUtil.getDefaultFont(32));
@@ -192,6 +192,7 @@ public class UpdateFrame extends JFrame
         progressBar.setValue(1);
         progressBar.setUI(new GradientProgressBarUI());
 
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }
 
     private void initView()
