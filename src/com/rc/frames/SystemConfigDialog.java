@@ -3,6 +3,7 @@ package com.rc.frames;
 import com.rc.app.Launcher;
 import com.rc.components.*;
 import com.rc.db.service.ContactsUserService;
+import com.rc.panels.AboutPanel;
 import com.rc.panels.ChangeAvatarPanel;
 import com.rc.panels.ChangePasswordPanel;
 import com.rc.panels.MePanel;
@@ -30,10 +31,12 @@ public class SystemConfigDialog extends JDialog
     private JLabel changeAvatarLabel;
     private JLabel changePasswordLabel;
     private JLabel meLabel;
+    private JLabel aboutLabel;
 
     private ChangeAvatarPanel changeAvatarPanel;
     private ChangePasswordPanel changePasswordPanel;
     private MePanel mePanel;
+    private AboutPanel aboutPanel;
 
 
     private JLabel selectedLabel;
@@ -41,6 +44,7 @@ public class SystemConfigDialog extends JDialog
     public static final String CHANGE_AVATAR = "CHANGE_AVATAR";
     public static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
     public static final String ME = "ME";
+    public static final String ABOUT = "ABOUT";
 
     private CardLayout cardLayout = new CardLayout();
 
@@ -120,6 +124,10 @@ public class SystemConfigDialog extends JDialog
         meLabel = new JLabel("我");
         processButtonLabel(meLabel);
 
+        // 关于 按钮
+        aboutLabel = new JLabel("关于");
+        processButtonLabel(aboutLabel);
+
 
         // 更改头像面板
         changeAvatarPanel = new ChangeAvatarPanel();
@@ -129,6 +137,9 @@ public class SystemConfigDialog extends JDialog
 
         // "我" 面板
         mePanel = new MePanel();
+
+        // 关于面板
+        aboutPanel = new AboutPanel();
 
     }
 
@@ -146,11 +157,13 @@ public class SystemConfigDialog extends JDialog
         settingMenuPanel.add(meLabel);
         settingMenuPanel.add(changeAvatarLabel);
         settingMenuPanel.add(changePasswordLabel);
+        settingMenuPanel.add(aboutLabel);
 
         settingAreaPanel.setLayout(cardLayout);
         settingAreaPanel.add(mePanel, ME);
         settingAreaPanel.add(changeAvatarPanel, CHANGE_AVATAR);
         settingAreaPanel.add(changePasswordPanel, CHANGE_PASSWORD);
+        settingAreaPanel.add(aboutPanel, ABOUT);
 
         add(settingPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
@@ -216,6 +229,10 @@ public class SystemConfigDialog extends JDialog
                     {
                         cardLayout.show(settingAreaPanel, ME);
                     }
+                    else if (source.getText().equals("关于"))
+                    {
+                        cardLayout.show(settingAreaPanel, ABOUT);
+                    }
                 }
 
 
@@ -226,6 +243,7 @@ public class SystemConfigDialog extends JDialog
         changeAvatarLabel.addMouseListener(itemMouseListener);
         changePasswordLabel.addMouseListener(itemMouseListener);
         meLabel.addMouseListener(itemMouseListener);
+        aboutLabel.addMouseListener(itemMouseListener);
     }
 
     private void selectedLabel(JLabel label)
