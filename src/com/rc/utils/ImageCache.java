@@ -126,7 +126,7 @@ public class ImageCache
                     {
                         byte[] data;
 
-                        // 本地上传的文件，则从原上传路径复制一份分缓存目录
+                        // 本地上传的文件，则从原上传路径复制一份到缓存目录
                         if (url.startsWith("file://"))
                         {
                             String originUrl = url.substring(7);

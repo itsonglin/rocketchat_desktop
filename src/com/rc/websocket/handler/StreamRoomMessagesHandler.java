@@ -271,14 +271,10 @@ public class StreamRoomMessagesHandler implements CollectionHandler
             param.put("size", message.getTimestamp() + "");
             param.put("unreadCount", room.getUnreadCount() + "");*/
 
-            // 如果是刚刚自己上传的文件，提示UI不要再把这条消息加入到消息列表中，防止消息重复出现
             if (myUploadFile)
             {
-                //param.put("doNotAddToMessageList", "true");
-
                 // 继续上传后面的文件
-                /*((WebSocketService) context).sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION,
-                        WebSocketService.DEQUEUE_AND_UPLOAD, param);*/
+                ChatPanel.getContext().dequeueAndUpload();
             }
 
             // 更新主程序窗口状态

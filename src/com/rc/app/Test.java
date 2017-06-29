@@ -28,46 +28,15 @@ class Test
     public static void main(String[] args) throws IOException, FontFormatException
     {
 
-        //String strImg = getImageStr("/Users/song/Pictures/ubuntu.png");
-        //System.out.println(strImg);
-
-        /*JFrame frame = new JFrame();
-        frame.setSize(new Dimension(800, 600));
-        JLabel label = new JLabel("AAAAAAAAAAAAAAA");
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        frame.add(label);
-
-        JPopupMenu popupMenu = new JPopupMenu();
-        JMenuItem enlargeItem = new JMenuItem("放大");
-        JMenuItem narrowItem = new JMenuItem("缩小");
-        JMenuItem saveAsItem = new JMenuItem("另存为");
-
-        *//*saveAsItem.setUI(new RCMenuItemUI());
-        narrowItem.setUI(new RCMenuItemUI());
-        enlargeItem.setUI(new RCMenuItemUI());*//*
-
-        popupMenu.add(enlargeItem);
-        popupMenu.add(narrowItem);
-        popupMenu.add(saveAsItem);
-
-        frame.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                if (e.getButton() == MouseEvent.BUTTON3)
-                {
-                    popupMenu.show(frame, e.getX(), e.getY());
-                }
-                super.mouseClicked(e);
-            }
-        });
+        int num = 2147483647;
+        num += 2L;
+        System.out.println(num);
 
 
-        frame.setVisible(true);*/
+        /*int num = 2147483647;
+        long temp  = num +  2;
 
-        //ImageViewerFrame frame = new ImageViewerFrame();
-        //frame.setVisible(true);
+        System.out.println(temp);*/
     }
 }
 

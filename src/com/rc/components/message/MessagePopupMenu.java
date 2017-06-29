@@ -1,14 +1,18 @@
 package com.rc.components.message;
 
+import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.RCMenuItemUI;
 import com.rc.components.SizeAutoAdjustTextArea;
+import com.rc.db.model.FileAttachment;
+import com.rc.db.service.FileAttachmentService;
 import com.rc.entity.MessageItem;
 import com.rc.panels.ChatPanel;
 import com.rc.frames.MainFrame;
 import com.rc.utils.ClipboardUtil;
 import com.rc.utils.FileCache;
 import com.rc.utils.ImageCache;
+import com.sun.xml.internal.ws.api.message.Attachment;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
@@ -24,6 +28,7 @@ public class MessagePopupMenu extends JPopupMenu
     private int messageType;
     private ImageCache imageCache = new ImageCache();
     private FileCache fileCache = new FileCache();
+    private FileAttachmentService fileAttachmentService = Launcher.fileAttachmentService;
 
     public MessagePopupMenu()
     {
@@ -108,10 +113,23 @@ public class MessagePopupMenu extends JPopupMenu
                             }
                             else
                             {
-                                JOptionPane.showMessageDialog(MainFrame.getContext(), "请先下载该文件", "文件未下载", JOptionPane.WARNING_MESSAGE);
+                                FileAttachment attachment =  fileAttachmentService.findById(id);
+                                if (attachment == null)
+                                {
+                                    JOptionPane.showMessageDialog(MainFrame.getContext(), "文件不存在", "文件不存在", JOptionPane.WARNING_MESSAGE);
+                                    return;
+                                }
+
+                                String link = attachment.getLink();
+                                if (link == null)
+                                {
+                                    JOptionPane.showMessageDialog(MainFrame.getContext(), "文件不存在，可能已被删除", "文件不存在", JOptionPane.WARNING_MESSAGE);
+                                }
+                                else
+                                {
+                                    ClipboardUtil.copyFile(link);
+                                }
                             }
-
-
                         }
                         break;
                     }
