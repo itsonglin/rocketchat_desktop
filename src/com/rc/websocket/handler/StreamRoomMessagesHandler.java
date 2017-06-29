@@ -297,7 +297,9 @@ public class StreamRoomMessagesHandler implements CollectionHandler
     private void notifyMainFrame(Message message, boolean myUploadFile)
     {
         // 更新房间列表
-        RoomsPanel.getContext().notifyDataSetChanged(true);
+        //RoomsPanel.getContext().notifyDataSetChanged(true);
+        RoomsPanel.getContext().updateRoomsList(message);
+
 
         MainFrame context = MainFrame.getContext();
         // 如果主窗口没有显示，则任务栏闪动

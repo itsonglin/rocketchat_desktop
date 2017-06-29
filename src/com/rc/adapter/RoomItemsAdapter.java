@@ -55,6 +55,9 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         //viewHolder.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         RoomItem item = roomItems.get(position);
+
+        viewHolder.setTag(item.getRoomId());
+
         viewHolder.roomName.setText(item.getTitle());
 
 

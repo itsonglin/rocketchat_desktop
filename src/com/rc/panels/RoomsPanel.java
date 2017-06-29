@@ -4,9 +4,11 @@ import com.rc.adapter.RoomItemViewHolder;
 import com.rc.adapter.RoomItemsAdapter;
 import com.rc.app.Launcher;
 import com.rc.components.*;
+import com.rc.db.model.Message;
 import com.rc.db.model.Room;
 import com.rc.db.service.RoomService;
 import com.rc.entity.RoomItem;
+import com.rc.websocket.handler.StreamRoomMessagesHandler;
 
 import javax.swing.*;
 import java.awt.*;
@@ -81,6 +83,26 @@ public class RoomsPanel extends ParentAvailablePanel
     {
         initData();
         roomItemsListView.notifyDataSetChanged(keepSize);
+    }
+
+    /**
+     * 更新房间列表，message参数用在{@link StreamRoomMessagesHandler}收到新消息并更新房间列表时使用，
+     * 当这条消息所在的房间在当前房间列表中排在第一位时，此时房间列表项目顺序不变，无需重新排列
+     * 因此无需更新整个房间列表，只需更新第一个项目即可
+     *
+     * @param message
+     */
+    public void updateRoomsList(Message message)
+    {
+        String roomId = (String) ((RoomItemViewHolder) (roomItemsListView.getItem(0))).getTag();
+        if (roomId.equals(message.getRoomId()))
+        {
+            roomItemsListView.notifyItemChanged(0);
+        }
+        else
+        {
+            notifyDataSetChanged(false);
+        }
     }
 
     /**

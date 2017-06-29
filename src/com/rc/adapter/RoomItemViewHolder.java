@@ -22,6 +22,7 @@ public class RoomItemViewHolder extends ViewHolder
     public JLabel time = new JLabel();
     public JLabel unreadCount = new JLabel();
     public JPanel timeUnread = new JPanel();
+    private Object tag;
 
     public RoomItemViewHolder()
     {
@@ -84,4 +85,13 @@ public class RoomItemViewHolder extends ViewHolder
     }
 
 
+    public Object getTag()
+    {
+        return tag;
+    }
+
+    public void setTag(Object tag)
+    {
+        this.tag = tag;
+    }
 }
