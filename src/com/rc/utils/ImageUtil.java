@@ -43,9 +43,6 @@ public class ImageUtil
         gs.setComposite(AlphaComposite.SrcAtop);
         gs.drawImage(srcImage, 0, 0, null);
         gs.dispose();
-
-        ImageIO.write(image, "jpg" , new File("D:\\asd.jpg"));
-
         return image;
     }
 }
