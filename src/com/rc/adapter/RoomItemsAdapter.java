@@ -2,7 +2,9 @@ package com.rc.adapter;
 
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
+import com.rc.db.model.CurrentUser;
 import com.rc.db.model.Room;
+import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.RoomService;
 import com.rc.entity.RoomItem;
 import com.rc.panels.ChatPanel;
@@ -61,17 +63,10 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         String type = item.getType();
         if (type.equals("c") || type.equals("p"))
         {
-            // 新的群头像
-            Room room = roomService.findById(item.getRoomId());
-            String memberStr = room.getMember();
-            String[] roomMember = null;
-            if (memberStr != null)
-            {
-                roomMember = room.getMember().split(",");
-            }
+            String[] memberArr = getRoomMembers(item.getRoomId());
 
-            icon.setImage(AvatarUtil.createOrLoadGroupAvatar(item.getTitle(), roomMember, type)
-                    .getScaledInstance(40,40, Image.SCALE_SMOOTH));
+            icon.setImage(AvatarUtil.createOrLoadGroupAvatar(item.getTitle(), memberArr, type)
+                    .getScaledInstance(40, 40, Image.SCALE_SMOOTH));
         }
         // 私聊头像
         else if (type.equals("d"))
@@ -87,7 +82,8 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         if (item.getLastMessage() != null && item.getLastMessage().length() > 15)
         {
             viewHolder.brief.setText(item.getLastMessage().substring(0, 15) + "...");
-        }else
+        }
+        else
         {
             viewHolder.brief.setText(item.getLastMessage());
         }
@@ -103,7 +99,8 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         {
             viewHolder.unreadCount.setVisible(true);
             viewHolder.unreadCount.setText(item.getUnreadCount() + "");
-        } else
+        }
+        else
         {
             viewHolder.unreadCount.setVisible(false);
         }
@@ -139,7 +136,7 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
                             }
                         }
 
-                       //setBackground(viewHolder, Colors.ITEM_SELECTED);
+                        //setBackground(viewHolder, Colors.ITEM_SELECTED);
                         selectedViewHolder = viewHolder;
                     }
                 }
@@ -164,6 +161,37 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
                 }
             }
         });
+    }
+
+    private String[] getRoomMembers(String roomId)
+    {
+        Room room = roomService.findById(roomId);
+        String members = room.getMember();
+        String[] memberArr = null;
+
+        List<String> roomMembers = new ArrayList<>();
+        if (members != null)
+        {
+            String[] userArr = members.split(",");
+            for (int i = 0; i < userArr.length; i++)
+            {
+                if (!roomMembers.contains(userArr[i]))
+                {
+                    roomMembers.add(userArr[i]);
+                }
+            }
+        }
+        String creator = room.getCreatorName();
+        if (creator != null)
+        {
+            if (!roomMembers.equals(creator))
+            {
+                roomMembers.add(creator);
+            }
+        }
+
+        memberArr = roomMembers.toArray(new String[]{});
+        return memberArr;
     }
 
     private void setBackground(RoomItemViewHolder holder, Color color)

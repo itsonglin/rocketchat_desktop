@@ -89,7 +89,7 @@ public class AvatarUtil
             if (avatar == null)
             {
                 // 如果尚未从服务器获取群成员，则获取默认群组头像
-                if (members == null)
+                if (members == null || members.length < 1)
                 {
                     String sign = type.equals("p") ? "#" : "##";
                     avatar = getCachedImageAvatar(sign);
