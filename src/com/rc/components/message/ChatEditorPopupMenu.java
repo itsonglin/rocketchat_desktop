@@ -118,11 +118,14 @@ public class ChatEditorPopupMenu extends JPopupMenu
             public void actionPerformed(ActionEvent e)
             {
                 JTextPane textPane = (JTextPane) getInvoker();
-                String text = textPane.getSelectedText();
+                /*String text = textPane.getSelectedText();
                 if (text != null)
                 {
                     textPane.replaceSelection("");
-                }
+                }*/
+
+
+                textPane.insertComponent(new FileEditorThumbnail());
 
             }
         });
