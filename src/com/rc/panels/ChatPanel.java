@@ -387,7 +387,7 @@ public class ChatPanel extends ParentAvailablePanel
                 loadRemoteRoomMembers();
             }
 
-            title += " (" + (roomMembers.size() + 1) + ")";
+            title += " (" + (roomMembers.size()) + ")";
         }
 
 
@@ -1724,11 +1724,10 @@ public class ChatPanel extends ParentAvailablePanel
 
         if (members != null)
         {
-            String creator = room.getCreatorName();
             String[] userArr = members.split(",");
             for (int i = 0; i < userArr.length; i++)
             {
-                if (!roomMembers.contains(userArr[i]) && !userArr[i].equals(creator))
+                if (!roomMembers.contains(userArr[i]))
                 {
                     roomMembers.add(userArr[i]);
                 }
@@ -1778,6 +1777,8 @@ public class ChatPanel extends ParentAvailablePanel
                 String creator = "";
                 try
                 {
+                    boolean newUserAdded = false;
+                    boolean userRemoved = false;
                     JSONObject obj = retJson.getJSONObject(finalArrayName);
                     if (obj.has("u"))
                     {
@@ -1785,13 +1786,13 @@ public class ChatPanel extends ParentAvailablePanel
                         if (!roomMembers.contains(creator))
                         {
                             roomMembers.add(creator);
+                            newUserAdded = true;
                         }
                         //roomService.updateCreatorUsername(Realm.getDefaultInstance(), room.getRoomId(), creator);
                         room.setCreatorName(creator);
                         roomService.update(room);
                     }
-                    boolean newUserAdded = false;
-                    boolean userRemoved = false;
+
                     JSONArray members = obj.getJSONArray("usernames");
                     List<String> memberList = new ArrayList<>();
                     for (int i = 0; i < members.length(); i++)
@@ -1805,7 +1806,7 @@ public class ChatPanel extends ParentAvailablePanel
                         }
                     }
 
-                    List<String> removedList = new ArrayList<String>();
+                    List<String> removedList = new ArrayList<>();
                     for (String name : roomMembers)
                     {
                         if (!memberList.contains(name))
@@ -1842,7 +1843,7 @@ public class ChatPanel extends ParentAvailablePanel
                         AvatarUtil.createGroupAvatar(room.getName(), roomMembers.toArray(new String[]{}));
                     }
 
-                    roomMembers.remove(creator);
+                    //roomMembers.remove(creator);
 
 
                 }

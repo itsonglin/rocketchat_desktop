@@ -266,6 +266,8 @@ public class LoginFrame extends JFrame
         }
         else
         {
+            statusLabel.setVisible(false);
+
             loginButton.setEnabled(false);
             HttpPostTask task = new HttpPostTask();
             task.setListener(new HttpResponseListener<JSONObject>()
