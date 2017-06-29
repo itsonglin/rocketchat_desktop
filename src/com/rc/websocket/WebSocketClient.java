@@ -240,7 +240,7 @@ public class WebSocketClient
      */
     private void handleMessage(String text)
     {
-       //System.out.println(("收到消息  " + text));
+       System.out.println(("收到消息  " + text));
 
         try
         {

@@ -162,7 +162,7 @@ public class AvatarUtil
      */
     public static void refreshUserAvatarCache(String username)
     {
-        avatarCache.put(username, createOrLoadUserAvatar(username));
+        avatarCache.put(username, null);
     }
 
 
@@ -211,7 +211,7 @@ public class AvatarUtil
             File file = new File(AVATAR_CACHE_ROOT + "/" + sign + ".jpg");
             ImageIO.write(roundImage, "jpg", file);
 
-            return image;
+            return roundImage;
         } catch (Exception ex)
         {
             ex.printStackTrace();

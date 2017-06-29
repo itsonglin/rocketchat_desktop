@@ -121,8 +121,8 @@ public class MyInfoPanel extends ParentAvailablePanel
 
 
 
-        //avatar.revalidate();
-        //avatar.repaint();
+        avatar.revalidate();
+        avatar.repaint();
     }
 
     public static MyInfoPanel getContext()
