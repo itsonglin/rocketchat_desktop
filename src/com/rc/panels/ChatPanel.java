@@ -1811,11 +1811,13 @@ public class ChatPanel extends ParentAvailablePanel
         try
         {
             Desktop.getDesktop().open(new File(path));
-        }
-        catch (IOException e1)
+        } catch (IOException e1)
         {
             JOptionPane.showMessageDialog(null, "文件打开失败，没有找到关联的应用程序", "打开失败", JOptionPane.ERROR_MESSAGE);
             e1.printStackTrace();
+        } catch (IllegalArgumentException e2)
+        {
+            JOptionPane.showMessageDialog(null, "文件不存在，可能已被删除", "打开失败", JOptionPane.ERROR_MESSAGE);
         }
     }
 
