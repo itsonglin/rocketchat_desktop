@@ -17,7 +17,7 @@ public class FontUtil
         }
         else
         {
-            font = new Font("微软雅黑", Font.PLAIN, 14);
+            font = new Font("Heiti SC Light", Font.PLAIN, 14);
         }
     }
 

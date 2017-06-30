@@ -24,6 +24,9 @@ import com.rc.websocket.WebSocketClient;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.text.Document;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
@@ -589,6 +592,10 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         MessageRightTextViewHolder holder = (MessageRightTextViewHolder) viewHolder;
         holder.text.setText(item.getMessageContent());
         holder.text.setTag(item.getId());
+
+        holder.text.setCaretPosition(holder.text.getDocument().getLength());
+        holder.text.insertIcon(IconUtil.getIcon(this, "/image/smile.png", 18,18));
+
         //processMessageContent(holder.messageText, item);
         //registerMessageTextListener(holder.messageText, item);
 

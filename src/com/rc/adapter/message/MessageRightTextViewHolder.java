@@ -3,6 +3,7 @@ package com.rc.adapter.message;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.SizeAutoAdjustTextArea;
+import com.rc.components.message.JIMSendTextPane;
 import com.rc.components.message.RCRightImageMessageBubble;
 import com.rc.frames.MainFrame;
 import com.rc.utils.FontUtil;
@@ -17,6 +18,7 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
 {
     //public JLabel avatar = new JLabel();
     //public JLabel size = new JLabel();
+    //public SizeAutoAdjustTextArea text;
     public SizeAutoAdjustTextArea text;
     public RCRightImageMessageBubble messageBubble = new RCRightImageMessageBubble();
     //public RCRightTextMessageBubble text = new RCRightTextMessageBubble();
@@ -40,6 +42,10 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
         int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.5);
         text = new SizeAutoAdjustTextArea(maxWidth);
 
+
+        //////
+        //text = new JIMSendTextPane();
+        //////
 
         time.setForeground(Colors.FONT_GRAY);
         time.setFont(FontUtil.getDefaultFont(12));

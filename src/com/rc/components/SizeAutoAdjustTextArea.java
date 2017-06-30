@@ -3,13 +3,17 @@ package com.rc.components;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
+import javax.swing.text.MutableAttributeSet;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyledDocument;
 import java.awt.*;
 import java.awt.event.MouseListener;
 
 /**
  * Created by song on 17-6-4.
  */
-public class SizeAutoAdjustTextArea extends JTextArea
+public class SizeAutoAdjustTextArea extends JTextPane
 {
     private String[] lineArr;
     private int maxWidth;
@@ -19,10 +23,15 @@ public class SizeAutoAdjustTextArea extends JTextArea
     {
         this.maxWidth = maxWidth;
         setOpaque(false);
-        setLineWrap(true);
-        setWrapStyleWord(false);
+        //setLineWrap(true);
+        //setWrapStyleWord(false);
         this.setFont(FontUtil.getDefaultFont(14));
         setEditable(false);
+
+        /*StyledDocument doc = getStyledDocument();
+        MutableAttributeSet attr = new SimpleAttributeSet();
+        StyleConstants.setSpaceBelow(attr, 3.0F);
+        doc.setParagraphAttributes(1,1, attr, false);*/
     }
 
 
@@ -48,7 +57,9 @@ public class SizeAutoAdjustTextArea extends JTextArea
 
         if (lineCount > 0)
         {
-            targetWidth = fm.stringWidth(lineArr[info[1]]) + 5;
+            //targetWidth = fm.stringWidth(lineArr[info[1]]) + 5;
+            // 这里要加上每一行表情数的宽度
+            targetWidth = fm.stringWidth(lineArr[info[1]]) + 20;
         }
         // 输入全为\n的情况
         else
@@ -72,7 +83,6 @@ public class SizeAutoAdjustTextArea extends JTextArea
                 int l = ret == 0 ? ret : ret + 1;
                 totalLine += l == 0 ? 1 : l;
             }
-            //targetHeight = lineHeight * totalLine + 20;
             targetHeight = lineHeight * totalLine;
         }
 

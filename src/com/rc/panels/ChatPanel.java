@@ -418,6 +418,10 @@ public class ChatPanel extends ParentAvailablePanel
 
         Document doc = messageEditorPanel.getEditor().getDocument();
         int count = doc.getRootElements()[0].getElementCount();
+
+        // 是否是纯文本，如果发现有图片或附件，则不是纯文本
+        boolean pureText = true;
+
         for (int i = 0; i < count; i++)
         {
             Element root = doc.getRootElements()[0].getElement(i);
@@ -442,12 +446,15 @@ public class ChatPanel extends ParentAvailablePanel
                         }
                         case "component":
                         {
+                            pureText = false;
                             Component component = StyleConstants.getComponent(elem.getAttributes());
                             inputData.add(component);
                             break;
                         }
                         case "icon":
                         {
+                            pureText = false;
+
                             ImageIcon icon = (ImageIcon) StyleConstants.getIcon(elem.getAttributes());
                             inputData.add(icon);
                             break;
@@ -459,6 +466,13 @@ public class ChatPanel extends ParentAvailablePanel
                     e.printStackTrace();
                 }
             }
+        }
+
+        // 如果是纯文本，直接返回整个文本，否则如果出消息中有换行符\n出现，那么每一行都会被解析成一句话，会造成一条消息被分散成多个消息发送
+        if (pureText)
+        {
+            inputData.clear();
+            inputData.add(messageEditorPanel.getEditor().getText());
         }
 
         return inputData;

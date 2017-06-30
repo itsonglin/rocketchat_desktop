@@ -1,6 +1,7 @@
 package com.rc.app;
 
 
+import com.rc.components.message.JIMSendTextPane;
 import com.rc.forms.ImageViewerFrame;
 import com.rc.utils.AvatarUtil;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
@@ -28,15 +29,25 @@ class Test
     public static void main(String[] args) throws IOException, FontFormatException
     {
 
-        int num = 2147483647;
+      /*  int num = 2147483647;
         num += 2L;
-        System.out.println(num);
+        System.out.println(num);*/
 
 
         /*int num = 2147483647;
         long temp  = num +  2;
 
         System.out.println(temp);*/
+
+
+        JFrame frame = new JFrame();
+        frame.setSize(300, 300);
+
+        //JIMSendTextPane jimSendTextPane = new JIMSendTextPane();
+        JTextPane jimSendTextPane = new JTextPane();
+        frame.add(jimSendTextPane);
+
+        frame.setVisible(true);
     }
 }
 
