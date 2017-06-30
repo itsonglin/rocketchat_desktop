@@ -1,5 +1,6 @@
 package com.rc.helper;
 
+import com.rc.utils.IconUtil;
 import com.rc.utils.MimeTypeUtil;
 
 import javax.swing.*;
@@ -11,31 +12,47 @@ public class AttachmentIconHelper
 {
     public ImageIcon getImageIcon(String filename)
     {
+        return getImageIcon(filename, -1, -1);
+    }
+
+    public ImageIcon getImageIcon(String filename, int width, int height)
+    {
         String suffix = filename.substring(filename.lastIndexOf(".") + 1);
 
         if (null == suffix || suffix.length() < 1)
         {
-            return null;
-        } else
+            return unknownMimeIcon(width, height);
+        }
+        else
         {
             String mime = MimeTypeUtil.getMime(suffix);
             if (mime == null)
             {
-                return null;
-            } else
+                return unknownMimeIcon(width, height);
+
+            }
+            else
             {
                 mime = parseMimeType(mime);
                 if (mime == null)
                 {
-                    return null;
-                } else
-                {
-                    return new ImageIcon(getClass().getResource("/image/" + mime + ".png"));
-                }
+                    return unknownMimeIcon(width, height);
 
+                }
+                else
+                {
+                    //return new ImageIcon(getClass().getResource("/image/" + mime + ".png"));
+                    return IconUtil.getIcon(this, "/image/" + mime + ".png", width, height);
+
+                }
             }
 
         }
+    }
+
+    private ImageIcon unknownMimeIcon(int width, int height)
+    {
+        return IconUtil.getIcon(this, "/image/unknown.png", width, height);
     }
 
     private String parseMimeType(String mime)

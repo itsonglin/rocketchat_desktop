@@ -238,7 +238,7 @@ public class WebSocketClient
      */
     private void handleMessage(String text)
     {
-       //System.out.println(("收到消息  " + text));
+      //System.out.println(("收到消息  " + text));
 
         try
         {
@@ -1133,18 +1133,21 @@ public class WebSocketClient
         // 上传文件过大
         if (errorType.equals("error-file-too-large"))
         {
-            JOptionPane.showMessageDialog(null, "上传文件大小不能超过20M", "文件过大", JOptionPane.WARNING_MESSAGE);
-
-            /*String reason = error.getString("reason");
-            String size = reason.substring(reason.indexOf("of ") + 3);
-            size = size.substring(0, size.length() - 1);
-
-            System.out.println("上传文件大小不能超过" + size);*/
-            /*Map<String, String> param = new HashMap<>();
-            param.put("message", "上传文件大小不能超过" + size);
-            sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, WebSocketService.EVENT_UPLOAD_FILE_TOO_LARGE_ERROR, param);*/
-
+            JOptionPane.showMessageDialog(null, "上传单个文件大小不能超过20M", "文件过大", JOptionPane.WARNING_MESSAGE);
         }
+        else if (errorType.equals("error-invalid-file-type"))
+        {
+            JOptionPane.showMessageDialog(null, "不支持的文件类型", "文件类型不正确", JOptionPane.WARNING_MESSAGE);
+        }
+
+
+        Room room = roomService.findById(ChatPanel.CHAT_ROOM_OPEN_ID);
+        room.setLastMessage("");
+        roomService.update(room);
+
+        // 继续上传后面的文件
+        ChatPanel.getContext().dequeueAndUpload();
+        RoomsPanel.getContext().updateRoomItem(ChatPanel.CHAT_ROOM_OPEN_ID);
     }
 
     private void processUsfComplete(JSONObject jsonText) throws JSONException

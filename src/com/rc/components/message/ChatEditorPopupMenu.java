@@ -99,14 +99,21 @@ public class ChatEditorPopupMenu extends JPopupMenu
                     List<Object> list = (List<Object>) data;
                     for (Object obj : list)
                     {
+                        // 图像
                         if (obj instanceof ImageIcon)
                         {
                             insertIcon(textPane, (ImageIcon) obj);
                         }
+                        // 文件
+                        else if (obj instanceof String)
+                        {
+                            FileEditorThumbnail thumbnail = new FileEditorThumbnail((String) obj);
+                            textPane.insertComponent(thumbnail);
+                        }
                     }
                 }
 
-               //textPane.insertComponent(new JButton("哈哈"));
+                //textPane.insertComponent(new JButton("哈哈"));
 
             }
         });
@@ -118,14 +125,14 @@ public class ChatEditorPopupMenu extends JPopupMenu
             public void actionPerformed(ActionEvent e)
             {
                 JTextPane textPane = (JTextPane) getInvoker();
-                String text = textPane.getSelectedText();
+               /* String text = textPane.getSelectedText();
                 if (text != null)
                 {
                     textPane.replaceSelection("");
-                }
+                }*/
 
 
-                //textPane.insertComponent(new FileEditorThumbnail());
+                textPane.insertComponent(new FileEditorThumbnail("/Users/song/使用说明.doc"));
 
             }
         });
@@ -142,6 +149,7 @@ public class ChatEditorPopupMenu extends JPopupMenu
 
     /**
      * 插入图片到编辑框，并自动调整图片大小
+     *
      * @param textPane
      * @param icon
      */

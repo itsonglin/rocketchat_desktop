@@ -118,12 +118,17 @@ public class ClipboardUtil
                     List<Object> datas = new ArrayList<>();
                     for (File file : files)
                     {
+                        // 复制的是图片
                         if (isImage(file))
                         {
                             datas.add(transferImageFileToImageIcon(file));
-                            //File destFile = new File(CLIPBOARD_TEMP_DIR + File.separator + "clipboard_image_" + file.getName());
-                            //System.out.println(destFile);
                         }
+                        // 复制的是非图片文件
+                        else
+                        {
+                            datas.add(file.getAbsolutePath());
+                        }
+
                     }
 
                     return datas;
@@ -160,7 +165,6 @@ public class ClipboardUtil
     }
 
     /**
-     *
      * @param file
      * @return
      */
@@ -169,6 +173,7 @@ public class ClipboardUtil
         String suffix = file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
         return suffix.equals("jpg") || suffix.equals("jpeg") || suffix.equals("png") || suffix.equals("gif");
     }
+
     private static ImageIcon transferImageFileToImageIcon(File file)
     {
         ImageIcon icon = new ImageIcon(file.getAbsolutePath());

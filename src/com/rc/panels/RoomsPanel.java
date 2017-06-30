@@ -111,6 +111,11 @@ public class RoomsPanel extends ParentAvailablePanel
      */
     public void updateRoomItem(String roomId)
     {
+        if (roomId == null || roomId.isEmpty())
+        {
+            notifyDataSetChanged(true);
+            return;
+        }
 
         for (int i = 0; i < roomItemList.size(); i++)
         {

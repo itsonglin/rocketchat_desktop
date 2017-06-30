@@ -164,19 +164,10 @@ public class StreamRoomMessagesHandler implements CollectionHandler
                         message.setMessageContent("[图片]");
 
                         // 查找是否有临时以FildId作为MessageId的消息
-                        //Realm realm = Realm.getDefaultInstance();
-                        //Message tempMsg = messageService.findById(realm, imageAttachment.getId());
                         Message tempMsg = messageService.findById(imageAttachment.getId());
 
                         if (tempMsg != null)
                         {
-                           /* myUploadFile = true;
-                            message.getImageAttachments().get(0).setTitle(tempMsg.getImageAttachments().get(0).getTitle());
-                            message.getImageAttachments().get(0).setImageUrl(tempMsg.getImageAttachments().get(0).getImageUrl());
-                            message.getImageAttachments().get(0).setDescription(tempMsg.getImageAttachments().get(0).getDescription());
-                            message.setNeedToResend(false);
-                            message.setTimestamp(tempMsg.getTimestamp());*/
-
                             myUploadFile = true;
                             ImageAttachment ia = imageAttachmentService.findById(tempMsg.getImageAttachmentId());
                             imageAttachment.setTitle(ia.getTitle());
@@ -188,7 +179,6 @@ public class StreamRoomMessagesHandler implements CollectionHandler
 
 
                             // 删除临时文件消息
-                            //messageService.delete(Realm.getDefaultInstance(), imageAttachment.getId());
                             messageService.delete(imageAttachment.getId());
                         }
 
@@ -201,24 +191,14 @@ public class StreamRoomMessagesHandler implements CollectionHandler
                         fileAttachment.setTitle(attachment.getString("title").substring(15));
                         fileAttachment.setDescription(attachment.getString("description"));
                         fileAttachment.setLink(attachment.getString("title_link"));
-                        //message.getFileAttachments().add(fileAttachment);
                         message.setFileAttachmentId(fileAttachment.getId());
                         message.setMessageContent(fileAttachment.getTitle());
 
                         // 查找是否有临时以FildId作为MessageId的消息
-                        //Realm realm = Realm.getDefaultInstance();
-                        //Message tempMsg = messageService.findById(realm, fileAttachment.getId());
                         Message tempMsg = messageService.findById(fileAttachment.getId());
 
                         if (tempMsg != null)
                         {
-                            /*myUploadFile = true;
-                            message.getFileAttachments().get(0).setTitle(tempMsg.getFileAttachments().get(0).getTitle());
-                            message.getFileAttachments().get(0).setLink(tempMsg.getFileAttachments().get(0).getLink());
-                            message.getFileAttachments().get(0).setDescription(tempMsg.getFileAttachments().get(0).getDescription());
-                            message.setNeedToResend(false);
-                            message.setTimestamp(tempMsg.getTimestamp());*/
-
                             myUploadFile = true;
                             FileAttachment fa = fileAttachmentService.findById(tempMsg.getFileAttachmentId());
                             fileAttachment.setTitle(fa.getTitle());
@@ -230,13 +210,10 @@ public class StreamRoomMessagesHandler implements CollectionHandler
 
 
                             // 删除临时文件消息
-                            //messageService.delete(Realm.getDefaultInstance(), fileAttachment.getId());
                             messageService.delete(fileAttachment.getId());
                         }
 
                         fileAttachmentService.insertOrUpdate(fileAttachment);
-
-                        // realm.close();
                     }
                 }
             }
@@ -247,7 +224,6 @@ public class StreamRoomMessagesHandler implements CollectionHandler
                 message.setTimestamp(obj.getJSONObject("ts").getLong("$date"));
             }
 
-            //messageService.insertOrUpdate(Realm.getDefaultInstance(), message);
             messageService.insertOrUpdate(message);
 
             // 更新Room相关信息
@@ -255,10 +231,18 @@ public class StreamRoomMessagesHandler implements CollectionHandler
             room.setMsgSum(room.getMsgSum() + 1);
 
             // 如果没有打开房间，则需要更新未读消息数，如果已经在房间中了，则无需更新未读消息数
-            if (!myUploadFile && !inChatRoom)
+            if (inChatRoom || myUploadFile)
+            {
+                room.setTotalReadCount(room.getMsgSum());
+            }
+            else
             {
                 room.setUnreadCount(room.getUnreadCount() + 1);
             }
+            /*if (!myUploadFile && !inChatRoom)
+            {
+                room.setUnreadCount(room.getUnreadCount() + 1);
+            }*/
 
             room.setLastMessage(message.getMessageContent());
             room.setLastChatAt(message.getTimestamp());

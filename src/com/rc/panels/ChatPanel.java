@@ -6,6 +6,7 @@ import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
 import com.rc.components.RCListView;
+import com.rc.components.message.FileEditorThumbnail;
 import com.rc.components.message.RemindUserPopup;
 import com.rc.db.model.*;
 import com.rc.db.service.*;
@@ -370,12 +371,14 @@ public class ChatPanel extends ParentAvailablePanel
                     shareAttachmentUploadQueue.add(path);
                 }
             }
-            else if (data instanceof Component)
+            else if (data instanceof FileEditorThumbnail)
             {
                 isImageOrFile = true;
 
-                Component component = (Component) data;
-                System.out.println(component);
+                FileEditorThumbnail component = (FileEditorThumbnail) data;
+                System.out.println(component.getPath());
+                shareAttachmentUploadQueue.add(component.getPath());
+
             }
         }
 
@@ -451,9 +454,10 @@ public class ChatPanel extends ParentAvailablePanel
     {
         String path = shareAttachmentUploadQueue.poll();
 
-        System.out.println("上传文件：" + path);
         if (path != null)
         {
+            System.out.println("上传文件：" + path);
+
             sendFileMessage(path);
             showSendingMessage();
         }
