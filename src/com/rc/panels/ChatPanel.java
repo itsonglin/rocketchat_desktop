@@ -1113,7 +1113,7 @@ public class ChatPanel extends ParentAvailablePanel
         {
             messageItems.get(pos).setUpdatedAt(message.getTimestamp());
             messagePanel.getMessageListView().notifyItemChanged(pos);
-            updateUnreadCount(0);
+            //updateUnreadCount(0);
             return;
         }
 
@@ -1140,7 +1140,7 @@ public class ChatPanel extends ParentAvailablePanel
             messagePanel.getMessageListView().setAutoScrollToBottom();
         }
 
-        updateUnreadCount(0);
+        //updateUnreadCount(0);
     }
 
     /**

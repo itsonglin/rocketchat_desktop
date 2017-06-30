@@ -135,7 +135,6 @@ public class StreamRoomMessagesHandler implements CollectionHandler
             boolean myUploadFile = false;
 
             // 当前是否打开了对应的聊天窗口
-            // TODO
             boolean inChatRoom = message.getRoomId().equals(ChatPanel.CHAT_ROOM_OPEN_ID);
 
             /*boolean inChatRoom = MainFrameActivity.CHAT_ROOM_OPEN_ID != null
@@ -233,16 +232,13 @@ public class StreamRoomMessagesHandler implements CollectionHandler
             // 如果没有打开房间，则需要更新未读消息数，如果已经在房间中了，则无需更新未读消息数
             if (inChatRoom || myUploadFile)
             {
+                room.setUnreadCount(0);
                 room.setTotalReadCount(room.getMsgSum());
             }
             else
             {
                 room.setUnreadCount(room.getUnreadCount() + 1);
             }
-            /*if (!myUploadFile && !inChatRoom)
-            {
-                room.setUnreadCount(room.getUnreadCount() + 1);
-            }*/
 
             room.setLastMessage(message.getMessageContent());
             room.setLastChatAt(message.getTimestamp());

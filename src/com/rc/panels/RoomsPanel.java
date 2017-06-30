@@ -97,6 +97,18 @@ public class RoomsPanel extends ParentAvailablePanel
         String roomId = (String) ((RoomItemViewHolder) (roomItemsListView.getItem(0))).getTag();
         if (roomId.equals(message.getRoomId()))
         {
+            Room room = roomService.findById(roomId);
+            for (RoomItem roomItem : roomItemList)
+            {
+                if (roomItem.getRoomId().equals(roomId))
+                {
+                    roomItem.setUnreadCount(room.getUnreadCount());
+                    roomItem.setTimestamp(room.getLastChatAt());
+                    roomItem.setLastMessage(room.getLastMessage());
+                    break;
+                }
+            }
+
             roomItemsListView.notifyItemChanged(0);
         }
         else
