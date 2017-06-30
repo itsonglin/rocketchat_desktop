@@ -132,7 +132,7 @@ public class TitlePanel extends ParentAvailablePanel
         titlePanel.setLayout(new GridBagLayout());
 
         statusLabel = new JLabel();
-        statusLabel.setFont(FontUtil.getDefaultFont(16));
+        statusLabel.setFont(FontUtil.getDefaultFont(14));
         statusLabel.setForeground(Colors.ITEM_SELECTED);
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusLabel.setText("正在连接中...");
@@ -211,8 +211,9 @@ public class TitlePanel extends ParentAvailablePanel
         }
 
 
+
         titlePanel.add(titleLabel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(100, 1).setInsets(margin, margin, 0, 0));
-        titlePanel.add(statusLabel, new GBC(1, 0).setFill(GBC.BOTH).setWeight(500, 1).setInsets(margin, margin, 0, 0));
+        titlePanel.add(statusLabel, new GBC(1, 0).setFill(GBC.BOTH).setWeight(200, 1).setInsets(margin, margin, 0, 0));
         titlePanel.add(roomInfoButton, new GBC(2, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(margin, 0, 0, margin));
     }
 
