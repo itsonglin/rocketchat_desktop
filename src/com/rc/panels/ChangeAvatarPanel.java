@@ -1,8 +1,11 @@
 package com.rc.panels;
 
+import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.RCButton;
 import com.rc.components.VerticalFlowLayout;
+import com.rc.db.model.CurrentUser;
+import com.rc.db.service.CurrentUserService;
 import com.rc.frames.MainFrame;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.IconUtil;
@@ -21,6 +24,8 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.Iterator;
+
+import static com.rc.app.Launcher.currentUserService;
 
 /**
  * 修改头像面板
@@ -48,10 +53,11 @@ public class ChangeAvatarPanel extends JPanel
 
     private void initComponents()
     {
+        CurrentUser currentUser = currentUserService.findAll().get(0);
         imageLabel = new JLabel();
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         imageLabel.setPreferredSize(new Dimension(200, 200));
-        imageLabel.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar("song").getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
+        imageLabel.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUser.getUsername()).getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
         imageLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         imageLabel.setToolTipText("点击上传本地头像");
 

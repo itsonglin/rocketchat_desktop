@@ -64,6 +64,11 @@ public class ContactsPanel extends ParentAvailablePanel
         List<ContactsUser> contactsUsers = contactsUserService.findAll();
         for (ContactsUser contactsUser : contactsUsers)
         {
+            if (contactsUser.getUsername().equals("admin") || contactsUser.getUsername().equals("appStoreTest"))
+            {
+                continue;
+            }
+
             ContactsItem item = new ContactsItem(contactsUser.getUserId(),
                     contactsUser.getUsername(), "d");
 

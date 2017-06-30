@@ -9,6 +9,7 @@ import com.rc.listener.AbstractMouseListener;
 import com.rc.utils.*;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 
@@ -34,7 +35,7 @@ public class TitlePanel extends ParentAvailablePanel
     private boolean windowMax; // 当前窗口是否已最大化
     private Rectangle desktopBounds; // 去除任务栏后窗口的大小
     private Rectangle normalBounds;
-
+    private long lastClickTime;
 
 
     public TitlePanel(JPanel parent)
@@ -43,7 +44,7 @@ public class TitlePanel extends ParentAvailablePanel
         context = this;
 
         initComponents();
-        addListeners();
+        setListeners();
         initView();
         initBounds();
     }
@@ -68,7 +69,7 @@ public class TitlePanel extends ParentAvailablePanel
 
     }
 
-    private void addListeners()
+    private void setListeners()
     {
         MouseListener mouseListener = new AbstractMouseListener()
         {
@@ -95,6 +96,38 @@ public class TitlePanel extends ParentAvailablePanel
 
         roomInfoButton.addMouseListener(mouseListener);
         //titleLabel.addMouseListener(mouseListener);
+
+        controlPanel.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                if (System.currentTimeMillis() - lastClickTime < 500)
+                {
+                    maxOrRestoreWindow();
+                }
+
+                lastClickTime = System.currentTimeMillis();
+                super.mouseClicked(e);
+            }
+        });
+
+    }
+
+    private void maxOrRestoreWindow()
+    {
+        if (windowMax)
+        {
+            MainFrame.getContext().setBounds(normalBounds);
+            maxLabel.setIcon(maxIcon);
+            windowMax = false;
+        }
+        else
+        {
+            MainFrame.getContext().setBounds(desktopBounds);
+            maxLabel.setIcon(restoreIcon);
+            windowMax = true;
+        }
     }
 
     /**
@@ -268,18 +301,7 @@ public class TitlePanel extends ParentAvailablePanel
             }
             else if (e.getComponent() == maxLabel)
             {
-                if (windowMax)
-                {
-                    MainFrame.getContext().setBounds(normalBounds);
-                    maxLabel.setIcon(maxIcon);
-                    windowMax = false;
-                }
-                else
-                {
-                    MainFrame.getContext().setBounds(desktopBounds);
-                    maxLabel.setIcon(restoreIcon);
-                    windowMax = true;
-                }
+                maxOrRestoreWindow();
             }
             else if (e.getComponent() == minLabel)
             {

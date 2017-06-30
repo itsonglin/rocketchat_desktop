@@ -531,6 +531,8 @@ public class WebSocketClient
      */
     private void getRooms(final String type)
     {
+        TitlePanel.getContext().showStatusLabel("正在同步消息列表...");
+
         String api = "";
         String roomType = "";
         if (type.equals("channels"))
@@ -671,6 +673,8 @@ public class WebSocketClient
                 {
                     e.printStackTrace();
                 }
+
+                TitlePanel.getContext().hideStatusLabel();
             }
         });
 
@@ -775,7 +779,7 @@ public class WebSocketClient
 
                     if (unreadCount < 0)
                     {
-                        System.out.println("unreadCount -- " + unreadCount);
+                        //System.out.println("unreadCount -- " + unreadCount);
                         unreadCount = 0;
                         //roomService.updateTotalReadCount(Realm.getDefaultInstance(), roomId, unreadNotLoaded + 1);
                         room.setTotalReadCount(unreadNotLoaded + 1);
