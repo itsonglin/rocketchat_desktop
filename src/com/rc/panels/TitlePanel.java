@@ -36,6 +36,7 @@ public class TitlePanel extends ParentAvailablePanel
     private Rectangle desktopBounds; // 去除任务栏后窗口的大小
     private Rectangle normalBounds;
     private long lastClickTime;
+    private static Point origin = new Point();
 
 
     public TitlePanel(JPanel parent)
@@ -47,6 +48,7 @@ public class TitlePanel extends ParentAvailablePanel
         setListeners();
         initView();
         initBounds();
+
     }
 
     private void initBounds()
@@ -97,20 +99,48 @@ public class TitlePanel extends ParentAvailablePanel
         roomInfoButton.addMouseListener(mouseListener);
         //titleLabel.addMouseListener(mouseListener);
 
-        controlPanel.addMouseListener(new MouseAdapter()
+        if (OSUtil.getOsType() != OSUtil.Mac_OS)
         {
-            @Override
-            public void mouseClicked(MouseEvent e)
+            MouseAdapter mouseAdapter = new MouseAdapter()
             {
-                if (System.currentTimeMillis() - lastClickTime < 500)
+                @Override
+                public void mouseClicked(MouseEvent e)
                 {
-                    maxOrRestoreWindow();
+                    if (System.currentTimeMillis() - lastClickTime < 500)
+                    {
+                        maxOrRestoreWindow();
+                    }
+
+                    lastClickTime = System.currentTimeMillis();
+                    super.mouseClicked(e);
                 }
 
-                lastClickTime = System.currentTimeMillis();
-                super.mouseClicked(e);
-            }
-        });
+                public void mousePressed(MouseEvent e)
+                {
+                    // 当鼠标按下的时候获得窗口当前的位置
+                    origin.x = e.getX();
+                    origin.y = e.getY();
+                }
+            };
+
+            MouseMotionListener mouseMotionListener = new MouseMotionAdapter()
+            {
+                public void mouseDragged(MouseEvent e)
+                {
+                    // 当鼠标拖动时获取窗口当前位置
+                    Point p = MainFrame.getContext().getLocation();
+                    // 设置窗口的位置
+                    MainFrame.getContext().setLocation(p.x + e.getX() - origin.x, p.y + e.getY()
+                            - origin.y);
+                }
+            };
+
+            controlPanel.addMouseListener(mouseAdapter);
+            controlPanel.addMouseMotionListener(mouseMotionListener);
+
+            this.addMouseListener(mouseAdapter);
+            this.addMouseMotionListener(mouseMotionListener);
+        }
 
     }
 
@@ -239,6 +269,8 @@ public class TitlePanel extends ParentAvailablePanel
         }
         else
         {
+            //add(controlPanel);
+
             add(titlePanel);
             margin = 15;
         }

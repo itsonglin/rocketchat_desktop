@@ -37,7 +37,6 @@ public class MainFrame extends JFrame
 
     private LeftPanel leftPanel;
     private RightPanel rightPanel;
-    private static Point origin = new Point();
 
     private static MainFrame context;
     private Image normalTrayIcon; // 正常时的任务栏图标
@@ -303,7 +302,7 @@ public class MainFrame extends JFrame
     private void setListeners()
     {
         // MAC OS 下拖动JFrame会出现抖动！
-        if (OSUtil.getOsType() != OSUtil.Mac_OS)
+        /*if (OSUtil.getOsType() != OSUtil.Mac_OS)
         {
             addMouseListener(new MouseAdapter()
             {
@@ -326,7 +325,7 @@ public class MainFrame extends JFrame
                             - origin.y);
                 }
             });
-        }
+        }*/
 
 
         addComponentListener(new ComponentAdapter()

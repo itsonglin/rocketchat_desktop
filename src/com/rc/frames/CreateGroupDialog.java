@@ -84,15 +84,15 @@ public class CreateGroupDialog extends JDialog
         setBounds(posX, posY, DIALOG_WIDTH, DIALOG_HEIGHT);
         setUndecorated(true);
 
-        getRootPane().setBorder(new LineBorder(Colors.LIGHT_GRAY));
+        getRootPane().setBorder(new LineBorder(Colors.DIALOG_BORDER));
 
-        if (OSUtil.getOsType() != OSUtil.Mac_OS)
+        /*if (OSUtil.getOsType() != OSUtil.Mac_OS)
         {
             // 边框阴影，但是会导致字体失真
             AWTUtilities.setWindowOpaque(this, false);
             //getRootPane().setOpaque(false);
             getRootPane().setBorder(ShadowBorder.newInstance());
-        }
+        }*/
 
         // 输入面板
         editorPanel = new JPanel();
