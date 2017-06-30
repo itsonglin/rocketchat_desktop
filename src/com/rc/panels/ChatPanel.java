@@ -715,6 +715,7 @@ public class ChatPanel extends ParentAvailablePanel
      */
     private void loadRemoteHistory(final long startTime, final long endTime, boolean loadUnread, boolean firstRequest, RemoteHistoryReceivedListener listener)
     {
+        TitlePanel.getContext().showStatusLabel("加载中...");
         if (!remoteHistoryLoadedRooms.contains(roomId))
         {
             remoteHistoryLoadedRooms.add(roomId);
@@ -726,7 +727,6 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void onResult(JSONObject retJson)
             {
-
                 try
                 {
                     int newMessageCount;
@@ -744,6 +744,8 @@ public class ChatPanel extends ParentAvailablePanel
                     System.out.println(e);
                     e.printStackTrace();
                 }
+
+                TitlePanel.getContext().hideStatusLabel();
             }
         });
 

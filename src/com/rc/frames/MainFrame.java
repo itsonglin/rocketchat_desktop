@@ -150,7 +150,7 @@ public class MainFrame extends JFrame
 
             PopupMenu menu = new PopupMenu();
 
-            MenuItem exitItem = new MenuItem("Exit");
+            MenuItem exitItem = new MenuItem("退出");
             exitItem.addActionListener(new ActionListener()
             {
                 @Override
@@ -160,7 +160,7 @@ public class MainFrame extends JFrame
                 }
             });
 
-            MenuItem showItem = new MenuItem("Open Helichat");
+            MenuItem showItem = new MenuItem("打开和理通");
             showItem.addActionListener(new ActionListener()
             {
                 @Override

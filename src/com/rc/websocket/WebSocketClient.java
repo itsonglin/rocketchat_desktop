@@ -477,7 +477,7 @@ public class WebSocketClient
             //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_LOGIN_SUCCESS);
             try
             {
-                TitlePanel.getContext().hidestatusLabel();
+                TitlePanel.getContext().hideStatusLabel();
                 loginSuccessTime = System.currentTimeMillis();
 
                 if (!sentPingMessage)

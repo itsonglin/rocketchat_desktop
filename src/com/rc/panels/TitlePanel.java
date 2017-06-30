@@ -136,7 +136,7 @@ public class TitlePanel extends ParentAvailablePanel
         statusLabel.setForeground(Colors.ITEM_SELECTED);
         statusLabel.setHorizontalAlignment(SwingConstants.LEFT);
         statusLabel.setText("正在连接中...");
-        statusLabel.setIcon(IconUtil.getIcon(this, "/image/sending.gif"));
+        statusLabel.setIcon(IconUtil.getIcon(this, "/image/loading_small.gif"));
         statusLabel.setVisible(false);
 
 
@@ -250,7 +250,7 @@ public class TitlePanel extends ParentAvailablePanel
     /**
      * 隐藏状态栏
      */
-    public void hidestatusLabel()
+    public void hideStatusLabel()
     {
         this.statusLabel.setVisible(false);
     }
