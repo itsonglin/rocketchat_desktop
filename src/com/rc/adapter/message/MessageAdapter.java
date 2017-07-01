@@ -593,8 +593,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         holder.text.setText(item.getMessageContent());
         holder.text.setTag(item.getId());
 
-        holder.text.setCaretPosition(holder.text.getDocument().getLength());
-        holder.text.insertIcon(IconUtil.getIcon(this, "/image/smile.png", 18,18));
+        //holder.text.setCaretPosition(holder.text.getDocument().getLength());
+        //holder.text.insertIcon(IconUtil.getIcon(this, "/image/smile.png", 18,18));
 
         //processMessageContent(holder.messageText, item);
         //registerMessageTextListener(holder.messageText, item);

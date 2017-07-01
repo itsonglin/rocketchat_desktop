@@ -19,7 +19,7 @@ public class RCTextMessageBubble extends JTextArea implements RCMessageBubble
     private  NinePatchImageIcon backgroundNormalIcon;
     private  NinePatchImageIcon backgroundActiveIcon;
     private Icon currentBackgroundIcon;
-    private String[] lineArr;
+    //private String[] lineArr;
 
 
     public RCTextMessageBubble()
@@ -71,7 +71,7 @@ public class RCTextMessageBubble extends JTextArea implements RCMessageBubble
         });
     }
 
-    @Override
+    /*@Override
     public void setText(String t)
     {
         if (t == null)
@@ -82,7 +82,7 @@ public class RCTextMessageBubble extends JTextArea implements RCMessageBubble
         int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.5);
         FontMetrics fm = getFontMetrics(getFont());
 
-        int[] info = parseText(getText());
+        int[] info = parseLineCountAndMaxLengthPosition(getText());
         int lineCount = info[0];
         int lineHeight = fm.getHeight();
 
@@ -109,7 +109,7 @@ public class RCTextMessageBubble extends JTextArea implements RCMessageBubble
         this.setPreferredSize(new Dimension(targetWidth, targetHeight));
 
         super.setText(t);
-    }
+    }*/
 
     @Override
     public Insets getInsets()
@@ -117,7 +117,7 @@ public class RCTextMessageBubble extends JTextArea implements RCMessageBubble
         return new Insets(10, 10, 10, 10);
     }
 
-    public int[] parseText(String text)
+    /*public int[] parseLineCountAndMaxLengthPosition(String text)
     {
         int[] retArr = new int[2];
 
@@ -137,7 +137,7 @@ public class RCTextMessageBubble extends JTextArea implements RCMessageBubble
         retArr[1] = position;
 
         return retArr;
-    }
+    }*/
 
 
     public NinePatchImageIcon getBackgroundNormalIcon()

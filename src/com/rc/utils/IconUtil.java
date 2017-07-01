@@ -2,6 +2,7 @@ package com.rc.utils;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 
 /**
  * Created by song on 2017/6/7.
@@ -20,7 +21,13 @@ public class IconUtil
 
     public static ImageIcon getIcon(Object context, String path, int width, int height)
     {
-        ImageIcon imageIcon = new ImageIcon(context.getClass().getResource(path));
+        URL url = context.getClass().getResource(path);
+        if (url == null)
+        {
+            return null;
+        }
+
+        ImageIcon imageIcon = new ImageIcon(url);
 
         if (width > 0 && height > 0)
         {
