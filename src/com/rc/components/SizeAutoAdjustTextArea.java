@@ -2,6 +2,7 @@ package com.rc.components;
 
 import com.rc.utils.EmojiUtil;
 import com.rc.utils.FontUtil;
+import com.vdurmont.emoji.EmojiParser;
 
 import javax.swing.*;
 import javax.swing.text.BadLocationException;
@@ -53,6 +54,9 @@ public class SizeAutoAdjustTextArea extends JTextPane
     @Override
     public void setText(String t)
     {
+        // 对emoji的Unicode编码转别名
+        t = EmojiParser.parseToAliases(t);
+
         if (t == null)
         {
             return;
