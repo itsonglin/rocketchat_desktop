@@ -1,5 +1,6 @@
 package com.rc.components;
 
+import com.rc.components.message.JIMSendTextPane;
 import com.rc.utils.EmojiUtil;
 import com.rc.utils.FontUtil;
 import com.vdurmont.emoji.EmojiParser;
@@ -9,17 +10,15 @@ import javax.swing.text.BadLocationException;
 import javax.swing.text.Document;
 import java.awt.*;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.List;
 
 /**
  * Created by song on 17-6-4.
  */
-public class SizeAutoAdjustTextArea extends JTextPane
+public class SizeAutoAdjustTextArea extends JIMSendTextPane
 {
     private final FontMetrics fontMetrics;
     private String[] lineArr;
@@ -28,7 +27,7 @@ public class SizeAutoAdjustTextArea extends JTextPane
     private Pattern emojiPattern;
 
     private String emojiRegx;
-    private int emojiSize = 18;
+    private int emojiSize = 20;
 
 
     // 最长一行是第几行
@@ -109,20 +108,50 @@ public class SizeAutoAdjustTextArea extends JTextPane
             targetHeight = lineHeight * totalLine;
         }
 
-        // 如果该行有emoji表情，高度就要适当增加
-        for (LineEmojiInfo info : lineEmojiInfoList)
+
+        String targetText = t.replaceAll(emojiRegx, "");
+        super.setText(targetText);
+
+
+        Map<Integer, String> emojiPositionMap = insertEmoji(t);
+        String exceptEmoji = t.replaceAll("\\r\\n", "\n");
+        for (String emoji : emojiPositionMap.values())
         {
-            if (info.getCount() > 0)
+            exceptEmoji = exceptEmoji.replace(emoji, "#");
+        }
+
+        // 每一个emoji表情距离字符串起始位置的长度
+/*        Set<Integer> posSet = emojiPositionMap.keySet();
+        int[] substringLengArr = new int[posSet.size()];
+        int index = 0;
+        for (int pos : posSet)
+        {
+            String substr = exceptEmoji.substring(0, pos);
+            substringLengArr[index] = substr.length();
+            index++;
+        }
+        System.out.println(substringLengArr);*/
+
+
+        for (int pos : emojiPositionMap.keySet())
+        {
+            String substr = exceptEmoji.substring(0, pos + 1);
+            int width = fontMetrics.stringWidth(substr) + emojiSize;
+            if (width > maxWidth || substr.indexOf("\n") > -1)
             {
-                targetHeight += 4;
+                targetHeight += 3;
             }
         }
 
+        // 如果有emoji表情，高度就要适当增加
+        if (emojiPositionMap.keySet().size() > 0)
+        {
+            targetHeight += 5;
+        }
+
+
+
         this.setPreferredSize(new Dimension(targetWidth, targetHeight + 2));
-
-        super.setText(t.replaceAll(emojiRegx, ""));
-
-        insertEmoji(t);
 
 
 /*        StyledDocument doc = getStyledDocument();
@@ -131,8 +160,9 @@ public class SizeAutoAdjustTextArea extends JTextPane
         doc.setCharacterAttributes(1,1, attr, false);*/
     }
 
-    private void insertEmoji(String src)
+    private Map<Integer, String> insertEmoji(String src)
     {
+        src = src.replaceAll("\\r\\n", "\n");
         Document doc = getDocument();
 
         Map<Integer, String> retMap = new HashMap();
@@ -157,13 +187,13 @@ public class SizeAutoAdjustTextArea extends JTextPane
                 {
                     emojiStart = false;
                     stringBuilder.append(ch);
-                    retMap.put(pos, stringBuilder.toString());
-
 
                     setCaretPosition(pos);
                     Icon icon = EmojiUtil.getEmoji(this, stringBuilder.toString());
                     if (icon != null)
                     {
+                        retMap.put(pos, stringBuilder.toString());
+
                         insertIcon(icon);
 
                         charArr = resetCharArr(new String(charArr), stringBuilder.toString());
@@ -195,6 +225,7 @@ public class SizeAutoAdjustTextArea extends JTextPane
 
         }
 
+        return retMap;
     }
 
     private char[] resetCharArr(String src, String s)

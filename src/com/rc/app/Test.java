@@ -8,14 +8,18 @@ import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import com.vdurmont.emoji.EmojiParser;
 import sun.misc.BASE64Encoder;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,25 +33,22 @@ class Test
     public static void main(String[] args) throws IOException, FontFormatException
     {
 
-      /*  int num = 2147483647;
-        num += 2L;
-        System.out.println(num);*/
+        File file = new File("F:\\emoji");
+        File[] imgs = file.listFiles();
+        for (File img : imgs)
+        {
+            BufferedImage bufferedImage = ImageIO.read(img);
+            Image scaledImage = bufferedImage.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
 
+            BufferedImage outImage = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB);
 
-        /*int num = 2147483647;
-        long temp  = num +  2;
+            // 获取Graphics2D
+            Graphics2D g2d = outImage.createGraphics();
 
-        System.out.println(temp);*/
+            g2d.drawImage(scaledImage, 0, 0, null);
 
-
-        JFrame frame = new JFrame();
-        frame.setSize(300, 300);
-
-        //JIMSendTextPane jimSendTextPane = new JIMSendTextPane();
-        JTextPane jimSendTextPane = new JTextPane();
-        frame.add(jimSendTextPane);
-
-        frame.setVisible(true);
+            ImageIO.write(outImage, "png", new File("F:\\emoji2\\" + img.getName()));
+        }
     }
 }
 
