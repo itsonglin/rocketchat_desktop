@@ -277,8 +277,8 @@ public class TitlePanel extends ParentAvailablePanel
 
 
 
-        titlePanel.add(titleLabel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(100, 1).setInsets(margin, margin, 0, 0));
-        titlePanel.add(statusLabel, new GBC(1, 0).setFill(GBC.BOTH).setWeight(200, 1).setInsets(margin, margin, 0, 0));
+        titlePanel.add(titleLabel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(400, 1).setInsets(margin, margin, 0, 0));
+        titlePanel.add(statusLabel, new GBC(1, 0).setFill(GBC.BOTH).setWeight(800, 1).setInsets(margin, margin, 0, 0));
         titlePanel.add(roomInfoButton, new GBC(2, 0).setFill(GBC.BOTH).setWeight(1, 1).setInsets(margin, 0, 0, margin));
     }
 

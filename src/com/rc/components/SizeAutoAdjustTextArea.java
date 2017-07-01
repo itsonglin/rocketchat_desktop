@@ -118,23 +118,12 @@ public class SizeAutoAdjustTextArea extends JTextPane
             }
         }
 
-       /* for (int c : lineEmojiInfoList)
-        {
-            if (c > 0)
-            {
-                targetHeight += 4;
-            }
-        }*/
-
-        //this.setPreferredSize(new Dimension(targetWidth, targetHeight + 2));
         this.setPreferredSize(new Dimension(targetWidth, targetHeight + 2));
 
         super.setText(t.replaceAll(emojiRegx, ""));
-        //super.setText(t);
 
         insertEmoji(t);
 
-        //insertIcon(IconUtil.getIcon(this, "/image/smile.png", 18,18));
 
 /*        StyledDocument doc = getStyledDocument();
         MutableAttributeSet attr = new SimpleAttributeSet();
