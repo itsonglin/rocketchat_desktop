@@ -17,7 +17,7 @@ public class EmojiUtil
     public static ImageIcon getEmoji(Object context, String code)
     {
         String iconPath = "/emoji/" + code.subSequence(1, code.length() - 1) + ".png";
-        return IconUtil.getIcon(context, iconPath);
+        return new ImageIcon(context.getClass().getResource(iconPath));
     }
 
     /**

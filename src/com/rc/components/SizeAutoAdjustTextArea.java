@@ -120,18 +120,6 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
             exceptEmoji = exceptEmoji.replace(emoji, "#");
         }
 
-        // 每一个emoji表情距离字符串起始位置的长度
-/*        Set<Integer> posSet = emojiPositionMap.keySet();
-        int[] substringLengArr = new int[posSet.size()];
-        int index = 0;
-        for (int pos : posSet)
-        {
-            String substr = exceptEmoji.substring(0, pos);
-            substringLengArr[index] = substr.length();
-            index++;
-        }
-        System.out.println(substringLengArr);*/
-
 
         for (int pos : emojiPositionMap.keySet())
         {
@@ -139,7 +127,7 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
             int width = fontMetrics.stringWidth(substr) + emojiSize;
             if (width > maxWidth || substr.indexOf("\n") > -1)
             {
-                targetHeight += 3;
+                targetHeight += 5;
             }
         }
 
@@ -152,7 +140,6 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
 
 
         this.setPreferredSize(new Dimension(targetWidth, targetHeight + 2));
-
 
 /*        StyledDocument doc = getStyledDocument();
         MutableAttributeSet attr = new SimpleAttributeSet();
