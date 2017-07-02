@@ -253,7 +253,7 @@ public class ChatPanel extends ParentAvailablePanel
                 {
                     try
                     {
-                        document.insertString(document.getLength(), "\n", null);
+                        document.insertString(editor.getCaretPosition(), "\n", null);
                     }
                     catch (BadLocationException e1)
                     {

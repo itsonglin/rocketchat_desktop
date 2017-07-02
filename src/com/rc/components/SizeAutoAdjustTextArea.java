@@ -6,8 +6,7 @@ import com.rc.utils.FontUtil;
 import com.vdurmont.emoji.EmojiParser;
 
 import javax.swing.*;
-import javax.swing.text.BadLocationException;
-import javax.swing.text.Document;
+import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseListener;
 import java.util.*;
@@ -46,13 +45,13 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
         emojiRegx = ":.+?:";
         emojiPattern = Pattern.compile(emojiRegx);// 懒惰匹配，最小匹配
         fontMetrics = getFontMetrics(getFont());
-
     }
 
 
     @Override
     public void setText(String t)
     {
+
         // 对emoji的Unicode编码转别名
         t = EmojiParser.parseToAliases(t);
 
@@ -68,8 +67,7 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
         // 每一行的emoji表情信息
         List<LineEmojiInfo> lineEmojiInfoList = parseLineEmojiInfo();
 
-        //int[] lineEmojiCount = parseLineEmojiInfo();
-
+        // 每一行的实际宽度，即插入表情后的宽度
         int[] lineWidthArr = parseLineActualWidth(lineEmojiInfoList);
 
 
@@ -80,7 +78,6 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
 
         if (lineCount > 0)
         {
-            //targetWidth = fontMetrics.stringWidth(lineArr[maxLengthLinePosition]) + 5 + emojiTotalWidth;
             targetWidth = lineWidthArr[maxLengthLinePosition] + 10;
         }
         // 输入全为\n的情况
@@ -90,7 +87,7 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
             t = " ";
         }
 
-
+        int contentWidth = maxWidth - 10;
         // 如果最长的一行宽度超过了最大宽度，就要重新计算高度
         if (targetWidth > maxWidth)
         {
@@ -99,8 +96,7 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
             int totalLine = 0;
             for (int lineWidth : lineWidthArr)
             {
-
-                int ret = lineWidth / (maxWidth - 10);
+                int ret = lineWidth / contentWidth;
                 int l = ret == 0 ? ret : ret + 1;
                 totalLine += l == 0 ? 1 : l;
             }
@@ -112,14 +108,13 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
         String targetText = t.replaceAll(emojiRegx, "");
         super.setText(targetText);
 
-
+        // 插入emoji表情，并计算需要增加的高度
         Map<Integer, String> emojiPositionMap = insertEmoji(t);
         String exceptEmoji = t.replaceAll("\\r\\n", "\n");
         for (String emoji : emojiPositionMap.values())
         {
-            exceptEmoji = exceptEmoji.replace(emoji, "#");
+            exceptEmoji = exceptEmoji.replace(emoji, "\0");
         }
-
 
         for (int pos : emojiPositionMap.keySet())
         {
@@ -137,9 +132,17 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
             targetHeight += 5;
         }
 
-
-
         this.setPreferredSize(new Dimension(targetWidth, targetHeight + 2));
+
+/*
+        SimpleAttributeSet bSet = new SimpleAttributeSet();
+        StyleConstants.setAlignment(bSet, StyleConstants.ALIGN_JUSTIFIED);
+
+        StyledDocument doc = getStyledDocument();
+        MutableAttributeSet attr = new SimpleAttributeSet();
+        //StyleConstants.setAlignment(attr, StyleConstants.ALIGN_JUSTIFIED);
+        StyleConstants.setBackground(attr, Color.red);
+        doc.setParagraphAttributes(0,0, bSet, false);*/
 
 /*        StyledDocument doc = getStyledDocument();
         MutableAttributeSet attr = new SimpleAttributeSet();
@@ -228,9 +231,6 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
      */
     private List<LineEmojiInfo> parseLineEmojiInfo()
     {
-
-        //int[] retArr = new int[lineArr.length];
-
         List<LineEmojiInfo> infoList = new ArrayList<>(lineArr.length);
         List<String> emojiList;
         LineEmojiInfo info;
@@ -239,7 +239,6 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
             emojiList = parseEmoji(lineArr[i]);
             info = new LineEmojiInfo(emojiList.size(), emojiList);
             infoList.add(info);
-            //retArr[i] = emojiList.size();
         }
 
 

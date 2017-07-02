@@ -4,7 +4,7 @@ package com.rc.components.message;
  * Created by song on 17-6-2.
  */
 
-import javax.swing.JTextPane;
+import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BoxView;
 import javax.swing.text.ComponentView;
@@ -79,7 +79,7 @@ public class JIMSendTextPane extends JTextPane
                 }
                 else if (kind.equals(StyleConstants.IconElementName))
                 {
-                    return new IconView(elem);
+                    return new WarpIconView(elem);
                 }
             }
 
@@ -92,6 +92,29 @@ public class JIMSendTextPane extends JTextPane
     {
 
         public WarpLabelView(Element elem)
+        {
+            super(elem);
+        }
+
+        @Override
+        public float getMinimumSpan(int axis)
+        {
+            switch (axis)
+            {
+                case View.X_AXIS:
+                    return 0;
+                case View.Y_AXIS:
+                    return super.getMinimumSpan(axis);
+                default:
+                    throw new IllegalArgumentException("Invalid axis: " + axis);
+            }
+        }
+    }
+
+    private class WarpIconView extends IconView
+    {
+
+        public WarpIconView(Element elem)
         {
             super(elem);
         }
