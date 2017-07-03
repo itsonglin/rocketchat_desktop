@@ -233,7 +233,7 @@ public class ChatPanel extends ParentAvailablePanel
             {
 
                 // CTRL + C
-                if (e.isControlDown() && e.getKeyCode() == 67)
+                /*if (e.isControlDown() && e.getKeyCode() == 67)
                 {
                     String text = editor.getSelectedText();
                     if (text != null)
@@ -246,7 +246,7 @@ public class ChatPanel extends ParentAvailablePanel
                 if (e.isControlDown() && e.getKeyCode() == 86)
                 {
                     paste();
-                }
+                }*/
 
                 // CTRL + 回车换行
                 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_ENTER)
@@ -361,6 +361,7 @@ public class ChatPanel extends ParentAvailablePanel
             }
         });
     }
+
 
     /**
      * 解析输入框中的内容并发送消息
@@ -2077,7 +2078,7 @@ public class ChatPanel extends ParentAvailablePanel
     /**
      * 粘贴内容到编辑框
      */
-    public void paste()
+    /*public void paste()
     {
         JTextPane textPane = messageEditorPanel.getEditor();
         Object data = ClipboardUtil.paste();
@@ -2108,14 +2109,14 @@ public class ChatPanel extends ParentAvailablePanel
                 }
             }
         }
-    }
+    }*/
 
     /**
      * 插入图片到编辑框，并自动调整图片大小
      *
      * @param textPane
      * @param icon
-     */
+     *//*
     private void insertIcon(JTextPane textPane, ImageIcon icon)
     {
         int iconWidth = icon.getIconWidth();
@@ -2146,7 +2147,7 @@ public class ChatPanel extends ParentAvailablePanel
         {
             textPane.insertIcon(icon);
         }
-    }
+    }*/
 
 }
 

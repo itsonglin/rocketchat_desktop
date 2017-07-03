@@ -1,17 +1,18 @@
 package com.rc.panels;
 
-import com.rc.components.Colors;
-import com.rc.components.GBC;
-import com.rc.components.ScrollUI;
+import com.rc.components.*;
 import com.rc.components.message.ChatEditorPopupMenu;
-import com.rc.components.RCButton;
+import com.rc.components.message.FileEditorThumbnail;
+import com.rc.utils.ClipboardUtil;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.*;
 
 /**
  * Created by song on 17-5-30.
@@ -21,7 +22,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
     private JPanel controlLabel;
     private JLabel fileLabel;
     private JScrollPane textScrollPane;
-    private JTextPane textEditor;
+    private RCTextEditor textEditor;
     private JPanel sendPanel;
     private RCButton sendButton;
     private ImageIcon fileNormalIcon;
@@ -52,7 +53,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
         fileLabel.setToolTipText("上传附件");
         controlLabel.add(fileLabel);
 
-        textEditor = new JTextPane();
+        textEditor = new RCTextEditor();
         textEditor.setBackground(Colors.WINDOW_BACKGROUND);
         textEditor.setFont(FontUtil.getDefaultFont(14));
         textEditor.setMargin(new Insets(0,15,0,0));
@@ -131,5 +132,6 @@ public class MessageEditorPanel extends ParentAvailablePanel
     {
         return fileLabel;
     }
+
 
 }

@@ -1,6 +1,7 @@
 package com.rc.utils;
 
 import javax.swing.*;
+import java.net.URL;
 
 /**
  * Created by song on 2017/7/1.
@@ -17,7 +18,8 @@ public class EmojiUtil
     public static ImageIcon getEmoji(Object context, String code)
     {
         String iconPath = "/emoji/" + code.subSequence(1, code.length() - 1) + ".png";
-        return new ImageIcon(context.getClass().getResource(iconPath));
+        URL url = context.getClass().getResource(iconPath);
+        return url == null ? null : new ImageIcon(url);
     }
 
     /**

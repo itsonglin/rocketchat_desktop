@@ -2,6 +2,7 @@ package com.rc.components.message;
 
 import com.rc.components.Colors;
 import com.rc.components.RCMenuItemUI;
+import com.rc.components.RCTextEditor;
 import com.rc.panels.ChatPanel;
 import com.rc.utils.ClipboardUtil;
 
@@ -83,8 +84,9 @@ public class ChatEditorPopupMenu extends JPopupMenu
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                //JTextPane textPane = (JTextPane) getInvoker();
-                ChatPanel.getContext().paste();
+                RCTextEditor textEditor = (RCTextEditor) getInvoker();
+                textEditor.paste();
+                //ChatPanel.getContext().paste();
             }
         });
 
