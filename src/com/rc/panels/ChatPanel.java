@@ -1106,7 +1106,10 @@ public class ChatPanel extends ParentAvailablePanel
                 messageViewHolderCacheHelper.reset();
 
                 messageItems.clear();
+
+                //long start = System.currentTimeMillis();
                 initData();
+                //System.out.println("花费时间 ：" + (System.currentTimeMillis() - start));
                 messagePanel.setVisible(true);
                 messageEditorPanel.setVisible(true);
                 messagePanel.getMessageListView().setVisible(true);

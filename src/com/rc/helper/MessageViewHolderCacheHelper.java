@@ -1,10 +1,14 @@
 package com.rc.helper;
 
 import com.rc.adapter.message.*;
+import com.rc.components.SizeAutoAdjustTextArea;
 import com.rc.panels.ChatPanel;
+import com.sun.glass.ui.Size;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseListener;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -213,6 +217,70 @@ public class MessageViewHolderCacheHelper
 
     public synchronized void reset()
     {
+        //long start = System.currentTimeMillis();
+
+        //for (MessageRightTextViewHolder viewHolder : rightTextViewHolders)
+        for (int i = 0; i < rightTextPosition; i++)
+        {
+            MessageRightTextViewHolder viewHolder = rightTextViewHolders.get(i);
+            clearMouseListener(viewHolder.messageBubble);
+            clearMouseListener(viewHolder.resend);
+            clearMouseListener(viewHolder.text);
+        }
+
+        //System.out.println("花费时间 ：" + (System.currentTimeMillis() - start));
+
+       //for (MessageRightImageViewHolder viewHolder : rightImageViewHolders)
+        for (int i = 0; i < rightImagePosition; i++)
+        {
+            MessageRightImageViewHolder viewHolder = rightImageViewHolders.get(i);
+            clearMouseListener(viewHolder.image);
+            clearMouseListener(viewHolder.imageBubble);
+            clearMouseListener(viewHolder.resend);
+        }
+
+        //for (MessageRightAttachmentViewHolder viewHolder : rightAttachmentViewHolders)
+        for (int i = 0; i < rightAttachmentPosition; i++)
+        {
+            MessageRightAttachmentViewHolder viewHolder = rightAttachmentViewHolders.get(i);
+            clearMouseListener(viewHolder.resend);
+            clearMouseListener(viewHolder.messageBubble);
+            clearMouseListener(viewHolder.attachmentPanel);
+            clearMouseListener(viewHolder.attachmentTitle);
+        }
+
+        //for (MessageLeftTextViewHolder viewHolder : leftTextViewHolders)
+        for (int i = 0; i < leftTextPosition; i++)
+        {
+            MessageLeftTextViewHolder viewHolder = leftTextViewHolders.get(i);
+
+            clearMouseListener(viewHolder.text);
+            clearMouseListener(viewHolder.messageBubble);
+            clearMouseListener(viewHolder.avatar);
+        }
+
+        //for (MessageLeftImageViewHolder viewHolder : leftImageViewHolders)
+        for (int i = 0; i < leftImagePosition; i++)
+        {
+            MessageLeftImageViewHolder viewHolder = leftImageViewHolders.get(i);
+
+            clearMouseListener(viewHolder.image);
+            clearMouseListener(viewHolder.imageBubble);
+            clearMouseListener(viewHolder.avatar);
+        }
+
+        //for (MessageLeftAttachmentViewHolder viewHolder : leftAttachmentViewHolders)
+        for (int i = 0; i < leftAttachmentPosition; i++)
+        {
+            MessageLeftAttachmentViewHolder viewHolder = leftAttachmentViewHolders.get(i);
+
+            clearMouseListener(viewHolder.attachmentPanel);
+            clearMouseListener(viewHolder.attachmentTitle);
+            clearMouseListener(viewHolder.messageBubble);
+            clearMouseListener(viewHolder.avatar);
+        }
+
+
         rightTextPosition = 0;
         rightImagePosition = 0;
         rightAttachmentPosition = 0;
@@ -222,47 +290,6 @@ public class MessageViewHolderCacheHelper
         leftAttachmentPosition = 0;
 
         systemMessagePosition = 0;
-
-
-        for (MessageRightTextViewHolder viewHolder : rightTextViewHolders)
-        {
-            clearMouseListener(viewHolder.messageBubble);
-            clearMouseListener(viewHolder.resend);
-            clearMouseListener(viewHolder.text);
-        }
-        for (MessageRightImageViewHolder viewHolder : rightImageViewHolders)
-        {
-            clearMouseListener(viewHolder.image);
-            clearMouseListener(viewHolder.imageBubble);
-            clearMouseListener(viewHolder.resend);
-        }
-        for (MessageRightAttachmentViewHolder viewHolder : rightAttachmentViewHolders)
-        {
-            clearMouseListener(viewHolder.resend);
-            clearMouseListener(viewHolder.messageBubble);
-            clearMouseListener(viewHolder.attachmentPanel);
-            clearMouseListener(viewHolder.attachmentTitle);
-        }
-
-        for (MessageLeftTextViewHolder viewHolder : leftTextViewHolders)
-        {
-            clearMouseListener(viewHolder.text);
-            clearMouseListener(viewHolder.messageBubble);
-            clearMouseListener(viewHolder.avatar);
-        }
-        for (MessageLeftImageViewHolder viewHolder : leftImageViewHolders)
-        {
-            clearMouseListener(viewHolder.image);
-            clearMouseListener(viewHolder.imageBubble);
-            clearMouseListener(viewHolder.avatar);
-        }
-        for (MessageLeftAttachmentViewHolder viewHolder : leftAttachmentViewHolders)
-        {
-            clearMouseListener(viewHolder.attachmentPanel);
-            clearMouseListener(viewHolder.attachmentTitle);
-            clearMouseListener(viewHolder.messageBubble);
-            clearMouseListener(viewHolder.avatar);
-        }
     }
 
     private void clearMouseListener(JComponent component)
