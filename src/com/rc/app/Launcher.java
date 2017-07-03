@@ -38,7 +38,7 @@ public class Launcher
     //    public static final String UPDATE_HOSTNAME = "http://192.168.1.171:8080";
     public static final String UPDATE_HOSTNAME = "https://apk.shls-leasing.com";
 
-    public static final String APP_VERSION = "1.0.0";
+    public static final String APP_VERSION = "1.0.1";
 
     public static String userHome;
     public static String appFilesBasePath;

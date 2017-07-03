@@ -3,6 +3,7 @@ package com.rc.components;
 import com.rc.components.message.JIMSendTextPane;
 import com.rc.utils.EmojiUtil;
 import com.rc.utils.FontUtil;
+import com.rc.utils.OSUtil;
 import com.vdurmont.emoji.EmojiParser;
 
 import javax.swing.*;
@@ -116,20 +117,22 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
             exceptEmoji = exceptEmoji.replace(emoji, "\0");
         }
 
+        int emojiExtraHeight = OSUtil.getOsType() == OSUtil.Mac_OS ? 8 : 5;
         for (int pos : emojiPositionMap.keySet())
         {
             String substr = exceptEmoji.substring(0, pos + 1);
             int width = fontMetrics.stringWidth(substr) + emojiSize;
             if (width > maxWidth || substr.indexOf("\n") > -1)
             {
-                targetHeight += 5;
+                System.out.println("+++一个");
+                targetHeight += emojiExtraHeight;
             }
         }
 
         // 如果有emoji表情，高度就要适当增加
         if (emojiPositionMap.keySet().size() > 0)
         {
-            targetHeight += 5;
+            targetHeight += emojiExtraHeight;
         }
 
         this.setPreferredSize(new Dimension(targetWidth, targetHeight + 2));
