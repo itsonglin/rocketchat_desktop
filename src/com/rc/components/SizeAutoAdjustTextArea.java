@@ -1,6 +1,5 @@
 package com.rc.components;
 
-import com.rc.adapter.message.MessageMouseListener;
 import com.rc.components.message.JIMSendTextPane;
 import com.rc.utils.EmojiUtil;
 import com.rc.utils.FontUtil;
@@ -12,7 +11,6 @@ import javax.swing.text.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -452,13 +450,9 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
             URI uri = new URI(url);
             Desktop.getDesktop().browse(uri);
         }
-        catch (URISyntaxException e)
+        catch (Exception e)
         {
-            e.printStackTrace();
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
+            System.out.println("URL打开失败");
         }
     }
 

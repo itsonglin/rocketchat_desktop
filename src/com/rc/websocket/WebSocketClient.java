@@ -630,10 +630,10 @@ public class WebSocketClient
                                 room.setCreatorName(oldRoom.getCreatorName());
                                 room.setLastChatAt(oldRoom.getLastChatAt());
 
-                                if (oldRoom.getTotalReadCount() < 0)
+                                /*if (oldRoom.getTotalReadCount() < 0)
                                 {
                                     System.out.println("oldRoom.getTotalReadCount()" + oldRoom.getTotalReadCount());
-                                }
+                                }*/
                                 room.setTotalReadCount(oldRoom.getTotalReadCount());
                             }
 

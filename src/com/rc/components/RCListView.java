@@ -385,8 +385,11 @@ public class RCListView extends JScrollPane
 
     public void notifyItemRemoved(int position)
     {
+        Component[] components = contentPanel.getComponents();
+
         contentPanel.remove(position);
         contentPanel.revalidate();
+        contentPanel.repaint();
     }
 
     /**
