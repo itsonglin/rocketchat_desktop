@@ -15,6 +15,7 @@ import com.rc.entity.ImageAttachmentItem;
 import com.rc.entity.MessageItem;
 import com.rc.frames.MainFrame;
 import com.rc.helper.MessageViewHolderCacheHelper;
+import com.rc.listener.ExpressionListener;
 import com.rc.utils.*;
 import com.rc.websocket.WebSocketClient;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -231,23 +232,6 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void keyPressed(KeyEvent e)
             {
-
-                // CTRL + C
-                /*if (e.isControlDown() && e.getKeyCode() == 67)
-                {
-                    String text = editor.getSelectedText();
-                    if (text != null)
-                    {
-                        ClipboardUtil.copyString(text);
-                    }
-                }
-
-                // CTRL + V
-                if (e.isControlDown() && e.getKeyCode() == 86)
-                {
-                    paste();
-                }*/
-
                 // CTRL + 回车换行
                 if (e.isControlDown() && e.getKeyCode() == KeyEvent.VK_ENTER)
                 {
@@ -324,16 +308,6 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                /*if (editor.getText() == null || editor.getText().isEmpty())
-                {
-                    return;
-                }
-
-                List<Object> inputDatas = parseEditorInput();
-                String text = editor.getText();
-
-                sendTextMessage(null, editor.getText());*/
-
                 sendMessage();
             }
         });
@@ -358,6 +332,16 @@ public class ChatPanel extends ParentAvailablePanel
                 }
 
                 super.mouseClicked(e);
+            }
+        });
+
+        // 插入表情
+        messageEditorPanel.setExpressionListener(new ExpressionListener()
+        {
+            @Override
+            public void onSelected(String code)
+            {
+                editor.replaceSelection(code);
             }
         });
     }

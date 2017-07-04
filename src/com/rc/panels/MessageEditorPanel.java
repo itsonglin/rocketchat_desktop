@@ -2,17 +2,14 @@ package com.rc.panels;
 
 import com.rc.components.*;
 import com.rc.components.message.ChatEditorPopupMenu;
-import com.rc.components.message.FileEditorThumbnail;
-import com.rc.utils.ClipboardUtil;
+import com.rc.listener.ExpressionListener;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.List;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.*;
 
 /**
  * Created by song on 17-5-30.
@@ -21,14 +18,20 @@ public class MessageEditorPanel extends ParentAvailablePanel
 {
     private JPanel controlLabel;
     private JLabel fileLabel;
+    private JLabel emotionLabel;
     private JScrollPane textScrollPane;
     private RCTextEditor textEditor;
     private JPanel sendPanel;
     private RCButton sendButton;
-    private ImageIcon fileNormalIcon;
-    private ImageIcon fileActiveIcon;
     private ChatEditorPopupMenu chatEditorPopupMenu;
 
+    private ImageIcon fileNormalIcon;
+    private ImageIcon fileActiveIcon;
+
+    private ImageIcon emotionNormalIcon;
+    private ImageIcon emotionActiveIcon;
+
+    private ExpressionPopup expressionPopup;
 
     public MessageEditorPanel(JPanel parent)
     {
@@ -53,6 +56,14 @@ public class MessageEditorPanel extends ParentAvailablePanel
         fileLabel.setToolTipText("上传附件");
         controlLabel.add(fileLabel);
 
+        emotionLabel = new JLabel();
+        emotionNormalIcon = IconUtil.getIcon(this, "/image/emotion.png");
+        emotionActiveIcon = IconUtil.getIcon(this, "/image/emotion_active.png");
+        emotionLabel.setIcon(emotionNormalIcon);
+        emotionLabel.setCursor(handCursor);
+        controlLabel.add(emotionLabel);
+
+
         textEditor = new RCTextEditor();
         textEditor.setBackground(Colors.WINDOW_BACKGROUND);
         textEditor.setFont(FontUtil.getDefaultFont(14));
@@ -73,6 +84,8 @@ public class MessageEditorPanel extends ParentAvailablePanel
         sendButton.setPreferredSize(new Dimension(75,23));
 
         chatEditorPopupMenu = new ChatEditorPopupMenu();
+
+        expressionPopup = new ExpressionPopup();
     }
 
     private void initView()
@@ -103,6 +116,30 @@ public class MessageEditorPanel extends ParentAvailablePanel
             }
         });
 
+        emotionLabel.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                emotionLabel.setIcon(emotionActiveIcon);
+                super.mouseEntered(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                emotionLabel.setIcon(emotionNormalIcon);
+                super.mouseExited(e);
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                expressionPopup.show((Component) e.getSource(), e.getX() - 200, e.getY() - 320);
+                super.mouseClicked(e);
+            }
+        });
+
         textEditor.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -117,6 +154,10 @@ public class MessageEditorPanel extends ParentAvailablePanel
         });
     }
 
+    public void setExpressionListener(ExpressionListener listener)
+    {
+        expressionPopup.setExpressionListener(listener);
+    }
 
     public JTextPane getEditor()
     {
