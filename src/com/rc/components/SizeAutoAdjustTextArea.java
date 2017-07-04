@@ -170,6 +170,7 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
         StyleConstants.setForeground(bSet, Color.blue);
         StyleConstants.setUnderline(bSet, true);
         StyledDocument doc = getStyledDocument();
+        doc.setCharacterAttributes(0, src.length(), getCharacterAttributes(), true);
 
         int startIndex = 0;
         int endIndex = 0;
@@ -386,7 +387,7 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
 
     private void setListeners()
     {
-        this.addMouseListener(new MessageMouseListener()
+        this.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseClicked(MouseEvent e)
