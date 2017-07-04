@@ -1,5 +1,6 @@
 package com.rc.components;
 
+import com.rc.adapter.message.MessageMouseListener;
 import com.rc.components.message.JIMSendTextPane;
 import com.rc.utils.EmojiUtil;
 import com.rc.utils.FontUtil;
@@ -9,7 +10,12 @@ import com.vdurmont.emoji.EmojiParser;
 import javax.swing.*;
 import javax.swing.text.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.*;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -33,6 +39,12 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
     // 最长一行是第几行
     private int maxLengthLinePosition = 0;
 
+    // 所有的url地址
+    private List<String> urlList;
+
+    // 记录每个url地址的起始位置与结束位置
+    int[][] urlRange;
+
 
     public SizeAutoAdjustTextArea(int maxWidth)
     {
@@ -46,6 +58,8 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
         emojiRegx = ":.+?:";
         emojiPattern = Pattern.compile(emojiRegx);// 懒惰匹配，最小匹配
         fontMetrics = getFontMetrics(getFont());
+
+        setListeners();
     }
 
 
@@ -124,7 +138,6 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
             int width = fontMetrics.stringWidth(substr) + emojiSize;
             if (width > maxWidth || substr.indexOf("\n") > -1)
             {
-                System.out.println("+++一个");
                 targetHeight += emojiExtraHeight;
             }
         }
@@ -135,22 +148,46 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
             targetHeight += emojiExtraHeight;
         }
 
+        // 解析网址
+        highlightUrls(t);
+
+
         this.setPreferredSize(new Dimension(targetWidth, targetHeight + 2));
 
-/*
+    }
+
+    /**
+     * 网址高亮
+     *
+     * @param src
+     */
+    private void highlightUrls(String src)
+    {
+        urlList = parseUrl(src);
+        urlRange = new int[urlList.size()][2];
+
         SimpleAttributeSet bSet = new SimpleAttributeSet();
-        StyleConstants.setAlignment(bSet, StyleConstants.ALIGN_JUSTIFIED);
-
+        StyleConstants.setForeground(bSet, Color.blue);
+        StyleConstants.setUnderline(bSet, true);
         StyledDocument doc = getStyledDocument();
-        MutableAttributeSet attr = new SimpleAttributeSet();
-        //StyleConstants.setAlignment(attr, StyleConstants.ALIGN_JUSTIFIED);
-        StyleConstants.setBackground(attr, Color.red);
-        doc.setParagraphAttributes(0,0, bSet, false);*/
 
-/*        StyledDocument doc = getStyledDocument();
-        MutableAttributeSet attr = new SimpleAttributeSet();
-        StyleConstants.setIcon(attr, IconUtil.getIcon(this, "/emoji/apple.png", 15,15));
-        doc.setCharacterAttributes(1,1, attr, false);*/
+        int startIndex = 0;
+        int endIndex = 0;
+        for (int i = 0; i < urlList.size(); i++)
+        {
+            String url = urlList.get(i);
+            startIndex = src.indexOf(url);
+            if (startIndex > -1)
+            {
+                endIndex = startIndex + url.length();
+                doc.setCharacterAttributes(src.indexOf(url, startIndex), url.length(), bSet, false);
+
+                urlRange[i][0] = startIndex;
+                urlRange[i][1] = endIndex;
+
+                startIndex++;
+            }
+        }
     }
 
     private Map<Integer, String> insertEmoji(String src)
@@ -199,7 +236,8 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
                         try
                         {
                             doc.insertString(pos, stringBuilder.toString(), getCharacterAttributes());
-                        } catch (BadLocationException e)
+                        }
+                        catch (BadLocationException e)
                         {
                             e.printStackTrace();
                         }
@@ -230,6 +268,7 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
 
     /**
      * 分析每一行的emoji数量
+     *
      * @return
      */
     private List<LineEmojiInfo> parseLineEmojiInfo()
@@ -289,6 +328,7 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
 
     /**
      * 解析每一行的实际宽度，包括字符串宽度和表情宽度
+     *
      * @param lineEmojiInfoList
      * @return
      */
@@ -325,6 +365,74 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
         return retArr;
     }
 
+    private List<String> parseUrl(String src)
+    {
+        List<String> urlList = new ArrayList<>();
+
+        //long start = System.currentTimeMillis();
+        String regex = "(?:https?://)?(www\\.)?[\\w]+(?:\\.+[\\w]+)+[\\w,-_/?&=#%:]*";
+        Pattern urlPattern = Pattern.compile(regex);
+        Matcher urlMatcher = urlPattern.matcher(src);
+        while (urlMatcher.find())
+        {
+            urlList.add(urlMatcher.group());
+        }
+
+        //System.out.println("花费时间 ：" + (System.currentTimeMillis() - start));
+
+        return urlList;
+    }
+
+
+    private void setListeners()
+    {
+        this.addMouseListener(new MessageMouseListener()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON1)
+                {
+                    int position = getCaretPosition();
+                    int urlIndex = 0;
+                    for (int[] range : urlRange)
+                    {
+                        if (position >= range[0] && position <= range[1])
+                        {
+                            String url = urlList.get(urlIndex);
+                            openUrlWithDefaultBrowser(url);
+                        }
+
+                        urlIndex++;
+                    }
+                }
+
+                super.mouseClicked(e);
+            }
+        });
+    }
+
+    /**
+     * 打开默认浏览器访问页面
+     */
+    public static void openUrlWithDefaultBrowser(String url)
+    {
+        //启用系统默认浏览器来打开网址。
+        try
+        {
+            URI uri = new URI(url);
+            Desktop.getDesktop().browse(uri);
+        }
+        catch (URISyntaxException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+    }
+
 
     public Object getTag()
     {
@@ -336,8 +444,7 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
         this.tag = tag;
     }
 
-
-    @Override
+/*    @Override
     public synchronized void addMouseListener(MouseListener l)
     {
         for (MouseListener listener : getMouseListeners())
@@ -349,8 +456,9 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
         }
 
         super.addMouseListener(l);
-    }
+    }*/
 }
+
 
 class LineEmojiInfo
 {
