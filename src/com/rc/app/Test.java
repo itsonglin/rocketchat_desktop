@@ -3,7 +3,9 @@ package com.rc.app;
 
 import com.rc.components.message.JIMSendTextPane;
 import com.rc.forms.ImageViewerFrame;
+import com.rc.panels.EmojiPanel;
 import com.rc.utils.AvatarUtil;
+import com.rc.utils.EmojiUtil;
 import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import com.vdurmont.emoji.EmojiParser;
 import sun.misc.BASE64Encoder;
@@ -33,7 +35,13 @@ class Test
     public static void main(String[] args) throws IOException, FontFormatException
     {
 
-        File file = new File("F:\\emoji");
+        String aa = "\uD83D\uDE42";
+        String str = ":smile:";
+        String out = EmojiParser.parseToUnicode(str);
+        System.out.println(out);
+
+
+        /*File file = new File("F:\\emoji");
         File[] imgs = file.listFiles();
         for (File img : imgs)
         {
@@ -48,7 +56,7 @@ class Test
             g2d.drawImage(scaledImage, 0, 0, null);
 
             ImageIO.write(outImage, "png", new File("F:\\emoji2\\" + img.getName()));
-        }
+        }*/
     }
 }
 

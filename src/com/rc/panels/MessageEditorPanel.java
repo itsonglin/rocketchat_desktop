@@ -54,15 +54,12 @@ public class MessageEditorPanel extends ParentAvailablePanel
         fileLabel.setIcon(fileNormalIcon);
         fileLabel.setCursor(handCursor);
         fileLabel.setToolTipText("上传附件");
-        controlLabel.add(fileLabel);
 
         emotionLabel = new JLabel();
         emotionNormalIcon = IconUtil.getIcon(this, "/image/emotion.png");
         emotionActiveIcon = IconUtil.getIcon(this, "/image/emotion_active.png");
         emotionLabel.setIcon(emotionNormalIcon);
         emotionLabel.setCursor(handCursor);
-        controlLabel.add(emotionLabel);
-
 
         textEditor = new RCTextEditor();
         textEditor.setBackground(Colors.WINDOW_BACKGROUND);
@@ -91,6 +88,9 @@ public class MessageEditorPanel extends ParentAvailablePanel
     private void initView()
     {
         this.setLayout(new GridBagLayout());
+
+        controlLabel.add(emotionLabel);
+        controlLabel.add(fileLabel);
 
         add(controlLabel, new GBC(0, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1));
         add(textScrollPane, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 15));

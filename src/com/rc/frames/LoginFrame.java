@@ -269,6 +269,8 @@ public class LoginFrame extends JFrame
             statusLabel.setVisible(false);
 
             loginButton.setEnabled(false);
+            usernameField.setEditable(false);
+            passwordField.setEditable(false);
             HttpPostTask task = new HttpPostTask();
             task.setListener(new HttpResponseListener<JSONObject>()
             {
@@ -312,6 +314,8 @@ public class LoginFrame extends JFrame
         {
             showMessage("用户不存在或密码错误");
             loginButton.setEnabled(true);
+            usernameField.setEditable(true);
+            passwordField.setEditable(true);
         }
 
     }
