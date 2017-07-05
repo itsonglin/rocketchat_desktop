@@ -57,6 +57,11 @@ public class ClipboardUtil
         }
     }
 
+    public static void copyImage(Image image)
+    {
+        clipboard.setContents(new ImageTransferable(image), null);
+    }
+
     public static void copyFile(String path)
     {
         try

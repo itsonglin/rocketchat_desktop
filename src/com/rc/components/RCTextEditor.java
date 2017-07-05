@@ -1,10 +1,13 @@
 package com.rc.components;
 
 import com.rc.components.message.FileEditorThumbnail;
+import com.rc.forms.ImageViewerFrame;
 import com.rc.utils.ClipboardUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * Created by song on 03/07/2017.
@@ -22,7 +25,7 @@ public class RCTextEditor extends JTextPane
         else if (data instanceof ImageIcon)
         {
             ImageIcon icon = (ImageIcon) data;
-            adjustAndinsertIcon(icon);
+            adjustAndInsertIcon(icon);
         }
         else if (data instanceof java.util.List)
         {
@@ -32,7 +35,7 @@ public class RCTextEditor extends JTextPane
                 // 图像
                 if (obj instanceof ImageIcon)
                 {
-                    adjustAndinsertIcon((ImageIcon) obj);
+                    adjustAndInsertIcon((ImageIcon) obj);
                 }
                 // 文件
                 else if (obj instanceof String)
@@ -49,8 +52,9 @@ public class RCTextEditor extends JTextPane
      *
      * @param icon
      */
-    private void adjustAndinsertIcon(ImageIcon icon)
+    private void adjustAndInsertIcon(ImageIcon icon)
     {
+        String path = icon.getDescription();
         int iconWidth = icon.getIconWidth();
         int iconHeight = icon.getIconHeight();
         float scale = iconWidth * 1.0F / iconHeight;
@@ -69,15 +73,36 @@ public class RCTextEditor extends JTextPane
             needToScale = true;
         }
 
+        JLabel label = new JLabel();
         if (needToScale)
         {
             ImageIcon scaledIcon = new ImageIcon(icon.getImage().getScaledInstance(iconWidth, iconHeight, Image.SCALE_SMOOTH));
             scaledIcon.setDescription(icon.getDescription());
-            this.insertIcon(scaledIcon);
+            //this.insertIcon(scaledIcon);
+            label.setIcon(scaledIcon);
         }
         else
         {
-            this.insertIcon(icon);
+            //this.insertIcon(icon);
+            label.setIcon(icon);
         }
+
+        label.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                // 双击预览选中的图片
+                if (e.getClickCount() == 2)
+                {
+                    ImageViewerFrame frame = new ImageViewerFrame(path);
+                    frame.setVisible(true);
+                }
+                super.mouseClicked(e);
+            }
+        });
+
+        insertComponent(label);
+
     }
 }

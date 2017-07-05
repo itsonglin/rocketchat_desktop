@@ -3,6 +3,7 @@ package com.rc.app;
 
 import com.rc.components.message.JIMSendTextPane;
 import com.rc.forms.ImageViewerFrame;
+import com.rc.frames.ScreenShot;
 import com.rc.panels.EmojiPanel;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.EmojiUtil;
@@ -32,14 +33,76 @@ import java.util.regex.Pattern;
 
 class Test
 {
-    public static void main(String[] args) throws IOException, FontFormatException
+
+
+    /**
+     * @param args
+     */
+    public static void main(String[] args) throws IOException
     {
+        try{
+            ScreenShot ssw=new ScreenShot();
+            ssw.setVisible(true);
+        }catch(AWTException e){
+            e.printStackTrace();
+        }
+    }
 
-        String aa = "\uD83D\uDE42";
-        String str = ":smile:";
-        String out = EmojiParser.parseToUnicode(str);
-        System.out.println(out);
+    /**
+     * 全屏窗口，无标题栏。
+     */
+    public static void fullWindow1() throws IOException
+    {
+        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        Robot robot = null;
+        try
+        {
+            robot = new Robot();
+        }
+        catch (AWTException e)
+        {
+            e.printStackTrace();
+        }
+        BufferedImage bufferedImage = robot.createScreenCapture(new Rectangle(d.width, d.height));
+        JLabel label = new JLabel();
+        label.setIcon(new ImageIcon(bufferedImage));
+        ImageIO.write(bufferedImage, "jpg", new File("/Users/song/" + System.currentTimeMillis() + ".jpg"));
 
+
+        final JFrame frame = new JFrame();
+        frame.setUndecorated(true);
+        frame.getGraphicsConfiguration().getDevice().setFullScreenWindow(frame);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.getContentPane().add(label);
+        frame.addMouseListener(new MouseAdapter()
+        {
+            // 双击退出
+            public void mouseClicked(MouseEvent e)
+            {
+                if (e.getClickCount() == 2)
+                {
+                    frame.dispose();
+                }
+            }
+        });
+        frame.setVisible(true);
+
+    }
+
+
+        /*Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
+        Robot robot = null;
+        try
+        {
+            robot = new Robot();
+        }
+        catch (AWTException e)
+        {
+            e.printStackTrace();
+        }
+        BufferedImage bufferedImage = robot.createScreenCapture(new Rectangle(d.width, d.height));
+        ImageIO.write(bufferedImage, "jpg", new File("/Users/song/" + System.currentTimeMillis() + ".jpg"));
+        System.out.println("ok");*/
 
         /*File file = new File("F:\\emoji");
         File[] imgs = file.listFiles();
@@ -57,6 +120,5 @@ class Test
 
             ImageIO.write(outImage, "png", new File("F:\\emoji2\\" + img.getName()));
         }*/
-    }
 }
 

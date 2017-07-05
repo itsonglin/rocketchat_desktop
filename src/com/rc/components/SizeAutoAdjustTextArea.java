@@ -144,7 +144,8 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
                 targetHeight = l * emojiSize;
             }
 
-            setPreferredSize(new Dimension(targetWidth, targetHeight));
+            int h = OSUtil.getOsType() == OSUtil.Mac_OS ? 0 : 3;
+            setPreferredSize(new Dimension(targetWidth, targetHeight + h));
             return;
         }
 

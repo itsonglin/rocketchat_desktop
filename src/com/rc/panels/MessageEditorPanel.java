@@ -1,10 +1,14 @@
 package com.rc.panels;
 
+import com.melloware.jintellitype.HotkeyListener;
+import com.melloware.jintellitype.JIntellitype;
 import com.rc.components.*;
 import com.rc.components.message.ChatEditorPopupMenu;
+import com.rc.frames.ScreenShot;
 import com.rc.listener.ExpressionListener;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
+import com.rc.utils.OSUtil;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,7 +22,8 @@ public class MessageEditorPanel extends ParentAvailablePanel
 {
     private JPanel controlLabel;
     private JLabel fileLabel;
-    private JLabel emotionLabel;
+    private JLabel expressionLabel;
+    private JLabel cutLabel;
     private JScrollPane textScrollPane;
     private RCTextEditor textEditor;
     private JPanel sendPanel;
@@ -31,6 +36,9 @@ public class MessageEditorPanel extends ParentAvailablePanel
     private ImageIcon emotionNormalIcon;
     private ImageIcon emotionActiveIcon;
 
+    private ImageIcon cutNormalIcon;
+    private ImageIcon cutActiveIcon;
+
     private ExpressionPopup expressionPopup;
 
     public MessageEditorPanel(JPanel parent)
@@ -40,31 +48,70 @@ public class MessageEditorPanel extends ParentAvailablePanel
         initComponents();
         initView();
         setListeners();
+
+        if (OSUtil.getOsType() == OSUtil.Windows)
+        {
+            registerHotKey();
+        }
+    }
+
+    private void registerHotKey()
+    {
+        int SCREEN_SHOT_CODE = 10001;
+        JIntellitype.getInstance().registerHotKey(SCREEN_SHOT_CODE, JIntellitype.MOD_ALT, 'S');
+
+        JIntellitype.getInstance().addHotKeyListener(new HotkeyListener()
+        {
+            @Override
+            public void onHotKey(int markCode)
+            {
+                if (markCode == SCREEN_SHOT_CODE)
+                {
+                    screenShot();
+                }
+            }
+        });
     }
 
     private void initComponents()
     {
         Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
         controlLabel = new JPanel();
-        controlLabel.setLayout(new FlowLayout(FlowLayout.LEFT, 15,5));
+        controlLabel.setLayout(new FlowLayout(FlowLayout.LEFT, 20, 7));
 
         fileLabel = new JLabel();
         fileNormalIcon = IconUtil.getIcon(this, "/image/file.png");
         fileActiveIcon = IconUtil.getIcon(this, "/image/file_active.png");
         fileLabel.setIcon(fileNormalIcon);
         fileLabel.setCursor(handCursor);
-        fileLabel.setToolTipText("上传附件");
+        fileLabel.setToolTipText("发送文件/图片");
 
-        emotionLabel = new JLabel();
+        expressionLabel = new JLabel();
         emotionNormalIcon = IconUtil.getIcon(this, "/image/emotion.png");
         emotionActiveIcon = IconUtil.getIcon(this, "/image/emotion_active.png");
-        emotionLabel.setIcon(emotionNormalIcon);
-        emotionLabel.setCursor(handCursor);
+        expressionLabel.setIcon(emotionNormalIcon);
+        expressionLabel.setCursor(handCursor);
+        expressionLabel.setToolTipText("表情");
+
+        cutLabel = new JLabel();
+        cutNormalIcon = IconUtil.getIcon(this, "/image/cut.png");
+        cutActiveIcon = IconUtil.getIcon(this, "/image/cut_active.png");
+        cutLabel.setIcon(cutNormalIcon);
+        cutLabel.setCursor(handCursor);
+        if (OSUtil.getOsType() == OSUtil.Windows)
+        {
+            cutLabel.setToolTipText("截图(Alt + S)");
+        }
+        else
+        {
+            cutLabel.setToolTipText("截图(当前系统下不支持全局热键)");
+        }
+
 
         textEditor = new RCTextEditor();
         textEditor.setBackground(Colors.WINDOW_BACKGROUND);
         textEditor.setFont(FontUtil.getDefaultFont(14));
-        textEditor.setMargin(new Insets(0,15,0,0));
+        textEditor.setMargin(new Insets(0, 15, 0, 0));
         textScrollPane = new JScrollPane(textEditor);
         textScrollPane.getVerticalScrollBar().setUI(new ScrollUI(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND));
         textScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -78,7 +125,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
         sendPanel.add(sendButton, BorderLayout.EAST);
         sendButton.setForeground(Colors.DARKER);
         sendButton.setFont(FontUtil.getDefaultFont(13));
-        sendButton.setPreferredSize(new Dimension(75,23));
+        sendButton.setPreferredSize(new Dimension(75, 23));
 
         chatEditorPopupMenu = new ChatEditorPopupMenu();
 
@@ -89,12 +136,13 @@ public class MessageEditorPanel extends ParentAvailablePanel
     {
         this.setLayout(new GridBagLayout());
 
-        controlLabel.add(emotionLabel);
+        controlLabel.add(expressionLabel);
         controlLabel.add(fileLabel);
+        controlLabel.add(cutLabel);
 
         add(controlLabel, new GBC(0, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1));
         add(textScrollPane, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 15));
-        add(sendPanel, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0,0,10,10));
+        add(sendPanel, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0, 0, 10, 10));
     }
 
     private void setListeners()
@@ -116,19 +164,19 @@ public class MessageEditorPanel extends ParentAvailablePanel
             }
         });
 
-        emotionLabel.addMouseListener(new MouseAdapter()
+        expressionLabel.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseEntered(MouseEvent e)
             {
-                emotionLabel.setIcon(emotionActiveIcon);
+                expressionLabel.setIcon(emotionActiveIcon);
                 super.mouseEntered(e);
             }
 
             @Override
             public void mouseExited(MouseEvent e)
             {
-                emotionLabel.setIcon(emotionNormalIcon);
+                expressionLabel.setIcon(emotionNormalIcon);
                 super.mouseExited(e);
             }
 
@@ -136,6 +184,30 @@ public class MessageEditorPanel extends ParentAvailablePanel
             public void mouseClicked(MouseEvent e)
             {
                 expressionPopup.show((Component) e.getSource(), e.getX() - 200, e.getY() - 320);
+                super.mouseClicked(e);
+            }
+        });
+
+        cutLabel.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+                cutLabel.setIcon(cutActiveIcon);
+                super.mouseEntered(e);
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+                cutLabel.setIcon(cutNormalIcon);
+                super.mouseExited(e);
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                screenShot();
                 super.mouseClicked(e);
             }
         });
@@ -154,12 +226,25 @@ public class MessageEditorPanel extends ParentAvailablePanel
         });
     }
 
+    private void screenShot()
+    {
+        try
+        {
+            ScreenShot ssw = new ScreenShot();
+            ssw.setVisible(true);
+        }
+        catch (AWTException e1)
+        {
+            e1.printStackTrace();
+        }
+    }
+
     public void setExpressionListener(ExpressionListener listener)
     {
         expressionPopup.setExpressionListener(listener);
     }
 
-    public JTextPane getEditor()
+    public RCTextEditor getEditor()
     {
         return textEditor;
     }
