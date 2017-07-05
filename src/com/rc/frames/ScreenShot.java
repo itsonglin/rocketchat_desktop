@@ -183,12 +183,16 @@ public class ScreenShot extends JFrame
 
         downloadLabel.setHorizontalAlignment(SwingConstants.CENTER);
         downloadLabel.setCursor(handCursor);
+        downloadLabel.setToolTipText("保存截图");
 
         okLabel.setHorizontalAlignment(SwingConstants.CENTER);
         okLabel.setCursor(handCursor);
+        okLabel.setToolTipText("确定");
 
         cancelLabel.setHorizontalAlignment(SwingConstants.CENTER);
         cancelLabel.setCursor(handCursor);
+        cancelLabel.setToolTipText("取消");
+
 
         downloadLabel.addMouseListener(new MouseAdapter()
         {
