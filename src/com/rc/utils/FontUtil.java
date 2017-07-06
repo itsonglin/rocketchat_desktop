@@ -17,7 +17,7 @@ public class FontUtil
         }
         else
         {
-            font = new Font("Heiti SC Light", Font.PLAIN, 14);
+            font = new Font("PingFang SC", Font.PLAIN, 14);
         }
     }
 
