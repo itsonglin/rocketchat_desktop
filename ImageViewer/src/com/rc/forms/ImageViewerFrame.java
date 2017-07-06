@@ -41,7 +41,6 @@ public class ImageViewerFrame extends JFrame
     private JMenuItem enlargeItem;
     private JMenuItem narrowItem;
 
-
     public ImageViewerFrame(String imagePath)
     {
         tooKit = Toolkit.getDefaultToolkit();

@@ -1,6 +1,7 @@
 package com.rc.utils;
 
 import com.rc.app.Launcher;
+import com.rc.db.model.CurrentUser;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import org.apache.log4j.Logger;
@@ -21,6 +22,7 @@ public class ImageCache
 
     private String IMAGE_CACHE_ROOT_PATH;
     Logger logger = Logger.getLogger(this.getClass());
+    private CurrentUser currentUser;
 
 
     public ImageCache()
@@ -41,6 +43,8 @@ public class ImageCache
         {
             IMAGE_CACHE_ROOT_PATH = "./";
         }
+
+        currentUser = Launcher.currentUserService.findAll().get(0);
     }
 
     public ImageIcon tryGetThumbCache(String identify)
@@ -99,6 +103,7 @@ public class ImageCache
 
         String finalSuffix = suffix;
 
+
         new Thread(new Runnable()
         {
             @Override
@@ -126,19 +131,21 @@ public class ImageCache
                     {
                         byte[] data;
 
+                        String reqUrl = buildRemoteImageUrl(url);
+
                         // 本地上传的文件，则从原上传路径复制一份到缓存目录
-                        if (url.startsWith("file://"))
+                        if (reqUrl.startsWith("file://"))
                         {
-                            String originUrl = url.substring(7);
-                            FileInputStream fileInputStream = new FileInputStream(originUrl);
+                            //String originUrl = reqUrl.substring(7);
+                            FileInputStream fileInputStream = new FileInputStream(url);
                             data = new byte[fileInputStream.available()];
                             fileInputStream.read(data);
                         }
                         // 接收的图像，从服务器获取并缓存
                         else
                         {
-                            System.out.println("服务器获取图片：" + url);
-                            data = HttpUtil.download(url);
+                            System.out.println("服务器获取图片：" + reqUrl);
+                            data = HttpUtil.download(reqUrl);
                         }
 
 
@@ -171,11 +178,27 @@ public class ImageCache
                     }
                     catch (IOException e)
                     {
-                        e.printStackTrace();
+                        listener.onFailed("文件不存在");
+                        //e.printStackTrace();
                     }
                 }
             }
         }).start();
+    }
+
+    private String buildRemoteImageUrl(String imageUrl)
+    {
+        String url;
+        if (imageUrl.startsWith("/file-upload"))
+        {
+            url = Launcher.HOSTNAME + imageUrl + "?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
+        }
+        else
+        {
+            url = "file://" + imageUrl;
+        }
+
+        return url;
     }
 
     /**

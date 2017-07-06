@@ -21,6 +21,7 @@ import com.rc.helper.AttachmentIconHelper;
 import com.rc.helper.MessageViewHolderCacheHelper;
 import com.rc.utils.*;
 import com.rc.websocket.WebSocketClient;
+import com.sun.javafx.tools.ant.Info;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
@@ -472,7 +473,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     private void processImage(MessageItem item, MessageImageLabel imageLabel, ViewHolder holder)
     {
         String imageUrl = item.getImageAttachment().getImageUrl();
-        String url;
+       /* String url;
         if (imageUrl.startsWith("/file-upload"))
         {
             //url = Launcher.HOSTNAME + imageUrl + ".jpg?rc_uid=" + currentUser.getUserId() + "&rc_token=" + currentUser.getAuthToken();
@@ -481,11 +482,11 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         else
         {
             url = "file://" + imageUrl;
-        }
+        }*/
 
         Map map = new HashMap();
         map.put("attachmentId", item.getImageAttachment().getId());
-        map.put("url", url);
+        map.put("url", imageUrl);
         map.put("messageId", item.getId());
         imageLabel.setTag(map);
 
@@ -495,7 +496,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         {
             imageLabel.setIcon(IconUtil.getIcon(this, "/image/image_loading.gif"));
 
-            imageCache.requestThumbAsynchronously(item.getImageAttachment().getId(), url, new ImageCache.ImageCacheRequestListener()
+            imageCache.requestThumbAsynchronously(item.getImageAttachment().getId(), imageUrl, new ImageCache.ImageCacheRequestListener()
             {
                 @Override
                 public void onSuccess(ImageIcon icon, String path)
@@ -548,7 +549,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                         @Override
                         public void onFailed(String why)
                         {
-
+                           // 图片不存在，显示错误图片
+                            ImageViewerFrame frame = new ImageViewerFrame(getClass().getResource("/image/image_error.png").getPath());
+                            frame.setVisible(true);
                         }
                     });
                 }
