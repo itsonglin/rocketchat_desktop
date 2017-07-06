@@ -141,8 +141,10 @@ public class LoginFrame extends JFrame
 
         editPanel.add(usernameField);
         editPanel.add(passwordField);
-        editPanel.add(statusLabel);
         editPanel.add(buttonPanel);
+
+        editPanel.add(statusLabel);
+
 
 
         add(contentPanel);
@@ -284,6 +286,9 @@ public class LoginFrame extends JFrame
                 public void onFailed()
                 {
                     showMessage("登录失败，请检查网络设置");
+                    loginButton.setEnabled(true);
+                    usernameField.setEditable(true);
+                    passwordField.setEditable(true);
                 }
             });
 
