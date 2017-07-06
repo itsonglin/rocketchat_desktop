@@ -11,7 +11,7 @@ public class App
 {
     public static void main(String[] args)
     {
-        checkTable();
+        //checkTable();
         Launcher launcher = new Launcher();
         launcher.launch();
     }
