@@ -39,6 +39,7 @@ public class MessageLeftTextViewHolder extends BaseMessageViewHolder
     {
         int maxWidth = (int) (MainFrame.getContext().currentWindowWidth * 0.5);
         text = new SizeAutoAdjustTextArea(maxWidth);
+        text.setParseUrl(true);
 
         time.setForeground(Colors.FONT_GRAY);
         time.setFont(FontUtil.getDefaultFont(12));

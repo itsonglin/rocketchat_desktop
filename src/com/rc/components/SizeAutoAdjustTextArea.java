@@ -33,6 +33,8 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
     private String emojiRegx;
     private int emojiSize = 20;
 
+    private boolean parseUrl = false;
+
 
     // 最长一行是第几行
     private int maxLengthLinePosition = 0;
@@ -175,8 +177,12 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
 
         this.setPreferredSize(new Dimension(targetWidth, targetHeight + 2));
 
-        // 解析网址
-        highlightUrls(t);
+        if (parseUrl)
+        {
+            // 解析网址
+            highlightUrls(t);
+        }
+
     }
 
     /**
@@ -397,8 +403,9 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
     {
         List<String> urlList = new ArrayList<>();
 
+
         //long start = System.currentTimeMillis();
-        String regex = "(?:https?://)?(www\\.)?[\\w]+(?:\\.+[\\w]+)+[\\w,-_/?&=#%:]*";
+        String regex = "(?:https?://)?(www\\.)?[\\w]+(?:\\.[\\w]+)+[\\w,\\-_/?&=#%:]*";
         Pattern urlPattern = Pattern.compile(regex);
         Matcher urlMatcher = urlPattern.matcher(src);
         while (urlMatcher.find())
@@ -466,6 +473,16 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
     public void setTag(Object tag)
     {
         this.tag = tag;
+    }
+
+    public boolean isParseUrl()
+    {
+        return parseUrl;
+    }
+
+    public void setParseUrl(boolean parseUrl)
+    {
+        this.parseUrl = parseUrl;
     }
 
 /*    @Override
