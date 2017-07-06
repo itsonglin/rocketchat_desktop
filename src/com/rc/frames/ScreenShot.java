@@ -4,7 +4,6 @@ import com.rc.components.Colors;
 import com.rc.panels.ChatPanel;
 import com.rc.utils.ClipboardUtil;
 import com.rc.utils.IconUtil;
-
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -20,7 +19,11 @@ import java.util.Date;
 
 public class ScreenShot extends JFrame
 {
-    private int startX, startY, endX, endY;
+    private int startX;
+    private int startY;
+    private int endX;
+    private int endY;
+
     private BufferedImage image = null;
     private BufferedImage tempImage = null;
     private BufferedImage saveImage = null;
@@ -33,7 +36,23 @@ public class ScreenShot extends JFrame
     private int maxWidth;
     private int maxHeight;
     boolean isShown = false;
-    private boolean inSelectArea = false;
+
+    private static final int OUTSIDE_SELECTED = -1;
+    private static final int IN_SELECTED_AREA = 0;
+    private static final int LEFT_TOP = 1;
+    private static final int LEFT_BOTTOM = 2;
+    private static final int RIGHT_TOP = 3;
+    private static final int RIGHT_BOTTOM = 4;
+
+    private Cursor crossCursor;
+    private Cursor moveCursor;
+    private Cursor NWresizeCursor;
+    private Cursor SWresizeCursor;
+    private Cursor NEresizeCursor;
+    private Cursor SEresizeCursor;
+
+
+    private int mouseDownArea = OUTSIDE_SELECTED;
 
     public ScreenShot() throws AWTException
     {
@@ -43,7 +62,16 @@ public class ScreenShot extends JFrame
         setOpacity(0); //初始时设置窗口为透明，防止窗口闪烁
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setCursor(new Cursor(Cursor.CROSSHAIR_CURSOR));
+
+        crossCursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
+        moveCursor = new Cursor(Cursor.MOVE_CURSOR);
+        NWresizeCursor = new Cursor(Cursor.NW_RESIZE_CURSOR);
+        SWresizeCursor = new Cursor(Cursor.SW_RESIZE_CURSOR);
+        NEresizeCursor = new Cursor(Cursor.NE_RESIZE_CURSOR);
+        SEresizeCursor = new Cursor(Cursor.SE_RESIZE_CURSOR);
+
+
+        setCursor(crossCursor);
 
         screenShot();
         initControlDialog();
@@ -57,18 +85,7 @@ public class ScreenShot extends JFrame
             @Override
             public void mousePressed(MouseEvent e)
             {
-                int x = e.getX();
-                int y = e.getY();
-
-                if (x >= drawX && x <= drawX + selectedWidth && y >= drawY && y <= drawY + selectedHeight)
-                {
-                    inSelectArea = true;
-                    System.out.println("鼠标在选定区域");
-                }
-                else
-                {
-                    inSelectArea = false;
-                }
+                mouseDownArea = getMousePosition(e);
 
                 startX = e.getX();
                 startY = e.getY();
@@ -81,7 +98,7 @@ public class ScreenShot extends JFrame
                 {
                     mouseDragged = false;
 
-                    controlDialog.setBounds(drawX, drawY + selectedHeight, 200, 50);
+                    controlDialog.setBounds(drawX + 8, drawY + selectedHeight + 10, 200, 50);
                     controlDialog.setVisible(true);
                 }
             }
@@ -101,7 +118,6 @@ public class ScreenShot extends JFrame
             }
         });
 
-        //对于鼠标移动的监听
         this.addMouseMotionListener(new MouseMotionAdapter()
         {
             @Override
@@ -115,12 +131,12 @@ public class ScreenShot extends JFrame
                 Graphics g = tempImage2.getGraphics();
                 g.drawImage(tempImage, 0, 0, null);
 
-                if (inSelectArea)
+                // 如果鼠标落在选定区域内，则鼠标移动时移动选定区域
+                if (mouseDownArea == IN_SELECTED_AREA)
                 {
                     int xDistance = e.getX() - startX;
                     int yDistance = e.getY() - startY;
 
-                    System.out.println(xDistance);
                     drawX += xDistance;
                     drawY += yDistance;
 
@@ -133,18 +149,77 @@ public class ScreenShot extends JFrame
                     startX = e.getX();
                     startY = e.getY();
                 }
-                else
+                // 选定新的区域
+                else if (mouseDownArea == OUTSIDE_SELECTED)
                 {
                     drawX = Math.min(startX, endX);
                     drawY = Math.min(startY, endY);
                     selectedWidth = Math.abs(endX - startX) + 1;
                     selectedHeight = Math.abs(endY - startY) + 1;
                 }
+                // 落在四个角
+                else
+                {
+                    int xDistance = e.getX() - startX;
+                    int yDistance = e.getY() - startY;
 
 
+                    switch (mouseDownArea)
+                    {
+                        case LEFT_TOP:
+                        {
+                            drawX += xDistance;
+                            drawY += yDistance;
+                            selectedWidth -= xDistance;
+                            selectedHeight -= yDistance;
+
+                            break;
+                        }
+                        case LEFT_BOTTOM:
+                        {
+                            drawX += xDistance;
+
+                            selectedWidth -= xDistance;
+                            selectedHeight += yDistance;
+
+                            break;
+                        }
+                        case RIGHT_TOP:
+                        {
+                            drawY += yDistance;
+
+                            selectedWidth += xDistance;
+                            selectedHeight -= yDistance;
+
+                            break;
+                        }
+                        case RIGHT_BOTTOM:
+                        {
+
+                            selectedWidth += xDistance;
+                            selectedHeight += yDistance;
+
+                            break;
+                        }
+
+                    }
+                    selectedWidth = selectedWidth < 1 ? 1 : selectedWidth;
+                    selectedHeight = selectedHeight < 1 ? 1 : selectedHeight;
+
+                    startX = e.getX();
+                    startY = e.getY();
+                }
 
                 g.setColor(Color.CYAN);
+
+                // 绘制选定区域矩形
                 g.drawRect(drawX - 1, drawY - 1, selectedWidth + 1, selectedHeight + 1);
+
+                // 绘制四角锚点
+                g.fillRect(drawX - 8, drawY - 8, 8, 8);
+                g.fillRect(drawX + selectedWidth, drawY - 8, 8, 8);
+                g.fillRect(drawX - 8, drawY + selectedHeight, 8, 8);
+                g.fillRect(drawX + selectedWidth, drawY + selectedHeight, 8, 8);
 
                 selectedWidth = selectedWidth > maxWidth ? maxWidth : selectedWidth;
                 selectedHeight = selectedHeight > maxHeight ? maxHeight : selectedHeight;
@@ -160,6 +235,47 @@ public class ScreenShot extends JFrame
                     controlDialog.setVisible(false);
                 }
 
+            }
+
+            @Override
+            public void mouseMoved(MouseEvent e)
+            {
+                int mousePosition = getMousePosition(e);
+                switch (mousePosition)
+                {
+                    case IN_SELECTED_AREA:
+                    {
+                        setCursor(moveCursor);
+                        break;
+                    }
+                    case OUTSIDE_SELECTED:
+                    {
+                        setCursor(crossCursor);
+                        break;
+                    }
+                    case LEFT_TOP:
+                    {
+                        setCursor(NWresizeCursor);
+                        break;
+                    }
+                    case LEFT_BOTTOM:
+                    {
+                        setCursor(SWresizeCursor);
+                        break;
+                    }
+                    case RIGHT_TOP:
+                    {
+                        setCursor(NEresizeCursor);
+                        break;
+                    }
+                    case RIGHT_BOTTOM:
+                    {
+                        setCursor(SEresizeCursor);
+                        break;
+                    }
+                }
+
+                super.mouseMoved(e);
             }
         });
 
@@ -183,6 +299,37 @@ public class ScreenShot extends JFrame
 
         addKeyListener(keyListener);
         controlDialog.addKeyListener(keyListener);
+    }
+
+    private int getMousePosition(MouseEvent e)
+    {
+        int x = e.getX();
+        int y = e.getY();
+
+        if (x >= drawX && x <= drawX + selectedWidth && y >= drawY && y <= drawY + selectedHeight)
+        {
+            return IN_SELECTED_AREA;
+        }
+        else if (x >= drawX - 8 && x <= drawX && y >= drawY - 8 && y <= drawY)
+        {
+            return LEFT_TOP;
+        }
+        else if (x >= drawX + selectedWidth && x <= drawX + selectedWidth + 8 && y >= drawY - 8 && y <= drawY)
+        {
+            return RIGHT_TOP;
+        }
+        else if (x >= drawX - 8 && x <= drawX && y >= drawY + selectedHeight && y <= drawY + selectedHeight + 8)
+        {
+            return LEFT_BOTTOM;
+        }
+        else if (x >= drawX + selectedWidth && x <= drawX + selectedWidth + 8 && y >= drawY + selectedHeight && y <= drawY + selectedHeight + 8)
+        {
+            return RIGHT_BOTTOM;
+        }
+        else
+        {
+            return OUTSIDE_SELECTED;
+        }
     }
 
     private void screenShot() throws AWTException
@@ -290,7 +437,7 @@ public class ScreenShot extends JFrame
             @Override
             public void mouseClicked(MouseEvent e)
             {
-               close();
+                close();
                 super.mouseClicked(e);
             }
 
