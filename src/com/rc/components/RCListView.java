@@ -350,7 +350,8 @@ public class RCListView extends JScrollPane
         //ViewHolder holder = adapter.onCreateViewHolder(viewType);
         ViewHolder holder = (ViewHolder) getItem(position);
         adapter.onBindViewHolder(holder, position);
-        contentPanel.revalidate();
+        //contentPanel.revalidate();
+        holder.repaint();
 
         /*contentPanel.getComponent(position).setBackground(Color.red);
         contentPanel.getComponent(position).revalidate();*/
@@ -385,8 +386,6 @@ public class RCListView extends JScrollPane
 
     public void notifyItemRemoved(int position)
     {
-        Component[] components = contentPanel.getComponents();
-
         contentPanel.remove(position);
         contentPanel.revalidate();
         contentPanel.repaint();

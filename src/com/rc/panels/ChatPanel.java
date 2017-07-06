@@ -358,10 +358,11 @@ public class ChatPanel extends ParentAvailablePanel
             {
                 sendTextMessage(null, (String)data);
             }
-            else if (data instanceof ImageIcon)
+            else if (data instanceof JLabel)
             {
                 isImageOrFile = true;
-                ImageIcon icon = (ImageIcon) data;
+                JLabel label = (JLabel) data;
+                ImageIcon icon = (ImageIcon) label.getIcon();
                 String path = icon.getDescription();
                 if (path != null && !path.isEmpty())
                 {
@@ -1113,6 +1114,7 @@ public class ChatPanel extends ParentAvailablePanel
             return;
         }
 
+        // 已有消息更新状态
         int pos = findMessageItemPositionInViewReverse(message.getId());
         if (pos > -1)
         {
@@ -1134,6 +1136,7 @@ public class ChatPanel extends ParentAvailablePanel
         }*/
 
 
+       // 插入新的消息
         MessageItem messageItem = new MessageItem(message, currentUser.getUserId());
         this.messageItems.add(messageItem);
         messagePanel.getMessageListView().notifyItemInserted(messageItems.size() - 1, false);
