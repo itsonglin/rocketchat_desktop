@@ -33,6 +33,7 @@ public class ScreenShot extends JFrame
     private int maxWidth;
     private int maxHeight;
     boolean isShown = false;
+    private boolean inSelectArea = false;
 
     public ScreenShot() throws AWTException
     {
@@ -56,6 +57,19 @@ public class ScreenShot extends JFrame
             @Override
             public void mousePressed(MouseEvent e)
             {
+                int x = e.getX();
+                int y = e.getY();
+
+                if (x >= drawX && x <= drawX + selectedWidth && y >= drawY && y <= drawY + selectedHeight)
+                {
+                    inSelectArea = true;
+                    System.out.println("鼠标在选定区域");
+                }
+                else
+                {
+                    inSelectArea = false;
+                }
+
                 startX = e.getX();
                 startY = e.getY();
             }
@@ -112,11 +126,35 @@ public class ScreenShot extends JFrame
                 Graphics g = tempImage2.getGraphics();
                 g.drawImage(tempImage, 0, 0, null);
 
-                drawX = Math.min(startX, endX);
-                drawY = Math.min(startY, endY);
+                if (inSelectArea)
+                {
+                    int xDistance = e.getX() - startX;
+                    int yDistance = e.getY() - startY;
 
-                selectedWidth = Math.abs(endX - startX) + 1;
-                selectedHeight = Math.abs(endY - startY) + 1;
+                    System.out.println(xDistance);
+                    drawX += xDistance;
+                    drawY += yDistance;
+
+                    // 保证不会越界
+                    drawX = drawX < 0 ? 0 : drawX;
+                    drawY = drawY < 0 ? 0 : drawY;
+                    drawX = drawX + selectedWidth > maxWidth ? maxWidth - selectedWidth : drawX;
+                    drawY = drawY + selectedHeight > maxHeight ? maxHeight - selectedHeight : drawY;
+
+                    startX = e.getX();
+                    startY = e.getY();
+                }
+                else
+                {
+                    drawX = Math.min(startX, endX);
+                    drawY = Math.min(startY, endY);
+                    selectedWidth = Math.abs(endX - startX) + 1;
+                    selectedHeight = Math.abs(endY - startY) + 1;
+                }
+
+
+
+
 
                 g.setColor(Color.CYAN);
                 g.drawRect(drawX - 1, drawY - 1, selectedWidth + 1, selectedHeight + 1);
