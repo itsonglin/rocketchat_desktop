@@ -405,7 +405,7 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
 
 
         //long start = System.currentTimeMillis();
-        String regex = "(?:https?://)?(www\\.)?[\\w]+(?:\\.[\\w]+)+[\\w,\\-_/?&=#%:]*";
+        String regex = "(?:https?://)?(www\\.)?[\\w]+(?:\\.[\\w]+)+[\\w,\\-_/?&=#%.:]*";
         Pattern urlPattern = Pattern.compile(regex);
         Matcher urlMatcher = urlPattern.matcher(src);
         while (urlMatcher.find())
