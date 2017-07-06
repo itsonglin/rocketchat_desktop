@@ -82,17 +82,6 @@ public class ScreenShot extends JFrame
                     mouseDragged = false;
 
                     controlDialog.setBounds(drawX, drawY + selectedHeight, 200, 50);
-                    controlDialog.addKeyListener(new KeyAdapter()
-                    {
-                        @Override
-                        public void keyPressed(KeyEvent e)
-                        {
-                            if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
-                            {
-                                close();
-                            }
-                        }
-                    });
                     controlDialog.setVisible(true);
                 }
             }
@@ -154,8 +143,6 @@ public class ScreenShot extends JFrame
 
 
 
-
-
                 g.setColor(Color.CYAN);
                 g.drawRect(drawX - 1, drawY - 1, selectedWidth + 1, selectedHeight + 1);
 
@@ -176,7 +163,7 @@ public class ScreenShot extends JFrame
             }
         });
 
-        addKeyListener(new KeyAdapter()
+        KeyListener keyListener = new KeyAdapter()
         {
             @Override
             public void keyPressed(KeyEvent e)
@@ -185,8 +172,17 @@ public class ScreenShot extends JFrame
                 {
                     close();
                 }
+                else if (e.getKeyCode() == KeyEvent.VK_ENTER)
+                {
+                    close();
+                    ClipboardUtil.copyImage(saveImage);
+                    ChatPanel.getContext().paste();
+                }
             }
-        });
+        };
+
+        addKeyListener(keyListener);
+        controlDialog.addKeyListener(keyListener);
     }
 
     private void screenShot() throws AWTException
