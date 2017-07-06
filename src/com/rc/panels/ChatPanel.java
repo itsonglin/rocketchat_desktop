@@ -653,8 +653,11 @@ public class ChatPanel extends ParentAvailablePanel
                     Room room = roomService.findById(roomId);
 
                     //if (newMessageCount < 10)
-                    // 总消息数小于1，继续拿
-                    if (room.getMsgSum() < 10)
+
+                    // 总消息数小于10，继续拿
+                    //if (room.getMsgSum() < 10)
+
+                    if (messageService.countByRoom(room.getRoomId()) < 10)
                     {
                         long lastStartTime = loadRemoteStartTime - 1;
                         loadRemoteStartTime = loadRemoteStartTime - (1000L * 60 * 60 * 24 * 30) - TIMESTAMP_8_HOURS;
