@@ -181,7 +181,7 @@ public class Launcher
                 task.setListener(new HttpResponseListener<JSONObject>()
                 {
                     @Override
-                    public void onResult(JSONObject retJson)
+                    public void onSuccess(JSONObject retJson)
                     {
                         try
                         {
@@ -211,6 +211,12 @@ public class Launcher
                         {
                             e.printStackTrace();
                         }
+                    }
+
+                    @Override
+                    public void onFailed()
+                    {
+
                     }
                 });
 

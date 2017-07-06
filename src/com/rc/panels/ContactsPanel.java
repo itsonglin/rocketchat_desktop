@@ -134,7 +134,7 @@ public class ContactsPanel extends ParentAvailablePanel
         task.setListener(new HttpResponseListener<byte[]>()
         {
             @Override
-            public void onResult(byte[] data)
+            public void onSuccess(byte[] data)
             {
                 processAvatarData(data, username);
                 if (hotRefresh)
@@ -148,6 +148,12 @@ public class ContactsPanel extends ParentAvailablePanel
                     }
                 }
 
+            }
+
+            @Override
+            public void onFailed()
+            {
+                System.out.println("头像获取失败：" + username);
             }
         });
         task.execute(Launcher.HOSTNAME + "/avatar/" + username);

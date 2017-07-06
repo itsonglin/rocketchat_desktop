@@ -563,7 +563,7 @@ public class WebSocketClient
         task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override
-            public void onResult(JSONObject retJson)
+            public void onSuccess(JSONObject retJson)
             {
                 try
                 {
@@ -675,6 +675,12 @@ public class WebSocketClient
                 }
 
                 TitlePanel.getContext().hideStatusLabel();
+            }
+
+            @Override
+            public void onFailed()
+            {
+                System.out.println("房间获取失败：" + type);
             }
         });
 
@@ -983,7 +989,7 @@ public class WebSocketClient
         task.addHeader("X-User-Id", currentUser.getUserId());
         task.setListener(new HttpResponseListener<JSONObject>()
         {
-            public void onResult(JSONObject retJson)
+            public void onSuccess(JSONObject retJson)
             {
                 try
                 {
@@ -1016,6 +1022,12 @@ public class WebSocketClient
                 {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onFailed()
+            {
+                System.out.println("通讯录获取失败");
             }
         });
 

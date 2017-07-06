@@ -377,13 +377,20 @@ public class RoomMembersPanel extends ParentAvailablePanel
         HttpResponseListener callback = new HttpResponseListener<JSONObject>()
         {
             @Override
-            public void onResult(JSONObject retJson)
+            public void onSuccess(JSONObject retJson)
             {
                 if (++count[0] == usernames.length)
                 {
                     addOrRemoveMemberDialog.setVisible(false);
                     updateRoomMembers(retJson);
                 }
+
+            }
+
+            @Override
+            public void onFailed()
+            {
+                JOptionPane.showMessageDialog(null, "网络请求失败", "网络请求失败", JOptionPane.ERROR_MESSAGE);
             }
         };
 
@@ -501,7 +508,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override
-            public void onResult(JSONObject retJson)
+            public void onSuccess(JSONObject retJson)
             {
                 if (retJson.has("success"))
                 {
@@ -513,7 +520,12 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 {
                     JOptionPane.showMessageDialog(MainFrame.getContext(), "删除失败", "删除失败", JOptionPane.ERROR_MESSAGE);
                 }
+            }
 
+            @Override
+            public void onFailed()
+            {
+                JOptionPane.showMessageDialog(null, "网络请求失败", "网络请求失败", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -536,7 +548,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
         task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override
-            public void onResult(JSONObject retJson)
+            public void onSuccess(JSONObject retJson)
             {
                 if (retJson.has("success"))
                 {
@@ -548,6 +560,12 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 {
                     JOptionPane.showMessageDialog(MainFrame.getContext(), "退出失败", "退出失败", JOptionPane.ERROR_MESSAGE);
                 }
+            }
+
+            @Override
+            public void onFailed()
+            {
+                JOptionPane.showMessageDialog(null, "网络请求失败", "网络请求失败", JOptionPane.ERROR_MESSAGE);
             }
         });
 

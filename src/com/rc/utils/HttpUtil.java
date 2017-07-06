@@ -17,6 +17,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
+
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -35,108 +36,86 @@ public class HttpUtil
         try
         {
             client = initClientBuilder().build();
-        } catch (KeyManagementException e)
+        }
+        catch (KeyManagementException e)
         {
             e.printStackTrace();
-        } catch (NoSuchAlgorithmException e)
+        }
+        catch (NoSuchAlgorithmException e)
         {
             e.printStackTrace();
         }
     }
 
-    public static String get(String url)
+    public static String get(String url) throws IOException
     {
         return get(url, null, null);
     }
 
-    public static byte[] getBytes(String url, Map<String, String> headers, Map<String, String> params)
+    public static byte[] getBytes(String url, Map<String, String> headers, Map<String, String> params) throws IOException
     {
         Response response = _get(url, headers, params);
         if (response != null)
         {
-            try
-            {
-                return response.body().bytes();
-            } catch (IOException e)
-            {
-                e.printStackTrace();
-            }
+            return response.body().bytes();
         }
         else
         {
-            throw new RuntimeException("Get请求失败:" + url);
+            throw new IOException("Get请求失败:" + url);
         }
-
-        return null;
     }
 
-    public static String get(String url, Map<String, String> headers, Map<String, String> params)
+    public static String get(String url, Map<String, String> headers, Map<String, String> params) throws IOException
     {
         Response response = _get(url, headers, params);
         if (response != null)
         {
-            try
-            {
-                return response.body().string();
-            } catch (IOException e)
-            {
-                System.out.println("Get请求失败: " +url);
-                return null;
-            }
+            return response.body().string();
         }
         else
         {
-            System.out.println("Get请求失败: " + url);
-
-            return null;
+            throw new IOException("Get请求失败:" + url);
         }
     }
 
-    private static Response _get(String url, Map<String, String> headers, Map<String, String> params)
+    private static Response _get(String url, Map<String, String> headers, Map<String, String> params) throws IOException
     {
-        try
+        if (params != null && params.size() > 0)
         {
-            if (params != null && params.size() > 0)
+            StringBuffer buffer = new StringBuffer(url);
+            buffer.append("?");
+            for (String key : params.keySet())
             {
-                StringBuffer buffer = new StringBuffer(url);
-                buffer.append("?");
-                for (String key : params.keySet())
-                {
-                    buffer.append(key + "=");
-                    buffer.append(params.get(key) + "&");
-                }
-                url = buffer.toString();
+                buffer.append(key + "=");
+                buffer.append(params.get(key) + "&");
             }
-
-            Request.Builder reqBuilder = new Request.Builder().url(url);
-            if (headers != null && headers.size() > 0)
-            {
-                for (String key : headers.keySet())
-                {
-                    reqBuilder.addHeader(key, headers.get(key));
-                }
-            }
-
-
-            Request request = reqBuilder.build();
-            Response response = client.newCall(request).execute();
-            if (response.isSuccessful())
-            {
-                return response;
-            }
-            else
-            {
-                throw new IOException("Unexpected code " + response);
-            }
-        } catch (IOException e)
-        {
-            e.printStackTrace();
+            url = buffer.toString();
         }
-        return null;
+
+        Request.Builder reqBuilder = new Request.Builder().url(url);
+        if (headers != null && headers.size() > 0)
+        {
+            for (String key : headers.keySet())
+            {
+                reqBuilder.addHeader(key, headers.get(key));
+            }
+        }
+
+
+        Request request = reqBuilder.build();
+        Response response = client.newCall(request).execute();
+        if (response.isSuccessful())
+        {
+            return response;
+        }
+        else
+        {
+            throw new IOException("Unexpected code " + response);
+        }
     }
 
 
-    public static String post(String url, Map<String, String> headers, Map<String, String> params)
+    public static String post(String url, Map<String, String> headers, Map<String, String> params) throws IOException
     {
         FormBody.Builder builder = new FormBody.Builder();
         for (String key : params.keySet())
@@ -155,24 +134,8 @@ public class HttpUtil
         }
         Request requestPost = reqBuilder.post(requestBodyPost).build();
 
-
-               /* Request requestPost = new Request.Builder()
-                .url(url)
-                .post(requestBodyPost)
-                .build();*/
-
-        try
-        {
-            Response response = client.newCall(requestPost).execute();
-            return response.body().string();
-
-
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        }
-
-        return null;
+        Response response = client.newCall(requestPost).execute();
+        return response.body().string();
     }
 
     public static boolean upload(String url, String type, byte[] part) throws IOException
@@ -191,12 +154,12 @@ public class HttpUtil
         return false;
     }
 
-    public static byte[] download(String url)
+    public static byte[] download(String url) throws IOException
     {
         return download(url, null, null, null);
     }
 
-    public static byte[] download(String url, Map<String, String> headers, Map<String, String> params, ProgressListener listener)
+    public static byte[] download(String url, Map<String, String> headers, Map<String, String> params, ProgressListener listener) throws IOException
     {
         if (params != null && params.size() > 0)
         {
@@ -256,13 +219,17 @@ public class HttpUtil
                 inputStream.close();
                 outputStream.close();
             }
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
-            e.printStackTrace();
+            throw e;
         }
         finally
         {
-            response.close();
+            if (response != null)
+            {
+                response.close();
+            }
         }
 
         return data;

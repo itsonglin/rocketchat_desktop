@@ -6,7 +6,7 @@ package com.rc.tasks;
  */
 public interface HttpResponseListener<T extends Object>
 {
-    void onResult(T ret);
+    void onSuccess(T ret);
 
-
+    void onFailed();
 }

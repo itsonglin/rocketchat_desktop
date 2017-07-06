@@ -528,7 +528,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
         task.setListener(new HttpResponseListener<byte[]>()
         {
             @Override
-            public void onResult(byte[] data)
+            public void onSuccess(byte[] data)
             {
                 SearchResultFileItemViewHolder holder = fileItemViewHolders.get(fileAttachment.getId());
 
@@ -564,6 +564,15 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
                     h.size.setVisible(true);
                     h.size.setText(fileCache.fileSizeString(fileCache.tryGetFileCache(fileAttachment.getId(), fileAttachment.getTitle())));*/
                 }
+            }
+
+            @Override
+            public void onFailed()
+            {
+                SearchResultFileItemViewHolder holder = fileItemViewHolders.get(fileAttachment.getId());
+                holder.size.setVisible(true);
+                holder.size.setText("文件获取失败");
+                holder.progressBar.setVisible(false);
             }
         });
 

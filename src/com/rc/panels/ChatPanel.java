@@ -726,7 +726,7 @@ public class ChatPanel extends ParentAvailablePanel
         task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override
-            public void onResult(JSONObject retJson)
+            public void onSuccess(JSONObject retJson)
             {
                 try
                 {
@@ -747,6 +747,12 @@ public class ChatPanel extends ParentAvailablePanel
                 }
 
                 TitlePanel.getContext().hideStatusLabel();
+            }
+
+            @Override
+            public void onFailed()
+            {
+                System.out.println("消息获取失败：" + room.getName());
             }
         });
 
@@ -1799,7 +1805,7 @@ public class ChatPanel extends ParentAvailablePanel
         task.setListener(new HttpResponseListener<byte[]>()
         {
             @Override
-            public void onResult(byte[] data)
+            public void onSuccess(byte[] data)
             {
                 //System.out.println(data);
                 String path = fileCache.cacheFile(fileAttachment.getId(), fileAttachment.getTitle(), data);
@@ -1823,6 +1829,16 @@ public class ChatPanel extends ParentAvailablePanel
                     System.out.println("文件已缓存在 " + path);
                     holder.sizeLabel.setText(fileCache.fileSizeString(path));
                 }
+            }
+
+            @Override
+            public void onFailed()
+            {
+                int pos = findMessageItemPositionInViewReverse(messageId);
+                MessageAttachmentViewHolder holder = (MessageAttachmentViewHolder) getViewHolderByPosition(pos);
+                holder.sizeLabel.setVisible(true);
+                holder.sizeLabel.setText("文件获取失败");
+                holder.progressBar.setVisible(false);
             }
         });
 
@@ -1908,7 +1924,7 @@ public class ChatPanel extends ParentAvailablePanel
         task.setListener(new HttpResponseListener<JSONObject>()
         {
             @Override
-            public void onResult(JSONObject retJson)
+            public void onSuccess(JSONObject retJson)
             {
                 String creator = "";
                 try
@@ -1987,6 +2003,12 @@ public class ChatPanel extends ParentAvailablePanel
                 {
                     e.printStackTrace();
                 }
+            }
+
+            @Override
+            public void onFailed()
+            {
+                System.out.println("成员获取失败：" + room.getName());
             }
         });
 

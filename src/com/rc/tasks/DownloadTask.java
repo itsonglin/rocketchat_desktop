@@ -26,13 +26,13 @@ public class DownloadTask extends HttpTask
                     byte[] data = HttpUtil.download(url, null, null, progressListener);
                     if (listener != null)
                     {
-                        listener.onResult(data);
+                        listener.onSuccess(data);
                     }
                 } catch (Exception e)
                 {
                     if (listener != null)
                     {
-                        listener.onResult(null);
+                        listener.onFailed();
                     }
                 }
             }

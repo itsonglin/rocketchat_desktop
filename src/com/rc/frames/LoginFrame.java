@@ -275,9 +275,15 @@ public class LoginFrame extends JFrame
             task.setListener(new HttpResponseListener<JSONObject>()
             {
                 @Override
-                public void onResult(JSONObject ret)
+                public void onSuccess(JSONObject ret)
                 {
                     processLoginResult(ret);
+                }
+
+                @Override
+                public void onFailed()
+                {
+                    showMessage("登录失败，请检查网络设置");
                 }
             });
 

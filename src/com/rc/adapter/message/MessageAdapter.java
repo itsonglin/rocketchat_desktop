@@ -472,7 +472,6 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
     private void processImage(MessageItem item, MessageImageLabel imageLabel, ViewHolder holder)
     {
-        String imageUrl = item.getImageAttachment().getImageUrl();
        /* String url;
         if (imageUrl.startsWith("/file-upload"))
         {
@@ -483,6 +482,59 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         {
             url = "file://" + imageUrl;
         }*/
+
+        loadImageThumb(holder, item, imageLabel);
+
+        // 当点击图片时，使用默认程序打开图片
+        imageLabel.addMouseListener(new MessageMouseListener()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                if (e.getButton() == MouseEvent.BUTTON1)
+                {
+                    imageCache.requestOriginalAsynchronously(item.getImageAttachment().getId(), item.getImageAttachment().getImageUrl(), new ImageCache.ImageCacheRequestListener()
+                    {
+                        @Override
+                        public void onSuccess(ImageIcon icon, String path)
+                        {
+                            try
+                            {
+                                //Desktop.getDesktop().open(new File(path));
+                                ImageViewerFrame frame = new ImageViewerFrame(path);
+                                frame.setVisible(true);
+
+                                // 如果图片获取成功，则重新加载缩略图
+                                ImageIcon thumbIcon = (ImageIcon) imageLabel.getIcon();
+                                if (thumbIcon.getDescription().endsWith("image_error.png"))
+                                {
+                                    loadImageThumb(holder, item, imageLabel);
+                                }
+                            }
+                            catch (Exception e1)
+                            {
+                                JOptionPane.showMessageDialog(null, "图像不存在", "图像不存在", JOptionPane.ERROR_MESSAGE);
+                                e1.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onFailed(String why)
+                        {
+                           // 图片不存在，显示错误图片
+                            ImageViewerFrame frame = new ImageViewerFrame(getClass().getResource("/image/image_error.png").getPath());
+                            frame.setVisible(true);
+                        }
+                    });
+                }
+                super.mouseClicked(e);
+            }
+        });
+    }
+
+    private void loadImageThumb(ViewHolder holder, MessageItem item, MessageImageLabel imageLabel)
+    {
+        String imageUrl = item.getImageAttachment().getImageUrl();
 
         Map map = new HashMap();
         map.put("attachmentId", item.getImageAttachment().getId());
@@ -510,7 +562,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 @Override
                 public void onFailed(String why)
                 {
-
+                    imageLabel.setIcon(IconUtil.getIcon(this, "/image/image_error.png", 64,64));
+                    holder.revalidate();
+                    holder.repaint();
                 }
             });
         }
@@ -519,45 +573,6 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             preferredImageSize(imageIcon);
             imageLabel.setIcon(imageIcon);
         }
-
-        // 当点击图片时，使用默认程序打开图片
-        imageLabel.addMouseListener(new MessageMouseListener()
-        {
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                if (e.getButton() == MouseEvent.BUTTON1)
-                {
-                    imageCache.requestOriginalAsynchronously(item.getImageAttachment().getId(), item.getImageAttachment().getImageUrl(), new ImageCache.ImageCacheRequestListener()
-                    {
-                        @Override
-                        public void onSuccess(ImageIcon icon, String path)
-                        {
-                            try
-                            {
-                                //Desktop.getDesktop().open(new File(path));
-                                ImageViewerFrame frame = new ImageViewerFrame(path);
-                                frame.setVisible(true);
-                            }
-                            catch (Exception e1)
-                            {
-                                JOptionPane.showMessageDialog(null, "图像不存在", "图像不存在", JOptionPane.ERROR_MESSAGE);
-                                e1.printStackTrace();
-                            }
-                        }
-
-                        @Override
-                        public void onFailed(String why)
-                        {
-                           // 图片不存在，显示错误图片
-                            ImageViewerFrame frame = new ImageViewerFrame(getClass().getResource("/image/image_error.png").getPath());
-                            frame.setVisible(true);
-                        }
-                    });
-                }
-                super.mouseClicked(e);
-            }
-        });
     }
 
     /**
