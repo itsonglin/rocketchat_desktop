@@ -307,6 +307,20 @@ public class ImageViewerFrame extends JFrame
                 }
             }
         });
+
+        addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyPressed(KeyEvent e)
+            {
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE)
+                {
+                    setVisible(false);
+                    dispose();
+                }
+                super.keyPressed(e);
+            }
+        });
     }
 
     private void doScale(float increment)
