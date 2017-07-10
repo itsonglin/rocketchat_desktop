@@ -18,7 +18,7 @@ import java.text.DecimalFormat;
 public class FileCache
 {
 
-    private String FILE_CACHE_ROOT_PATH;
+    public String FILE_CACHE_ROOT_PATH;
     Logger logger = Logger.getLogger(this.getClass());
     private DecimalFormat decimalFormat = new DecimalFormat("#.0");
 
@@ -96,11 +96,11 @@ public class FileCache
         }
         else if (size < 1024 * 1024)
         {
-            retString = decimalFormat.format(size * 10.F / 1024 / 10) + " KB";
+            retString = decimalFormat.format(size * 1.0F / 1024) + " KB";
         }
         else
         {
-            retString = decimalFormat.format(size * 10.F / 1024 / 1024 / 10) + " MB";
+            retString = decimalFormat.format(size * 1.0F / 1024 / 1024) + " MB";
         }
 
         return retString;

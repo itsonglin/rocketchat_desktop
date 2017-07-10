@@ -1,12 +1,7 @@
 package com.rc.frames;
 
-import com.rc.app.Launcher;
 import com.rc.components.*;
-import com.rc.db.service.ContactsUserService;
-import com.rc.panels.AboutPanel;
-import com.rc.panels.ChangeAvatarPanel;
-import com.rc.panels.ChangePasswordPanel;
-import com.rc.panels.MePanel;
+import com.rc.panels.*;
 import com.rc.utils.FontUtil;
 
 import javax.swing.*;
@@ -32,11 +27,13 @@ public class SystemConfigDialog extends JDialog
     private JLabel changePasswordLabel;
     private JLabel meLabel;
     private JLabel aboutLabel;
+    private JLabel clearCacheLabel;
 
     private ChangeAvatarPanel changeAvatarPanel;
     private ChangePasswordPanel changePasswordPanel;
     private MePanel mePanel;
     private AboutPanel aboutPanel;
+    private ClearCachePanel clearCachePanel;
 
 
     private JLabel selectedLabel;
@@ -45,10 +42,9 @@ public class SystemConfigDialog extends JDialog
     public static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
     public static final String ME = "ME";
     public static final String ABOUT = "ABOUT";
+    public static final String CLEAR_CHACE = "CLEAR_CHACE";
 
     private CardLayout cardLayout = new CardLayout();
-
-    private ContactsUserService contactsUserService = Launcher.contactsUserService;
 
 
     public static final int DIALOG_WIDTH = 580;
@@ -86,14 +82,6 @@ public class SystemConfigDialog extends JDialog
 
         getRootPane().setBorder(new LineBorder(Colors.DIALOG_BORDER));
 
-       /* if (OSUtil.getOsType() != OSUtil.Mac_OS)
-        {
-            // 边框阴影，但是会导致字体失真
-            AWTUtilities.setWindowOpaque(this, false);
-            //getRootPane().setOpaque(false);
-            getRootPane().setBorder(ShadowBorder.newInstance());
-        }*/
-
         // 按钮组
         buttonPanel = new JPanel();
         buttonPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 10, 10));
@@ -128,6 +116,10 @@ public class SystemConfigDialog extends JDialog
         aboutLabel = new JLabel("关于");
         processButtonLabel(aboutLabel);
 
+        // 清除缓存 按钮
+        clearCacheLabel = new JLabel("清除缓存");
+        processButtonLabel(clearCacheLabel);
+
 
         // 更改头像面板
         changeAvatarPanel = new ChangeAvatarPanel();
@@ -140,6 +132,9 @@ public class SystemConfigDialog extends JDialog
 
         // 关于面板
         aboutPanel = new AboutPanel();
+
+        // 清除缓存面板
+        clearCachePanel = new ClearCachePanel();
 
     }
 
@@ -157,6 +152,7 @@ public class SystemConfigDialog extends JDialog
         settingMenuPanel.add(meLabel);
         settingMenuPanel.add(changeAvatarLabel);
         settingMenuPanel.add(changePasswordLabel);
+        settingMenuPanel.add(clearCacheLabel);
         settingMenuPanel.add(aboutLabel);
 
         settingAreaPanel.setLayout(cardLayout);
@@ -164,6 +160,8 @@ public class SystemConfigDialog extends JDialog
         settingAreaPanel.add(changeAvatarPanel, CHANGE_AVATAR);
         settingAreaPanel.add(changePasswordPanel, CHANGE_PASSWORD);
         settingAreaPanel.add(aboutPanel, ABOUT);
+        settingAreaPanel.add(clearCachePanel, CLEAR_CHACE);
+
 
         add(settingPanel, BorderLayout.CENTER);
         add(buttonPanel, BorderLayout.SOUTH);
@@ -233,6 +231,10 @@ public class SystemConfigDialog extends JDialog
                     {
                         cardLayout.show(settingAreaPanel, ABOUT);
                     }
+                    else if (source.getText().equals("清除缓存"))
+                    {
+                        cardLayout.show(settingAreaPanel, CLEAR_CHACE);
+                    }
                 }
 
 
@@ -244,6 +246,7 @@ public class SystemConfigDialog extends JDialog
         changePasswordLabel.addMouseListener(itemMouseListener);
         meLabel.addMouseListener(itemMouseListener);
         aboutLabel.addMouseListener(itemMouseListener);
+        clearCacheLabel.addMouseListener(itemMouseListener);
     }
 
     private void selectedLabel(JLabel label)

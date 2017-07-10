@@ -20,7 +20,7 @@ public class ImageCache
     public static final int THUMB = 0;
     public static final int ORIGINAL = 1;
 
-    private String IMAGE_CACHE_ROOT_PATH;
+    public String IMAGE_CACHE_ROOT_PATH;
     Logger logger = Logger.getLogger(this.getClass());
     private CurrentUser currentUser;
 
