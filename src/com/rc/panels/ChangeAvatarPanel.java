@@ -11,19 +11,13 @@ import com.rc.websocket.WebSocketClient;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReadParam;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.ImageInputStream;
-import javax.imageio.stream.ImageOutputStream;
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.RescaleOp;
 import java.io.*;
-import java.util.Iterator;
 
 import static com.rc.app.Launcher.currentUserService;
 
@@ -37,6 +31,7 @@ public class ChangeAvatarPanel extends JPanel
     private static ChangeAvatarPanel context;
     private ImageAdjustLabel imageLabel;
     private RCButton okButton;
+    private RCButton openButton;
     private JPanel contentPanel;
     private File selectedFile;
     private JLabel statusLabel;
@@ -58,6 +53,15 @@ public class ChangeAvatarPanel extends JPanel
         try
         {
             BufferedImage image = ImageIO.read(file);
+
+            int imageWidth = image.getWidth(null);
+            int imageHeight = image.getHeight(null);
+            if (imageWidth < 200 || imageHeight < 200)
+            {
+                JOptionPane.showMessageDialog(MainFrame.getContext(), "建议使用 200 * 200 或更高分辨率的图像", "图像太low - , -!", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
             imageLabel.setImage(image);
             imageLabel.repaint();
         }
@@ -71,18 +75,22 @@ public class ChangeAvatarPanel extends JPanel
     private void initComponents()
     {
         CurrentUser currentUser = currentUserService.findAll().get(0);
-        imageLabel = new ImageAdjustLabel(imageMaxWidth, imageMaxHeight);
+        Image avatar = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUser.getUsername()).getScaledInstance(200, 200, Image.SCALE_SMOOTH)).getImage();
+        imageLabel = new ImageAdjustLabel(imageMaxWidth, imageMaxHeight, avatar);
         imageLabel.setHorizontalAlignment(SwingConstants.CENTER);
         imageLabel.setPreferredSize(new Dimension(360, 200));
-        imageLabel.setBorder(new LineBorder(Colors.FONT_GRAY));
+        //imageLabel.setBorder(new LineBorder(Colors.ITEM_SELECTED_LIGHT));
 
         //imageLabel.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUser.getUsername()).getScaledInstance(200, 200, Image.SCALE_SMOOTH)));
 
-        imageLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        imageLabel.setToolTipText("点击上传本地头像");
 
         okButton = new RCButton("使用头像", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
         okButton.setPreferredSize(new Dimension(100, 35));
+
+        openButton = new RCButton("选择图片", Colors.MAIN_COLOR, Colors.MAIN_COLOR_DARKER, Colors.MAIN_COLOR_DARKER);
+        openButton.setPreferredSize(new Dimension(100, 35));
+        openButton.setToolTipText("点击上传本地头像");
+
 
         statusLabel = new JLabel();
         statusLabel.setText("头像应用成功");
@@ -96,17 +104,21 @@ public class ChangeAvatarPanel extends JPanel
     private void initView()
     {
         contentPanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 10, true, false));
+
+        JPanel openPanel = new JPanel();
+        openPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        openPanel.add(openButton);
+        contentPanel.add(openPanel);
         contentPanel.add(imageLabel);
         contentPanel.add(okButton);
         contentPanel.add(statusLabel);
-
 
         add(contentPanel);
     }
 
     private void setListener()
     {
-        imageLabel.addMouseListener(new MouseAdapter()
+        openButton.addMouseListener(new MouseAdapter()
         {
             @Override
             public void mouseClicked(MouseEvent e)
@@ -135,10 +147,15 @@ public class ChangeAvatarPanel extends JPanel
                     okButton.setText("应用中...");
 
                     BufferedImage selectedImage = imageLabel.getSelectedImage();
-                    int w = selectedImage.getWidth();
-                    int h = selectedImage.getHeight();
+                    if (selectedImage == null)
+                    {
+                        restoreOKButton();
+                    }
+                    else
+                    {
+                        WebSocketClient.getContext().setAvatar(base64EncodeImage(selectedImage));
+                    }
 
-                    WebSocketClient.getContext().setAvatar(base64EncodeImage(selectedImage));
                 }
 
                 super.mouseClicked(e);
@@ -154,9 +171,10 @@ public class ChangeAvatarPanel extends JPanel
         fileChooser.setFileFilter(new FileNameExtensionFilter("图像", "jpg", "jpeg", "png"));
 
         fileChooser.showDialog(MainFrame.getContext(), "上传");
-        selectedFile = fileChooser.getSelectedFile();
-        if (selectedFile != null)
+        if (fileChooser.getSelectedFile() != null)
         {
+            selectedFile = fileChooser.getSelectedFile();
+
             String extension = selectedFile.getName();
             if (!extension.endsWith(".jpg") && !extension.endsWith(".jpeg") && !extension.endsWith(".png"))
             {
@@ -164,73 +182,9 @@ public class ChangeAvatarPanel extends JPanel
                 return;
             }
 
-            /*try
-            {
-                ByteArrayOutputStream out = cutImage(selectedFile.getAbsolutePath());
-                byte[] data = out.toByteArray();
-                ImageIcon imageIcon = new ImageIcon(data);
-                imageIcon.setImage(imageIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH));
-                imageLabel.setIcon(imageIcon);
-            }
-            catch (IOException e)
-            {
-                e.printStackTrace();
-            }*/
-
             openImage(selectedFile);
 
         }
-    }
-
-    /**
-     * 图片裁剪
-     *
-     * @param src
-     * @return
-     * @throws IOException
-     */
-    public static ByteArrayOutputStream cutImage(String src) throws IOException
-    {
-        String extension = src.substring(src.lastIndexOf(".") + 1);
-        /*if (extension.equals("jpeg"))
-        {
-            extension = "jpg";
-        }*/
-        Iterator iterator = ImageIO.getImageReadersByFormatName(extension);
-        ImageReader reader = (ImageReader) iterator.next();
-        InputStream in = new FileInputStream(src);
-        ImageInputStream iis = ImageIO.createImageInputStream(in);
-        reader.setInput(iis, true);
-        ImageReadParam param = reader.getDefaultReadParam();
-
-        int width = reader.getWidth(0);
-        int height = reader.getHeight(0);
-
-        int x = 0;
-        int y = 0;
-
-        if (width >= height)
-        {
-            width = height;
-            x = (reader.getWidth(0) - width) / 2;
-        }
-        else
-        {
-            height = width;
-            y = (reader.getHeight(0) - height) / 2;
-        }
-
-
-        Rectangle rect = new Rectangle(x, y, width, height);
-
-        param.setSourceRegion(rect);
-        BufferedImage bi = reader.read(0, param);
-
-        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-
-        ImageIO.write(bi, extension, byteArrayOutputStream);
-
-        return byteArrayOutputStream;
     }
 
     /**
@@ -262,7 +216,7 @@ public class ChangeAvatarPanel extends JPanel
         okButton.setText("使用头像");
         okButton.setIcon(null);
         okButton.setEnabled(true);
-        selectedFile = null;
+        //selectedFile = null;
     }
 
     public void showSuccessMessage()
@@ -294,7 +248,6 @@ class ImageAdjustLabel extends JLabel
     private static final int RIGHT_TOP = 3;
     private static final int RIGHT_BOTTOM = 4;
 
-    private Cursor crossCursor;
     private Cursor moveCursor;
     private Cursor NWresizeCursor;
     private Cursor SWresizeCursor;
@@ -304,8 +257,6 @@ class ImageAdjustLabel extends JLabel
     private int mouseDownArea = OUTSIDE_SELECTED;
     private int startX;
     private int startY;
-    private int endX;
-    private int endY;
 
     private boolean mouseDragged = false;
     private int drawX;
@@ -321,20 +272,48 @@ class ImageAdjustLabel extends JLabel
     private int minSelectWidth = 80;
     private int imageWidth;
     private int imageHeight;
+    private Image initAvatar;
+    private boolean isInit = true;
 
-    public ImageAdjustLabel(int imageMaxWidth, int imageMaxHeight)
+    public ImageAdjustLabel(int imageMaxWidth, int imageMaxHeight, Image initAvatar)
     {
         this.imageMaxWidth = imageMaxWidth;
         this.imageMaxHeight = imageMaxHeight;
+        this.initAvatar = initAvatar;
+
+        moveCursor = new Cursor(Cursor.MOVE_CURSOR);
+        NWresizeCursor = new Cursor(Cursor.NW_RESIZE_CURSOR);
+        SWresizeCursor = new Cursor(Cursor.SW_RESIZE_CURSOR);
+        NEresizeCursor = new Cursor(Cursor.NE_RESIZE_CURSOR);
+        SEresizeCursor = new Cursor(Cursor.SE_RESIZE_CURSOR);
 
         setListeners();
+        paintInitAvatar();
+    }
+
+    private void paintInitAvatar()
+    {
+        if (this.initAvatar == null)
+        {
+            return;
+        }
     }
 
     @Override
     public void paint(Graphics g)
     {
-        //g.drawImage(image, 0, 0, 100, 100, null);
-        adjustAndPaintImage((Graphics2D) g.create());
+        if (isInit)
+        {
+            int x = (imageMaxWidth - 200) / 2;
+            int y = (imageMaxHeight - 200) / 2;
+            g.drawImage(initAvatar, x, y, 200, 200, ImageAdjustLabel.this);
+            isInit = false;
+        }
+        else
+        {
+            adjustAndPaintOpenedImage((Graphics2D) g.create());
+        }
+
         super.paint(g);
     }
 
@@ -343,7 +322,7 @@ class ImageAdjustLabel extends JLabel
         this.image = image;
     }
 
-    private void adjustAndPaintImage(Graphics2D g2d)
+    private void adjustAndPaintOpenedImage(Graphics2D g2d)
     {
         if (image == null)
         {
@@ -405,7 +384,7 @@ class ImageAdjustLabel extends JLabel
         drawY = (targetHeight - selectedHeight) / 2;
 
 
-        g2d.setColor(Color.CYAN);
+        g2d.setColor(Colors.LIGHT_GRAY);
         // 绘制选定区域矩形
         g2d.drawRect(drawX + imageX - 1, drawY + imageY - 1, selectedWidth + 1, selectedHeight + 1);
         selectedImage = scaledImage.getSubimage(drawX, drawY, selectedWidth, selectedHeight);
@@ -452,9 +431,12 @@ class ImageAdjustLabel extends JLabel
             @Override
             public void mouseDragged(MouseEvent e)
             {
+                if (image == null)
+                {
+                    return;
+                }
+
                 mouseDragged = true;
-                endX = e.getX();
-                endY = e.getY();
 
                 int xDistance = 0;
                 int yDistance = 0;
@@ -573,11 +555,6 @@ class ImageAdjustLabel extends JLabel
                         setCursor(moveCursor);
                         break;
                     }
-                    case OUTSIDE_SELECTED:
-                    {
-                        setCursor(crossCursor);
-                        break;
-                    }
                     case LEFT_TOP:
                     {
                         setCursor(NWresizeCursor);
@@ -665,7 +642,7 @@ class ImageAdjustLabel extends JLabel
         Graphics g = tempImage2.getGraphics();
         g.drawImage(tempImage, 0, 0, null);
 
-        g.setColor(Color.CYAN);
+        g.setColor(Colors.LIGHT_GRAY);
         // 绘制选定区域矩形
         g.drawRect(drawX - 1, drawY - 1, selectedWidth + 1, selectedHeight + 1);
 
@@ -715,28 +692,34 @@ class ImageAdjustLabel extends JLabel
         }
     }
 
+    public void setInitAvatar(Image initAvatar)
+    {
+        this.initAvatar = initAvatar;
+    }
+
     public BufferedImage getSelectedImage()
     {
-        int x = (int) (drawX / zoomScale);
-        int y = (int) (drawY / zoomScale);
-        int w = (int) (selectedWidth / zoomScale);
-        int h = (int) (selectedHeight /zoomScale);
-
-        BufferedImage selectedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-        selectedImage.getGraphics().drawImage(image.getSubimage(x, y, w, h), 0, 0, w, h, null);
-
-        BufferedImage outputImage = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
-        outputImage.getGraphics().drawImage(selectedImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH), 0, 0, null);
-
         try
         {
-            ImageIO.write(outputImage, "png", new File("/Users/song/Desktop/aa.png"));
-        }
-        catch (IOException e)
-        {
-            e.printStackTrace();
-        }
+            int x = (int) (drawX / zoomScale);
+            int y = (int) (drawY / zoomScale);
+            int w = (int) (selectedWidth / zoomScale);
+            int h = (int) (selectedHeight / zoomScale);
 
-        return outputImage;
+            x = x + w > imageWidth ? imageWidth - w : x;
+            y = y + h > imageHeight ? imageHeight - h : y;
+
+            BufferedImage selectedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+            selectedImage.getGraphics().drawImage(image.getSubimage(x, y, w, h), 0, 0, w, h, null);
+
+            BufferedImage outputImage = new BufferedImage(200, 200, BufferedImage.TYPE_INT_RGB);
+            outputImage.getGraphics().drawImage(selectedImage.getScaledInstance(200, 200, Image.SCALE_SMOOTH), 0, 0, null);
+
+            return outputImage;
+        }
+        catch (Exception e)
+        {
+            return null;
+        }
     }
 }
