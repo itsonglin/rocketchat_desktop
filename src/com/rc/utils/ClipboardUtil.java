@@ -186,6 +186,19 @@ public class ClipboardUtil
         return icon;
     }
 
+    /**
+     * 清除剪切板缓存文件
+     */
+    public static void clearCache()
+    {
+        System.out.println("清除剪切板缓存文件...");
+        File file = new File(CLIPBOARD_TEMP_DIR);
+        File[] files = file.listFiles();
+        for (File f : files)
+        {
+            f.delete();
+        }
+    }
 }
 
 class ImageTransferable implements Transferable

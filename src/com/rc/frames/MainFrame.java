@@ -7,6 +7,7 @@ import com.rc.panels.LeftPanel;
 import com.rc.panels.RightPanel;
 import com.rc.tasks.HttpGetTask;
 import com.rc.tasks.HttpResponseListener;
+import com.rc.utils.ClipboardUtil;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.OSUtil;
@@ -67,27 +68,11 @@ public class MainFrame extends JFrame
             public void run()
             {
                 initTray();
-                //initSound();
             }
         }).start();
 
     }
 
-    /**
-     * 初始化提示声音
-     */
-    private void initSound()
-    {
-        try
-        {
-            InputStream inputStream = getClass().getResourceAsStream("/wav/msg.wav");
-            messageSound = new AudioStream(inputStream);
-        }
-        catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-    }
 
     /**
      * 播放消息提示间
@@ -155,6 +140,7 @@ public class MainFrame extends JFrame
                 @Override
                 public void actionPerformed(ActionEvent e)
                 {
+                    clearClipboardCache();
                     System.exit(1);
                 }
             });
@@ -180,6 +166,14 @@ public class MainFrame extends JFrame
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 清除剪切板缓存文件
+     */
+    private void clearClipboardCache()
+    {
+        ClipboardUtil.clearCache();
     }
 
     /**
@@ -272,11 +266,6 @@ public class MainFrame extends JFrame
             {
                 e.printStackTrace();
             }
-
-            // 边框阴影
-/*            AWTUtilities.setWindowOpaque(this, false);
-            getRootPane().setBorder(ShadowBorder.newInstance());
-            getRootPane().setOpaque(true);*/
         }
 
         setListeners();
@@ -301,33 +290,6 @@ public class MainFrame extends JFrame
 
     private void setListeners()
     {
-        // MAC OS 下拖动JFrame会出现抖动！
-        /*if (OSUtil.getOsType() != OSUtil.Mac_OS)
-        {
-            addMouseListener(new MouseAdapter()
-            {
-                public void mousePressed(MouseEvent e)
-                {
-                    // 当鼠标按下的时候获得窗口当前的位置
-                    origin.x = e.getX();
-                    origin.y = e.getY();
-                }
-            });
-
-            addMouseMotionListener(new MouseMotionAdapter()
-            {
-                public void mouseDragged(MouseEvent e)
-                {
-                    // 当鼠标拖动时获取窗口当前位置
-                    Point p = MainFrame.this.getLocation();
-                    // 设置窗口的位置
-                    MainFrame.this.setLocation(p.x + e.getX() - origin.x, p.y + e.getY()
-                            - origin.y);
-                }
-            });
-        }*/
-
-
         addComponentListener(new ComponentAdapter()
         {
             @Override
