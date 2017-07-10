@@ -273,7 +273,7 @@ public class SystemConfigDialog extends JDialog
         label.setForeground(Colors.DARKER);
         label.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.SHADOW));
         label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setPreferredSize(new Dimension(40, 30));
+        label.setPreferredSize(new Dimension(50, 30));
         label.setCursor(handCursor);
         label.setOpaque(true);
     }

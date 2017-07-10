@@ -126,6 +126,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
         sendButton.setForeground(Colors.DARKER);
         sendButton.setFont(FontUtil.getDefaultFont(13));
         sendButton.setPreferredSize(new Dimension(75, 23));
+        sendButton.setToolTipText("Enter发送消息，Ctrl+Enter换行");
 
         chatEditorPopupMenu = new ChatEditorPopupMenu();
 

@@ -112,9 +112,9 @@ public class ContactsPanel extends ParentAvailablePanel
                     }
                 }
 
-                // 获取头像
+                // 自己的头像每次启动都去获取
                 currentUsername = currentUserService.findAll().get(0).getUsername();
-                if (!AvatarUtil.customAvatarExist(currentUsername))
+                //if (!AvatarUtil.customAvatarExist(currentUsername))
                 {
                     getUserAvatar(currentUsername, true);
                 }

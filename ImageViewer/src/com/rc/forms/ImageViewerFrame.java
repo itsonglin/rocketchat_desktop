@@ -10,7 +10,7 @@ import java.io.*;
 /**
  * Created by song on 2017/6/25.
  */
-public class ImageViewerFrame extends JFrame
+public class ImageViewerFrame extends JDialog
 {
     private int minWidth;
     private int minHeight;

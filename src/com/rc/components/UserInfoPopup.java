@@ -49,7 +49,6 @@ public class UserInfoPopup extends JPopupMenu
         ContactsPanel.getContext().getUserAvatar(this.username, true);
     }
 
-
     private void initComponents()
     {
         setBackground(Colors.WINDOW_BACKGROUND_LIGHT);
@@ -117,12 +116,13 @@ public class UserInfoPopup extends JPopupMenu
             @Override
             public void mouseClicked(MouseEvent e)
             {
+                setVisible(false);
+
                 ImageIcon icon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(username));
                 Image image = icon.getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH);
-
-
                 ImageViewerFrame imageViewerFrame = new ImageViewerFrame(image);
                 imageViewerFrame.setVisible(true);
+                imageViewerFrame.toFront();
                 super.mouseClicked(e);
             }
         });

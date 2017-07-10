@@ -34,11 +34,11 @@ public class Launcher
     public static ImageAttachmentService imageAttachmentService;
     public static FileAttachmentService fileAttachmentService;
 
-    public static final String HOSTNAME = "https://rc.shls-leasing.com";
+    public static final String HOSTNAME = "https://chat1.shls-leasing.com";
     //    public static final String UPDATE_HOSTNAME = "http://192.168.1.171:8080";
     public static final String UPDATE_HOSTNAME = "https://apk.shls-leasing.com";
 
-    public static final String APP_VERSION = "1.0.4";
+    public static final String APP_VERSION = "1.0.5";
 
     public static String userHome;
     public static String appFilesBasePath;
@@ -74,7 +74,7 @@ public class Launcher
             System.out.println("检查更新中...");
 
             // 检查更新
-            checkoutUpdate();
+            checkUpdate();
         }
         else
         {
@@ -168,7 +168,7 @@ public class Launcher
     /**
      * 检查是否有更新
      */
-    private void checkoutUpdate()
+    private void checkUpdate()
     {
         new Thread(new Runnable()
         {
