@@ -208,8 +208,8 @@ public class AvatarUtil
             BufferedImage roundImage = ImageUtil.setRadius(image, width, height, 35);
 
             g2d.dispose();
-            File file = new File(AVATAR_CACHE_ROOT + "/" + sign + ".jpg");
-            ImageIO.write(roundImage, "jpg", file);
+            File file = new File(AVATAR_CACHE_ROOT + "/" + sign + ".png");
+            ImageIO.write(roundImage, "png", file);
 
             return roundImage;
         } catch (Exception ex)
@@ -237,11 +237,11 @@ public class AvatarUtil
         String path = "";
         if (type == DEFAULT_AVATAR)
         {
-            path = AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+            path = AVATAR_CACHE_ROOT + "/" + username + ".png";
         }
         else if (type == CUSTOM_AVATAR)
         {
-            path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+            path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".png";
         }
         else
         {
@@ -256,7 +256,7 @@ public class AvatarUtil
             {
                 BufferedImage bufferedImage = ImageIO.read(new ByteArrayInputStream(data));
                 bufferedImage = ImageUtil.setRadius(bufferedImage, bufferedImage.getWidth(), bufferedImage.getHeight(), 35);
-                ImageIO.write(bufferedImage, "jpg", avatarPath);
+                ImageIO.write(bufferedImage, "png", avatarPath);
                 /*FileOutputStream outputStream = new FileOutputStream(avatarPath);
                 outputStream.write(data);
                 outputStream.close();*/
@@ -279,13 +279,13 @@ public class AvatarUtil
     {
         if (customAvatarExist(username))
         {
-            String path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+            String path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".png";
             ImageIcon imageIcon = new ImageIcon(path);
             return imageIcon.getImage();
         }
         else if (defaultAvatarExist(username))
         {
-            String path = AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+            String path = AVATAR_CACHE_ROOT + "/" + username + ".png";
             ImageIcon imageIcon = new ImageIcon(path);
             return imageIcon.getImage();
         }
@@ -298,21 +298,21 @@ public class AvatarUtil
 
     public static boolean customAvatarExist(String username)
     {
-        String path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+        String path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".png";
         File file = new File(path);
         return file.exists();
     }
 
     public static boolean defaultAvatarExist(String username)
     {
-        String path = AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+        String path = AVATAR_CACHE_ROOT + "/" + username + ".png";
         File file = new File(path);
         return file.exists();
     }
 
     public static void deleteCustomAvatar(String username)
     {
-        String path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".jpg";
+        String path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".png";
 
         File file = new File(path);
         if (file.exists())
@@ -323,7 +323,7 @@ public class AvatarUtil
 
     public static void deleteGroupAvatar(String groupName)
     {
-        String path = AVATAR_CACHE_ROOT + "/" + groupName + ".jpg";
+        String path = AVATAR_CACHE_ROOT + "/" + groupName + ".png";
         File file = new File(path);
         if (file.exists())
         {
@@ -365,8 +365,8 @@ public class AvatarUtil
             g2d.dispose();
 
             // 缓存到磁盘
-            File file = new File(AVATAR_CACHE_ROOT + "/" + groupName + ".jpg");
-            ImageIO.write(image, "jpg", file);
+            File file = new File(AVATAR_CACHE_ROOT + "/" + groupName + ".png");
+            ImageIO.write(image, "png", file);
 
             return image;
         } catch (Exception ex)

@@ -64,6 +64,7 @@ public class ChangeAvatarPanel extends JPanel
 
             imageLabel.setImage(image);
             imageLabel.repaint();
+
         }
         catch (IOException e)
         {
@@ -273,7 +274,7 @@ class ImageAdjustLabel extends JLabel
     private int imageWidth;
     private int imageHeight;
     private Image initAvatar;
-    private boolean isInit = true;
+    private boolean isOriginalAvatar = true;
 
     public ImageAdjustLabel(int imageMaxWidth, int imageMaxHeight, Image initAvatar)
     {
@@ -302,12 +303,11 @@ class ImageAdjustLabel extends JLabel
     @Override
     public void paint(Graphics g)
     {
-        if (isInit)
+        if (isOriginalAvatar)
         {
             int x = (imageMaxWidth - 200) / 2;
             int y = (imageMaxHeight - 200) / 2;
             g.drawImage(initAvatar, x, y, 200, 200, ImageAdjustLabel.this);
-            isInit = false;
         }
         else
         {
@@ -319,6 +319,7 @@ class ImageAdjustLabel extends JLabel
 
     public void setImage(BufferedImage image)
     {
+        isOriginalAvatar = false;
         this.image = image;
     }
 
