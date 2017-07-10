@@ -303,7 +303,6 @@ public class ImageViewerFrame extends JFrame
                     {
                         e1.printStackTrace();
                     }
-
                 }
             }
         });

@@ -19,6 +19,12 @@ import java.util.List;
  */
 public class ChatEditorPopupMenu extends JPopupMenu
 {
+    JMenuItem selectAllItem = new JMenuItem("全选");
+    JMenuItem copyItem = new JMenuItem("复制");
+    JMenuItem cutItem = new JMenuItem("剪切");
+    JMenuItem pasteItem = new JMenuItem("粘贴");
+    JMenuItem deleteItem = new JMenuItem("删除");
+
     public ChatEditorPopupMenu()
     {
         initMenuItem();
@@ -26,13 +32,6 @@ public class ChatEditorPopupMenu extends JPopupMenu
 
     private void initMenuItem()
     {
-        JMenuItem selectAllItem = new JMenuItem("全选");
-        JMenuItem copyItem = new JMenuItem("复制");
-        JMenuItem cutItem = new JMenuItem("剪切");
-        JMenuItem pasteItem = new JMenuItem("粘贴");
-        JMenuItem deleteItem = new JMenuItem("删除");
-
-
         selectAllItem.setUI(new RCMenuItemUI(80, 25));
         selectAllItem.addActionListener(new AbstractAction()
         {
@@ -117,5 +116,24 @@ public class ChatEditorPopupMenu extends JPopupMenu
 
         setBorder(new LineBorder(Colors.SCROLL_BAR_TRACK_LIGHT));
         setBackground(Colors.FONT_WHITE);
+    }
+
+    @Override
+    public void show(Component invoker, int x, int y)
+    {
+        RCTextEditor editor = (RCTextEditor) invoker;
+        if (editor.getSelectedText() == null)
+        {
+            copyItem.setEnabled(false);
+            cutItem.setEnabled(false);
+            deleteItem.setEnabled(false);
+        }
+        else
+        {
+            copyItem.setEnabled(true);
+            cutItem.setEnabled(true);
+            deleteItem.setEnabled(true);
+        }
+        super.show(invoker, x, y);
     }
 }
