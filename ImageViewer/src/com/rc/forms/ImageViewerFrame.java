@@ -43,6 +43,16 @@ public class ImageViewerFrame extends JFrame
 
     public ImageViewerFrame(String imagePath)
     {
+        this(imagePath, null);
+    }
+
+    public ImageViewerFrame(Image image)
+    {
+        this(null, image);
+    }
+
+    private  ImageViewerFrame(String imagePath, Image image)
+    {
         tooKit = Toolkit.getDefaultToolkit();
 
         initComponents();
@@ -50,8 +60,8 @@ public class ImageViewerFrame extends JFrame
         initSize();
 
         this.imagePath = imagePath;
-        //imagePath = "/Users/song/aa.jpg";
-        //imagePath = "C:\\Users\\song\\Pictures\\user-cover.jpg";
+        this.image = image;
+
 
         try
         {
@@ -61,7 +71,6 @@ public class ImageViewerFrame extends JFrame
         {
             e.printStackTrace();
         }
-        //setSize(800,600);
 
         setListeners();
     }
@@ -96,8 +105,8 @@ public class ImageViewerFrame extends JFrame
     private void initSize()
     {
         // 窗口最小宽度、高度
-        minWidth = 300;
-        minHeight = 300;
+        minWidth = 200;
+        minHeight = 200;
 
         // 窗口最大宽度、高度
         Dimension screenSize = tooKit.getScreenSize();
@@ -111,7 +120,18 @@ public class ImageViewerFrame extends JFrame
 
     private void initImageAndFrameBounds() throws IOException
     {
-        image = ImageIO.read(new File(imagePath));
+        if (imagePath != null)
+        {
+            image = ImageIO.read(new File(imagePath));
+        }
+        else
+        {
+            if (image == null)
+            {
+                throw new RuntimeException("必须至少提供imagePath 或 image");
+            }
+        }
+
 
         int imageWidth = image.getWidth(null);
         int imageHeight = image.getHeight(null);

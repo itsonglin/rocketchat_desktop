@@ -29,7 +29,6 @@ public class ImageLabel extends JLabel
 
     public ImageLabel()
     {
-        setText("this is ImageLabel");
     }
 
     @Override
@@ -49,7 +48,7 @@ public class ImageLabel extends JLabel
             y = (getHeight() - currentHeight) / 2;
             firstDraw = false;
         }
-        if (scaleImage)
+        else if (scaleImage)
         {
             int lastWidth = 0;
             int lastHeight = 0;

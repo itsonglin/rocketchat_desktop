@@ -755,7 +755,6 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                System.out.println(username + " ----------- ");
                 UserInfoPopup popup = new UserInfoPopup(username);
                 popup.show(e.getComponent(), e.getX(), e.getY());
 

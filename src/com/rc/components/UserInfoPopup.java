@@ -6,6 +6,8 @@ import com.rc.components.GBC;
 import com.rc.components.RCButton;
 import com.rc.db.model.ContactsUser;
 import com.rc.db.model.Room;
+import com.rc.forms.ImageLabel;
+import com.rc.forms.ImageViewerFrame;
 import com.rc.panels.ChatPanel;
 import com.rc.panels.ContactsPanel;
 import com.rc.utils.AvatarUtil;
@@ -106,6 +108,21 @@ public class UserInfoPopup extends JPopupMenu
             public void mouseClicked(MouseEvent e)
             {
                 openOrCreateDirectChat();
+                super.mouseClicked(e);
+            }
+        });
+
+        avatarLabel.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                ImageIcon icon = new ImageIcon(AvatarUtil.createOrLoadUserAvatar(username));
+                Image image = icon.getImage().getScaledInstance(200,200,Image.SCALE_SMOOTH);
+
+
+                ImageViewerFrame imageViewerFrame = new ImageViewerFrame(image);
+                imageViewerFrame.setVisible(true);
                 super.mouseClicked(e);
             }
         });

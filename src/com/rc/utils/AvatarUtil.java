@@ -4,9 +4,7 @@ import com.rc.app.Launcher;
 import com.rc.components.Colors;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.font.LineMetrics;
 import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -280,19 +278,36 @@ public class AvatarUtil
         if (customAvatarExist(username))
         {
             String path = CUSTOM_AVATAR_CACHE_ROOT + "/" + username + ".png";
-            ImageIcon imageIcon = new ImageIcon(path);
-            return imageIcon.getImage();
+            /*ImageIcon imageIcon = new ImageIcon(path);
+            return imageIcon.getImage();*/
+
+            return readImage(path);
         }
         else if (defaultAvatarExist(username))
         {
             String path = AVATAR_CACHE_ROOT + "/" + username + ".png";
-            ImageIcon imageIcon = new ImageIcon(path);
-            return imageIcon.getImage();
+            /*ImageIcon imageIcon = new ImageIcon(path);
+            return imageIcon.getImage();*/
+            return readImage(path);
         }
         else
         {
             return null;
         }
+    }
+
+    private static BufferedImage readImage(String path)
+    {
+        try
+        {
+            return ImageIO.read(new File(path));
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
+        }
+
+        return null;
     }
 
 
