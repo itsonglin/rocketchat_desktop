@@ -174,7 +174,7 @@ public class ChatPanel extends ParentAvailablePanel
                 }
             }
 
-            updateUnreadCount(0);
+            //updateUnreadCount(0);
         }
     }
 
@@ -497,6 +497,11 @@ public class ChatPanel extends ParentAvailablePanel
      */
     public void enterRoom(String roomId, long firstMessageTimestamp)
     {
+        if (roomId == null || roomId.isEmpty())
+        {
+            return;
+        }
+
         this.firstMessageTimestamp = firstMessageTimestamp;
 
         this.roomId = roomId;
@@ -516,6 +521,8 @@ public class ChatPanel extends ParentAvailablePanel
         RoomMembersPanel.getContext().setRoomId(roomId);
 
         messageEditorPanel.getEditor().setText("");
+
+        updateUnreadCount(0);
     }
 
     /**
@@ -2097,6 +2104,10 @@ public class ChatPanel extends ParentAvailablePanel
         messageEditorPanel.getEditor().requestFocus();
     }
 
+    public void restoreRemoteHistoryLoadedRooms()
+    {
+        remoteHistoryLoadedRooms.clear();
+    }
 }
 
 interface RemoteHistoryReceivedListener

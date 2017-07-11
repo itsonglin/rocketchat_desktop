@@ -478,6 +478,9 @@ public class WebSocketClient
             try
             {
                 TitlePanel.getContext().hideStatusLabel();
+                ChatPanel.getContext().restoreRemoteHistoryLoadedRooms();
+                ChatPanel.getContext().enterRoom(ChatPanel.CHAT_ROOM_OPEN_ID);
+
                 loginSuccessTime = System.currentTimeMillis();
 
                 if (!sentPingMessage)
