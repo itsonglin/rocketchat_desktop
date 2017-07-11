@@ -12,7 +12,7 @@
                    icon="src/ic_launcher.icns"
                    hidedockicon="src/ic_launcher.icns"
                    mainclassname="com.rc.app.App">
-            <classpath dir="src"/>
+            <classpath dir="../out/artifacts/rocketchat_desktop_jar"/>
         </bundleapp>
     </target>
 

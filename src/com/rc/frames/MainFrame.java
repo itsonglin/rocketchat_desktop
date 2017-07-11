@@ -115,8 +115,9 @@ public class MainFrame extends JFrame
             trayIcon.setImageAutoSize(true);
             trayIcon.addMouseListener(new MouseAdapter()
             {
+
                 @Override
-                public void mouseClicked(MouseEvent e)
+                public void mousePressed(MouseEvent e)
                 {
                     // 显示主窗口
                     setVisible(true);
