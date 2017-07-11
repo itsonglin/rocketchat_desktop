@@ -22,7 +22,6 @@ public class DbUtils
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	private DbUtils() {

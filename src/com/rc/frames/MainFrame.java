@@ -225,7 +225,10 @@ public class MainFrame extends JFrame
         setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
 
         // 任务栏图标
-        setIconImage(IconUtil.getIcon(this, "/image/ic_launcher.png").getImage());
+        if (OSUtil.getOsType() != OSUtil.Mac_OS)
+        {
+            setIconImage(IconUtil.getIcon(this, "/image/ic_launcher.png").getImage());
+        }
 
         UIManager.put("Label.font", FontUtil.getDefaultFont());
         UIManager.put("Panel.font", FontUtil.getDefaultFont());

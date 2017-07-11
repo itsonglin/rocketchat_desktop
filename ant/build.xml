@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Helichat" default="bundle-helichat" basedir=".">
+
+    <taskdef name="bundleapp"
+             classname="com.oracle.appbundler.AppBundlerTask"
+             classpath="lib/appbundler-1.0.jar"/>
+    <target name="bundle-helichat">
+        <bundleapp outputdirectory="../out"
+                   name="和理通"
+                   displayname="和理通"
+                   identifier="com.rc.app.App"
+                   icon="src/ic_launcher.icns"
+                   hidedockicon="src/ic_launcher.icns"
+                   mainclassname="com.rc.app.App">
+            <classpath dir="src"/>
+        </bundleapp>
+    </target>
+
+</project>
