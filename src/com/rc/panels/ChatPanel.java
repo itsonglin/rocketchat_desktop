@@ -1027,6 +1027,11 @@ public class ChatPanel extends ParentAvailablePanel
                 {
                     List<Message> messages = messageService.findBetween(roomId, startTime + TIMESTAMP_8_HOURS, utcCurr);
 
+                    if (messages.size() > 5)
+                    {
+                        messageItems.clear();
+                    }
+
                     for (Message message : messages)
                     {
                         if (!message.isDeleted() && !inMessageItems(message.getId()))
