@@ -502,6 +502,8 @@ public class ChatPanel extends ParentAvailablePanel
             return;
         }
 
+
+
         this.firstMessageTimestamp = firstMessageTimestamp;
 
         this.roomId = roomId;
@@ -615,7 +617,7 @@ public class ChatPanel extends ParentAvailablePanel
 
         messagePanel.getMessageListView().notifyDataSetChanged(false);
 
-        if (messageItems.size() <= PAGE_LENGTH)
+        //if (messageItems.size() <= PAGE_LENGTH)
         {
             messagePanel.getMessageListView().setAutoScrollToBottom();
         }
@@ -742,7 +744,7 @@ public class ChatPanel extends ParentAvailablePanel
                 {
                     int newMessageCount;
                     //boolean loadUnread = (startTime != 0 && endTime == 0);
-                    newMessageCount = processRoomHistoryResult(retJson, loadUnread, firstRequest);
+                    newMessageCount = processRoomHistoryResult(retJson, loadUnread, firstRequest, startTime);
                     System.out.println("newMessageCount = " + newMessageCount);
 
                     if (listener != null)
@@ -811,9 +813,10 @@ public class ChatPanel extends ParentAvailablePanel
      *
      * @param jsonText
      * @param firstRequest
+     * @param startTime
      * @throws JSONException
      */
-    private int processRoomHistoryResult(JSONObject jsonText, boolean loadUnread, boolean firstRequest) throws JSONException, ParseException
+    private int processRoomHistoryResult(JSONObject jsonText, boolean loadUnread, boolean firstRequest, long startTime) throws JSONException, ParseException
     {
         //String roomId = jsonText.getString("id").replace(SubscriptionHelper.SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE, "");
         JSONArray messages = jsonText.getJSONArray("messages");
@@ -989,7 +992,7 @@ public class ChatPanel extends ParentAvailablePanel
             }
 
             // 通知UI更新消息列表
-            notifyNewMessageLoaded(loadUnread, firstRequest);
+            notifyNewMessageLoaded(loadUnread, firstRequest, startTime);
 
 
             //if (loadUnread)
@@ -1006,7 +1009,7 @@ public class ChatPanel extends ParentAvailablePanel
      *
      * @throws ParseException
      */
-    private void notifyNewMessageLoaded(boolean loadUnread, boolean firstRequest) throws ParseException
+    private void notifyNewMessageLoaded(boolean loadUnread, boolean firstRequest, long startTime) throws ParseException
     {
         if (messageItems != null)
         {
@@ -1022,13 +1025,11 @@ public class ChatPanel extends ParentAvailablePanel
                 // 已有消息，追加
                 if (messageItems.size() > 0)
                 {
-                    long from = messageItems.get(messageItems.size() - 1).getTimestamp();
-                    //List<Message> messages = messageService.findBetween(realm, roomId, from + 1, utcCurr);
-                    List<Message> messages = messageService.findBetween(roomId, from + 1, utcCurr);
+                    List<Message> messages = messageService.findBetween(roomId, startTime + TIMESTAMP_8_HOURS, utcCurr);
 
                     for (Message message : messages)
                     {
-                        if (!message.isDeleted())
+                        if (!message.isDeleted() && !inMessageItems(message.getId()))
                         {
                             messageItems.add(new MessageItem(message, currentUser.getUserId()));
                         }
@@ -1073,6 +1074,19 @@ public class ChatPanel extends ParentAvailablePanel
                 }
             }
         }
+    }
+
+    private boolean inMessageItems(String messageId)
+    {
+        for (MessageItem item : messageItems)
+        {
+            if (item.getId().equals(messageId))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

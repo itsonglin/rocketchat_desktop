@@ -71,7 +71,7 @@
     </select>
 
     <select id="findLastMessageTime" resultType="java.lang.Long">
-       SELECT MAX(timestamp)  FROM  message WHERE roomId = #{roomId}
+       SELECT MAX(timestamp)  FROM  message WHERE roomId = #{roomId} AND updatedAt > 0
     </select>
 
     <select id="findFirstMessageTime" resultType="java.lang.Long">
