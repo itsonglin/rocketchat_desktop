@@ -3,6 +3,7 @@ package com.rc.components.message;
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.components.RCMenuItemUI;
+import com.rc.components.RCTextEditor;
 import com.rc.components.SizeAutoAdjustTextArea;
 import com.rc.db.model.FileAttachment;
 import com.rc.db.service.FileAttachmentService;
@@ -14,11 +15,16 @@ import com.rc.utils.FileCache;
 import com.rc.utils.ImageCache;
 import com.sun.xml.internal.ws.api.message.Attachment;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import javax.swing.filechooser.FileSystemView;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.io.File;
+import java.io.*;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -31,6 +37,11 @@ public class MessagePopupMenu extends JPopupMenu
     private FileCache fileCache = new FileCache();
     private FileAttachmentService fileAttachmentService = Launcher.fileAttachmentService;
 
+    private JMenuItem item1 = new JMenuItem("复制");
+    private JMenuItem item2 = new JMenuItem("删除");
+    private JMenuItem item3 = new JMenuItem("转发");
+    private JMenuItem item4 = new JMenuItem("另存为");
+
     public MessagePopupMenu()
     {
         initMenuItem();
@@ -38,9 +49,6 @@ public class MessagePopupMenu extends JPopupMenu
 
     private void initMenuItem()
     {
-        JMenuItem item1 = new JMenuItem("复制");
-        JMenuItem item2 = new JMenuItem("删除");
-        JMenuItem item3 = new JMenuItem("转发");
 
         item1.setUI(new RCMenuItemUI());
         item1.addActionListener(new AbstractAction()
@@ -206,13 +214,166 @@ public class MessagePopupMenu extends JPopupMenu
             }
         });
 
+        item4.setUI(new RCMenuItemUI());
+        item4.addActionListener(new AbstractAction()
+        {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                switch (messageType)
+                {
+                    case (MessageItem.RIGHT_IMAGE):
+                    case (MessageItem.LEFT_IMAGE):
+                    {
+                        MessageImageLabel imageLabel = (MessageImageLabel) getInvoker();
+                        Object obj = imageLabel.getTag();
+                        if (obj != null)
+                        {
+                            Map map = (Map) obj;
+                            String id = (String) map.get("attachmentId");
+                            String url = (String) map.get("url");
+                            imageCache.requestOriginalAsynchronously(id, url, new ImageCache.ImageCacheRequestListener()
+                            {
+                                @Override
+                                public void onSuccess(ImageIcon icon, String path)
+                                {
+                                    if (path != null && !path.isEmpty())
+                                    {
+                                        saveAsFile(path);
+                                    }
+                                    else
+                                    {
+                                        System.out.println("图片不存在，复制失败");
+                                    }
+                                }
+
+                                @Override
+                                public void onFailed(String why)
+                                {
+                                    System.out.println("图片不存在，复制失败");
+                                }
+                            });
+                        }
+                        break;
+                    }
+
+                    case (MessageItem.RIGHT_ATTACHMENT):
+                    case (MessageItem.LEFT_ATTACHMENT):
+                    {
+                        AttachmentPanel attachmentPanel = (AttachmentPanel) getInvoker();
+                        Object obj = attachmentPanel.getTag();
+                        if (obj != null)
+                        {
+                            Map map = (Map) obj;
+                            String id = (String) map.get("attachmentId");
+                            String name = (String) map.get("name");
+
+                            String path = fileCache.tryGetFileCache(id, name);
+                            if (path != null && !path.isEmpty())
+                            {
+                                saveAsFile(path);
+                            }
+                            else
+                            {
+                                FileAttachment attachment = fileAttachmentService.findById(id);
+                                if (attachment == null)
+                                {
+                                    JOptionPane.showMessageDialog(MainFrame.getContext(), "文件不存在", "文件不存在", JOptionPane.WARNING_MESSAGE);
+                                    return;
+                                }
+
+                                String link = attachment.getLink();
+                                if (link.startsWith("/file-upload"))
+                                {
+                                    JOptionPane.showMessageDialog(MainFrame.getContext(), "请先下载文件", "请先下载文件", JOptionPane.WARNING_MESSAGE);
+                                    return;
+                                }
+                                else
+                                {
+                                    File file = new File(link);
+                                    if (!file.exists())
+                                    {
+                                        JOptionPane.showMessageDialog(MainFrame.getContext(), "文件不存在，可能已被删除", "文件不存在", JOptionPane.WARNING_MESSAGE);
+                                        return;
+                                    }
+
+                                    saveAsFile(link);
+                                }
+                            }
+                        }
+                        break;
+                    }
+                }
+
+            }
+        });
+
         this.add(item1);
         this.add(item2);
-        //this.add(item3);
+        this.add(item4);
 
         setBorder(new LineBorder(Colors.SCROLL_BAR_TRACK_LIGHT));
         setBackground(Colors.FONT_WHITE);
     }
+
+    /**
+     * 文件另存为
+     * @param path
+     */
+    private void saveAsFile(String path)
+    {
+        File srcFile = new File(path);
+        if (!srcFile.exists())
+        {
+            JOptionPane.showMessageDialog(null, "文件不存在，可能已被删除或无访问权限", "另存失败", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        String filename = srcFile.getName();
+
+        JFileChooser jfc = new JFileChooser();
+        jfc.setDialogTitle("保存");
+
+        File filePath = FileSystemView.getFileSystemView().getHomeDirectory();
+        File defaultFile = new File(filePath + File.separator + filename);
+        jfc.setSelectedFile(defaultFile);
+
+        int flag = jfc.showSaveDialog(MainFrame.getContext());
+        if (flag == JFileChooser.APPROVE_OPTION)
+        {
+            File destFile = jfc.getSelectedFile();
+
+            new Thread(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    try
+                    {
+                        FileInputStream inputStream = new FileInputStream(srcFile);
+                        FileOutputStream outputStream = new FileOutputStream(destFile);
+
+                        byte[] buffer = new byte[2048];
+                        int len;
+                        while ((len = inputStream.read(buffer)) > -1)
+                        {
+                            outputStream.write(buffer, 0, len);
+                        }
+
+                        inputStream.close();
+                        outputStream.close();
+                    }
+                    catch (Exception e)
+                    {
+                        JOptionPane.showMessageDialog(null, "文件保存失败，文件可能已被删除或无访问权限", "另存失败", JOptionPane.ERROR_MESSAGE);
+                        e.printStackTrace();
+                    }
+                }
+            }).start();
+        }
+    }
+
+
 
     @Override
     public void show(Component invoker, int x, int y)
@@ -223,7 +384,18 @@ public class MessagePopupMenu extends JPopupMenu
 
     public void show(Component invoker, int x, int y, int messageType)
     {
+        if (invoker instanceof MessageImageLabel || invoker instanceof AttachmentPanel)
+        {
+            item4.setVisible(true);
+        }
+        else
+        {
+            item4.setVisible(false);
+        }
+
         this.messageType = messageType;
         super.show(invoker, x, y);
     }
+
+
 }

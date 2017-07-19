@@ -1185,6 +1185,11 @@ public class ChatPanel extends ParentAvailablePanel
             messagePanel.getMessageListView().setAutoScrollToBottom();
         }
 
+        if (message.getFileAttachmentId() != null)
+        {
+            downloadFile(fileAttachmentService.findById(message.getFileAttachmentId()), message.getId());
+        }
+
         //updateUnreadCount(0);
     }
 
@@ -1476,6 +1481,7 @@ public class ChatPanel extends ParentAvailablePanel
     {
         uploadFile(url, uploadFilename, fileId, token);
         uploadingOrDownloadingFiles.add(fileId);
+        System.out.println(uploadingOrDownloadingFiles);
     }
 
     /**
@@ -1798,6 +1804,14 @@ public class ChatPanel extends ParentAvailablePanel
      */
     private void downloadFile(FileAttachment fileAttachment, String messageId)
     {
+        if (uploadingOrDownloadingFiles.contains(fileAttachment.getId()))
+        {
+            System.out.println("文件正在下载...");
+            return;
+        }
+
+        uploadingOrDownloadingFiles.add(fileAttachment.getId());
+
         final DownloadTask task = new DownloadTask(new HttpUtil.ProgressListener()
         {
             @Override
@@ -1806,7 +1820,7 @@ public class ChatPanel extends ParentAvailablePanel
                 int pos = findMessageItemPositionInViewReverse(messageId);
                 MessageAttachmentViewHolder holder = (MessageAttachmentViewHolder) getViewHolderByPosition(pos);
 
-                logger.debug("文件下载进度：" + progress);
+                //System.out.println("文件下载进度：" + progress);
                 if (pos < 0 || holder == null)
                 {
                     return;
@@ -1859,6 +1873,7 @@ public class ChatPanel extends ParentAvailablePanel
                     holder.sizeLabel.setVisible(true);
                     System.out.println("文件已缓存在 " + path);
                     holder.sizeLabel.setText(fileCache.fileSizeString(path));
+                    uploadingOrDownloadingFiles.remove(fileAttachment.getId());
                 }
             }
 
