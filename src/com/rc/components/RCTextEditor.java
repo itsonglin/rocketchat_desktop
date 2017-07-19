@@ -6,14 +6,28 @@ import com.rc.utils.ClipboardUtil;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.Transferable;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.awt.dnd.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Created by song on 03/07/2017.
  */
-public class RCTextEditor extends JTextPane
+public class RCTextEditor extends JTextPane implements DropTargetListener
 {
+
+    public RCTextEditor()
+    {
+        new DropTarget(this, DnDConstants.ACTION_COPY_OR_MOVE, this);
+    }
+
     @Override
     public void paste()
     {
@@ -93,7 +107,7 @@ public class RCTextEditor extends JTextPane
             public void mouseClicked(MouseEvent e)
             {
                 // 双击预览选中的图片
-                if (e.getClickCount() == 2)
+                if (e.getButton() == MouseEvent.BUTTON1  && e.getClickCount() == 2)
                 {
                     ImageViewerFrame frame = new ImageViewerFrame(path);
                     frame.setVisible(true);
@@ -103,6 +117,77 @@ public class RCTextEditor extends JTextPane
         });
 
         insertComponent(label);
+    }
 
+    @Override
+    public void dragEnter(DropTargetDragEvent dtde)
+    {
+    }
+
+    @Override
+    public void dragOver(DropTargetDragEvent dtde)
+    {
+    }
+
+    @Override
+    public void dropActionChanged(DropTargetDragEvent dtde)
+    {
+    }
+
+    @Override
+    public void dragExit(DropTargetEvent dte)
+    {
+    }
+
+    @Override
+    public void drop(DropTargetDropEvent dtde)
+    {
+        try
+        {
+            if (dtde.isDataFlavorSupported(DataFlavor.javaFileListFlavor))
+            {
+                dtde.acceptDrop(DnDConstants.ACTION_COPY_OR_MOVE);
+                List list = (List) (dtde.getTransferable()
+                        .getTransferData(DataFlavor.javaFileListFlavor));
+                Iterator iterator = list.iterator();
+                while (iterator.hasNext())
+                {
+                    File f = (File) iterator.next();
+                    if (isImage(f))
+                    {
+                        adjustAndInsertIcon(new ImageIcon(f.getAbsolutePath()));
+                    }
+                    else
+                    {
+                        FileEditorThumbnail thumbnail = new FileEditorThumbnail(f.getAbsolutePath());
+                        this.insertComponent(thumbnail);
+                    }
+
+                }
+                dtde.dropComplete(true);
+            }
+            else
+            {
+                dtde.rejectDrop();
+            }
+        }
+        catch (IOException ioe)
+        {
+            ioe.printStackTrace();
+        }
+        catch (UnsupportedFlavorException ufe)
+        {
+            ufe.printStackTrace();
+        }
+    }
+
+    /**
+     * @param file
+     * @return
+     */
+    private static boolean isImage(File file)
+    {
+        String suffix = file.getName().substring(file.getName().lastIndexOf(".") + 1).toLowerCase();
+        return suffix.equals("jpg") || suffix.equals("jpeg") || suffix.equals("png") || suffix.equals("gif");
     }
 }

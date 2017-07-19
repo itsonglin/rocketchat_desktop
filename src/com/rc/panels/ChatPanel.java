@@ -1401,7 +1401,15 @@ public class ChatPanel extends ParentAvailablePanel
      */
     private void sendFileMessage(String path)
     {
-        WebSocketClient.getContext().sendFileMessage(roomId, path);
+        try
+        {
+            WebSocketClient.getContext().sendFileMessage(roomId, path);
+        }
+        catch (Exception e)
+        {
+            JOptionPane.showMessageDialog(null, e.getMessage(), "文件发送失败", JOptionPane.ERROR_MESSAGE);
+        }
+
     }
 
     /**

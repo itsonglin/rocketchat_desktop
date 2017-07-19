@@ -430,16 +430,20 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
                 {
                     int position = getCaretPosition();
                     int urlIndex = 0;
-                    for (int[] range : urlRange)
+                    if (urlRange != null)
                     {
-                        if (position >= range[0] && position <= range[1])
+                        for (int[] range : urlRange)
                         {
-                            String url = urlList.get(urlIndex);
-                            openUrlWithDefaultBrowser(url);
-                        }
+                            if (position >= range[0] && position <= range[1])
+                            {
+                                String url = urlList.get(urlIndex);
+                                openUrlWithDefaultBrowser(url);
+                            }
 
-                        urlIndex++;
+                            urlIndex++;
+                        }
                     }
+
                 }
 
                 super.mouseClicked(e);

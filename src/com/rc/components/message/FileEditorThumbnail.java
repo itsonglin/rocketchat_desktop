@@ -3,6 +3,7 @@ package com.rc.components.message;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.VerticalFlowLayout;
+import com.rc.forms.ImageViewerFrame;
 import com.rc.helper.AttachmentIconHelper;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
@@ -10,7 +11,10 @@ import com.rc.utils.IconUtil;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * 文件在输入框中的缩略图，当文件直接被粘贴到输入框时，该文件将会以缩略图的形式显示在输入框中
@@ -30,13 +34,14 @@ public class FileEditorThumbnail extends JPanel
 
         initComponents();
         initView();
-    }
 
+        setListeners();
+    }
 
     private void initComponents()
     {
-        setPreferredSize(new Dimension(100, 70));
-        setMaximumSize(new Dimension(100, 70));
+        setPreferredSize(new Dimension(100, 80));
+        setMaximumSize(new Dimension(100, 80));
         setBackground(Colors.FONT_WHITE);
         setBorder(new LineBorder(Colors.LIGHT_GRAY));
 
@@ -59,6 +64,24 @@ public class FileEditorThumbnail extends JPanel
         add(text, new GBC(0, 1).setFill(GBC.BOTH).setInsets(5).setWeight(1, 1));
     }
 
+    private void setListeners()
+    {
+        addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                // 双击打开文件
+                if (e.getButton() == MouseEvent.BUTTON1 &&  e.getClickCount() == 2)
+                {
+                    openFileWithDefaultApplication(path);
+                }
+                super.mouseClicked(e);
+            }
+        });
+    }
+
+
     public String getPath()
     {
         return path;
@@ -67,5 +90,25 @@ public class FileEditorThumbnail extends JPanel
     public void setPath(String path)
     {
         this.path = path;
+    }
+
+    /**
+     * 使用默认程序打开文件
+     *
+     * @param path
+     */
+    private void openFileWithDefaultApplication(String path)
+    {
+        try
+        {
+            Desktop.getDesktop().open(new File(path));
+        } catch (IOException e1)
+        {
+            JOptionPane.showMessageDialog(null, "文件打开失败，没有找到关联的应用程序", "打开失败", JOptionPane.ERROR_MESSAGE);
+            e1.printStackTrace();
+        } catch (IllegalArgumentException e2)
+        {
+            JOptionPane.showMessageDialog(null, "文件不存在，可能已被删除", "打开失败", JOptionPane.ERROR_MESSAGE);
+        }
     }
 }
