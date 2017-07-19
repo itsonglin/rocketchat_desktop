@@ -1144,6 +1144,7 @@ public class ChatPanel extends ParentAvailablePanel
     public void addOrUpdateMessageItem()
     {
         Message message = messageService.findLastMessage(roomId);
+        System.out.println("新来消息：" + message.getMessageContent());
         if (message == null || message.isDeleted())
         {
             return;
@@ -1153,6 +1154,7 @@ public class ChatPanel extends ParentAvailablePanel
         int pos = findMessageItemPositionInViewReverse(message.getId());
         if (pos > -1)
         {
+            System.out.println("更新消息");
             messageItems.get(pos).setUpdatedAt(message.getTimestamp());
             messagePanel.getMessageListView().notifyItemChanged(pos);
             //updateUnreadCount(0);

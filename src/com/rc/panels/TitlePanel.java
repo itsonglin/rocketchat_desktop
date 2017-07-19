@@ -97,7 +97,7 @@ public class TitlePanel extends ParentAvailablePanel
         };
 
         roomInfoButton.addMouseListener(mouseListener);
-        //titleLabel.addMouseListener(mouseListener);
+
 
         if (OSUtil.getOsType() != OSUtil.Mac_OS)
         {
@@ -141,7 +141,6 @@ public class TitlePanel extends ParentAvailablePanel
             this.addMouseListener(mouseAdapter);
             this.addMouseMotionListener(mouseMotionListener);
         }
-
     }
 
     private void maxOrRestoreWindow()
