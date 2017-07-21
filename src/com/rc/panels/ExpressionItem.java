@@ -17,17 +17,17 @@ public class ExpressionItem extends JPanel
 
     private JLabel iconLabel;
 
-    public ExpressionItem(String code, ImageIcon icon, String displayName)
+    public ExpressionItem(String code, ImageIcon icon, String displayName, Dimension expressionSize, Dimension iconSize)
     {
         this.code = code;
         this.icon = icon;
         this.displayName = displayName;
 
-        setPreferredSize(new Dimension(30, 30));
+        setPreferredSize(expressionSize);
         iconLabel = new JLabel();
 
 
-        setIconPreferredSize(new Dimension(20,20));
+        setIconPreferredSize(iconSize);
         iconLabel.setIcon(icon);
         iconLabel.setHorizontalAlignment(SwingConstants.CENTER);
         iconLabel.setVerticalAlignment(SwingConstants.CENTER);

@@ -3,13 +3,13 @@ package com.rc.adapter.message;
 import com.rc.adapter.BaseAdapter;
 import com.rc.adapter.ViewHolder;
 import com.rc.app.Launcher;
+import com.rc.components.SizeAutoAdjustTextArea;
 import com.rc.components.message.MessageImageLabel;
 import com.rc.components.RCListView;
 import com.rc.components.message.MessagePopupMenu;
 import com.rc.components.message.RCMessageBubble;
-import com.rc.db.model.CurrentUser;
+import com.rc.components.message.RCTextMessageBubble;
 import com.rc.db.model.Message;
-import com.rc.db.service.CurrentUserService;
 import com.rc.db.service.MessageService;
 import com.rc.entity.FileAttachmentItem;
 import com.rc.entity.MessageItem;
@@ -21,15 +21,12 @@ import com.rc.helper.AttachmentIconHelper;
 import com.rc.helper.MessageViewHolderCacheHelper;
 import com.rc.utils.*;
 import com.rc.websocket.WebSocketClient;
-import com.sun.javafx.tools.ant.Info;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
-import javax.swing.text.Document;
-import javax.swing.text.Style;
-import javax.swing.text.StyleConstants;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,8 +39,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     private List<MessageItem> messageItems;
     private RCListView listView;
     private AttachmentIconHelper attachmentIconHelper = new AttachmentIconHelper();
-    private CurrentUserService currentUserService = Launcher.currentUserService;
-    private CurrentUser currentUser;
+    //private CurrentUserService currentUserService = Launcher.currentUserService;
+   // private CurrentUser currentUser;
     private ImageCache imageCache;
     private MessageService messageService = Launcher.messageService;
     private Logger logger = Logger.getLogger(this.getClass());
@@ -58,7 +55,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         this.messageItems = messageItems;
         this.listView = listView;
 
-        currentUser = currentUserService.findAll().get(0);
+        //currentUser = currentUserService.findAll().get(0);
         imageCache = new ImageCache();
         fileCache = new FileCache();
         this.messageViewHolderCacheHelper = messageViewHolderCacheHelper;
@@ -609,15 +606,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     {
         MessageRightTextViewHolder holder = (MessageRightTextViewHolder) viewHolder;
 
-        holder.text.setText(item.getMessageContent());
+        handleTextAndExpression(holder.expressionLabel, holder.messageBubble, holder.text, item);
 
-        holder.text.setTag(item.getId());
-
-        //holder.text.setCaretPosition(holder.text.getDocument().getLength());
-        //holder.text.insertIcon(IconUtil.getIcon(this, "/image/smile.png", 18,18));
-
-        //processMessageContent(holder.messageText, item);
-        //registerMessageTextListener(holder.messageText, item);
 
         // 判断是否显示重发按钮
         boolean needToUpdateResendStatus = !item.isNeedToResend() && item.getUpdatedAt() < 1 && System.currentTimeMillis() - item.getTimestamp() > 10 * 1000;
@@ -686,14 +676,54 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     {
         MessageLeftTextViewHolder holder = (MessageLeftTextViewHolder) viewHolder;
 
-        holder.text.setText(item.getMessageContent());
-        holder.text.setTag(item.getId());
+        /*holder.text.setText(item.getMessageContent());
+        holder.text.setTag(item.getId());*/
+
+        handleTextAndExpression(holder.expressionLabel, holder.messageBubble, holder.text, item);
+
 
         holder.sender.setText(item.getSenderUsername());
 
         listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
         listView.setScrollHiddenOnMouseLeave(holder.text);
         attachPopupMenu(viewHolder, MessageItem.LEFT_TEXT);
+    }
+
+    private void handleTextAndExpression(JLabel expressionLabel, JComponent messageBubble, SizeAutoAdjustTextArea text, MessageItem item)
+    {
+        boolean isExpression = true;
+        if (item.getMessageContent().matches(" :\\w+: "))
+        {
+            String filename = item.getMessageContent().substring(2, item.getMessageContent().length() - 2);
+
+            URL url = getClass().getResource("/expression/meng2/" + filename + ".gif");
+            if (url != null)
+            {
+                ImageIcon imageIcon = new ImageIcon(url);
+
+                expressionLabel.setIcon(imageIcon);
+                messageBubble.setVisible(false);
+                expressionLabel.setVisible(true);
+            }
+            else
+            {
+                isExpression = false;
+            }
+
+        }
+        else
+        {
+            isExpression = false;
+        }
+
+        if (!isExpression)
+        {
+            expressionLabel.setVisible(false);
+            messageBubble.setVisible(true);
+
+            text.setText(item.getMessageContent());
+            text.setTag(item.getId());
+        }
     }
 
     /**

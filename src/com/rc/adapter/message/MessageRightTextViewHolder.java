@@ -3,7 +3,6 @@ package com.rc.adapter.message;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.SizeAutoAdjustTextArea;
-import com.rc.components.message.JIMSendTextPane;
 import com.rc.components.message.RCRightImageMessageBubble;
 import com.rc.frames.MainFrame;
 import com.rc.utils.FontUtil;
@@ -16,14 +15,11 @@ import java.awt.*;
  */
 public class MessageRightTextViewHolder extends BaseMessageViewHolder
 {
-    //public JLabel avatar = new JLabel();
-    //public JLabel size = new JLabel();
-    //public SizeAutoAdjustTextArea text;
     public SizeAutoAdjustTextArea text;
     public RCRightImageMessageBubble messageBubble = new RCRightImageMessageBubble();
-    //public RCRightTextMessageBubble text = new RCRightTextMessageBubble();
     public JLabel resend = new JLabel(); // 重发按钮
     public JLabel sendingProgress = new JLabel(); // 正在发送
+    public JLabel expressionLabel = new JLabel(); // 表情面板
 
     private JPanel timePanel = new JPanel();
     private JPanel messageAvatarPanel = new JPanel();
@@ -60,6 +56,9 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
 
         text.setCaretPosition(text.getDocument().getLength());
 
+        expressionLabel.setPreferredSize(new Dimension(120,120));
+        expressionLabel.setVisible(false);
+
     }
 
     private void initView()
@@ -75,6 +74,7 @@ public class MessageRightTextViewHolder extends BaseMessageViewHolder
         resendTextPanel.add(resend, BorderLayout.WEST);
         resendTextPanel.add(sendingProgress, BorderLayout.WEST);
         resendTextPanel.add(messageBubble, BorderLayout.CENTER);
+        resendTextPanel.add(expressionLabel, BorderLayout.CENTER);
 
         messageAvatarPanel.setLayout(new GridBagLayout());
         messageAvatarPanel.add(resendTextPanel, new GBC(1, 0).setWeight(1000, 1).setAnchor(GBC.EAST).setInsets(0, 0, 5, 0));

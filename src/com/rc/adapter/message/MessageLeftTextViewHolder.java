@@ -18,9 +18,6 @@ import java.awt.*;
 public class MessageLeftTextViewHolder extends BaseMessageViewHolder
 {
     public JLabel sender = new JLabel();
-    //public JLabel avatar = new JLabel();
-    //public JLabel size = new JLabel();
-    //public RCLeftTextMessageBubble text = new RCLeftTextMessageBubble();
 
     public SizeAutoAdjustTextArea text;
     public RCLeftImageMessageBubble messageBubble = new RCLeftImageMessageBubble();
@@ -28,6 +25,8 @@ public class MessageLeftTextViewHolder extends BaseMessageViewHolder
     private JPanel timePanel = new JPanel();
     private JPanel messageAvatarPanel = new JPanel();
     private MessagePopupMenu popupMenu = new MessagePopupMenu();
+    public JLabel expressionLabel = new JLabel(); // 表情面板
+
 
     public MessageLeftTextViewHolder()
     {
@@ -49,6 +48,9 @@ public class MessageLeftTextViewHolder extends BaseMessageViewHolder
 
         messageAvatarPanel.setBackground(Colors.WINDOW_BACKGROUND);
         timePanel.setBackground(Colors.WINDOW_BACKGROUND);
+
+        expressionLabel.setPreferredSize(new Dimension(120,120));
+        expressionLabel.setVisible(false);
     }
 
     private void initView()
@@ -63,6 +65,7 @@ public class MessageLeftTextViewHolder extends BaseMessageViewHolder
         senderMessagePanel.setLayout(new VerticalFlowLayout(VerticalFlowLayout.TOP, 0,0,true, false));
         senderMessagePanel.add(sender);
         senderMessagePanel.add(messageBubble);
+        senderMessagePanel.add(expressionLabel);
 
         messageAvatarPanel.setLayout(new GridBagLayout());
         messageAvatarPanel.add(avatar, new GBC(1, 0).setWeight(1, 1).setAnchor(GBC.NORTH).setInsets(4,5,0,0));

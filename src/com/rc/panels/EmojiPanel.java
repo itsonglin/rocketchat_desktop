@@ -49,6 +49,8 @@ public class EmojiPanel extends JPanel
             public void mouseClicked(MouseEvent e)
             {
                 ExpressionItem panel = (ExpressionItem) e.getSource();
+                panel.setBackground(Colors.WINDOW_BACKGROUND);
+
                 if (expressionListener != null)
                 {
                     expressionListener.onSelected(panel.getCode());
@@ -80,7 +82,7 @@ public class EmojiPanel extends JPanel
         {
             String name = codeList[i].substring(1, codeList[i].length() - 1);
             JPanel panel = new ExpressionItem(codeList[i], IconUtil.getIcon(this,
-                    iconPath +  name + ".png"), name);
+                    iconPath +  name + ".png"), name, new Dimension(30,30), new Dimension(20,20));
             panel.addMouseListener(listener);
 
             add(panel);

@@ -364,9 +364,27 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void onSelected(String code)
             {
-                editor.replaceSelection(code);
+                if (isCustomExpression(code))
+                {
+                    sendTextMessage(null, code);
+                }
+                else
+                {
+                    editor.replaceSelection(code);
+                }
             }
         });
+    }
+
+    /**
+     * 判断是否是自定义表情（即非emoji表情）
+     *
+     * @param code
+     * @return
+     */
+    private boolean isCustomExpression(String code)
+    {
+        return code.matches(" :\\w+: ");
     }
 
 
@@ -379,9 +397,9 @@ public class ChatPanel extends ParentAvailablePanel
         boolean isImageOrFile = false;
         for (Object data : inputDatas)
         {
-            if (data instanceof String && !data .equals("\n"))
+            if (data instanceof String && !data.equals("\n"))
             {
-                sendTextMessage(null, (String)data);
+                sendTextMessage(null, (String) data);
             }
             else if (data instanceof JLabel)
             {
@@ -419,6 +437,7 @@ public class ChatPanel extends ParentAvailablePanel
 
     /**
      * 解析输入框中的输入数据
+     *
      * @return
      */
     private List<Object> parseEditorInput()
@@ -526,7 +545,6 @@ public class ChatPanel extends ParentAvailablePanel
         {
             return;
         }
-
 
 
         this.firstMessageTimestamp = firstMessageTimestamp;
@@ -1198,7 +1216,7 @@ public class ChatPanel extends ParentAvailablePanel
         }*/
 
 
-       // 插入新的消息
+        // 插入新的消息
         MessageItem messageItem = new MessageItem(message, currentUser.getUserId());
         this.messageItems.add(messageItem);
         messagePanel.getMessageListView().notifyItemInserted(messageItems.size() - 1, false);
@@ -1935,11 +1953,13 @@ public class ChatPanel extends ParentAvailablePanel
         try
         {
             Desktop.getDesktop().open(new File(path));
-        } catch (IOException e1)
+        }
+        catch (IOException e1)
         {
             JOptionPane.showMessageDialog(null, "文件打开失败，没有找到关联的应用程序", "打开失败", JOptionPane.ERROR_MESSAGE);
             e1.printStackTrace();
-        } catch (IllegalArgumentException e2)
+        }
+        catch (IllegalArgumentException e2)
         {
             JOptionPane.showMessageDialog(null, "文件不存在，可能已被删除", "打开失败", JOptionPane.ERROR_MESSAGE);
         }
