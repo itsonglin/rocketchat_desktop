@@ -1,6 +1,7 @@
 package com.rc.frames;
 
 
+import com.apple.eawt.Application;
 import com.rc.app.Launcher;
 import com.rc.components.Colors;
 import com.rc.panels.LeftPanel;
