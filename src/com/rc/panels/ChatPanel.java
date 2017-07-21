@@ -50,6 +50,11 @@ public class ChatPanel extends ParentAvailablePanel
     private MessagePanel messagePanel;
     private MessageEditorPanel messageEditorPanel;
 
+    private JPanel topPanel;
+    private JPanel bottomPanel;
+    private JSplitPane splitPane;
+
+
     private static ChatPanel context;
 
     public static final long TIMESTAMP_8_HOURS = 28800000L;
@@ -130,14 +135,34 @@ public class ChatPanel extends ParentAvailablePanel
 
         messageEditorPanel = new MessageEditorPanel(this);
         messageEditorPanel.setPreferredSize(new Dimension(MainFrame.DEFAULT_WIDTH, MainFrame.DEFAULT_WIDTH / 4));
+
+        topPanel = new JPanel();
+        topPanel.setBorder(null);
+        topPanel.setLayout(new GridBagLayout());
+        topPanel.add(messagePanel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
+
+        bottomPanel = new JPanel();
+        bottomPanel.setBorder(null);
+        bottomPanel.setLayout(new GridBagLayout());
+        bottomPanel.add(messageEditorPanel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
+
+        splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
+        splitPane.setBorder(null);
+        splitPane.setDividerLocation(400);
+        splitPane.setDividerSize(2);
+        splitPane.setLeftComponent(topPanel);
+        splitPane.setRightComponent(bottomPanel);
     }
 
 
     private void initView()
     {
-        this.setLayout(new GridBagLayout());
+        /*this.setLayout(new GridBagLayout());
         add(messagePanel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 4));
-        add(messageEditorPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1));
+        add(messageEditorPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1));*/
+
+        this.setLayout(new GridBagLayout());
+        add(splitPane, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
 
         if (roomId == null)
         {

@@ -125,7 +125,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
         sendPanel.add(sendButton, BorderLayout.EAST);
         sendButton.setForeground(Colors.DARKER);
         sendButton.setFont(FontUtil.getDefaultFont(13));
-        sendButton.setPreferredSize(new Dimension(75, 23));
+        sendButton.setPreferredSize(new Dimension(75, 29));
         sendButton.setToolTipText("Enter发送消息，Ctrl+Enter换行");
 
         chatEditorPopupMenu = new ChatEditorPopupMenu();
@@ -141,8 +141,8 @@ public class MessageEditorPanel extends ParentAvailablePanel
         controlLabel.add(fileLabel);
         controlLabel.add(cutLabel);
 
-        add(controlLabel, new GBC(0, 0).setFill(GBC.HORIZONTAL).setWeight(1, 1));
-        add(textScrollPane, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 15));
+        add(controlLabel, new GBC(0, 0).setFill(GBC.HORIZONTAL).setWeight(1, 50));
+        add(textScrollPane, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 750));
         add(sendPanel, new GBC(0, 2).setFill(GBC.BOTH).setWeight(1, 1).setInsets(0, 0, 10, 10));
     }
 
