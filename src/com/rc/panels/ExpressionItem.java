@@ -1,6 +1,7 @@
 package com.rc.panels;
 
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 
@@ -34,6 +35,11 @@ public class ExpressionItem extends JPanel
         add(iconLabel);
 
         this.setToolTipText(displayName);
+    }
+
+    public void setImage(ImageIcon icon)
+    {
+        this.iconLabel.setIcon(icon);
     }
 
     public void setIconPreferredSize(Dimension size)

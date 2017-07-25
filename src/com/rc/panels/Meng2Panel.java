@@ -43,7 +43,10 @@ public class Meng2Panel extends JPanel
             @Override
             public void mouseEntered(MouseEvent e)
             {
-                JPanel panel = (JPanel) e.getSource();
+                ExpressionItem panel = (ExpressionItem) e.getSource();
+                ImageIcon icon = IconUtil.getIcon(this, "/expression/meng2/" + panel.getDisplayName() + ".gif", 50,50, Image.SCALE_FAST);
+                panel.setImage(icon);
+
                 panel.setBackground(Colors.SCROLL_BAR_TRACK_LIGHT);
                 super.mouseEntered(e);
             }
@@ -51,8 +54,14 @@ public class Meng2Panel extends JPanel
             @Override
             public void mouseExited(MouseEvent e)
             {
-                JPanel panel = (JPanel) e.getSource();
+                ExpressionItem panel = (ExpressionItem) e.getSource();
                 panel.setBackground(Colors.WINDOW_BACKGROUND);
+
+                String iconPath = "/expression/meng2/";
+                InputStream inputStream = getClass().getResourceAsStream(iconPath + panel.getDisplayName() + ".gif");
+                ImageIcon icon = new ImageIcon(getFirstFrameInGif(inputStream).getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+                panel.setImage(icon);
+
                 super.mouseExited(e);
             }
 
@@ -111,8 +120,6 @@ public class Meng2Panel extends JPanel
             {
                 String name = codeList[i].substring(2, codeList[i].length() - 2);
                 InputStream inputStream = getClass().getResourceAsStream(iconPath + name + ".gif");
-
-
                 ImageIcon icon = new ImageIcon(getFirstFrameInGif(inputStream).getScaledInstance(50, 50, Image.SCALE_SMOOTH));
 
                 JPanel panel = new ExpressionItem(codeList[i], icon, name, new Dimension(60, 60), new Dimension(50, 50));

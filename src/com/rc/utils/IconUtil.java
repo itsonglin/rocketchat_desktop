@@ -17,15 +17,20 @@ public class IconUtil
 
     public static ImageIcon getIcon(Object context, String path)
     {
-        return getIcon(context, path, -1, -1);
+        return getIcon(context, path, -1, -1, Image.SCALE_SMOOTH);
     }
 
     public static ImageIcon getIcon(Object context, String path, int width)
     {
-        return getIcon(context, path, width, width);
+        return getIcon(context, path, width, width, Image.SCALE_SMOOTH);
     }
 
     public static ImageIcon getIcon(Object context, String path, int width, int height)
+    {
+        return getIcon(context, path, width, height, Image.SCALE_SMOOTH);
+    }
+
+    public static ImageIcon getIcon(Object context, String path, int width, int height, int hints)
     {
         ImageIcon imageIcon = iconCache.get(path);
         if (imageIcon == null)
@@ -40,7 +45,7 @@ public class IconUtil
 
             if (width > 0 && height > 0)
             {
-                imageIcon.setImage(imageIcon.getImage().getScaledInstance(width, height, Image.SCALE_SMOOTH));
+                imageIcon.setImage(imageIcon.getImage().getScaledInstance(width, height, hints));
             }
 
             iconCache.put(path, imageIcon);
