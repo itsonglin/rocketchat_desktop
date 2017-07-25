@@ -99,7 +99,7 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
             t = " ";
         }
 
-        int contentWidth = maxWidth - 10;
+        int contentWidth = maxWidth - 20;
         // 如果最长的一行宽度超过了最大宽度，就要重新计算高度
         if (targetWidth > maxWidth)
         {
@@ -175,14 +175,17 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
             targetHeight += emojiExtraHeight;
         }
 
-        this.setPreferredSize(new Dimension(targetWidth, targetHeight + 2));
 
         if (parseUrl)
         {
             // 解析网址
-            highlightUrls(t);
+            if (highlightUrls(t) > 0)
+            {
+                targetHeight += lineHeight;
+            }
         }
 
+        this.setPreferredSize(new Dimension(targetWidth, targetHeight + 2));
     }
 
     /**
@@ -190,7 +193,7 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
      *
      * @param src
      */
-    private void highlightUrls(String src)
+    private int highlightUrls(String src)
     {
         urlList = parseUrl(src);
         urlRange = new int[urlList.size()][2];
@@ -218,6 +221,8 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
                 startIndex++;
             }
         }
+
+        return urlList.size();
     }
 
     private Map<Integer, String> insertEmoji(String src)

@@ -4,6 +4,8 @@ package com.rc.components.message;
  * Created by song on 17-6-2.
  */
 
+import com.rc.frames.MainFrame;
+
 import javax.swing.*;
 import javax.swing.text.AbstractDocument;
 import javax.swing.text.BoxView;
