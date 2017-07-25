@@ -97,7 +97,7 @@ public class UpdateFrame extends JFrame
             oldFile.renameTo(new File("helichat_old.jar"));
         }
 
-        File file = new File("helichat.jar");
+        File file = new File("./helichat.jar");
         try
         {
             FileOutputStream outputStream = new FileOutputStream(file);
@@ -114,7 +114,7 @@ public class UpdateFrame extends JFrame
             File oFile = new File("helichat_old.jar");
             oFile.renameTo(new File("helichat.jar"));
 
-            System.out.println(e);
+            e.printStackTrace();
             JOptionPane.showMessageDialog(null, "更新失败，正在还原...", "更新失败", JOptionPane.ERROR_MESSAGE);
             if (updateResultListener != null)
             {
