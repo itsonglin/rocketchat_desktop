@@ -6,6 +6,7 @@ import com.rc.utils.IconUtil;
 import com.sun.imageio.plugins.gif.GIFImageReader;
 import com.sun.imageio.plugins.gif.GIFImageReaderSpi;
 
+import javax.imageio.ImageIO;
 import javax.imageio.spi.ImageReaderSpi;
 import javax.imageio.stream.FileImageInputStream;
 import javax.imageio.stream.ImageInputStream;
@@ -15,9 +16,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.awt.image.RenderedImage;
+import java.io.*;
+import java.net.URISyntaxException;
 
 /**
  * Created by song on 04/07/2017.
@@ -106,20 +107,20 @@ public class Meng2Panel extends JPanel
                 return;
             }
 
-            String name = codeList[i].substring(2, codeList[i].length() - 2);
-            File imgFile = new File(getClass().getResource(iconPath + name + ".gif").getPath());
             try
             {
-                ImageInputStream imageInputStream = new FileImageInputStream(imgFile);
-                ImageIcon icon = new ImageIcon(getFirstFrameInGif(imageInputStream).getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+                String name = codeList[i].substring(2, codeList[i].length() - 2);
+                InputStream inputStream = getClass().getResourceAsStream(iconPath + name + ".gif");
+
+
+                ImageIcon icon = new ImageIcon(getFirstFrameInGif(inputStream).getScaledInstance(50, 50, Image.SCALE_SMOOTH));
 
                 JPanel panel = new ExpressionItem(codeList[i], icon, name, new Dimension(60, 60), new Dimension(50, 50));
                 panel.addMouseListener(listener);
 
                 add(panel);
-
             }
-            catch (IOException e)
+            catch (Exception e)
             {
                 e.printStackTrace();
             }
@@ -150,17 +151,27 @@ public class Meng2Panel extends JPanel
      * @param src
      * @return
      */
-    private BufferedImage getFirstFrameInGif(ImageInputStream src)
+    private BufferedImage getFirstFrameInGif(InputStream src)
     {
         try
         {
+            ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
-            ImageReaderSpi readerSpi = new GIFImageReaderSpi();
-            GIFImageReader gifReader = (GIFImageReader) readerSpi.createReaderInstance();
-            gifReader.setInput(src);
-            return gifReader.read(0);
+            byte buffer[] = new byte[1024];
+            int len = 0;
+            while ((len = src.read(buffer)) != -1)
+            {
+                bos.write(buffer, 0, len);
+            }
+
+
+            //截取第一张图
+            BufferedImage bimage = ImageIO.read(new ByteArrayInputStream(bos.toByteArray(), 0, bos.size()));
+            src.close();
+            bos.close();
+            return bimage;
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             e.printStackTrace();
         }

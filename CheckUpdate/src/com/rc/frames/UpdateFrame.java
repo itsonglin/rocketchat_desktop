@@ -114,6 +114,7 @@ public class UpdateFrame extends JFrame
             File oFile = new File("helichat_old.jar");
             oFile.renameTo(new File("helichat.jar"));
 
+            System.out.println(e);
             JOptionPane.showMessageDialog(null, "更新失败，正在还原...", "更新失败", JOptionPane.ERROR_MESSAGE);
             if (updateResultListener != null)
             {

@@ -146,6 +146,11 @@ public class ChatPanel extends ParentAvailablePanel
         bottomPanel.setLayout(new GridBagLayout());
         bottomPanel.add(messageEditorPanel, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1));
 
+
+        UIDefaults defaults = UIManager.getDefaults();
+        defaults.remove("SplitPane.border");
+        defaults.remove("SplitPaneDivider.border");
+
         splitPane = new JSplitPane(JSplitPane.VERTICAL_SPLIT, true);
         splitPane.setBorder(null);
         splitPane.setDividerLocation(400);
