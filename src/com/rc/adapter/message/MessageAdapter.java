@@ -689,6 +689,13 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         attachPopupMenu(viewHolder, MessageItem.LEFT_TEXT);
     }
 
+    /**
+     * 处理文本与表情，如果消息只包含一个表情而没有其他内容，则尝试解析是否存在对应的表情。
+     * @param expressionLabel
+     * @param messageBubble
+     * @param text
+     * @param item
+     */
     private void handleTextAndExpression(JLabel expressionLabel, JComponent messageBubble, SizeAutoAdjustTextArea text, MessageItem item)
     {
         boolean isExpression = true;

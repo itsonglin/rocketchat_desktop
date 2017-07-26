@@ -238,7 +238,7 @@ public class WebSocketClient
      */
     private void handleMessage(String text)
     {
-      //System.out.println(("收到消息  " + text));
+        //System.out.println(("收到消息  " + text));
 
         try
         {
@@ -254,11 +254,12 @@ public class WebSocketClient
                     id = jsonText.getString("id");
                 }
 
-                /*if (!msg.equals("ping") && !msg.equals("updated") && !msg.equals("ready") && !id.startsWith("SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE"))
+                if (!msg.equals("ping") && !msg.equals("updated") && !msg.equals("ready") && !id.startsWith("SEND_LOAD_UNREAD_COUNT_AND_LAST_MESSAGE"))
                 {
 
-                    logger.debug("收到消息  " + text);
-                }*/
+                    //logger.debug("收到消息  " + text);
+                    //System.out.println(("收到消息  " + text));
+                }
 
 
                 if (msg.equals("ping"))
