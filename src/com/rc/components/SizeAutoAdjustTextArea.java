@@ -469,6 +469,11 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
         }
         catch (Exception e)
         {
+            if (!url.startsWith("http"))
+            {
+                openUrlWithDefaultBrowser("http://" + url);
+            }
+
             System.out.println("URL打开失败");
         }
     }
