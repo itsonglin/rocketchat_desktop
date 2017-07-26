@@ -200,7 +200,17 @@ public class ChatPanel extends ParentAvailablePanel
                 {
                     long startTs = messageService.findLastMessageTime(roomId) + 1;
                     logger.debug("startTs = " + startTs);
-                    loadRemoteHistory(startTs - TIMESTAMP_8_HOURS, 0, true, false, null);
+                    loadRemoteHistory(startTs - TIMESTAMP_8_HOURS, 0, true, false, new RemoteHistoryReceivedListener()
+                    {
+                        @Override
+                        public void onReceived(int newMessageCount)
+                        {
+                            if (newMessageCount >= 10)
+                            {
+
+                            }
+                        }
+                    });
                 }
             }
 
@@ -709,11 +719,7 @@ public class ChatPanel extends ParentAvailablePanel
                 {
                     Room room = roomService.findById(roomId);
 
-                    //if (newMessageCount < 10)
-
                     // 总消息数小于10，继续拿
-                    //if (room.getMsgSum() < 10)
-
                     if (messageService.countByRoom(room.getRoomId()) < 10)
                     {
                         long lastStartTime = loadRemoteStartTime - 1;
@@ -771,7 +777,7 @@ public class ChatPanel extends ParentAvailablePanel
      * @param endTime      最后一条消息的时间
      * @param loadUnread   是否是加载未读消息，如果loadUnread = true，加载的消息会追加到现有消息列表后面，并滚动到底部。
      * @param firstRequest 是否是第一次加载，即加载第一页的消息，firstRequest = true，会清空消息列表已有的消息，只从数据库获取 {@linkplain this#PAGE_LENGTH}条消息,
-     *                     如果firstRequest = true且第一次从本地拿到的消息数小于10条，则会继续从服务器中获取历史消息
+     *                     如果firstRequest = true且本地总消息数小于10条，则会继续从服务器中获取历史消，直到时间早于2017/1/1
      * @param listener     远程加载完成后的回调，可选
      */
     private void loadRemoteHistory(final long startTime, final long endTime, boolean loadUnread, boolean firstRequest, RemoteHistoryReceivedListener listener)
@@ -1074,19 +1080,31 @@ public class ChatPanel extends ParentAvailablePanel
                 if (messageItems.size() > 0)
                 {
                     List<Message> messages = messageService.findBetween(roomId, startTime + TIMESTAMP_8_HOURS, utcCurr);
-
-                    if (messages.size() > 5)
+                    int size = messages.size();
+                    if (size > 5)
                     {
                         messageItems.clear();
                     }
 
-                    for (Message message : messages)
+                    /*for (Message message : messages)
                     {
                         if (!message.isDeleted() && !inMessageItems(message.getId()))
                         {
                             messageItems.add(new MessageItem(message, currentUser.getUserId()));
                         }
+                    }*/
+
+                    // 如果未读消息总数大于等于10， 只加载10条
+                    int startIndex = size >= 10 ? size - 10 : 0;
+                    for (int i = startIndex; i < size; i++)
+                    {
+                        Message message = messages.get(i);
+                        if (!message.isDeleted() && !inMessageItems(message.getId()))
+                        {
+                            messageItems.add(new MessageItem(message, currentUser.getUserId()));
+                        }
                     }
+
 
                     //recyclerview.getAdapter().notifyDataSetChanged();
                     if (messages.size() > 0)
@@ -1105,6 +1123,7 @@ public class ChatPanel extends ParentAvailablePanel
                     loadLocalHistory();
                 }
             }
+
             // 第一次请求该房间历史消，通常是一个月内的消息
             else if (firstRequest)
             {
