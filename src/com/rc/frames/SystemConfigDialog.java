@@ -42,7 +42,7 @@ public class SystemConfigDialog extends JDialog
     public static final String CHANGE_PASSWORD = "CHANGE_PASSWORD";
     public static final String ME = "ME";
     public static final String ABOUT = "ABOUT";
-    public static final String CLEAR_CHACE = "CLEAR_CHACE";
+    public static final String CLEAR_CACHE = "CLEAR_CACHE";
 
     private CardLayout cardLayout = new CardLayout();
 
@@ -160,7 +160,7 @@ public class SystemConfigDialog extends JDialog
         settingAreaPanel.add(changeAvatarPanel, CHANGE_AVATAR);
         settingAreaPanel.add(changePasswordPanel, CHANGE_PASSWORD);
         settingAreaPanel.add(aboutPanel, ABOUT);
-        settingAreaPanel.add(clearCachePanel, CLEAR_CHACE);
+        settingAreaPanel.add(clearCachePanel, CLEAR_CACHE);
 
 
         add(settingPanel, BorderLayout.CENTER);
@@ -233,7 +233,7 @@ public class SystemConfigDialog extends JDialog
                     }
                     else if (source.getText().equals("清除缓存"))
                     {
-                        cardLayout.show(settingAreaPanel, CLEAR_CHACE);
+                        cardLayout.show(settingAreaPanel, CLEAR_CACHE);
                     }
                 }
 
