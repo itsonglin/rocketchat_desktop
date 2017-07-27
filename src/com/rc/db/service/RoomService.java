@@ -50,4 +50,9 @@ public class RoomService extends BasicService<RoomDao, Room>
     {
         return dao.searchByName(name);
     }
+
+    public int totalUnreadCount()
+    {
+        return dao.totalUnreadCount();
+    }
 }

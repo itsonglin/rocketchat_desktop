@@ -1,10 +1,7 @@
 package com.rc.websocket.handler;
 
 import com.rc.app.Launcher;
-import com.rc.db.model.FileAttachment;
-import com.rc.db.model.ImageAttachment;
-import com.rc.db.model.Message;
-import com.rc.db.model.Room;
+import com.rc.db.model.*;
 import com.rc.db.service.FileAttachmentService;
 import com.rc.db.service.ImageAttachmentService;
 import com.rc.db.service.MessageService;
@@ -12,7 +9,9 @@ import com.rc.db.service.RoomService;
 import com.rc.panels.ChatPanel;
 import com.rc.frames.MainFrame;
 import com.rc.panels.RoomsPanel;
+import com.rc.utils.NotificationUtil;
 import com.rc.utils.OSUtil;
+import com.vdurmont.emoji.EmojiParser;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +27,7 @@ public class StreamRoomMessagesHandler implements CollectionHandler
     private RoomService roomService = Launcher.roomService;
     private ImageAttachmentService imageAttachmentService = Launcher.imageAttachmentService;
     private FileAttachmentService fileAttachmentService = Launcher.fileAttachmentService;
+    private CurrentUser currentUser = Launcher.currentUserService.findAll().get(0);
     private Logger logger;
 
 
@@ -260,6 +260,7 @@ public class StreamRoomMessagesHandler implements CollectionHandler
             // 更新主程序窗口状态
             notifyMainFrame(message, myUploadFile);
 
+
         }
         catch (JSONException e)
         {
@@ -275,43 +276,81 @@ public class StreamRoomMessagesHandler implements CollectionHandler
         // 更新房间列表
         //RoomsPanel.getContext().notifyDataSetChanged(true);
         RoomsPanel.getContext().updateRoomsList(message);
+        boolean inChatRoom = message.getRoomId().equals(ChatPanel.CHAT_ROOM_OPEN_ID);
 
 
         MainFrame context = MainFrame.getContext();
-        // 如果主窗口没有显示，则任务栏闪动
+        // 如果主窗口没有显示
         if (!context.isVisible())
         {
-            if (!context.isTrayFlashing())
+            // 苹果系统
+            if (OSUtil.getOsType() == OSUtil.Mac_OS)
             {
-                context.setTrayFlashing();
+                // 发送通知
+                if (!message.getSenderId().equals(currentUser.getUserId()))
+                {
+                    sendNotification(message);
+                }
             }
+            else
+            {
+                if (!context.isTrayFlashing())
+                {
+                    context.setTrayFlashing();
+                }
 
-            context.playMessageSound();
+                context.playMessageSound();
+            }
         }
         // 主窗口已显示
         else
         {
-            // 窗体打开，但没有被激活，则任务栏图标高亮
+            // 窗体打开，但没有被激活
             if (!context.isActive())
             {
-                context.playMessageSound();
-
-                if (OSUtil.getOsType() != OSUtil.Mac_OS)
+                if (OSUtil.getOsType() == OSUtil.Mac_OS)
                 {
+                    // 发送通知
+                    if (!message.getSenderId().equals(currentUser.getUserId()))
+                    {
+                        sendNotification(message);
+                    }
+                }
+                else
+                {
+                    // 任务栏图标高亮
+                    context.playMessageSound();
                     context.setVisible(true);
                     context.toFront();
                 }
             }
+        }
 
-            // 如果是当前打开的房间，更新消息列表
-            if (message.getRoomId().equals(ChatPanel.CHAT_ROOM_OPEN_ID))
+        // 如果是当前打开的房间，更新消息列表
+        if (inChatRoom)
+        {
+            // 如果是刚刚自己上传的文件，提示UI不要再把这条消息加入到消息列表中，防止消息重复出现
+            if (!myUploadFile)
             {
-                // 如果是刚刚自己上传的文件，提示UI不要再把这条消息加入到消息列表中，防止消息重复出现
-                if (!myUploadFile)
-                {
-                    ChatPanel.getContext().addOrUpdateMessageItem();
-                }
+                ChatPanel.getContext().addOrUpdateMessageItem();
             }
+        }
+
+
+        // 更新总消息数，MAC系统中dock中的Badge
+        if (OSUtil.getOsType() == OSUtil.Mac_OS)
+        {
+            ChatPanel.getContext().updateTotalUnreadCount();
+        }
+    }
+
+    private void sendNotification(Message message)
+    {
+        // 发送通知
+        if (!message.getSenderId().equals(currentUser.getUserId()))
+        {
+            String t = EmojiParser.parseToUnicode(message.getMessageContent());
+            NotificationUtil.sendNotification(message.getSenderUsername(), "", t, 1);
         }
     }
 }

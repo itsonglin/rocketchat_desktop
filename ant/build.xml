@@ -10,12 +10,12 @@
         <bundleapp outputdirectory="../out"
                    name="和理通"
                    displayname="和理通"
-                   identifier="com.rc.app.App"
+                   identifier="com.rc.app.Helichat.App"
                    icon="src/ic_launcher.icns"
-                   hidedockicon="true"
+                   hidedockicon="false"
                    mainclassname="com.rc.app.App" >
 
-            <classpath dir="../out/artifacts/rocketchat_desktop_jar"/>
+            <classpath file="../out/artifacts/rocketchat_desktop_jar/helichat.jar"/>
         </bundleapp>
     </target>
 

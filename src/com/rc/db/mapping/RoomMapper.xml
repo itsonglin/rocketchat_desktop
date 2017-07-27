@@ -38,6 +38,12 @@
 		SELECT count(1) FROM room
 	</select>
 
+    <select id="totalUnreadCount" resultType="java.lang.Integer">
+        SELECT SUM (unreadCount) FROM room
+    </select>
+
+
+
     <select id="exist" resultType="java.lang.Integer">
 		SELECT count(1) FROM room where roomId = #{id}
 	</select>

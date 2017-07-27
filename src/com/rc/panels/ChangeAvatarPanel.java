@@ -5,6 +5,7 @@ import com.rc.components.RCButton;
 import com.rc.components.VerticalFlowLayout;
 import com.rc.db.model.CurrentUser;
 import com.rc.frames.MainFrame;
+import com.rc.frames.SystemConfigDialog;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.IconUtil;
 import com.rc.websocket.WebSocketClient;
@@ -38,9 +39,12 @@ public class ChangeAvatarPanel extends JPanel
 
     private int imageMaxWidth = 350;
     private int imageMaxHeight = 200;
+    private SystemConfigDialog parent;
 
-    public ChangeAvatarPanel()
+    public ChangeAvatarPanel(SystemConfigDialog parent)
     {
+        this.parent = parent;
+
         context = this;
 
         initComponents();
@@ -58,7 +62,7 @@ public class ChangeAvatarPanel extends JPanel
             int imageHeight = image.getHeight(null);
             if (imageWidth < 200 || imageHeight < 200)
             {
-                JOptionPane.showMessageDialog(MainFrame.getContext(), "建议使用 200 * 200 或更高分辨率的图像", "图像太low - , -!", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(parent, "建议使用 200 * 200 或更高分辨率的图像", "图像太low - , -!", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 
@@ -139,7 +143,7 @@ public class ChangeAvatarPanel extends JPanel
 
                     if (selectedFile == null)
                     {
-                        JOptionPane.showMessageDialog(MainFrame.getContext(), "请选择图像文件", "选择图片", JOptionPane.WARNING_MESSAGE);
+                        JOptionPane.showMessageDialog(parent, "请选择图像文件", "选择图片", JOptionPane.WARNING_MESSAGE);
                         okButton.setEnabled(true);
                         return;
                     }
@@ -171,7 +175,7 @@ public class ChangeAvatarPanel extends JPanel
         fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
         fileChooser.setFileFilter(new FileNameExtensionFilter("图像", "jpg", "jpeg", "png"));
 
-        fileChooser.showDialog(MainFrame.getContext(), "上传");
+        fileChooser.showDialog(parent, "上传");
         if (fileChooser.getSelectedFile() != null)
         {
             selectedFile = fileChooser.getSelectedFile();
@@ -179,7 +183,7 @@ public class ChangeAvatarPanel extends JPanel
             String extension = selectedFile.getName();
             if (!extension.endsWith(".jpg") && !extension.endsWith(".jpeg") && !extension.endsWith(".png"))
             {
-                JOptionPane.showMessageDialog(MainFrame.getContext(), "请选择图像文件", "文件类型不正确", JOptionPane.WARNING_MESSAGE);
+                JOptionPane.showMessageDialog(parent, "请选择图像文件", "文件类型不正确", JOptionPane.WARNING_MESSAGE);
                 return;
             }
 

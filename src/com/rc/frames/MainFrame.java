@@ -1,29 +1,23 @@
 package com.rc.frames;
 
 
-import com.apple.eawt.Application;
-import com.rc.app.Launcher;
+import com.apple.eawt.AppEvent;
+import com.apple.eawt.AppForegroundListener;
+import com.apple.eawt.AppReOpenedListener;
 import com.rc.components.Colors;
 import com.rc.panels.LeftPanel;
 import com.rc.panels.RightPanel;
-import com.rc.tasks.HttpGetTask;
-import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.ClipboardUtil;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.OSUtil;
 import com.rc.websocket.WebSocketClient;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 
 /**
@@ -101,7 +95,8 @@ public class MainFrame extends JFrame
         SystemTray systemTray = SystemTray.getSystemTray();//获取系统托盘
         try
         {
-            if (OSUtil.getOsType() == OSUtil.Mac_OS)
+            boolean isMacOs = OSUtil.getOsType() == OSUtil.Mac_OS;
+            if (isMacOs)
             {
                 normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher_dark.png", 20, 20).getImage();
             }
@@ -114,6 +109,8 @@ public class MainFrame extends JFrame
 
             trayIcon = new TrayIcon(normalTrayIcon, "和理通");
             trayIcon.setImageAutoSize(true);
+            PopupMenu menu = new PopupMenu();
+
             trayIcon.addMouseListener(new MouseAdapter()
             {
 
@@ -122,6 +119,7 @@ public class MainFrame extends JFrame
                 {
                     // 显示主窗口
                     setVisible(true);
+                    setToFront();
 
                     // 任务栏图标停止闪动
                     if (trayFlashing)
@@ -129,12 +127,10 @@ public class MainFrame extends JFrame
                         trayFlashing = false;
                         trayIcon.setImage(normalTrayIcon);
                     }
-
-                    super.mouseClicked(e);
+                    super.mousePressed(e);
                 }
             });
 
-            PopupMenu menu = new PopupMenu();
 
             MenuItem exitItem = new MenuItem("退出");
             exitItem.addActionListener(new ActionListener()
@@ -154,12 +150,17 @@ public class MainFrame extends JFrame
                 public void actionPerformed(ActionEvent e)
                 {
                     setVisible(true);
+                    setToFront();
                 }
             });
             menu.add(showItem);
             menu.add(exitItem);
 
-            trayIcon.setPopupMenu(menu);
+            if (!isMacOs)
+            {
+                trayIcon.setPopupMenu(menu);
+            }
+
 
             systemTray.add(trayIcon);
 
@@ -168,6 +169,28 @@ public class MainFrame extends JFrame
         {
             e.printStackTrace();
         }
+    }
+
+    private void setToFront()
+    {
+        setAlwaysOnTop(true);
+        new Thread(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                try
+                {
+                    Thread.sleep(500);
+                }
+                catch (InterruptedException e1)
+                {
+                    e1.printStackTrace();
+                }
+
+                setAlwaysOnTop(false);
+            }
+        }).start();
     }
 
     /**
@@ -248,7 +271,6 @@ public class MainFrame extends JFrame
 
     private void test()
     {
-
     }
 
     private void initView()
@@ -304,6 +326,35 @@ public class MainFrame extends JFrame
                 currentWindowHeight = (int) e.getComponent().getBounds().getHeight();
             }
         });
+
+        if (OSUtil.getOsType() == OSUtil.Mac_OS)
+        {
+            com.apple.eawt.Application app = com.apple.eawt.Application.getApplication();
+            app.addAppEventListener(new AppForegroundListener()
+            {
+                @Override
+                public void appMovedToBackground(AppEvent.AppForegroundEvent arg0)
+                {
+                }
+
+                @Override
+                public void appRaisedToForeground(AppEvent.AppForegroundEvent arg0)
+                {
+                    setVisible(true);
+                }
+
+            });
+
+            app.addAppEventListener(new AppReOpenedListener()
+            {
+                @Override
+                public void appReOpened(AppEvent.AppReOpenedEvent arg0)
+                {
+                    setVisible(true);
+                }
+            });
+        }
+
     }
 
     private void startWebSocket()

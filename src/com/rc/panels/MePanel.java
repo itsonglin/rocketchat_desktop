@@ -8,6 +8,7 @@ import com.rc.components.VerticalFlowLayout;
 import com.rc.db.model.CurrentUser;
 import com.rc.db.service.CurrentUserService;
 import com.rc.frames.MainFrame;
+import com.rc.frames.SystemConfigDialog;
 import com.rc.utils.AvatarUtil;
 import com.rc.utils.FontUtil;
 import com.rc.websocket.WebSocketClient;
@@ -28,9 +29,11 @@ public class MePanel extends JPanel
     private RCButton button;
     private CurrentUserService currentUserService = Launcher.currentUserService;
     private CurrentUser currentUser;
+    private SystemConfigDialog parent;
 
-    public MePanel()
+    public MePanel(SystemConfigDialog parent)
     {
+        this.parent = parent;
         currentUser = currentUserService.findAll().get(0);
         initComponents();
         initView();
@@ -80,7 +83,7 @@ public class MePanel extends JPanel
             @Override
             public void mouseClicked(MouseEvent e)
             {
-                int ret = JOptionPane.showConfirmDialog(MainFrame.getContext(), "确认退出登录？", "确认退出", JOptionPane.YES_NO_OPTION);
+                int ret = JOptionPane.showConfirmDialog(parent, "确认退出登录？", "确认退出", JOptionPane.YES_NO_OPTION);
                 if (ret == JOptionPane.YES_OPTION)
                 {
                     WebSocketClient.getContext().sendLogoutMessage();

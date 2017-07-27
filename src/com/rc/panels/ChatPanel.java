@@ -107,6 +107,7 @@ public class ChatPanel extends ParentAvailablePanel
      * 待上传的外部分享附件队列
      */
     private Queue<String> shareAttachmentUploadQueue = new ArrayDeque<>(MAX_SHARE_ATTACHMENT_UPLOAD_COUNT);
+    private com.apple.eawt.Application app = null;
 
 
     public ChatPanel(JPanel parent)
@@ -124,6 +125,11 @@ public class ChatPanel extends ParentAvailablePanel
         initData();
 
         fileCache = new FileCache();
+
+        if (OSUtil.getOsType() == OSUtil.Mac_OS)
+        {
+            app = com.apple.eawt.Application.getApplication();
+        }
     }
 
     private void initComponents()
@@ -582,7 +588,37 @@ public class ChatPanel extends ParentAvailablePanel
 
         messageEditorPanel.getEditor().setText("");
 
+        // 更新当前房间的未读消息数为0
         updateUnreadCount(0);
+
+        // 更新总未读消息数
+        updateTotalUnreadCount();
+
+
+    }
+
+    /**
+     * 更新总未读消息数
+     */
+    public void updateTotalUnreadCount()
+    {
+        if (OSUtil.getOsType() == OSUtil.Mac_OS && app != null)
+        {
+            int unreadCount = roomService.totalUnreadCount();
+
+            if (unreadCount <= 0)
+            {
+                app.setDockIconBadge("");
+            }
+            else if (unreadCount > 99)
+            {
+                app.setDockIconBadge("99+");
+            }
+            else
+            {
+                app.setDockIconBadge(unreadCount + "");
+            }
+        }
     }
 
     /**
@@ -757,10 +793,10 @@ public class ChatPanel extends ParentAvailablePanel
     private void updateUnreadCount(int count)
     {
         room = roomService.findById(roomId);
-        if (count < 0)
+        /*if (count < 0)
         {
             System.out.println(count);
-        }
+        }*/
         room.setUnreadCount(count);
         room.setTotalReadCount(room.getMsgSum());
         roomService.update(room);

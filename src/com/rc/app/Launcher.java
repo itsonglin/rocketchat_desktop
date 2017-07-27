@@ -12,10 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.RandomAccessFile;
+import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 
@@ -79,6 +76,44 @@ public class Launcher
         else
         {
             System.exit(-1);
+        }
+
+        copyLib();
+    }
+
+    private void copyLib()
+    {
+        try
+        {
+            InputStream inputStream = getClass().getResourceAsStream("/libs/NsUserNotificationsBridge.dylib");
+
+            File libDir = new File(appFilesBasePath + File.separator + "libs");
+            if (!libDir.exists())
+            {
+                System.out.println("创建目录：" + libDir.getAbsolutePath());
+                libDir.mkdirs();
+            }
+
+            File destDylibFile = new File(libDir, "NsUserNotificationsBridge.dylib");
+            if (!destDylibFile.exists())
+            {
+
+                FileOutputStream outputStream = new FileOutputStream(destDylibFile);
+                byte[] buffer = new byte[1024];
+                int len = -1;
+                while ((len = inputStream.read(buffer)) > -1)
+                {
+                    outputStream.write(buffer, 0, len);
+                }
+            }
+        }
+        catch (FileNotFoundException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IOException e)
+        {
+            e.printStackTrace();
         }
     }
 

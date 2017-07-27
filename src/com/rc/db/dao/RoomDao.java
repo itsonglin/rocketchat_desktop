@@ -30,4 +30,9 @@ public class RoomDao extends BasicDao
         map.put("condition", "'%" + name + "%'");
         return session.selectList("searchByName", map);
     }
+
+    public int totalUnreadCount()
+    {
+        return (int) session.selectOne("totalUnreadCount");
+    }
 }

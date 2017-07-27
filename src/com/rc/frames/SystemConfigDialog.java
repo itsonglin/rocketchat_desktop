@@ -122,13 +122,13 @@ public class SystemConfigDialog extends JDialog
 
 
         // 更改头像面板
-        changeAvatarPanel = new ChangeAvatarPanel();
+        changeAvatarPanel = new ChangeAvatarPanel(this);
 
         // 更改密码面板
         changePasswordPanel = new ChangePasswordPanel();
 
         // "我" 面板
-        mePanel = new MePanel();
+        mePanel = new MePanel(this);
 
         // 关于面板
         aboutPanel = new AboutPanel();
