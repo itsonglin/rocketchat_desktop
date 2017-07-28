@@ -16,6 +16,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,94 +33,61 @@ import java.util.regex.Pattern;
  * Created by song on 14/06/2017.
  */
 
-class Test
+
+class Test extends JFrame
 {
-
-
-    /**
-     * @param args
-     */
-    public static void main(String[] args) throws IOException
+    public Test()
     {
-        try{
-            ScreenShot ssw=new ScreenShot();
-            ssw.setVisible(true);
-        }catch(AWTException e){
-            e.printStackTrace();
-        }
-    }
+        super("JLayeredPane");
+        /*
+         * 由小到大定义组件深度数值，也就是Z-order layer的大小。
+		 */
+        Integer[] layerConstants = {JLayeredPane.DEFAULT_LAYER,
+                JLayeredPane.PALETTE_LAYER, new Integer(101),
+                JLayeredPane.MODAL_LAYER, new Integer(201),
+                JLayeredPane.POPUP_LAYER, JLayeredPane.DRAG_LAYER};
+		/*
+		 * 定义每个JLabel的颜色
+		 */
+        Color[] colors = {Color.red, Color.blue, Color.magenta, Color.cyan,
+                Color.yellow, Color.green, Color.pink};
+        Point position = new Point(10, 10);
+        JLabel[] label = new JLabel[7];
+        JLayeredPane layeredPane = getLayeredPane();// 取得窗口的Layered Pane
 
-    /**
-     * 全屏窗口，无标题栏。
-     */
-    public static void fullWindow1() throws IOException
-    {
-        Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        Robot robot = null;
-        try
+        for (int i = 0; i < 7; i++)
         {
-            robot = new Robot();
+            label[i] = createLabel("第" + (i + 1) + "层", colors[i], position);
+            position.x = position.x + 20;
+            position.y = position.y + 20;
+            // 将组件(JLabel)放入Layered Pane中并给予深度(Z-order layer)的数值。
+            layeredPane.add(label[i], layerConstants[i]);
         }
-        catch (AWTException e)
+        setSize(new Dimension(280, 280));
+        show();
+        addWindowListener(new WindowAdapter()
         {
-            e.printStackTrace();
-        }
-        BufferedImage bufferedImage = robot.createScreenCapture(new Rectangle(d.width, d.height));
-        JLabel label = new JLabel();
-        label.setIcon(new ImageIcon(bufferedImage));
-        ImageIO.write(bufferedImage, "jpg", new File("/Users/song/" + System.currentTimeMillis() + ".jpg"));
-
-
-        final JFrame frame = new JFrame();
-        frame.setUndecorated(true);
-        frame.getGraphicsConfiguration().getDevice().setFullScreenWindow(frame);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().add(label);
-        frame.addMouseListener(new MouseAdapter()
-        {
-            // 双击退出
-            public void mouseClicked(MouseEvent e)
+            public void windowClosing(WindowEvent e)
             {
-                if (e.getClickCount() == 2)
-                {
-                    frame.dispose();
-                }
+                System.exit(0);
             }
         });
-        frame.setVisible(true);
-
     }
 
+    public JLabel createLabel(String content, Color color, Point position)
+    {
+        JLabel label = new JLabel(content, JLabel.CENTER);
+        label.setVerticalAlignment(JLabel.TOP);
+        label.setBackground(color);
+        label.setForeground(Color.black);
+        label.setOpaque(true);
+        label.setBounds(position.x, position.y, 100, 100);
+        return label;
+    }
 
-        /*Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
-        Robot robot = null;
-        try
-        {
-            robot = new Robot();
-        }
-        catch (AWTException e)
-        {
-            e.printStackTrace();
-        }
-        BufferedImage bufferedImage = robot.createScreenCapture(new Rectangle(d.width, d.height));
-        ImageIO.write(bufferedImage, "jpg", new File("/Users/song/" + System.currentTimeMillis() + ".jpg"));
-        System.out.println("ok");*/
-
-        /*File file = new File("F:\\emoji");
-        File[] imgs = file.listFiles();
-        for (File img : imgs)
-        {
-            BufferedImage bufferedImage = ImageIO.read(img);
-            Image scaledImage = bufferedImage.getScaledInstance(20, 20, Image.SCALE_SMOOTH);
-
-            BufferedImage outImage = new BufferedImage(20, 20, BufferedImage.TYPE_INT_ARGB);
-
-            // 获取Graphics2D
-            Graphics2D g2d = outImage.createGraphics();
-
-            g2d.drawImage(scaledImage, 0, 0, null);
-
-            ImageIO.write(outImage, "png", new File("F:\\emoji2\\" + img.getName()));
-        }*/
+    public static void main(String[] args)
+    {
+        new Test();
+    }
 }
 

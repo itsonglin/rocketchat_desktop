@@ -2,6 +2,8 @@ package com.rc.panels;
 
 import com.rc.components.Colors;
 import com.rc.components.RCListView;
+import com.rc.components.message.MessagePopupMenu;
+import com.rc.frames.MainFrame;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,7 +33,6 @@ public class MessagePanel extends ParentAvailablePanel
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         listView.setScrollHiddenOnMouseLeave(listView);
-
     }
 
     private void setListeners()
@@ -51,18 +52,6 @@ public class MessagePanel extends ParentAvailablePanel
     {
         this.setLayout(new BorderLayout());
         add(listView, BorderLayout.CENTER);
-        /*listView.repaint();
-        listView.setVisible(true);*/
-
-
-        /*addComponentListener(new ComponentAdapter()
-        {
-            @Override
-            public void componentResized(ComponentEvent e)
-            {
-                listView.repaint();
-            }
-        });*/
     }
 
     public RCListView getMessageListView()
@@ -70,3 +59,4 @@ public class MessagePanel extends ParentAvailablePanel
         return listView;
     }
 }
+
