@@ -1257,8 +1257,9 @@ public class ChatPanel extends ParentAvailablePanel
         int pos = findMessageItemPositionInViewReverse(message.getId());
         if (pos > -1)
         {
-            System.out.println("更新消息");
             messageItems.get(pos).setUpdatedAt(message.getTimestamp());
+            System.out.println("更新消息状态：" + messageItems.get(pos));
+
             messagePanel.getMessageListView().notifyItemChanged(pos);
             //updateUnreadCount(0);
             return;
@@ -1466,11 +1467,6 @@ public class ChatPanel extends ParentAvailablePanel
      */
     private int findMessageItemPositionInViewReverse(String messageId)
     {
-        // 浅复制一份messageItems来排序，因为原本messageItems顺序并不是按照时间顺序排列的
-        /*List<MessageItem> tmpItems = new ArrayList<>();
-        tmpItems.addAll(messageItems);
-        Collections.sort(tmpItems);*/
-
         for (int i = messageItems.size() - 1; i >= 0; i--)
         {
             // 找到消息列表中对应的消息

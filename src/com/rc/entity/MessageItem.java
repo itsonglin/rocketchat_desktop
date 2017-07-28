@@ -293,5 +293,28 @@ public class MessageItem implements Comparable<MessageItem>
     {
         this.imageAttachment = imageAttachment;
     }
+
+
+    @Override
+    public String toString()
+    {
+        return "MessageItem{" +
+                "id='" + id + '\'' +
+                ", roomId='" + roomId + '\'' +
+                ", messageContent='" + messageContent + '\'' +
+                ", groupable=" + groupable +
+                ", timestamp=" + timestamp +
+                ", senderUsername='" + senderUsername + '\'' +
+                ", senderId='" + senderId + '\'' +
+                ", updatedAt=" + updatedAt +
+                ", unreadCount=" + unreadCount +
+                ", needToResend=" + needToResend +
+                ", progress=" + progress +
+                ", deleted=" + deleted +
+                ", messageType=" + messageType +
+                ", fileAttachment=" + fileAttachment +
+                ", imageAttachment=" + imageAttachment +
+                '}';
+    }
 }
 

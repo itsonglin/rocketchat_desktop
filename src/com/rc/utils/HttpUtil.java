@@ -54,27 +54,31 @@ public class HttpUtil
 
     public static byte[] getBytes(String url, Map<String, String> headers, Map<String, String> params) throws IOException
     {
-        Response response = _get(url, headers, params);
-        if (response != null)
+        try (Response response = _get(url, headers, params))
         {
-            return response.body().bytes();
-        }
-        else
-        {
-            throw new IOException("Get请求失败:" + url);
+            if (response != null)
+            {
+                return response.body().bytes();
+            }
+            else
+            {
+                throw new IOException("Get请求失败:" + url);
+            }
         }
     }
 
     public static String get(String url, Map<String, String> headers, Map<String, String> params) throws IOException
     {
-        Response response = _get(url, headers, params);
-        if (response != null)
+        try(Response response = _get(url, headers, params))
         {
-            return response.body().string();
-        }
-        else
-        {
-            throw new IOException("Get请求失败:" + url);
+            if (response != null)
+            {
+                return response.body().string();
+            }
+            else
+            {
+                throw new IOException("Get请求失败:" + url);
+            }
         }
     }
 
@@ -134,8 +138,10 @@ public class HttpUtil
         }
         Request requestPost = reqBuilder.post(requestBodyPost).build();
 
-        Response response = client.newCall(requestPost).execute();
-        return response.body().string();
+        try(Response response = client.newCall(requestPost).execute())
+        {
+            return response.body().string();
+        }
     }
 
     public static boolean upload(String url, String type, byte[] part) throws IOException
