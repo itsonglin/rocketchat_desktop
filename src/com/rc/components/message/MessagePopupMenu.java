@@ -42,6 +42,9 @@ public class MessagePopupMenu extends JPopupMenu
     private JMenuItem item3 = new JMenuItem("转发");
     private JMenuItem item4 = new JMenuItem("另存为");
 
+    private JFileChooser jfc = new JFileChooser();
+
+
     public MessagePopupMenu()
     {
         initMenuItem();
@@ -318,6 +321,7 @@ public class MessagePopupMenu extends JPopupMenu
 
     /**
      * 文件另存为
+     *
      * @param path
      */
     private void saveAsFile(String path)
@@ -330,18 +334,22 @@ public class MessagePopupMenu extends JPopupMenu
         }
 
         String filename = srcFile.getName();
-
-        JFileChooser jfc = new JFileChooser();
+        //JFileChooser jfc = new JFileChooser();
         jfc.setDialogTitle("保存");
 
         File filePath = FileSystemView.getFileSystemView().getHomeDirectory();
         File defaultFile = new File(filePath + File.separator + filename);
         jfc.setSelectedFile(defaultFile);
 
-        int flag = jfc.showSaveDialog(MainFrame.getContext());
+        int flag = jfc.showSaveDialog(this);
+
         if (flag == JFileChooser.APPROVE_OPTION)
         {
             File destFile = jfc.getSelectedFile();
+            if (destFile == null)
+            {
+                return;
+            }
 
             new Thread(new Runnable()
             {
@@ -372,7 +380,6 @@ public class MessagePopupMenu extends JPopupMenu
             }).start();
         }
     }
-
 
 
     @Override
