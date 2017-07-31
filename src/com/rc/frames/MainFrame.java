@@ -100,68 +100,75 @@ public class MainFrame extends JFrame
             if (isMacOs)
             {
                 normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher_dark.png", 20, 20).getImage();
+                trayIcon = new TrayIcon(normalTrayIcon, "和理通");
+                trayIcon.setImageAutoSize(true);
+
+                trayIcon.addMouseListener(new MouseAdapter()
+                {
+                    @Override
+                    public void mousePressed(MouseEvent e)
+                    {
+                        // 显示主窗口
+                        setVisible(true);
+                        setToFront();
+                        super.mousePressed(e);
+                    }
+                });
             }
             else
             {
                 normalTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher.png", 20, 20).getImage();
-            }
+                emptyTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher_empty.png", 20, 20).getImage();
 
-            emptyTrayIcon = IconUtil.getIcon(this, "/image/ic_launcher_empty.png", 20, 20).getImage();
+                trayIcon = new TrayIcon(normalTrayIcon, "和理通");
+                trayIcon.setImageAutoSize(true);
+                PopupMenu menu = new PopupMenu();
 
-            trayIcon = new TrayIcon(normalTrayIcon, "和理通");
-            trayIcon.setImageAutoSize(true);
-            PopupMenu menu = new PopupMenu();
-
-            trayIcon.addMouseListener(new MouseAdapter()
-            {
-
-                @Override
-                public void mousePressed(MouseEvent e)
+                trayIcon.addMouseListener(new MouseAdapter()
                 {
-                    // 显示主窗口
-                    setVisible(true);
-                    setToFront();
-
-                    // 任务栏图标停止闪动
-                    if (trayFlashing)
+                    @Override
+                    public void mouseClicked(MouseEvent e)
                     {
-                        trayFlashing = false;
-                        trayIcon.setImage(normalTrayIcon);
+                        // 显示主窗口
+                        setVisible(true);
+                        setToFront();
+
+                        // 任务栏图标停止闪动
+                        if (trayFlashing)
+                        {
+                            trayFlashing = false;
+                            trayIcon.setImage(normalTrayIcon);
+                        }
+                        super.mouseClicked(e);
                     }
-                    super.mousePressed(e);
-                }
-            });
+                });
 
 
-            MenuItem exitItem = new MenuItem("退出");
-            exitItem.addActionListener(new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e)
+                MenuItem exitItem = new MenuItem("退出");
+                exitItem.addActionListener(new ActionListener()
                 {
-                    clearClipboardCache();
-                    System.exit(1);
-                }
-            });
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        clearClipboardCache();
+                        System.exit(1);
+                    }
+                });
 
-            MenuItem showItem = new MenuItem("打开和理通");
-            showItem.addActionListener(new ActionListener()
-            {
-                @Override
-                public void actionPerformed(ActionEvent e)
+                MenuItem showItem = new MenuItem("打开和理通");
+                showItem.addActionListener(new ActionListener()
                 {
-                    setVisible(true);
-                    setToFront();
-                }
-            });
-            menu.add(showItem);
-            menu.add(exitItem);
-
-            if (!isMacOs)
-            {
+                    @Override
+                    public void actionPerformed(ActionEvent e)
+                    {
+                        setVisible(true);
+                        setToFront();
+                    }
+                });
+                menu.add(showItem);
+                menu.add(exitItem);
                 trayIcon.setPopupMenu(menu);
             }
-
 
             systemTray.add(trayIcon);
 
@@ -262,8 +269,6 @@ public class MainFrame extends JFrame
 
         UIManager.put("Panel.background", Colors.WINDOW_BACKGROUND);
         UIManager.put("CheckBox.background", Colors.WINDOW_BACKGROUND);
-
-
 
 
         leftPanel = new LeftPanel();
