@@ -165,9 +165,6 @@ public class ChatPanel extends ParentAvailablePanel
         splitPane.setDividerSize(2);
         splitPane.setLeftComponent(topPanel);
         splitPane.setRightComponent(bottomPanel);
-
-        newMessageToast = new Toast(MainFrame.getContext(), "新未读消息");
-        newMessageToast.setVisible(false);
     }
 
 
@@ -229,6 +226,22 @@ public class ChatPanel extends ParentAvailablePanel
         }
     }
 
+    private void initNewMessageToast()
+    {
+        newMessageToast = new Toast(MainFrame.getContext(), "新未读消息");
+        newMessageToast.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                messagePanel.getMessageListView().scrollToBottom();
+                newMessageToast.setVisible(false);
+
+                super.mouseClicked(e);
+            }
+        });
+    }
+
     private void setListeners()
     {
         messagePanel.getMessageListView().setScrollToTopListener(new RCListView.ScrollToTopListener()
@@ -275,7 +288,10 @@ public class ChatPanel extends ParentAvailablePanel
             @Override
             public void onScrollToBottom()
             {
-                newMessageToast.setVisible(false);
+                if (newMessageToast != null)
+                {
+                    newMessageToast.setVisible(false);
+                }
             }
         });
 
@@ -404,18 +420,6 @@ public class ChatPanel extends ParentAvailablePanel
                 {
                     editor.replaceSelection(code);
                 }
-            }
-        });
-
-        newMessageToast.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                messagePanel.getMessageListView().scrollToBottom();
-                newMessageToast.setVisible(false);
-
-                super.mouseClicked(e);
             }
         });
     }
@@ -1329,6 +1333,11 @@ public class ChatPanel extends ParentAvailablePanel
 
         if ((max - (val + extent)) > 0)
         {
+            if (newMessageToast == null)
+            {
+                initNewMessageToast();
+            }
+
             newMessageToast.setVisible(true);
         }
 
