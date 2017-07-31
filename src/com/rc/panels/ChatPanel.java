@@ -1037,10 +1037,6 @@ public class ChatPanel extends ParentAvailablePanel
                 //dbMessage.setMessageContent(message.getString("msg").replaceAll("\\[ \\]\\(.*\\)\\s*", ""));
                 messageContent = message.getString("msg").replaceAll("\\[ \\]\\(.*\\)\\s*", "");
             }
-            /*else
-            {
-                dbMessage.setMessageContent(message.getString("msg"));
-            }*/
 
             // 处理附件
             if (message.has("attachments") && !message.getString("msg").startsWith("[ ]("))
