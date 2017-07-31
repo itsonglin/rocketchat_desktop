@@ -143,76 +143,79 @@ public class StreamRoomMessagesHandler implements CollectionHandler
             // 附件消息
             if (obj.has("attachments") && !obj.getString("msg").startsWith("[ ]("))
             {
-                JSONArray attachments = obj.getJSONArray("attachments");
-                for (int j = 0; j < attachments.length(); j++)
+                if (obj.has("file") && obj.get("attachments") instanceof JSONArray)
                 {
-                    JSONObject attachment = attachments.getJSONObject(j);
-                    if (attachment.has("image_url"))
+                    JSONArray attachments = obj.getJSONArray("attachments");
+                    for (int j = 0; j < attachments.length(); j++)
                     {
-                        ImageAttachment imageAttachment = new ImageAttachment();
-                        imageAttachment.setId(obj.getJSONObject("file").getString("_id"));
-                        imageAttachment.setTitle(attachment.getString("title"));
-                        imageAttachment.setDescription(attachment.getString("description"));
-                        imageAttachment.setImageUrl(attachment.getString("image_url"));
-                        imageAttachment.setImagesize(attachment.getLong("image_size"));
-                        imageAttachment.setWidth(attachment.getJSONObject("image_dimensions").getInt("width"));
-                        imageAttachment.setHeight(attachment.getJSONObject("image_dimensions").getInt("height"));
-
-                        //message.getImageAttachments().add(imageAttachment);
-                        message.setImageAttachmentId(imageAttachment.getId());
-                        message.setMessageContent("[图片]");
-
-                        // 查找是否有临时以FildId作为MessageId的消息
-                        Message tempMsg = messageService.findById(imageAttachment.getId());
-
-                        if (tempMsg != null)
+                        JSONObject attachment = attachments.getJSONObject(j);
+                        if (attachment.has("image_url"))
                         {
-                            myUploadFile = true;
-                            ImageAttachment ia = imageAttachmentService.findById(tempMsg.getImageAttachmentId());
-                            imageAttachment.setTitle(ia.getTitle());
-                            //imageAttachment.setImageUrl(ia.getImageUrl());
-                            imageAttachment.setDescription(ia.getDescription());
+                            ImageAttachment imageAttachment = new ImageAttachment();
+                            imageAttachment.setId(obj.getJSONObject("file").getString("_id"));
+                            imageAttachment.setTitle(attachment.getString("title"));
+                            imageAttachment.setDescription(attachment.getString("description"));
+                            imageAttachment.setImageUrl(attachment.getString("image_url"));
+                            imageAttachment.setImagesize(attachment.getLong("image_size"));
+                            imageAttachment.setWidth(attachment.getJSONObject("image_dimensions").getInt("width"));
+                            imageAttachment.setHeight(attachment.getJSONObject("image_dimensions").getInt("height"));
 
-                            message.setNeedToResend(false);
-                            message.setTimestamp(tempMsg.getTimestamp());
+                            //message.getImageAttachments().add(imageAttachment);
+                            message.setImageAttachmentId(imageAttachment.getId());
+                            message.setMessageContent("[图片]");
+
+                            // 查找是否有临时以FildId作为MessageId的消息
+                            Message tempMsg = messageService.findById(imageAttachment.getId());
+
+                            if (tempMsg != null)
+                            {
+                                myUploadFile = true;
+                                ImageAttachment ia = imageAttachmentService.findById(tempMsg.getImageAttachmentId());
+                                imageAttachment.setTitle(ia.getTitle());
+                                //imageAttachment.setImageUrl(ia.getImageUrl());
+                                imageAttachment.setDescription(ia.getDescription());
+
+                                message.setNeedToResend(false);
+                                message.setTimestamp(tempMsg.getTimestamp());
 
 
-                            // 删除临时文件消息
-                            messageService.delete(imageAttachment.getId());
+                                // 删除临时文件消息
+                                messageService.delete(imageAttachment.getId());
+                            }
+
+                            imageAttachmentService.insertOrUpdate(imageAttachment);
                         }
-
-                        imageAttachmentService.insertOrUpdate(imageAttachment);
-                    }
-                    else
-                    {
-                        FileAttachment fileAttachment = new FileAttachment();
-                        fileAttachment.setId(obj.getJSONObject("file").getString("_id"));
-                        fileAttachment.setTitle(attachment.getString("title").substring(15));
-                        fileAttachment.setDescription(attachment.getString("description"));
-                        fileAttachment.setLink(attachment.getString("title_link"));
-                        message.setFileAttachmentId(fileAttachment.getId());
-                        message.setMessageContent(fileAttachment.getTitle());
-
-                        // 查找是否有临时以FildId作为MessageId的消息
-                        Message tempMsg = messageService.findById(fileAttachment.getId());
-
-                        if (tempMsg != null)
+                        else
                         {
-                            myUploadFile = true;
-                            FileAttachment fa = fileAttachmentService.findById(tempMsg.getFileAttachmentId());
-                            fileAttachment.setTitle(fa.getTitle());
-                            fileAttachment.setLink(fa.getLink());
-                            fileAttachment.setDescription(fa.getDescription());
+                            FileAttachment fileAttachment = new FileAttachment();
+                            fileAttachment.setId(obj.getJSONObject("file").getString("_id"));
+                            fileAttachment.setTitle(attachment.getString("title").substring(15));
+                            fileAttachment.setDescription(attachment.getString("description"));
+                            fileAttachment.setLink(attachment.getString("title_link"));
+                            message.setFileAttachmentId(fileAttachment.getId());
+                            message.setMessageContent(fileAttachment.getTitle());
 
-                            message.setNeedToResend(false);
-                            message.setTimestamp(tempMsg.getTimestamp());
+                            // 查找是否有临时以FildId作为MessageId的消息
+                            Message tempMsg = messageService.findById(fileAttachment.getId());
+
+                            if (tempMsg != null)
+                            {
+                                myUploadFile = true;
+                                FileAttachment fa = fileAttachmentService.findById(tempMsg.getFileAttachmentId());
+                                fileAttachment.setTitle(fa.getTitle());
+                                fileAttachment.setLink(fa.getLink());
+                                fileAttachment.setDescription(fa.getDescription());
+
+                                message.setNeedToResend(false);
+                                message.setTimestamp(tempMsg.getTimestamp());
 
 
-                            // 删除临时文件消息
-                            messageService.delete(fileAttachment.getId());
+                                // 删除临时文件消息
+                                messageService.delete(fileAttachment.getId());
+                            }
+
+                            fileAttachmentService.insertOrUpdate(fileAttachment);
                         }
-
-                        fileAttachmentService.insertOrUpdate(fileAttachment);
                     }
                 }
             }

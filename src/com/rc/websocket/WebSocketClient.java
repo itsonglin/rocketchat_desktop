@@ -214,7 +214,7 @@ public class WebSocketClient
             @Override
             public void run()
             {
-                while(ConnectionStatus.equals("disconnected") && !isLogout)
+                while (ConnectionStatus.equals("disconnected") && !isLogout)
                 {
                     System.out.println("自动重连中...");
                     startWebSocketClient();
@@ -320,8 +320,6 @@ public class WebSocketClient
             }
         }
     }
-
-
 
 
     /**
@@ -430,6 +428,7 @@ public class WebSocketClient
 
     /**
      * 处理创建群聊返回消息
+     *
      * @param jsonText
      */
     private void processCreateChanelOrGroupMessage(JSONObject jsonText)
@@ -673,7 +672,8 @@ public class WebSocketClient
                     //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_UPDATE_ROOM_ITEMS);
                     //RoomsPanel.getContext().notifyDataSetChanged();
 
-                } catch (JSONException e)
+                }
+                catch (JSONException e)
                 {
                     e.printStackTrace();
                 }
@@ -718,6 +718,7 @@ public class WebSocketClient
 
     /**
      * 获取每个房间未读数及最后一条消息
+     *
      * @param roomType
      */
     private void loadUnreadCountAndLastMessage(final String roomType)
@@ -739,6 +740,7 @@ public class WebSocketClient
 
     /**
      * 处理获取每个房间未读数及最后一条消息回调
+     *
      * @param jsonText
      * @throws JSONException
      */
@@ -892,42 +894,45 @@ public class WebSocketClient
                 {
                     isattachmentOrImage = true;
 
-                    Object obj = message.get("attachments");
-                    if (obj instanceof JSONArray)
+                    if (message.has("file"))
                     {
-                        JSONArray attachments = message.getJSONArray("attachments");
-                        for (int j = 0; j < attachments.length(); j++)
+                        Object obj = message.get("attachments");
+                        if (obj instanceof JSONArray)
                         {
-                            JSONObject attachment = attachments.getJSONObject(j);
-                            if (attachment.has("image_url"))
+                            JSONArray attachments = message.getJSONArray("attachments");
+                            for (int j = 0; j < attachments.length(); j++)
                             {
-                                ImageAttachment imageAttachment = new ImageAttachment();
-                                imageAttachment.setId(message.getJSONObject("file").getString("_id"));
-                                imageAttachment.setTitle(attachment.getString("title"));
-                                imageAttachment.setDescription(attachment.getString("description"));
-                                imageAttachment.setImageUrl(attachment.getString("image_url"));
-                                imageAttachment.setImagesize(attachment.getLong("image_size"));
-                                imageAttachment.setWidth(attachment.getJSONObject("image_dimensions").getInt("width"));
-                                imageAttachment.setHeight(attachment.getJSONObject("image_dimensions").getInt("height"));
+                                JSONObject attachment = attachments.getJSONObject(j);
+                                if (attachment.has("image_url"))
+                                {
+                                    ImageAttachment imageAttachment = new ImageAttachment();
+                                    imageAttachment.setId(message.getJSONObject("file").getString("_id"));
+                                    imageAttachment.setTitle(attachment.getString("title"));
+                                    imageAttachment.setDescription(attachment.getString("description"));
+                                    imageAttachment.setImageUrl(attachment.getString("image_url"));
+                                    imageAttachment.setImagesize(attachment.getLong("image_size"));
+                                    imageAttachment.setWidth(attachment.getJSONObject("image_dimensions").getInt("width"));
+                                    imageAttachment.setHeight(attachment.getJSONObject("image_dimensions").getInt("height"));
 
-                                //dbMessage.getImageAttachments().add(imageAttachment);
-                                dbMessage.setImageAttachmentId(imageAttachment.getId());
+                                    //dbMessage.getImageAttachments().add(imageAttachment);
+                                    dbMessage.setImageAttachmentId(imageAttachment.getId());
 
-                                //dbMessage.setMessageContent("[图片]");
-                                messageContent = "[图片]";
-                            }
-                            else if (attachment.has("title_link"))
-                            {
-                                FileAttachment fileAttachment = new FileAttachment();
-                                fileAttachment.setId(message.getJSONObject("file").getString("_id"));
-                                fileAttachment.setTitle(attachment.getString("title").substring(15));
-                                fileAttachment.setDescription(attachment.getString("description"));
-                                fileAttachment.setLink(attachment.getString("title_link"));
-                                //dbMessage.getFileAttachments().add(fileAttachment);
-                                dbMessage.setFileAttachmentId(fileAttachment.getId());
-                                //dbMessage.setMessageContent(fileAttachment.getTitle().replace("File Uploaded:", ""));
-                                messageContent = fileAttachment.getTitle();
+                                    //dbMessage.setMessageContent("[图片]");
+                                    messageContent = "[图片]";
+                                }
+                                else if (attachment.has("title_link"))
+                                {
+                                    FileAttachment fileAttachment = new FileAttachment();
+                                    fileAttachment.setId(message.getJSONObject("file").getString("_id"));
+                                    fileAttachment.setTitle(attachment.getString("title").substring(15));
+                                    fileAttachment.setDescription(attachment.getString("description"));
+                                    fileAttachment.setLink(attachment.getString("title_link"));
+                                    //dbMessage.getFileAttachments().add(fileAttachment);
+                                    dbMessage.setFileAttachmentId(fileAttachment.getId());
+                                    //dbMessage.setMessageContent(fileAttachment.getTitle().replace("File Uploaded:", ""));
+                                    messageContent = fileAttachment.getTitle();
 
+                                }
                             }
                         }
                     }
@@ -1031,7 +1036,8 @@ public class WebSocketClient
                     //sendBroadcast(MainFrameActivity.WEBSOCKET_TO_ACTIVITY_ACTION, EVENT_UPDATE_CONTACTS);
                     ContactsPanel.getContext().notifyDataSetChanged();
 
-                } catch (JSONException e)
+                }
+                catch (JSONException e)
                 {
                     e.printStackTrace();
                 }
@@ -1260,7 +1266,8 @@ public class WebSocketClient
             currentUserService.insertOrUpdate(user);
             //realm.close();
 
-        } catch (JSONException e)
+        }
+        catch (JSONException e)
         {
             e.printStackTrace();
         }
@@ -1326,6 +1333,7 @@ public class WebSocketClient
 
     /**
      * 发送修改密码消息
+     *
      * @param password
      */
     public void sendChangePasswordMessage(String password)

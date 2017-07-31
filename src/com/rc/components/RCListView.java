@@ -2,11 +2,9 @@ package com.rc.components;
 
 import com.rc.adapter.BaseAdapter;
 import com.rc.adapter.HeaderViewHolder;
-import com.rc.adapter.SelectUserItemViewHolder;
 import com.rc.adapter.ViewHolder;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -28,7 +26,7 @@ public class RCListView extends JScrollPane
     private ScrollUI scrollUI;
 
     // 监听滚动到顶部事件
-    private ScrollToTopListener scrollToTopListener;
+    private ScrollListener scrollListener;
     private boolean scrollBarPressed = false;
     private int lastScrollValue = -1;
 
@@ -134,16 +132,16 @@ public class RCListView extends JScrollPane
                 // 之所以要加上!scrollBarPressed这个条件，scrollBar在顶部的时间，scrollbar点击和释放都分别会触发adjustmentValueChanged这个事件
                 // 所以只让scrollBar释放的时候触发这个回调
                 // !scrollToBottom 这个条件保证在自动滚动到底部之前，不会调用此回调
-                if (scrollToTopListener != null)
+                if (scrollListener != null)
                 {
                     if (evt.getValue() == 0 && evt.getValue() != lastScrollValue && !scrollBarPressed && !scrollToBottom)
                     {
                         messageLoading = true;
-                        scrollToTopListener.onScrollToTop();
+                        scrollListener.onScrollToTop();
                     }
                     else if ((max - (val + extent)) < 1)
                     {
-                        scrollToTopListener.onScrollToBottom();
+                        scrollListener.onScrollToBottom();
                     }
                 }
 
@@ -195,9 +193,9 @@ public class RCListView extends JScrollPane
                     else
                     {
                         System.out.println("鼠标滚轮到顶，自动加载");
-                        if (scrollToTopListener != null)
+                        if (scrollListener != null)
                         {
-                            scrollToTopListener.onScrollToTop();
+                            scrollListener.onScrollToTop();
                         }
                     }
 
@@ -236,6 +234,7 @@ public class RCListView extends JScrollPane
         }
 
         lastItemCount = adapter.getCount();
+        //this.setVisible(false);
         for (int i = 0; i < adapter.getCount(); i++)
         {
             int viewType = adapter.getItemViewType(i);
@@ -253,6 +252,8 @@ public class RCListView extends JScrollPane
             contentPanel.add(holder);
             //System.out.println("加载完成 ，用时 " + (System.currentTimeMillis() - startTime));
         }
+
+        //this.setVisible(true);
     }
 
     public BaseAdapter getAdapter()
@@ -382,9 +383,9 @@ public class RCListView extends JScrollPane
     }
 
 
-    public void setScrollToTopListener(ScrollToTopListener listener)
+    public void setScrollListener(ScrollListener listener)
     {
-        this.scrollToTopListener = listener;
+        this.scrollListener = listener;
     }
 
     public void notifyItemInserted(int position, boolean end)
@@ -425,7 +426,7 @@ public class RCListView extends JScrollPane
         return viewHolders;
     }
 
-    public interface ScrollToTopListener
+    public interface ScrollListener
     {
         void onScrollToTop();
 

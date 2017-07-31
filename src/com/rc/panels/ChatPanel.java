@@ -244,7 +244,7 @@ public class ChatPanel extends ParentAvailablePanel
 
     private void setListeners()
     {
-        messagePanel.getMessageListView().setScrollToTopListener(new RCListView.ScrollToTopListener()
+        messagePanel.getMessageListView().setScrollListener(new RCListView.ScrollListener()
         {
             @Override
             public void onScrollToTop()
@@ -1051,46 +1051,50 @@ public class ChatPanel extends ParentAvailablePanel
                     continue;
                 }
 
-                JSONArray attachments = message.getJSONArray("attachments");
-                for (int j = 0; j < attachments.length(); j++)
+                if (message.has("file"))
                 {
-                    JSONObject attachment = attachments.getJSONObject(j);
-                    if (attachment.has("image_url"))
+                    JSONArray attachments = message.getJSONArray("attachments");
+                    for (int j = 0; j < attachments.length(); j++)
                     {
-                        ImageAttachment imageAttachment = new ImageAttachment();
-                        imageAttachment.setId(message.getJSONObject("file").getString("_id"));
-                        imageAttachment.setTitle(attachment.getString("title"));
-                        imageAttachment.setDescription(attachment.get("description").toString());
-                        imageAttachment.setImageUrl(attachment.getString("image_url"));
-                        imageAttachment.setImagesize(attachment.getLong("image_size"));
-                        if (attachment.has("image_dimensions"))
+                        JSONObject attachment = attachments.getJSONObject(j);
+                        if (attachment.has("image_url"))
                         {
-                            imageAttachment.setWidth(attachment.getJSONObject("image_dimensions").getInt("width"));
-                            imageAttachment.setHeight(attachment.getJSONObject("image_dimensions").getInt("height"));
+                            ImageAttachment imageAttachment = new ImageAttachment();
+                            imageAttachment.setId(message.getJSONObject("file").getString("_id"));
+                            imageAttachment.setTitle(attachment.getString("title"));
+                            imageAttachment.setDescription(attachment.get("description").toString());
+                            imageAttachment.setImageUrl(attachment.getString("image_url"));
+                            imageAttachment.setImagesize(attachment.getLong("image_size"));
+                            if (attachment.has("image_dimensions"))
+                            {
+                                imageAttachment.setWidth(attachment.getJSONObject("image_dimensions").getInt("width"));
+                                imageAttachment.setHeight(attachment.getJSONObject("image_dimensions").getInt("height"));
+                            }
+
+                            messageContent = "[图片]";
+
+                            dbMessage.setImageAttachmentId(imageAttachment.getId());
+                            imageAttachmentService.insertOrUpdate(imageAttachment);
+
+
+                            //dbMessage.getImageAttachments().add(imageAttachment);
+                            //dbMessage.setMessageContent("[图片]");
+
                         }
+                        ///////////////////
+                        else if (attachment.has("title_link"))
+                        {
+                            FileAttachment fileAttachment = new FileAttachment();
+                            fileAttachment.setId(message.getJSONObject("file").getString("_id"));
+                            fileAttachment.setTitle(attachment.getString("title").substring(15));
+                            fileAttachment.setDescription(attachment.getString("description"));
+                            fileAttachment.setLink(attachment.getString("title_link"));
+                            //dbMessage.getFileAttachments().add(fileAttachment);
+                            messageContent = fileAttachment.getTitle();
 
-
-                        //dbMessage.getImageAttachments().add(imageAttachment);
-                        //dbMessage.setMessageContent("[图片]");
-
-                        messageContent = "[图片]";
-
-                        dbMessage.setImageAttachmentId(imageAttachment.getId());
-                        imageAttachmentService.insertOrUpdate(imageAttachment);
-                    }
-                    ///////////////////
-                    else if (attachment.has("title_link"))
-                    {
-                        FileAttachment fileAttachment = new FileAttachment();
-                        fileAttachment.setId(message.getJSONObject("file").getString("_id"));
-                        fileAttachment.setTitle(attachment.getString("title").substring(15));
-                        fileAttachment.setDescription(attachment.getString("description"));
-                        fileAttachment.setLink(attachment.getString("title_link"));
-                        //dbMessage.getFileAttachments().add(fileAttachment);
-                        messageContent = fileAttachment.getTitle();
-
-                        dbMessage.setFileAttachmentId(fileAttachment.getId());
-                        fileAttachmentService.insertOrUpdate(fileAttachment);
+                            dbMessage.setFileAttachmentId(fileAttachment.getId());
+                            fileAttachmentService.insertOrUpdate(fileAttachment);
+                        }
                     }
                 }
             }
