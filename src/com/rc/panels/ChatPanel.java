@@ -1021,8 +1021,13 @@ public class ChatPanel extends ParentAvailablePanel
                 Object obj = message.get("attachments");
                 if (!(obj instanceof JSONArray))
                 {
+                    ////////////
+                    dbMessage.setMessageContent(messageContent);
+                    messageList.add(dbMessage);
+                    /////////////
                     continue;
                 }
+
                 JSONArray attachments = message.getJSONArray("attachments");
                 for (int j = 0; j < attachments.length(); j++)
                 {
@@ -1050,7 +1055,8 @@ public class ChatPanel extends ParentAvailablePanel
                         dbMessage.setImageAttachmentId(imageAttachment.getId());
                         imageAttachmentService.insertOrUpdate(imageAttachment);
                     }
-                    else
+                    ///////////////////
+                    else if (attachment.has("title_link"))
                     {
                         FileAttachment fileAttachment = new FileAttachment();
                         fileAttachment.setId(message.getJSONObject("file").getString("_id"));
@@ -1062,7 +1068,6 @@ public class ChatPanel extends ParentAvailablePanel
 
                         dbMessage.setFileAttachmentId(fileAttachment.getId());
                         fileAttachmentService.insertOrUpdate(fileAttachment);
-
                     }
                 }
             }

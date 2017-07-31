@@ -912,7 +912,7 @@ public class WebSocketClient
                             //dbMessage.setMessageContent("[图片]");
                             messageContent = "[图片]";
                         }
-                        else
+                        else if (attachment.has("title_link"))
                         {
                             FileAttachment fileAttachment = new FileAttachment();
                             fileAttachment.setId(message.getJSONObject("file").getString("_id"));

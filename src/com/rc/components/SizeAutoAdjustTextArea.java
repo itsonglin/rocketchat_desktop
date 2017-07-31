@@ -44,6 +44,8 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
 
     // 记录每个url地址的起始位置与结束位置
     int[][] urlRange;
+    private String urlRegex;
+    private Pattern urlPattern;
 
 
     public SizeAutoAdjustTextArea(int maxWidth)
@@ -58,6 +60,10 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
         emojiRegx = ":.+?:";
         emojiPattern = Pattern.compile(emojiRegx);// 懒惰匹配，最小匹配
         fontMetrics = getFontMetrics(getFont());
+
+        //urlRegex = "(?:https?://)?(www\\.)?[\\w]+(?:\\.[\\w]+)+[\\w,\\-_/?&=#%.:]*";
+        urlRegex = "((http|ftp|https)://)?(([a-zA-Z0-9._-]+\\.[a-zA-Z]{2,})|(localhost)|([0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}))(:[0-9]{2,5})*[\\w,\\-_/?&=#%.:]*";
+        urlPattern = Pattern.compile(urlRegex);
 
         setListeners();
     }
@@ -410,8 +416,9 @@ public class SizeAutoAdjustTextArea extends JIMSendTextPane
 
 
         //long start = System.currentTimeMillis();
-        String regex = "(?:https?://)?(www\\.)?[\\w]+(?:\\.[\\w]+)+[\\w,\\-_/?&=#%.:]*";
-        Pattern urlPattern = Pattern.compile(regex);
+        //String regex = "(?:https?://)?(www\\.)?[\\w]+(?:\\.[\\w]+)+[\\w,\\-_/?&=#%.:]*";
+        //urlRegex = "(?:https?://)?(www\\.)?[\\w]+(?:\\.[\\w]+)+[\\w,\\-_/?&=#%.:]*";
+        //urlPattern = Pattern.compile(urlRegex);
         Matcher urlMatcher = urlPattern.matcher(src);
         while (urlMatcher.find())
         {
