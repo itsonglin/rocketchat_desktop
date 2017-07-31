@@ -16,6 +16,7 @@ import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.InputStream;
@@ -261,6 +262,8 @@ public class MainFrame extends JFrame
 
         UIManager.put("Panel.background", Colors.WINDOW_BACKGROUND);
         UIManager.put("CheckBox.background", Colors.WINDOW_BACKGROUND);
+
+
 
 
         leftPanel = new LeftPanel();

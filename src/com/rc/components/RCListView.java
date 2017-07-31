@@ -127,14 +127,26 @@ public class RCListView extends JScrollPane
         {
             public void adjustmentValueChanged(AdjustmentEvent evt)
             {
+                int val = evt.getValue();
+                int max = getVerticalScrollBar().getMaximum();
+                int extent = getVerticalScrollBar().getModel().getExtent();
+
                 // 之所以要加上!scrollBarPressed这个条件，scrollBar在顶部的时间，scrollbar点击和释放都分别会触发adjustmentValueChanged这个事件
                 // 所以只让scrollBar释放的时候触发这个回调
                 // !scrollToBottom 这个条件保证在自动滚动到底部之前，不会调用此回调
-                if (evt.getValue() == 0 && evt.getValue() != lastScrollValue && scrollToTopListener != null && !scrollBarPressed && !scrollToBottom)
+                if (scrollToTopListener != null)
                 {
-                    messageLoading = true;
-                    scrollToTopListener.onScrollToTop();
+                    if (evt.getValue() == 0 && evt.getValue() != lastScrollValue && !scrollBarPressed && !scrollToBottom)
+                    {
+                        messageLoading = true;
+                        scrollToTopListener.onScrollToTop();
+                    }
+                    else if ((max - (val + extent)) < 1)
+                    {
+                        scrollToTopListener.onScrollToBottom();
+                    }
                 }
+
 
                 if (evt.getAdjustmentType() == AdjustmentEvent.TRACK && scrollToBottom)
                 {
@@ -262,8 +274,10 @@ public class RCListView extends JScrollPane
         contentPanel.setBackground(color);
     }
 
-    public void scrollToPosition(int position)
+    public void scrollToBottom()
     {
+        setAutoScrollToBottom();
+        getVerticalScrollBar().setValue(getVerticalScrollBar().getMaximum());
     }
 
     /**
@@ -414,5 +428,7 @@ public class RCListView extends JScrollPane
     public interface ScrollToTopListener
     {
         void onScrollToTop();
+
+        void onScrollToBottom();
     }
 }

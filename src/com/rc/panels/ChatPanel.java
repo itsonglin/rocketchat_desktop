@@ -2,6 +2,7 @@ package com.rc.panels;
 
 import com.rc.adapter.message.*;
 import com.rc.app.Launcher;
+import com.rc.app.Toast;
 import com.rc.components.Colors;
 import com.rc.components.GBC;
 import com.rc.components.RCBorder;
@@ -108,6 +109,7 @@ public class ChatPanel extends ParentAvailablePanel
      */
     private Queue<String> shareAttachmentUploadQueue = new ArrayDeque<>(MAX_SHARE_ATTACHMENT_UPLOAD_COUNT);
     private com.apple.eawt.Application app = null;
+    private Toast newMessageToast;
 
 
     public ChatPanel(JPanel parent)
@@ -163,6 +165,9 @@ public class ChatPanel extends ParentAvailablePanel
         splitPane.setDividerSize(2);
         splitPane.setLeftComponent(topPanel);
         splitPane.setRightComponent(bottomPanel);
+
+        newMessageToast = new Toast(MainFrame.getContext(), "新未读消息");
+        newMessageToast.setVisible(false);
     }
 
 
@@ -265,6 +270,12 @@ public class ChatPanel extends ParentAvailablePanel
 
                     messagePanel.getMessageListView().notifyItemRangeInserted(0, messages.size());
                 }
+            }
+
+            @Override
+            public void onScrollToBottom()
+            {
+                newMessageToast.setVisible(false);
             }
         });
 
@@ -393,6 +404,18 @@ public class ChatPanel extends ParentAvailablePanel
                 {
                     editor.replaceSelection(code);
                 }
+            }
+        });
+
+        newMessageToast.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                messagePanel.getMessageListView().scrollToBottom();
+                newMessageToast.setVisible(false);
+
+                super.mouseClicked(e);
             }
         });
     }
@@ -1298,6 +1321,17 @@ public class ChatPanel extends ParentAvailablePanel
         {
             downloadFile(fileAttachmentService.findById(message.getFileAttachmentId()), message.getId());
         }
+
+        JScrollBar messageScrollBar = messagePanel.getMessageListView().getVerticalScrollBar();
+        int val = messageScrollBar.getValue();
+        int max = messageScrollBar.getMaximum();
+        int extent = messageScrollBar.getModel().getExtent();
+
+        if ((max - (val + extent)) > 0)
+        {
+            newMessageToast.setVisible(true);
+        }
+
 
         //updateUnreadCount(0);
     }

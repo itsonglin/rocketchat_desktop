@@ -13,11 +13,14 @@ import java.awt.*;
  */
 public class MessagePanel extends ParentAvailablePanel
 {
+    private static MessagePanel context;
+
     RCListView listView;
 
     public MessagePanel(JPanel parent)
     {
         super(parent);
+        context = this;
 
         initComponents();
         setListeners();
@@ -57,6 +60,11 @@ public class MessagePanel extends ParentAvailablePanel
     public RCListView getMessageListView()
     {
         return listView;
+    }
+
+    public static MessagePanel getContext()
+    {
+        return context;
     }
 }
 
