@@ -85,11 +85,8 @@ public class ChatPanel extends ParentAvailablePanel
     private FileCache fileCache;
 
 
-    // 当前消息分页数
-    private int page = 1;
-
     // 每次加载的消息条数
-    private static final int PAGE_LENGTH = 10;
+    private static final int PAGE_LENGTH = 5;
 
 
     private String roomId;
@@ -275,10 +272,10 @@ public class ChatPanel extends ParentAvailablePanel
                         loadMoreHistoryFromRemote(false);
 
                         // 数据库中没有当前房间的消，页码恢复为1
-                        if (messageService.countByRoom(roomId) < 1)
+                        /*if (messageService.countByRoom(roomId) < 1)
                         {
                             page = 1;
-                        }
+                        }*/
                     }
 
                     messagePanel.getMessageListView().notifyItemRangeInserted(0, messages.size());
@@ -862,7 +859,10 @@ public class ChatPanel extends ParentAvailablePanel
                     int newMessageCount;
                     //boolean loadUnread = (startTime != 0 && endTime == 0);
                     newMessageCount = processRoomHistoryResult(retJson, loadUnread, firstRequest, startTime);
-                    System.out.println("newMessageCount = " + newMessageCount);
+                    if (newMessageCount > 0)
+                    {
+                        System.out.println("newMessageCount = " + newMessageCount);
+                    }
 
                     if (listener != null)
                     {
@@ -1039,62 +1039,51 @@ public class ChatPanel extends ParentAvailablePanel
             }
 
             // 处理附件
-            if (message.has("attachments") && !message.getString("msg").startsWith("[ ]("))
+            if (message.has("attachments") && message.get("attachments") instanceof JSONArray
+                    && message.has("file")
+                    && !message.getString("msg").startsWith("[ ]("))
             {
-                Object obj = message.get("attachments");
-                if (!(obj instanceof JSONArray))
+                JSONArray attachments = message.getJSONArray("attachments");
+                for (int j = 0; j < attachments.length(); j++)
                 {
-                    ////////////
-                    dbMessage.setMessageContent(messageContent);
-                    messageList.add(dbMessage);
-                    /////////////
-                    continue;
-                }
-
-                if (message.has("file"))
-                {
-                    JSONArray attachments = message.getJSONArray("attachments");
-                    for (int j = 0; j < attachments.length(); j++)
+                    JSONObject attachment = attachments.getJSONObject(j);
+                    if (attachment.has("image_url"))
                     {
-                        JSONObject attachment = attachments.getJSONObject(j);
-                        if (attachment.has("image_url"))
+                        ImageAttachment imageAttachment = new ImageAttachment();
+                        imageAttachment.setId(message.getJSONObject("file").getString("_id"));
+                        imageAttachment.setTitle(attachment.getString("title"));
+                        imageAttachment.setDescription(attachment.get("description").toString());
+                        imageAttachment.setImageUrl(attachment.getString("image_url"));
+                        imageAttachment.setImagesize(attachment.getLong("image_size"));
+                        if (attachment.has("image_dimensions"))
                         {
-                            ImageAttachment imageAttachment = new ImageAttachment();
-                            imageAttachment.setId(message.getJSONObject("file").getString("_id"));
-                            imageAttachment.setTitle(attachment.getString("title"));
-                            imageAttachment.setDescription(attachment.get("description").toString());
-                            imageAttachment.setImageUrl(attachment.getString("image_url"));
-                            imageAttachment.setImagesize(attachment.getLong("image_size"));
-                            if (attachment.has("image_dimensions"))
-                            {
-                                imageAttachment.setWidth(attachment.getJSONObject("image_dimensions").getInt("width"));
-                                imageAttachment.setHeight(attachment.getJSONObject("image_dimensions").getInt("height"));
-                            }
-
-                            messageContent = "[图片]";
-
-                            dbMessage.setImageAttachmentId(imageAttachment.getId());
-                            imageAttachmentService.insertOrUpdate(imageAttachment);
-
-
-                            //dbMessage.getImageAttachments().add(imageAttachment);
-                            //dbMessage.setMessageContent("[图片]");
-
+                            imageAttachment.setWidth(attachment.getJSONObject("image_dimensions").getInt("width"));
+                            imageAttachment.setHeight(attachment.getJSONObject("image_dimensions").getInt("height"));
                         }
-                        ///////////////////
-                        else if (attachment.has("title_link"))
-                        {
-                            FileAttachment fileAttachment = new FileAttachment();
-                            fileAttachment.setId(message.getJSONObject("file").getString("_id"));
-                            fileAttachment.setTitle(attachment.getString("title").substring(15));
-                            fileAttachment.setDescription(attachment.getString("description"));
-                            fileAttachment.setLink(attachment.getString("title_link"));
-                            //dbMessage.getFileAttachments().add(fileAttachment);
-                            messageContent = fileAttachment.getTitle();
 
-                            dbMessage.setFileAttachmentId(fileAttachment.getId());
-                            fileAttachmentService.insertOrUpdate(fileAttachment);
-                        }
+                        messageContent = "[图片]";
+
+                        dbMessage.setImageAttachmentId(imageAttachment.getId());
+                        imageAttachmentService.insertOrUpdate(imageAttachment);
+
+
+                        //dbMessage.getImageAttachments().add(imageAttachment);
+                        //dbMessage.setMessageContent("[图片]");
+
+                    }
+                    ///////////////////
+                    else if (attachment.has("title_link"))
+                    {
+                        FileAttachment fileAttachment = new FileAttachment();
+                        fileAttachment.setId(message.getJSONObject("file").getString("_id"));
+                        fileAttachment.setTitle(attachment.getString("title").substring(15));
+                        fileAttachment.setDescription(attachment.getString("description"));
+                        fileAttachment.setLink(attachment.getString("title_link"));
+                        //dbMessage.getFileAttachments().add(fileAttachment);
+                        messageContent = fileAttachment.getTitle();
+
+                        dbMessage.setFileAttachmentId(fileAttachment.getId());
+                        fileAttachmentService.insertOrUpdate(fileAttachment);
                     }
                 }
             }
@@ -1249,6 +1238,8 @@ public class ChatPanel extends ParentAvailablePanel
      */
     public void notifyDataSetChanged()
     {
+        messageItems.clear();
+
         messagePanel.getMessageListView().setVisible(false);
         new Thread(new Runnable()
         {
@@ -1257,8 +1248,6 @@ public class ChatPanel extends ParentAvailablePanel
             {
                 // 重置ViewHolder缓存
                 messageViewHolderCacheHelper.reset();
-
-                messageItems.clear();
 
                 //long start = System.currentTimeMillis();
                 initData();

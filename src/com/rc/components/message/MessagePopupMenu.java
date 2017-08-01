@@ -336,7 +336,6 @@ public class MessagePopupMenu extends JPopupMenu
         String filename = srcFile.getName();
         //JFileChooser jfc = new JFileChooser();
         jfc.setDialogTitle("保存");
-
         File filePath = FileSystemView.getFileSystemView().getHomeDirectory();
         File defaultFile = new File(filePath + File.separator + filename);
         jfc.setSelectedFile(defaultFile);

@@ -4,6 +4,7 @@ import com.rc.components.Colors;
 import com.rc.panels.ChatPanel;
 import com.rc.utils.ClipboardUtil;
 import com.rc.utils.IconUtil;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -19,6 +20,7 @@ import java.util.Date;
 
 public class ScreenShot extends JFrame
 {
+    public static boolean visible = false;
     private int startX;
     private int startY;
     private int endX;
@@ -54,7 +56,7 @@ public class ScreenShot extends JFrame
 
     private int mouseDownArea = OUTSIDE_SELECTED;
 
-    public ScreenShot() throws AWTException
+    public ScreenShot()
     {
         setUndecorated(true);
         setBackground(Colors.DARK);
@@ -69,7 +71,6 @@ public class ScreenShot extends JFrame
         SWresizeCursor = new Cursor(Cursor.SW_RESIZE_CURSOR);
         NEresizeCursor = new Cursor(Cursor.NE_RESIZE_CURSOR);
         SEresizeCursor = new Cursor(Cursor.SE_RESIZE_CURSOR);
-
 
         setCursor(crossCursor);
 
@@ -98,7 +99,7 @@ public class ScreenShot extends JFrame
                 {
                     mouseDragged = false;
 
-                    controlDialog.setBounds(drawX + 8, drawY + selectedHeight + 10, 200, 50);
+                    controlDialog.setBounds(drawX + 8, drawY + selectedHeight + 10, 200, 40);
                     controlDialog.setVisible(true);
                 }
             }
@@ -332,7 +333,7 @@ public class ScreenShot extends JFrame
         }
     }
 
-    private void screenShot() throws AWTException
+    private void screenShot()
     {
         //获取默认屏幕设备
         GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
@@ -343,11 +344,19 @@ public class ScreenShot extends JFrame
         this.setBounds(0, 0, d.width, d.height);
 
         //获取屏幕截图
-        Robot robot = new Robot(screen);
-        image = robot.createScreenCapture(new Rectangle(0, 0, d.width, d.height));
+        try
+        {
+            Robot robot = new Robot(screen);
+            image = robot.createScreenCapture(new Rectangle(0, 0, d.width, d.height));
 
-        maxWidth = image.getWidth();
-        maxHeight = image.getHeight();
+            maxWidth = image.getWidth();
+            maxHeight = image.getHeight();
+        }
+        catch (AWTException e)
+        {
+            e.printStackTrace();
+        }
+
     }
 
     private void initControlDialog()
@@ -355,7 +364,8 @@ public class ScreenShot extends JFrame
         controlDialog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         controlDialog.setAlwaysOnTop(true);
         controlDialog.setUndecorated(true);
-        controlDialog.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        controlDialog.setOpacity(0.7F);
+        controlDialog.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 6));
 
         JLabel okLabel = new JLabel(IconUtil.getIcon(this, "/image/ok.png"));
         JLabel cancelLabel = new JLabel(IconUtil.getIcon(this, "/image/cancel.png"));
@@ -506,6 +516,25 @@ public class ScreenShot extends JFrame
         }
     }
 
+
+    @Override
+    public void setVisible(boolean v)
+    {
+        if (v)
+        {
+            boolean frameActive = MainFrame.getContext().isActive();
+
+            if (!frameActive)
+            {
+                setAlwaysOnTop(true);
+                toFront();
+            }
+        }
+
+
+        visible = v;
+        super.setVisible(v);
+    }
 
     private void close()
     {

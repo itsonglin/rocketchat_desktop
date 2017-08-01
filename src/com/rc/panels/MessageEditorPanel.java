@@ -1,14 +1,15 @@
 package com.rc.panels;
 
-import com.melloware.jintellitype.HotkeyListener;
-import com.melloware.jintellitype.JIntellitype;
+import com.rc.app.Launcher;
 import com.rc.components.*;
 import com.rc.components.message.ChatEditorPopupMenu;
 import com.rc.frames.ScreenShot;
+import com.rc.helper.HotKeyHelper;
 import com.rc.listener.ExpressionListener;
 import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
-import com.rc.utils.OSUtil;
+import com.tulskiy.keymaster.common.HotKey;
+import com.tulskiy.keymaster.common.HotKeyListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -40,6 +41,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
     private ImageIcon cutActiveIcon;
 
     private ExpressionPopup expressionPopup;
+    private ScreenShot screenShot;
 
     public MessageEditorPanel(JPanel parent)
     {
@@ -49,28 +51,19 @@ public class MessageEditorPanel extends ParentAvailablePanel
         initView();
         setListeners();
 
-        if (OSUtil.getOsType() == OSUtil.Windows)
-        {
-            registerHotKey();
-        }
+        registerHotKey();
     }
 
     private void registerHotKey()
     {
-        int SCREEN_SHOT_CODE = 10001;
-        JIntellitype.getInstance().registerHotKey(SCREEN_SHOT_CODE, JIntellitype.MOD_ALT, 'S');
-
-        JIntellitype.getInstance().addHotKeyListener(new HotkeyListener()
+        HotKeyHelper.getInstance().register(Launcher.hotKeyMap.get(Launcher.HOT_KEY_SCREEN_SHOT), new HotKeyListener()
         {
             @Override
-            public void onHotKey(int markCode)
+            public void onHotKey(HotKey hotKey)
             {
-                if (markCode == SCREEN_SHOT_CODE)
-                {
-                    screenShot();
-                }
+                screenShot();
             }
-        });
+        }, "屏幕截图");
     }
 
     private void initComponents()
@@ -98,14 +91,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
         cutActiveIcon = IconUtil.getIcon(this, "/image/cut_active.png");
         cutLabel.setIcon(cutNormalIcon);
         cutLabel.setCursor(handCursor);
-        if (OSUtil.getOsType() == OSUtil.Windows)
-        {
-            cutLabel.setToolTipText("截图(Alt + S)");
-        }
-        else
-        {
-            cutLabel.setToolTipText("截图(当前系统下不支持全局热键)");
-        }
+        cutLabel.setToolTipText("截图(Ctrl + Alt + Z)");
 
 
         textEditor = new RCTextEditor();
@@ -131,6 +117,8 @@ public class MessageEditorPanel extends ParentAvailablePanel
         chatEditorPopupMenu = new ChatEditorPopupMenu();
 
         expressionPopup = new ExpressionPopup();
+
+        screenShot = new ScreenShot();
     }
 
     private void initView()
@@ -229,14 +217,10 @@ public class MessageEditorPanel extends ParentAvailablePanel
 
     private void screenShot()
     {
-        try
+        if (!ScreenShot.visible)
         {
-            ScreenShot ssw = new ScreenShot();
-            ssw.setVisible(true);
-        }
-        catch (AWTException e1)
-        {
-            e1.printStackTrace();
+            screenShot = new ScreenShot();
+            screenShot.setVisible(true);
         }
     }
 

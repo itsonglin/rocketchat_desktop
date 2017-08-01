@@ -12,9 +12,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
+import java.awt.event.InputEvent;
 import java.io.*;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by song on 09/06/2017.
@@ -32,13 +35,20 @@ public class Launcher
     public static FileAttachmentService fileAttachmentService;
 
     public static final String HOSTNAME = "https://chat1.shls-leasing.com";
-    //    public static final String UPDATE_HOSTNAME = "http://192.168.1.171:8080";
     public static final String UPDATE_HOSTNAME = "https://apk.shls-leasing.com";
-
     public static final String APP_VERSION = "1.0.10";
+
 
     public static String userHome;
     public static String appFilesBasePath;
+
+    public static Map<Integer, KeyStroke> hotKeyMap;
+
+
+    /**
+     * 截取屏幕
+     */
+    public static final int HOT_KEY_SCREEN_SHOT = 1;
 
 
     static
@@ -50,6 +60,10 @@ public class Launcher
         contactsUserService = new ContactsUserService(sqlSession);
         imageAttachmentService = new ImageAttachmentService(sqlSession);
         fileAttachmentService = new FileAttachmentService(sqlSession);
+
+        hotKeyMap = new HashMap<>();
+        hotKeyMap.put(HOT_KEY_SCREEN_SHOT, KeyStroke.getKeyStroke('Z', InputEvent.CTRL_DOWN_MASK|InputEvent.ALT_DOWN_MASK));
+
     }
 
     private JFrame currentFrame;

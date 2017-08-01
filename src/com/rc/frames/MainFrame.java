@@ -12,6 +12,11 @@ import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.OSUtil;
 import com.rc.websocket.WebSocketClient;
+import com.tulskiy.keymaster.common.HotKey;
+import com.tulskiy.keymaster.common.HotKeyListener;
+import com.tulskiy.keymaster.common.MediaKey;
+import com.tulskiy.keymaster.common.Provider;
+import org.apache.log4j.spi.LoggerFactory;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
 
@@ -279,6 +284,18 @@ public class MainFrame extends JFrame
 
     private void test()
     {
+        /*Provider provider = Provider.getCurrentProvider(true);
+
+
+        KeyStroke hh = KeyStroke.getKeyStroke('Q', InputEvent.CTRL_DOWN_MASK);
+        provider.register(hh, new HotKeyListener()
+        {
+            @Override
+            public void onHotKey(HotKey hotKey)
+            {
+                System.out.println(hotKey);
+            }
+        });*/
     }
 
     private void initView()
