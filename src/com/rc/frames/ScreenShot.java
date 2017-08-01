@@ -4,6 +4,8 @@ import com.rc.components.Colors;
 import com.rc.panels.ChatPanel;
 import com.rc.utils.ClipboardUtil;
 import com.rc.utils.IconUtil;
+import com.rc.utils.OSUtil;
+import com.rc.utils.WindowUtil;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,7 +18,7 @@ import java.awt.image.RescaleOp;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.util.*;
 
 public class ScreenShot extends JFrame
 {
@@ -56,6 +58,11 @@ public class ScreenShot extends JFrame
 
     private int mouseDownArea = OUTSIDE_SELECTED;
 
+    private java.util.List<WindowUtil.WindowInfo> windowInfoList = new ArrayList<>();
+    private boolean mouseDown = false;
+    private boolean hitWindow;
+    private WindowUtil.WindowInfo activeWindow = null;
+
     public ScreenShot()
     {
         setUndecorated(true);
@@ -77,6 +84,47 @@ public class ScreenShot extends JFrame
         screenShot();
         initControlDialog();
         setListeners();
+
+        getWindowList();
+
+        activeWindow = WindowUtil.getForegroundWindow();
+
+    }
+
+    /**
+     * 获取当前桌面的所有窗口位置信息
+     */
+    private void getWindowList()
+    {
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        int screenWidth = tk.getScreenSize().width;
+        int screenHeight = tk.getScreenSize().height;
+
+
+        if (OSUtil.getOsType() == OSUtil.Windows)
+        {
+            for (WindowUtil.WindowInfo info : WindowUtil.listWindow())
+            {
+                if (info.getRect().right == screenWidth)
+                {
+                    continue;
+                }
+
+                WindowUtil.RECT rect = info.getRect();
+
+                // 保证窗口大小不越界
+                int l = rect.left < 0 ? 0 : rect.left;
+                int t = rect.top < 0 ? 0 : rect.top;
+                int r = rect.right > screenWidth ? screenWidth : rect.right;
+                int b = rect.bottom > screenHeight ? screenHeight : rect.bottom;
+                rect.setLeft(l);
+                rect.setTop(t);
+                rect.setRight(r);
+                rect.setBottom(b);
+
+                windowInfoList.add(info);
+            }
+        }
     }
 
     private void setListeners()
@@ -86,8 +134,14 @@ public class ScreenShot extends JFrame
             @Override
             public void mousePressed(MouseEvent e)
             {
-                mouseDownArea = getMousePosition(e);
+                mouseDown = true;
 
+                if (hitWindow)
+                {
+                    drawRectangle(true);
+                }
+
+                mouseDownArea = getMousePosition(e);
                 startX = e.getX();
                 startY = e.getY();
             }
@@ -128,9 +182,9 @@ public class ScreenShot extends JFrame
                 endX = e.getX();
                 endY = e.getY();
 
-                Image tempImage2 = createImage(ScreenShot.this.getWidth(), ScreenShot.this.getHeight());
+                /*Image tempImage2 = createImage(ScreenShot.this.getWidth(), ScreenShot.this.getHeight());
                 Graphics g = tempImage2.getGraphics();
-                g.drawImage(tempImage, 0, 0, null);
+                g.drawImage(tempImage, 0, 0, null);*/
 
                 // 如果鼠标落在选定区域内，则鼠标移动时移动选定区域
                 if (mouseDownArea == IN_SELECTED_AREA)
@@ -211,8 +265,7 @@ public class ScreenShot extends JFrame
                     startY = e.getY();
                 }
 
-                g.setColor(Color.CYAN);
-
+                /*g.setColor(Color.CYAN);
                 // 绘制选定区域矩形
                 g.drawRect(drawX - 1, drawY - 1, selectedWidth + 1, selectedHeight + 1);
 
@@ -229,7 +282,9 @@ public class ScreenShot extends JFrame
                 g.drawImage(saveImage, drawX, drawY, null);
 
                 ScreenShot.this.getGraphics().drawImage(tempImage2,
-                        0, 0, ScreenShot.this);
+                        0, 0, ScreenShot.this);*/
+
+                drawRectangle(true);
 
                 if (controlDialog.isVisible())
                 {
@@ -241,38 +296,95 @@ public class ScreenShot extends JFrame
             @Override
             public void mouseMoved(MouseEvent e)
             {
-                int mousePosition = getMousePosition(e);
-                switch (mousePosition)
+                // 如果已经按下了鼠标，则不高亮其他窗口
+                if (mouseDown)
                 {
-                    case IN_SELECTED_AREA:
+
+                    int mousePosition = getMousePosition(e);
+                    switch (mousePosition)
                     {
-                        setCursor(moveCursor);
-                        break;
+                        case IN_SELECTED_AREA:
+                        {
+                            setCursor(moveCursor);
+                            break;
+                        }
+                        case LEFT_TOP:
+                        {
+                            setCursor(NWresizeCursor);
+                            break;
+                        }
+                        case LEFT_BOTTOM:
+                        {
+                            setCursor(SWresizeCursor);
+                            break;
+                        }
+                        case RIGHT_TOP:
+                        {
+                            setCursor(NEresizeCursor);
+                            break;
+                        }
+                        case RIGHT_BOTTOM:
+                        {
+                            setCursor(SEresizeCursor);
+                            break;
+                        }
+                        case OUTSIDE_SELECTED:
+                        {
+                            setCursor(crossCursor);
+                            break;
+                        }
                     }
-                    case OUTSIDE_SELECTED:
+                }
+                else
+                {
+                    WindowUtil.RECT rect = null;
+                    hitWindow = false;
+
+                   // 高亮现有窗口
+                    for (WindowUtil.WindowInfo info : windowInfoList)
                     {
-                        setCursor(crossCursor);
-                        break;
+                        WindowUtil.RECT rectangle = info.getRect();
+
+
+                        if (e.getX() >= rectangle.getLeft()
+                                && e.getY() >= rectangle.getTop()
+                                && e.getX() <= rectangle.getRight()
+                                && e.getY() <= rectangle.getBottom())
+                        {
+                            if (info.getHwnd() == activeWindow.getHwnd())
+                            {
+                                hitWindow = true;
+                                rect = rectangle;
+                                break;
+                            }
+
+                            if (!inActiveWindow(e.getX(), e.getY()))
+                            {
+                                hitWindow = true;
+                                rect = rectangle;
+                                break;
+                            }
+                        }
                     }
-                    case LEFT_TOP:
+
+                    if (hitWindow)
                     {
-                        setCursor(NWresizeCursor);
-                        break;
-                    }
-                    case LEFT_BOTTOM:
-                    {
-                        setCursor(SWresizeCursor);
-                        break;
-                    }
-                    case RIGHT_TOP:
-                    {
-                        setCursor(NEresizeCursor);
-                        break;
-                    }
-                    case RIGHT_BOTTOM:
-                    {
-                        setCursor(SEresizeCursor);
-                        break;
+                        drawX = (int) rect.getLeft();
+                        drawY = (int) rect.getTop();
+                        selectedWidth = (int) rect.getRight() - rect.getLeft();
+                        selectedHeight = (int) rect.getBottom() - rect.getTop();
+
+
+                        /*Image tempImage2 = createImage(ScreenShot.this.getWidth(), ScreenShot.this.getHeight());
+                        Graphics g = tempImage2.getGraphics();
+                        g.drawImage(tempImage, 0, 0, null);
+
+                        saveImage = image.getSubimage(drawX, drawY, selectedWidth, selectedHeight);
+                        g.drawImage(saveImage, drawX, drawY, null);
+
+                        ScreenShot.this.getGraphics().drawImage(tempImage2,
+                                0, 0, ScreenShot.this);*/
+                        drawRectangle(false);
                     }
                 }
 
@@ -300,6 +412,44 @@ public class ScreenShot extends JFrame
 
         addKeyListener(keyListener);
         controlDialog.addKeyListener(keyListener);
+    }
+
+    private boolean inActiveWindow(int x, int y)
+    {
+        int ax1 = activeWindow.getRect().left;
+        int ay1 = activeWindow.getRect().top;
+        int ax2 = activeWindow.getRect().right;
+        int ay2 = activeWindow.getRect().bottom;
+
+        return x >= ax1 && x <= ax2 && y >= ay1 && y <= ay2;
+    }
+
+
+    private void drawRectangle(boolean drawAnchor)
+    {
+        Image tempImage2 = createImage(ScreenShot.this.getWidth(), ScreenShot.this.getHeight());
+        Graphics g = tempImage2.getGraphics();
+        g.drawImage(tempImage, 0, 0, null);
+        g.setColor(Color.CYAN);
+
+        // 绘制选定区域矩形
+        g.drawRect(drawX - 1, drawY - 1, selectedWidth + 1, selectedHeight + 1);
+
+        if (drawAnchor)
+        {
+            // 绘制四角锚点
+            g.fillRect(drawX - 8, drawY - 8, 8, 8);
+            g.fillRect(drawX + selectedWidth, drawY - 8, 8, 8);
+            g.fillRect(drawX - 8, drawY + selectedHeight, 8, 8);
+            g.fillRect(drawX + selectedWidth, drawY + selectedHeight, 8, 8);
+        }
+
+
+        saveImage = image.getSubimage(drawX, drawY, selectedWidth, selectedHeight);
+        g.drawImage(saveImage, drawX, drawY, null);
+
+        ScreenShot.this.getGraphics().drawImage(tempImage2,
+                0, 0, ScreenShot.this);
     }
 
     private int getMousePosition(MouseEvent e)

@@ -103,7 +103,7 @@ public class AddOrRemoveMemberDialog extends JDialog
         buttonPanel.add(okButton, new GBC(1, 0).setWeight(1, 1));
 
 
-        /*setLayout(new VerticalFlowLayout(VerticalFlowLayout.LEFT, 0, 0, false, false));
+        /*setLayout(new VerticalFlowLayout(VerticalFlowLayout.left, 0, 0, false, false));
         editorPanel.setPreferredSize(new Dimension(DIALOG_WIDTH, 40));
         selectUserPanel.setPreferredSize(new Dimension(400, 200));
         buttonPanel.setPreferredSize(new Dimension(DIALOG_WIDTH, 40));

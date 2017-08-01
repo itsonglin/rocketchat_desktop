@@ -102,7 +102,7 @@ public class LoginFrame extends JFrame
         passwordField = new RCPasswordField();
         passwordField.setPreferredSize(textFieldDimension);
         passwordField.setPlaceholder("密码");
-        //passwordField.setBorder(new RCBorder(RCBorder.BOTTOM, Colors.LIGHT_GRAY));
+        //passwordField.setBorder(new RCBorder(RCBorder.bottom, Colors.LIGHT_GRAY));
         passwordField.setFont(FontUtil.getDefaultFont(14));
         passwordField.setForeground(Colors.FONT_BLACK);
         passwordField.setMargin(new Insets(0, 15, 0, 0));
