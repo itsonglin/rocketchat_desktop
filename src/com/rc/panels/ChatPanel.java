@@ -599,7 +599,6 @@ public class ChatPanel extends ParentAvailablePanel
         sendReadMessage();
 
 
-        //TitlePanel.getContext().hideRoomMembersPanel();
         RoomMembersPanel.getContext().setRoomId(roomId);
 
         messageEditorPanel.getEditor().setText("");
@@ -810,10 +809,12 @@ public class ChatPanel extends ParentAvailablePanel
     private void updateUnreadCount(int count)
     {
         room = roomService.findById(roomId);
-        /*if (count < 0)
+
+        if (room == null)
         {
-            System.out.println(count);
-        }*/
+            RoomsPanel.getContext().notifyDataSetChanged(true);
+            return;
+        }
         room.setUnreadCount(count);
         room.setTotalReadCount(room.getMsgSum());
         roomService.update(room);

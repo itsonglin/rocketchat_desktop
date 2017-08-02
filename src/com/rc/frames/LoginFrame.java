@@ -116,6 +116,8 @@ public class LoginFrame extends JFrame
         statusLabel.setForeground(Colors.RED);
         statusLabel.setText("密码不正确");
         statusLabel.setVisible(false);
+
+        setIconImage(IconUtil.getIcon(this, "/image/ic_launcher.png").getImage());
     }
 
     private void initView()

@@ -24,8 +24,12 @@ import com.rc.websocket.WebSocketClient;
 import org.apache.log4j.Logger;
 
 import javax.swing.*;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.html.HTMLDocument;
+import javax.swing.text.html.HTMLEditorKit;
 import java.awt.*;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
@@ -678,6 +682,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
         listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
         listView.setScrollHiddenOnMouseLeave(holder.text);
+
+
     }
 
     /**
