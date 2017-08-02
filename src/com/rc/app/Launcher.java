@@ -78,17 +78,6 @@ public class Launcher
 
     public void launch()
     {
-        if (OSUtil.getOsType() == OSUtil.Windows)
-        {
-            for (WindowUtil.WindowInfo info : WindowUtil.listWindow())
-            {
-                System.out.println(info);
-            };
-
-        }
-
-
-
         config();
 
         if (!isApplicationRunning())
