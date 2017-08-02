@@ -85,10 +85,12 @@ public class ScreenShot extends JFrame
         initControlDialog();
         setListeners();
 
-        getWindowList();
+        if (OSUtil.getOsType() == OSUtil.Windows)
+        {
+            getWindowList();
 
-        activeWindow = WindowUtil.getForegroundWindow();
-
+            activeWindow = WindowUtil.getForegroundWindow();
+        }
     }
 
     /**
@@ -284,6 +286,9 @@ public class ScreenShot extends JFrame
                 ScreenShot.this.getGraphics().drawImage(tempImage2,
                         0, 0, ScreenShot.this);*/
 
+                selectedWidth = selectedWidth > maxWidth ? maxWidth : selectedWidth;
+                selectedHeight = selectedHeight > maxHeight ? maxHeight : selectedHeight;
+
                 drawRectangle(true);
 
                 if (controlDialog.isVisible())
@@ -450,6 +455,8 @@ public class ScreenShot extends JFrame
 
         ScreenShot.this.getGraphics().drawImage(tempImage2,
                 0, 0, ScreenShot.this);
+
+        g.dispose();
     }
 
     private int getMousePosition(MouseEvent e)

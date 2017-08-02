@@ -323,10 +323,6 @@ public class ChatPanel extends ParentAvailablePanel
 
                     sendTextMessage(null, editor.getText());*/
 
-                    WindowUtil.WindowInfo toprect = WindowUtil.getForegroundWindow();
-                    System.out.println(toprect);
-
-
                     sendMessage();
                     e.consume();
                 }
