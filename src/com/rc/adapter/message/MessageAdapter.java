@@ -40,7 +40,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
     private RCListView listView;
     private AttachmentIconHelper attachmentIconHelper = new AttachmentIconHelper();
     //private CurrentUserService currentUserService = Launcher.currentUserService;
-   // private CurrentUser currentUser;
+    // private CurrentUser currentUser;
     private ImageCache imageCache;
     private MessageService messageService = Launcher.messageService;
     private Logger logger = Logger.getLogger(this.getClass());
@@ -75,6 +75,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             case MessageItem.SYSTEM_MESSAGE:
             {
                 MessageSystemMessageViewHolder holder = messageViewHolderCacheHelper.tryGetSystemMessageViewHolder();
+
+
                 if (holder == null)
                 {
                     holder = new MessageSystemMessageViewHolder();
@@ -85,6 +87,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             case MessageItem.RIGHT_TEXT:
             {
                 MessageRightTextViewHolder holder = messageViewHolderCacheHelper.tryGetRightTextViewHolder();
+
+
                 if (holder == null)
                 {
                     holder = new MessageRightTextViewHolder();
@@ -95,6 +99,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             case MessageItem.LEFT_TEXT:
             {
                 MessageLeftTextViewHolder holder = messageViewHolderCacheHelper.tryGetLeftTextViewHolder();
+
+
                 if (holder == null)
                 {
                     holder = new MessageLeftTextViewHolder();
@@ -105,6 +111,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             case MessageItem.RIGHT_IMAGE:
             {
                 MessageRightImageViewHolder holder = messageViewHolderCacheHelper.tryGetRightImageViewHolder();
+
+
                 if (holder == null)
                 {
                     holder = new MessageRightImageViewHolder();
@@ -115,6 +123,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             case MessageItem.LEFT_IMAGE:
             {
                 MessageLeftImageViewHolder holder = messageViewHolderCacheHelper.tryGetLeftImageViewHolder();
+
+
                 if (holder == null)
                 {
                     holder = new MessageLeftImageViewHolder();
@@ -125,6 +135,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             case MessageItem.RIGHT_ATTACHMENT:
             {
                 MessageRightAttachmentViewHolder holder = messageViewHolderCacheHelper.tryGetRightAttachmentViewHolder();
+
+
                 if (holder == null)
                 {
                     holder = new MessageRightAttachmentViewHolder();
@@ -135,6 +147,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
             case MessageItem.LEFT_ATTACHMENT:
             {
                 MessageLeftAttachmentViewHolder holder = messageViewHolderCacheHelper.tryGetLeftAttachmentViewHolder();
+
+
                 if (holder == null)
                 {
                     holder = new MessageLeftAttachmentViewHolder();
@@ -518,7 +532,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                         @Override
                         public void onFailed(String why)
                         {
-                           // 图片不存在，显示错误图片
+                            // 图片不存在，显示错误图片
                             ImageViewerFrame frame = new ImageViewerFrame(getClass().getResource("/image/image_error.png").getPath());
                             frame.setVisible(true);
                         }
@@ -559,7 +573,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
                 @Override
                 public void onFailed(String why)
                 {
-                    imageLabel.setIcon(IconUtil.getIcon(this, "/image/image_error.png", 64,64));
+                    imageLabel.setIcon(IconUtil.getIcon(this, "/image/image_error.png", 64, 64));
                     holder.revalidate();
                     holder.repaint();
                 }
@@ -691,6 +705,7 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
     /**
      * 处理文本与表情，如果消息只包含一个表情而没有其他内容，则尝试解析是否存在对应的表情。
+     *
      * @param expressionLabel
      * @param messageBubble
      * @param text

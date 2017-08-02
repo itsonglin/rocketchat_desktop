@@ -107,6 +107,7 @@ public class ChatPanel extends ParentAvailablePanel
     private Queue<String> shareAttachmentUploadQueue = new ArrayDeque<>(MAX_SHARE_ATTACHMENT_UPLOAD_COUNT);
     private com.apple.eawt.Application app = null;
     private Toast newMessageToast;
+    private boolean enterRoomJustNow = false;
 
 
     public ChatPanel(JPanel parent)
@@ -249,16 +250,18 @@ public class ChatPanel extends ParentAvailablePanel
                 // 当滚动到顶部时，继续拿前面的消息
                 if (roomId != null)
                 {
+                    // 在刚刚进入房间时，会触发onScrollToTop, 导致多加载一次消息，因此设置enterRoomJustNow标记阻止这次加载
+                    // 在第一次加载完本地消息后，会设置enterRoomJustNow = false;避免在后面滚动到顶部时无法加载消息的问题
+                    if (enterRoomJustNow)
+                    {
+                        enterRoomJustNow = false;
+                        return;
+                    }
+
                     List<Message> messages = messageService.findOffset(roomId, messageItems.size(), PAGE_LENGTH);
 
                     if (messages.size() > 0)
                     {
-                        /*for (Message message : messages)
-                        {
-                            MessageItem item = new MessageItem(message, currentUser.getUserId());
-                            messageItems.add(0, item);
-                        }*/
-
                         for (int i = messages.size() - 1; i >= 0; i--)
                         {
                             MessageItem item = new MessageItem(messages.get(i), currentUser.getUserId());
@@ -270,12 +273,6 @@ public class ChatPanel extends ParentAvailablePanel
                     {
                         System.out.println("到顶，本地没有拿到消息，从服务器拿距现在一个月内的消息");
                         loadMoreHistoryFromRemote(false);
-
-                        // 数据库中没有当前房间的消，页码恢复为1
-                        /*if (messageService.countByRoom(roomId) < 1)
-                        {
-                            page = 1;
-                        }*/
                     }
 
                     messagePanel.getMessageListView().notifyItemRangeInserted(0, messages.size());
@@ -316,13 +313,6 @@ public class ChatPanel extends ParentAvailablePanel
                 // 回车发送消息
                 else if (!e.isControlDown() && e.getKeyCode() == KeyEvent.VK_ENTER)
                 {
-                    /*if (editor.getText() == null || editor.getText().isEmpty())
-                    {
-                        return;
-                    }
-
-                    sendTextMessage(null, editor.getText());*/
-
                     sendMessage();
                     e.consume();
                 }
@@ -591,6 +581,8 @@ public class ChatPanel extends ParentAvailablePanel
             return;
         }
 
+        enterRoomJustNow = true;
+
 
         this.firstMessageTimestamp = firstMessageTimestamp;
 
@@ -734,6 +726,7 @@ public class ChatPanel extends ParentAvailablePanel
 
 
         messagePanel.getMessageListView().notifyDataSetChanged(false);
+        enterRoomJustNow = false;
 
         //if (messageItems.size() <= PAGE_LENGTH)
         {

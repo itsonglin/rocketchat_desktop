@@ -234,8 +234,8 @@ public class RCListView extends JScrollPane
         }
 
         lastItemCount = adapter.getCount();
-        //this.setVisible(false);
-        for (int i = 0; i < adapter.getCount(); i++)
+
+        for (int i = 0; i < lastItemCount; i++)
         {
             int viewType = adapter.getItemViewType(i);
             HeaderViewHolder headerViewHolder = adapter.onCreateHeaderViewHolder(viewType, i);
@@ -252,8 +252,6 @@ public class RCListView extends JScrollPane
             contentPanel.add(holder);
             //System.out.println("加载完成 ，用时 " + (System.currentTimeMillis() - startTime));
         }
-
-        //this.setVisible(true);
     }
 
     public BaseAdapter getAdapter()
@@ -322,9 +320,13 @@ public class RCListView extends JScrollPane
         }
 
         contentPanel.removeAll();
-        contentPanel.repaint();
+        //contentPanel.revalidate();
+        //contentPanel.repaint();
+
         fillComponents();
+
         contentPanel.revalidate();
+        contentPanel.repaint();
 
     }
 
@@ -360,6 +362,8 @@ public class RCListView extends JScrollPane
      */
     public void notifyItemChanged(int position)
     {
+         //List<Component> components = getItems();
+
         //contentPanel.remove(position);
         //int viewType = adapter.getItemViewType(position);
         //ViewHolder holder = adapter.onCreateViewHolder(viewType);
