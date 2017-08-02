@@ -21,7 +21,7 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
 {
     private List<ContactsItem> contactsItems;
     private List<ContactsItemViewHolder> viewHolders = new ArrayList<>();
-    Map<Integer, String> positionMap = new HashMap<>();
+    Map<Integer, String> positionMap = new TreeMap<>();
     private ContactsItemViewHolder selectedViewHolder;
 
     public ContactsItemsAdapter(List<ContactsItem> contactsItems)

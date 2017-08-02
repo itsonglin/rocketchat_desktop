@@ -455,7 +455,6 @@ public class ChatPanel extends ParentAvailablePanel
                 isImageOrFile = true;
 
                 FileEditorThumbnail component = (FileEditorThumbnail) data;
-                System.out.println(component.getPath());
                 shareAttachmentUploadQueue.add(component.getPath());
 
             }
@@ -886,8 +885,6 @@ public class ChatPanel extends ParentAvailablePanel
             // 时间不准时可能出错
             //end = getCurrentUTCTime();
             end = "";
-            System.out.println(end);
-
         }
         else
         {
@@ -1262,7 +1259,6 @@ public class ChatPanel extends ParentAvailablePanel
     public void addOrUpdateMessageItem()
     {
         Message message = messageService.findLastMessage(roomId);
-        System.out.println("新来消息：" + message.getMessageContent());
         if (message == null || message.isDeleted())
         {
             return;
@@ -1273,7 +1269,6 @@ public class ChatPanel extends ParentAvailablePanel
         if (pos > -1)
         {
             messageItems.get(pos).setUpdatedAt(message.getTimestamp());
-            System.out.println("更新消息状态：" + messageItems.get(pos));
 
             messagePanel.getMessageListView().notifyItemChanged(pos);
             //updateUnreadCount(0);
@@ -1665,7 +1660,6 @@ public class ChatPanel extends ParentAvailablePanel
 
             fileAttachment = new FileAttachment();
             fileAttachment.setId(fileId);
-            System.out.println(File.separator);
             fileAttachment.setLink(uploadFilename);
             fileAttachment.setTitle(name);
             item.setFileAttachment(new FileAttachmentItem(fileAttachment));

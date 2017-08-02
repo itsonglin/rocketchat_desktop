@@ -356,7 +356,14 @@ public class ScreenShot extends JFrame
                     {
                         case IN_SELECTED_AREA:
                         {
-                            setCursor(moveCursor);
+                            if (drawSignRectangleMode || drawArrowMode)
+                            {
+                                setCursor(Cursor.getDefaultCursor());
+                            }
+                            else
+                            {
+                                setCursor(moveCursor);
+                            }
                             break;
                         }
                         case LEFT_TOP:
@@ -753,6 +760,7 @@ public class ScreenShot extends JFrame
                 drawArrowMode = true;
 
                 drawRectLabel.setIcon(IconUtil.getIcon(this, "/image/rect.png"));
+
                 super.mouseClicked(e);
             }
         });

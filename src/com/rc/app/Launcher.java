@@ -38,7 +38,7 @@ public class Launcher
 
     public static final String HOSTNAME = "https://chat1.shls-leasing.com";
     public static final String UPDATE_HOSTNAME = "https://apk.shls-leasing.com";
-    public static final String APP_VERSION = "1.0.11";
+    public static final String APP_VERSION = "1.0.12";
 
 
     public static String userHome;
