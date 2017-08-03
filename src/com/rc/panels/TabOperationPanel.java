@@ -6,6 +6,7 @@ import com.rc.components.RCBorder;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
@@ -87,67 +88,48 @@ public class TabOperationPanel extends ParentAvailablePanel
         super.printBorder(g);
     }
 
-    class TabItemClickListener implements MouseListener
+    class TabItemClickListener extends MouseAdapter
     {
-
-        @Override
-        public void mouseClicked(MouseEvent e)
-        {
-            // 搜索框内容清空
-            SearchPanel.getContext().clearSearchText();
-
-            if (e.getComponent() == chatLabel)
-            {
-                chatLabel.setIcon(chatIconActive);
-                contactsLabel.setIcon(contactIconNormal);
-                meLable.setIcon(meIconNormal);
-                parent.getListPanel().showPanel(ListPanel.CHAT);
-                RightPanel.getContext().showPanel(RightPanel.TIP);
-
-            } else if (e.getComponent() == contactsLabel)
-            {
-                chatLabel.setIcon(chatIconNormal);
-                contactsLabel.setIcon(contactIconActive);
-                meLable.setIcon(meIconNormal);
-                parent.getListPanel().showPanel(ListPanel.CONTACTS);
-                RightPanel.getContext().showPanel(RightPanel.TIP);
-                RoomsPanel.getContext().restoreActiveItem();
-                TitlePanel.getContext().showAppTitle();
-            }
-            else if (e.getComponent() == meLable)
-            {
-                chatLabel.setIcon(chatIconNormal);
-                contactsLabel.setIcon(contactIconNormal);
-                meLable.setIcon(meIconActive);
-                parent.getListPanel().showPanel(ListPanel.COLLECTIONS);
-                RightPanel.getContext().showPanel(RightPanel.TIP);
-                RoomsPanel.getContext().restoreActiveItem();
-                TitlePanel.getContext().showAppTitle();
-            }
-        }
-
-        @Override
-        public void mousePressed(MouseEvent e)
-        {
-
-        }
 
         @Override
         public void mouseReleased(MouseEvent e)
         {
+            if (e.getButton() == MouseEvent.BUTTON1)
+            {
 
-        }
+                // 搜索框内容清空
+                SearchPanel.getContext().clearSearchText();
 
-        @Override
-        public void mouseEntered(MouseEvent e)
-        {
+                if (e.getComponent() == chatLabel)
+                {
+                    chatLabel.setIcon(chatIconActive);
+                    contactsLabel.setIcon(contactIconNormal);
+                    meLable.setIcon(meIconNormal);
+                    parent.getListPanel().showPanel(ListPanel.CHAT);
+                    RightPanel.getContext().showPanel(RightPanel.TIP);
 
-        }
-
-        @Override
-        public void mouseExited(MouseEvent e)
-        {
-
+                }
+                else if (e.getComponent() == contactsLabel)
+                {
+                    chatLabel.setIcon(chatIconNormal);
+                    contactsLabel.setIcon(contactIconActive);
+                    meLable.setIcon(meIconNormal);
+                    parent.getListPanel().showPanel(ListPanel.CONTACTS);
+                    RightPanel.getContext().showPanel(RightPanel.TIP);
+                    RoomsPanel.getContext().restoreActiveItem();
+                    TitlePanel.getContext().showAppTitle();
+                }
+                else if (e.getComponent() == meLable)
+                {
+                    chatLabel.setIcon(chatIconNormal);
+                    contactsLabel.setIcon(contactIconNormal);
+                    meLable.setIcon(meIconActive);
+                    parent.getListPanel().showPanel(ListPanel.COLLECTIONS);
+                    RightPanel.getContext().showPanel(RightPanel.TIP);
+                    RoomsPanel.getContext().restoreActiveItem();
+                    TitlePanel.getContext().showAppTitle();
+                }
+            }
         }
     }
 }

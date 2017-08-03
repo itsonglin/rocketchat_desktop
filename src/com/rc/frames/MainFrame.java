@@ -155,8 +155,7 @@ public class MainFrame extends JFrame
                     @Override
                     public void actionPerformed(ActionEvent e)
                     {
-                        clearClipboardCache();
-                        System.exit(1);
+                        exitApp();
                     }
                 });
 
@@ -182,6 +181,12 @@ public class MainFrame extends JFrame
         {
             e.printStackTrace();
         }
+    }
+
+    public void exitApp()
+    {
+        clearClipboardCache();
+        System.exit(1);
     }
 
     private void setToFront()
