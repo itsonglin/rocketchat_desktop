@@ -1,6 +1,5 @@
 package com.rc.utils;
 
-import com.rc.app.Test;
 import com.sun.jna.Native;
 import com.sun.jna.Structure;
 import com.sun.jna.win32.StdCallLibrary;
@@ -17,7 +16,6 @@ public class WindowUtil
 {
     public static List<WindowInfo> listWindow()
     {
-        Test m = new Test();
         final List<WindowInfo> windowInfoList = new ArrayList<>();
         final List<Integer> order = new ArrayList<>();
 

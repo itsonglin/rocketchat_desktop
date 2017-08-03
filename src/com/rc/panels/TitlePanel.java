@@ -299,10 +299,6 @@ public class TitlePanel extends ParentAvailablePanel
     public void showAppTitle()
     {
         this.titleLabel.setText("和理通");
-    }
-
-    public void hideRoomInfoButton()
-    {
         roomInfoButton.setVisible(false);
     }
 
