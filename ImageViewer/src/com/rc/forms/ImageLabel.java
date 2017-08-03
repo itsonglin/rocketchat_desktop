@@ -2,6 +2,8 @@ package com.rc.forms;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.font.LineMetrics;
@@ -19,16 +21,27 @@ public class ImageLabel extends JLabel
 
     int x = -1;
     int y = -1;
-    int minX;
-    int maxX;
-    int minY;
-    int maxY;
 
     private boolean firstDraw = true;
     private boolean scaleImage = false;
 
     public ImageLabel()
     {
+        setListeners();
+    }
+
+    private void setListeners()
+    {
+        addComponentListener(new ComponentAdapter()
+        {
+            @Override
+            public void componentResized(ComponentEvent e)
+            {
+                firstDraw = true;
+                repaint();
+                super.componentResized(e);
+            }
+        });
     }
 
     @Override
@@ -41,11 +54,14 @@ public class ImageLabel extends JLabel
         int currentWidth = image.getWidth(null);
         int currentHeight = image.getHeight(null);
 
+        int width = getWidth();
+        int height = getHeight();
+
         if (firstDraw)
         {
             // 图片于容器垂直居中
-            x = (getWidth() - currentWidth) / 2;
-            y = (getHeight() - currentHeight) / 2;
+            x = (width - currentWidth) / 2;
+            y = (height- currentHeight) / 2;
             firstDraw = false;
         }
         else if (scaleImage)
@@ -66,46 +82,51 @@ public class ImageLabel extends JLabel
             // 图片于容器垂直居中
             x += xOffset;
             y += yOffset;
+
+
+            y = y < (height - currentHeight) ? (height - currentHeight) : y;
+            x = x < (width - currentWidth) ? (width - currentWidth) : x;
+
+            if (x > 0)
+            {
+                x = (width - currentWidth) / 2;
+            }
+            if (y > 0)
+            {
+                y = (height - currentHeight) / 2;
+            }
+
             scaleImage = false;
         }
         else
         {
-            x += xDistance;
-            y += yDistance;
+
+
+            if (currentWidth < width && currentHeight < height)
+            {
+
+            }
+            else
+            {
+                // 移动图像
+                x += xDistance;
+                y += yDistance;
+
+                y = height - y > currentHeight ? height - currentHeight : y;
+                x = width - x > currentWidth ? width - currentWidth : x;
+
+                x = x > 0 ? 0 : x;
+                y = y > 0 ? 0 : y;
+            }
+
+            //y = y < (height - currentHeight) ? y : ;
         }
 
-
-
-       /* x = x > 0 ? 0 : x;
-        y = y > 0 ? 0 : y;*/
-
-
-        //System.out.println("x = " + x + ", y = " + y + ",   width = " + getWidth() + ", height = " + getHeight());
-        minX = (int) (-getWidth() * 0.7);
-        maxX = (int) (getWidth() * 0.7);
-        minY = (int) (-getHeight() * 0.7);
-        maxY = (int) (getHeight() * 0.7);
-
-        if (x < minX)
-        {
-            x = minX;
-        }
-        else if (x > maxX)
-        {
-            x = maxX;
-        }
-
-        if (y < minY)
-        {
-            y = minY;
-        }
-        else if (y > maxY)
-        {
-            y = maxY;
-        }
+        /*System.out.println("x = " + x + ", y = " + y + ",   width = " + getWidth() + ", height = " + getHeight()
+                + ",   currentWidth = " + currentWidth + ", currentHeight = " + currentHeight
+                + ", height - currentHeight = " + (height - currentHeight));*/
 
         g2d.drawImage(image, x, y, null);
-
         g2d.dispose();
     }
 
@@ -134,6 +155,14 @@ public class ImageLabel extends JLabel
         this.xDistance = xDistance;
         this.yDistance = yDistance;
 
+        /*if (x == 0 && y == 0)
+        {
+            return;
+        }*/
+
+
         this.repaint();
     }
+
+
 }

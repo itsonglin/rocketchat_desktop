@@ -249,6 +249,7 @@ public class ImageViewerFrame extends JDialog
                 }
                 super.mouseClicked(e);
             }
+
         };
 
         imageLabel.addMouseWheelListener(listener);
