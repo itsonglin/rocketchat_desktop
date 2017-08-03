@@ -235,7 +235,7 @@ public class RCListView extends JScrollPane
 
         lastItemCount = adapter.getCount();
 
-        for (int i = 0; i < lastItemCount; i++)
+        for (int i = 0; i < adapter.getCount(); i++)
         {
             int viewType = adapter.getItemViewType(i);
             HeaderViewHolder headerViewHolder = adapter.onCreateHeaderViewHolder(viewType, i);

@@ -22,6 +22,7 @@ import java.util.List;
 public class RoomsPanel extends ParentAvailablePanel
 {
     private static RoomsPanel context;
+    private final RoomItemsAdapter adapter;
 
     private RCListView roomItemsListView;
     private List<RoomItem> roomItemList = new ArrayList<>();
@@ -36,7 +37,9 @@ public class RoomsPanel extends ParentAvailablePanel
         initComponents();
         initView();
         initData();
-        roomItemsListView.setAdapter(new RoomItemsAdapter(roomItemList));
+
+        adapter = new RoomItemsAdapter(roomItemList);
+        roomItemsListView.setAdapter(adapter);
     }
 
     private void initComponents()
@@ -156,6 +159,12 @@ public class RoomsPanel extends ParentAvailablePanel
         RoomItemViewHolder holder = (RoomItemViewHolder) roomItemsListView.getItem(position);
         setItemBackground(holder, Colors.ITEM_SELECTED);
     }
+
+    public void restoreActiveItem()
+    {
+        adapter.restoreActiveItem();
+    }
+
 
     /**
      * 设置每个房间项目的背影色

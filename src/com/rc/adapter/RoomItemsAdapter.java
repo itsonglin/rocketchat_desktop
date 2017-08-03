@@ -197,6 +197,11 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
         return memberArr;
     }
 
+    public RoomItemViewHolder getSelectedViewHolder()
+    {
+        return selectedViewHolder;
+    }
+
     private void setBackground(RoomItemViewHolder holder, Color color)
     {
         holder.setBackground(color);
@@ -208,13 +213,14 @@ public class RoomItemsAdapter extends BaseAdapter<RoomItemViewHolder>
     {
         // 加载房间消息
         ChatPanel.getContext().enterRoom(roomId);
-
-        //TitlePanel.getContext().hideRoomMembersPanel();
-        /*RoomMembersPanel.getContext().setRoomId(roomId);
-        if (RoomMembersPanel.getContext().isVisible())
-        {
-            RoomMembersPanel.getContext().updateUI();
-        }*/
     }
 
+    public void restoreActiveItem()
+    {
+        if (selectedViewHolder != null)
+        {
+            setBackground(selectedViewHolder, Colors.DARK);
+            selectedViewHolder = null;
+        }
+    }
 }

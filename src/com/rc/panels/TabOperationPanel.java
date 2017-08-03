@@ -102,6 +102,7 @@ public class TabOperationPanel extends ParentAvailablePanel
                 contactsLabel.setIcon(contactIconNormal);
                 meLable.setIcon(meIconNormal);
                 parent.getListPanel().showPanel(ListPanel.CHAT);
+                RightPanel.getContext().showPanel(RightPanel.TIP);
 
             } else if (e.getComponent() == contactsLabel)
             {
@@ -109,6 +110,9 @@ public class TabOperationPanel extends ParentAvailablePanel
                 contactsLabel.setIcon(contactIconActive);
                 meLable.setIcon(meIconNormal);
                 parent.getListPanel().showPanel(ListPanel.CONTACTS);
+                RightPanel.getContext().showPanel(RightPanel.TIP);
+                RoomsPanel.getContext().restoreActiveItem();
+                TitlePanel.getContext().showAppTitle();
             }
             else if (e.getComponent() == meLable)
             {
@@ -116,6 +120,9 @@ public class TabOperationPanel extends ParentAvailablePanel
                 contactsLabel.setIcon(contactIconNormal);
                 meLable.setIcon(meIconActive);
                 parent.getListPanel().showPanel(ListPanel.COLLECTIONS);
+                RightPanel.getContext().showPanel(RightPanel.TIP);
+                RoomsPanel.getContext().restoreActiveItem();
+                TitlePanel.getContext().showAppTitle();
             }
         }
 

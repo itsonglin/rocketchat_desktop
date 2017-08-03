@@ -514,6 +514,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 {
                     RightPanel.getContext().showPanel(RightPanel.TIP);
                     TitlePanel.getContext().showAppTitle();
+                    TitlePanel.getContext().hideRoomInfoButton();
                     RoomMembersPanel.getContext().setVisible(false);
                 }
                 else
@@ -554,6 +555,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
                 {
                     RightPanel.getContext().showPanel(RightPanel.TIP);
                     TitlePanel.getContext().showAppTitle();
+                    TitlePanel.getContext().hideRoomInfoButton();
                     RoomMembersPanel.getContext().setVisible(false);
                 }
                 else

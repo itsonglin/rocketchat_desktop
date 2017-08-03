@@ -20,6 +20,7 @@ import com.rc.listener.AbstractMouseListener;
 import com.rc.tasks.DownloadTask;
 import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.*;
+import com.rc.websocket.WebSocketClient;
 
 import javax.swing.*;
 import java.awt.*;
@@ -265,8 +266,16 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
 
                     if (item.getType().equals("d"))
                     {
-                        String roomId = roomService.findRelativeRoomIdByUserId(item.getId()).getRoomId();
-                        enterRoom(roomId, 0L);
+                        Room room = roomService.findRelativeRoomIdByUserId(item.getId());
+                        if (room != null)
+                        {
+                            String roomId = room.getRoomId();
+                            enterRoom(roomId, 0L);
+                        }
+                        else
+                        {
+                            createDirectChat(item.getName());
+                        }
                         clearSearchText();
                     }
                     else if (item.getType().equals("c") || item.getType().equals("p"))
@@ -304,6 +313,16 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
                 setBackground(viewHolder, Colors.DARK);
             }
         });
+    }
+
+    /**
+     * 创建直接聊天
+     *
+     * @param username
+     */
+    private void createDirectChat(String username)
+    {
+        WebSocketClient.getContext().createDirectChat(username);
     }
 
     private void clearSearchText()
