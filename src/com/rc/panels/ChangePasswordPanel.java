@@ -13,9 +13,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * 修改头像面板
- * <p>
  * Created by song on 23/06/2017.
+ *
+ * 设置 -> 修改密码
  */
 public class ChangePasswordPanel extends JPanel
 {

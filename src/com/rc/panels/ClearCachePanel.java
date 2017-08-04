@@ -17,6 +17,8 @@ import java.text.DecimalFormat;
 
 /**
  * Created by song on 10/07/2017.
+ *
+ * 设置 -> 清除缓存
  */
 public class ClearCachePanel extends JPanel
 {

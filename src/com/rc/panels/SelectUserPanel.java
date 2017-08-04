@@ -16,6 +16,8 @@ import java.util.Iterator;
 import java.util.List;
 
 /**
+ * 用户选择面板
+ *
  * Created by song on 19/06/2017.
  */
 public class SelectUserPanel extends JPanel

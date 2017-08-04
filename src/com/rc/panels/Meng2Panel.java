@@ -22,6 +22,7 @@ import java.net.URISyntaxException;
 
 /**
  * Created by song on 04/07/2017.
+ * 萌二表情选择列表
  */
 public class Meng2Panel extends JPanel
 {

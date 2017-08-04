@@ -23,9 +23,9 @@ import java.io.*;
 import static com.rc.app.Launcher.currentUserService;
 
 /**
- * 修改头像面板
- * <p>
  * Created by song on 23/06/2017.
+ *
+ * 设置 -> 修改头像
  */
 public class ChangeAvatarPanel extends JPanel
 {

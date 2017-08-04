@@ -13,6 +13,8 @@ import java.awt.event.MouseEvent;
 
 /**
  * Created by song on 04/07/2017.
+ *
+ * 表情弹窗
  */
 public class ExpressionPopup extends JPopupMenu
 {

@@ -20,6 +20,8 @@ import java.awt.event.MouseEvent;
 
 /**
  * Created by song on 26/06/2017.
+ *
+ * 设置 -> 我
  */
 public class MePanel extends JPanel
 {
