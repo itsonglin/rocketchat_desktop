@@ -140,6 +140,7 @@ public class ContactsItemsAdapter extends BaseAdapter<ContactsItemViewHolder>
     public void processData()
     {
         Collections.sort(contactsItems);
+        positionMap.clear();
 
         int index = 0;
         String lastChara = "";

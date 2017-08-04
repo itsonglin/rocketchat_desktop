@@ -878,7 +878,7 @@ public class ScreenShot extends JFrame
         FileNameExtensionFilter filter = new FileNameExtensionFilter("PNG", "png");
         jfc.setFileFilter(filter);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyymmddHHmmss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         String filename = "Helichat_screen_shot_" + sdf.format(new Date());
 
         File filePath = FileSystemView.getFileSystemView().getHomeDirectory();
