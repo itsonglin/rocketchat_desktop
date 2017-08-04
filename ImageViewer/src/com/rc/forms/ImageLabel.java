@@ -160,21 +160,33 @@ public class ImageLabel extends JLabel
         {
 
 
-            if (currentWidth < width && currentHeight < height)
-            {
-
-            }
-            else
+            if (currentWidth > width && currentHeight > height)
             {
                 // 移动图像
                 drawX += xDistance;
                 drawY += yDistance;
 
-                drawY = height - drawY > currentHeight ? height - currentHeight : drawY;
-                drawX = width - drawX > currentWidth ? width - currentWidth : drawX;
+                /*
+                * [1] + [3] 确保当图像尺寸大于窗口尺寸时，图像在水平方向上拖动时不会脱离窗口左右边缘
+                * [2] + [4] 确保当图像尺寸大于窗口尺寸时，图像在垂直方向上拖动时不会脱离窗口上下边缘
+                * */
+                drawX = width - drawX > currentWidth ? width - currentWidth : drawX; // [1]
+                drawY = height - drawY > currentHeight ? height - currentHeight : drawY; // [2]
+                drawX = drawX > 0 ? 0 : drawX; // [3]
+                drawY = drawY > 0 ? 0 : drawY; // [4]
+            }
+            else if (currentWidth > width && currentHeight <= height)
+            {
+                drawX += xDistance;
+                drawX = width - drawX > currentWidth ? width - currentWidth : drawX; // [1]
+                drawX = drawX > 0 ? 0 : drawX; // [3]
 
-                drawX = drawX > 0 ? 0 : drawX;
-                drawY = drawY > 0 ? 0 : drawY;
+            }
+            else if (currentHeight > height && currentWidth <= width)
+            {
+                drawY += yDistance;
+                drawY = height - drawY > currentHeight ? height - currentHeight : drawY; // [2]
+                drawY = drawY > 0 ? 0 : drawY; // [4]
             }
         }
 
