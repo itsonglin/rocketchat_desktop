@@ -235,7 +235,7 @@ class JFXBrowser extends JPanel
                 localJFrame.add(new JFXBrowser());
                 localJFrame.setSize(1024, 768);
                 localJFrame.setLocationRelativeTo(null);
-///                localJFrame.setIconImage(getIcon("jxbrowser16x16.png").getImage());
+///                localJFrame.setIconImage(getIcon("jxbrowser16x16.png").getDrawImage());
                 localJFrame.setVisible(true);
             }
         });

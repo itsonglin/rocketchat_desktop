@@ -2,15 +2,15 @@ package com.rc.forms;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.image.BufferedImage;
 import java.io.*;
 
 /**
  * Created by song on 2017/6/25.
  */
-public class ImageViewerFrame extends JDialog
+public class ImageViewerFrame extends JFrame
 {
     private int minWidth;
     private int minHeight;
@@ -18,28 +18,34 @@ public class ImageViewerFrame extends JDialog
     private int maxWidth;
     private int maxHeight;
 
-    float maxScale = 3.0F;
-    float minScale = 0.2F;
-
     private ImageLabel imageLabel;
     private String imagePath;
     private Toolkit tooKit;
 
-
-    // 图片缩放比例
-    private float scale = 1.0F;
-
     private Image image;
-
-    private int xDistance;
-    private int yDistance;
-    private int x;
-    private int y;
 
     private JPopupMenu popupMenu;
     private JMenuItem saveAsItem;
     private JMenuItem enlargeItem;
     private JMenuItem narrowItem;
+
+    private JPanel controlPanel;
+    private static final int controlPanelHeight = 30;
+    private JLabel closeLabel;
+    private JLabel maxLabel;
+    private JLabel minLabel;
+
+    private ImageIcon maxIcon;
+    private ImageIcon restoreIcon;
+
+    private boolean windowMax; // 当前窗口是否已最大化
+    private Rectangle desktopBounds; // 去除任务栏后窗口的大小
+    private Rectangle normalBounds;
+    private int actualWidth;
+    private int actualHeight;
+
+    private static Point origin = new Point();
+
 
     public ImageViewerFrame(String imagePath)
     {
@@ -51,16 +57,16 @@ public class ImageViewerFrame extends JDialog
         this(null, image);
     }
 
-    private  ImageViewerFrame(String imagePath, Image image)
+    private ImageViewerFrame(String imagePath, Image image)
     {
+        this.imagePath = imagePath;
+        this.image = image;
+
         tooKit = Toolkit.getDefaultToolkit();
 
         initComponents();
         initView();
         initSize();
-
-        this.imagePath = imagePath;
-        this.image = image;
 
 
         try
@@ -71,6 +77,8 @@ public class ImageViewerFrame extends JDialog
         {
             e.printStackTrace();
         }
+
+        initBounds();
 
         setListeners();
     }
@@ -91,13 +99,74 @@ public class ImageViewerFrame extends JDialog
         popupMenu.add(saveAsItem);
 
         imageLabel = new ImageLabel();
-
         setIconImage(new ImageIcon(getClass().getResource("ic_launcher.png")).getImage());
+
+        if (OSUtil.getOsType() == OSUtil.Windows)
+        {
+            setUndecorated(true);
+            getRootPane().setBorder(new LineBorder(new Color(204, 204, 204)));
+
+            Dimension controlLabelSize = new Dimension(30, 30);
+            Cursor handCursor = new Cursor(Cursor.HAND_CURSOR);
+            maxIcon = new ImageIcon(getClass().getResource("/image/window_max.png"));
+            restoreIcon = new ImageIcon(getClass().getResource("/image/window_restore.png"));
+            ControlLabelMouseListener listener = new ControlLabelMouseListener();
+
+            closeLabel = new JLabel();
+            closeLabel.setIcon(new ImageIcon(getClass().getResource("/image/close.png")));
+            closeLabel.setHorizontalAlignment(JLabel.CENTER);
+            closeLabel.setOpaque(true);
+            closeLabel.addMouseListener(listener);
+            closeLabel.setPreferredSize(controlLabelSize);
+            closeLabel.setCursor(handCursor);
+
+            maxLabel = new JLabel();
+            maxLabel.setIcon(maxIcon);
+            maxLabel.setHorizontalAlignment(JLabel.CENTER);
+            maxLabel.setOpaque(true);
+            maxLabel.addMouseListener(listener);
+            maxLabel.setPreferredSize(controlLabelSize);
+            maxLabel.setCursor(handCursor);
+
+            minLabel = new JLabel();
+            minLabel.setIcon(new ImageIcon(getClass().getResource("/image/window_min.png")));
+            minLabel.setHorizontalAlignment(JLabel.CENTER);
+            minLabel.setOpaque(true);
+            minLabel.addMouseListener(listener);
+            minLabel.setPreferredSize(controlLabelSize);
+            minLabel.setCursor(handCursor);
+
+            controlPanel = new JPanel();
+            controlPanel.setLayout(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+            controlPanel.add(minLabel);
+            controlPanel.add(maxLabel);
+            controlPanel.add(closeLabel);
+        }
+    }
+
+    private void initBounds()
+    {
+        Toolkit tk = Toolkit.getDefaultToolkit();
+        Dimension screenSize = tk.getScreenSize();
+        //上面这种方式获取的是整个显示屏幕的大小，包含了任务栏的高度。
+        Insets screenInsets = Toolkit.getDefaultToolkit()
+                .getScreenInsets(getGraphicsConfiguration());
+        desktopBounds = new Rectangle(
+                screenInsets.left, screenInsets.top,
+                screenSize.width - screenInsets.left - screenInsets.right,
+                screenSize.height - screenInsets.top - screenInsets.bottom);
+
+        normalBounds = new Rectangle(this.getLocation(), new Dimension(actualWidth, actualHeight));
 
     }
 
     private void initView()
     {
+        if (OSUtil.getOsType() == OSUtil.Windows)
+        {
+            controlPanel.setPreferredSize(new Dimension(100, controlPanelHeight));
+            add(controlPanel, BorderLayout.NORTH);
+        }
         add(imageLabel);
     }
 
@@ -137,17 +206,15 @@ public class ImageViewerFrame extends JDialog
         int imageHeight = image.getHeight(null);
         float imageScale = imageWidth * 1.0F / imageHeight; // 图像宽高比
 
-        int actualWidth = imageWidth;
-        int actualHeight = imageHeight;
+        actualWidth = imageWidth;
+        actualHeight = imageHeight;
 
-        boolean needScale = false; // 是否需要对图片进行缩放
         if (imageWidth >= imageHeight)
         {
             if (imageWidth > maxWidth)
             {
                 actualWidth = maxWidth;
                 actualHeight = (int) (actualWidth / imageScale);
-                needScale = true;
             }
             else if (imageWidth < minWidth)
             {
@@ -162,7 +229,6 @@ public class ImageViewerFrame extends JDialog
             {
                 actualHeight = maxHeight;
                 actualWidth = (int) (actualHeight * imageScale);
-                needScale = true;
             }
             else if (imageHeight < minHeight)
             {
@@ -171,75 +237,39 @@ public class ImageViewerFrame extends JDialog
             }
         }
 
-        if (needScale)
+
+        // 如果图片宽度大于最小显示宽度，需要调整图片大小， 使图片布满整个窗口
+        if (imageWidth > minWidth || imageHeight> minHeight)
         {
-            image = image.getScaledInstance(actualWidth, actualHeight, Image.SCALE_SMOOTH);
+            // 图片的实际大小
+            int h = actualHeight;
+            int w = actualWidth;
+            if (OSUtil.getOsType() == OSUtil.Windows)
+            {
+                h = actualHeight - controlPanelHeight - 2;
+                w -= 2; // 减去边框
+            }
+            else if (OSUtil.getOsType() == OSUtil.Mac_OS)
+            {
+                h = actualHeight - 22;
+            }
+
+            image = image.getScaledInstance(w, h, Image.SCALE_SMOOTH);
         }
 
-        //imageLabel.setIcon(imageIcon);
-        imageLabel.setImage(image);
+        imageLabel.setSourceImage(image);
 
-        this.setSize(new Dimension(actualWidth, actualHeight + 22));
+        this.setSize(new Dimension(actualWidth, actualHeight));
+
         this.setLocation((tooKit.getScreenSize().width - actualWidth) / 2, (tooKit.getScreenSize().height - actualHeight) / 2);
     }
 
-    public Image scaledImage(float scale)
-    {
-        int scaledWidth = (int) (image.getWidth(null) * scale);
-        int scaledHeight = (int) (image.getHeight(null) * scale);
-
-        Image scaledimage = image.getScaledInstance(scaledWidth, scaledHeight, Image.SCALE_FAST);
-        return scaledimage;
-    }
 
     private void setListeners()
     {
-        MouseAdapter listener = new MouseAdapter()
+
+        imageLabel.addMouseListener(new MouseAdapter()
         {
-            @Override
-            public void mouseWheelMoved(MouseWheelEvent e)
-            {
-                // 是否向上滚动
-                boolean up = e.getWheelRotation() < 0;
-                float increment;
-                if (up)
-                {
-                    increment = 0.15F;
-                }
-                else
-                {
-                    increment = -0.15F;
-                }
-                doScale(increment);
-
-                super.mouseWheelMoved(e);
-            }
-
-            @Override
-            public void mousePressed(MouseEvent e)
-            {
-                x = e.getX();
-                y = e.getY();
-                super.mousePressed(e);
-            }
-
-            @Override
-            public void mouseDragged(MouseEvent e)
-            {
-
-                if (e.getModifiers() == InputEvent.BUTTON1_MASK)
-                {
-                    xDistance = e.getX() - x;
-                    yDistance = e.getY() - y;
-
-                    x = e.getX();
-                    y = e.getY();
-                    imageLabel.moveImage(xDistance, yDistance);
-                }
-
-                super.mouseDragged(e);
-            }
-
             @Override
             public void mouseClicked(MouseEvent e)
             {
@@ -249,19 +279,14 @@ public class ImageViewerFrame extends JDialog
                 }
                 super.mouseClicked(e);
             }
-
-        };
-
-        imageLabel.addMouseWheelListener(listener);
-        imageLabel.addMouseMotionListener(listener);
-        imageLabel.addMouseListener(listener);
+        });
 
         enlargeItem.addActionListener(new ActionListener()
         {
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                doScale(0.15F);
+                imageLabel.scaleImage(0.15F);
             }
         });
 
@@ -270,7 +295,7 @@ public class ImageViewerFrame extends JDialog
             @Override
             public void actionPerformed(ActionEvent e)
             {
-                doScale(-0.15F);
+                imageLabel.scaleImage(-0.15F);
             }
         });
 
@@ -298,7 +323,7 @@ public class ImageViewerFrame extends JDialog
 
                     if (path.indexOf(".") < 0)
                     {
-                        path  += suffix;
+                        path += suffix;
                     }
 
                     try
@@ -341,29 +366,101 @@ public class ImageViewerFrame extends JDialog
                 super.keyPressed(e);
             }
         });
+
+        if (OSUtil.getOsType() == OSUtil.Windows)
+        {
+            MouseAdapter mouseAdapter = new MouseAdapter()
+            {
+                @Override
+                public void mouseClicked(MouseEvent e)
+                {
+                    if (e.getClickCount() >= 2)
+                    {
+                        maxOrRestoreWindow();
+                    }
+
+                    super.mouseClicked(e);
+                }
+
+                public void mousePressed(MouseEvent e)
+                {
+                    // 当鼠标按下的时候获得窗口当前的位置
+                    origin.x = e.getX();
+                    origin.y = e.getY();
+                }
+            };
+
+            MouseMotionListener mouseMotionListener = new MouseMotionAdapter()
+            {
+                public void mouseDragged(MouseEvent e)
+                {
+                    // 当鼠标拖动时获取窗口当前位置
+                    Point p = getLocation();
+                    // 设置窗口的位置
+                    setLocation(p.x + e.getX() - origin.x, p.y + e.getY()
+                            - origin.y);
+                }
+            };
+
+            controlPanel.addMouseListener(mouseAdapter);
+            controlPanel.addMouseMotionListener(mouseMotionListener);
+
+            this.addMouseListener(mouseAdapter);
+            this.addMouseMotionListener(mouseMotionListener);
+        }
     }
 
-    private void doScale(float increment)
+    private class ControlLabelMouseListener extends MouseAdapter
     {
-        scale = scale + increment;
-        //System.out.println("倍率：" + scale);
+        @Override
+        public void mouseClicked(MouseEvent e)
+        {
+            if (e.getComponent() == closeLabel)
+            {
+                ImageViewerFrame.this.setVisible(false);
+                ImageViewerFrame.this.dispose();
 
-        if (scale > maxScale)
-        {
-            scale = maxScale;
+            }
+            else if (e.getComponent() == maxLabel)
+            {
+                maxOrRestoreWindow();
+            }
+            else if (e.getComponent() == minLabel)
+            {
+                ImageViewerFrame.this.setExtendedState(JFrame.ICONIFIED);
+            }
         }
-        else if (scale < minScale)
+
+        @Override
+        public void mouseEntered(MouseEvent e)
         {
-            scale = minScale;
+            ((JLabel) e.getSource()).setBackground(new Color(222, 222, 222));
+            super.mouseEntered(e);
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e)
+        {
+            ((JLabel) e.getSource()).setBackground(new Color(238, 238, 238));
+            super.mouseExited(e);
+        }
+    }
+
+    private void maxOrRestoreWindow()
+    {
+        if (windowMax)
+        {
+            ImageViewerFrame.this.setBounds(normalBounds);
+            maxLabel.setIcon(maxIcon);
+            windowMax = false;
         }
         else
         {
-            if (Math.abs(scale - 1.0F) < 0.1F)
-            {
-                scale = 1.0F;
-            }
-            Image scaledImage = scaledImage(scale);
-            imageLabel.scaleImage(scaledImage);
+            ImageViewerFrame.this.setBounds(desktopBounds);
+            maxLabel.setIcon(restoreIcon);
+            windowMax = true;
         }
     }
 }
+
+

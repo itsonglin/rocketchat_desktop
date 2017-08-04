@@ -367,7 +367,7 @@ public class SearchResultItemsAdapter extends BaseAdapter<SearchResultItemViewHo
                 Room room = roomService.findById((String) ((Map) item.getTag()).get("roomId"));
                 if (room != null)
                 {
-                    icon.setImage(getRoomAvatar(room.getType(), room.getName()));
+                    icon.setDrawImage(getRoomAvatar(room.getType(), room.getName()));
                 }
             }*/
         }

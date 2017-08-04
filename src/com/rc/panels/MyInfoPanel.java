@@ -116,7 +116,7 @@ public class MyInfoPanel extends ParentAvailablePanel
     {
         currentUsername = currentUserService.findAll().get(0).getUsername();
         //Image image = AvatarUtil.createOrLoadUserAvatar(currentUsername);
-        //avatar.setImage(image);
+        //avatar.setDrawImage(image);
         avatar.setIcon(new ImageIcon(AvatarUtil.createOrLoadUserAvatar(currentUsername).getScaledInstance(50,50,Image.SCALE_SMOOTH)));
 
 
