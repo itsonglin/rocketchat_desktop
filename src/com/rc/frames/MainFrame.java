@@ -12,16 +12,9 @@ import com.rc.utils.FontUtil;
 import com.rc.utils.IconUtil;
 import com.rc.utils.OSUtil;
 import com.rc.websocket.WebSocketClient;
-import com.tulskiy.keymaster.common.HotKey;
-import com.tulskiy.keymaster.common.HotKeyListener;
-import com.tulskiy.keymaster.common.MediaKey;
-import com.tulskiy.keymaster.common.Provider;
-import org.apache.log4j.spi.LoggerFactory;
 import sun.audio.AudioPlayer;
 import sun.audio.AudioStream;
-
 import javax.swing.*;
-import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.InputStream;

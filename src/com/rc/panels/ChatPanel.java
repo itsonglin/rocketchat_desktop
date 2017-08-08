@@ -407,13 +407,15 @@ public class ChatPanel extends ParentAvailablePanel
                 fileChooser.setDialogTitle("请选择上传文件或图片");
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-                fileChooser.showDialog(MainFrame.getContext(), "上传");
-                File selectedFile = fileChooser.getSelectedFile();
-                if (selectedFile != null)
+                if (fileChooser.showDialog(MainFrame.getContext(), "上传") == JFileChooser.APPROVE_OPTION)
                 {
-                    String path = selectedFile.getAbsolutePath();
-                    sendFileMessage(path);
-                    showSendingMessage();
+                    File selectedFile = fileChooser.getSelectedFile();
+                    if (selectedFile != null)
+                    {
+                        String path = selectedFile.getAbsolutePath();
+                        sendFileMessage(path);
+                        showSendingMessage();
+                    }
                 }
 
                 super.mouseClicked(e);
