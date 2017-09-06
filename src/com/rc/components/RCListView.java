@@ -50,6 +50,7 @@ public class RCListView extends JScrollPane
         setListeners();
     }
 
+    @Deprecated
     public void setScrollHiddenOnMouseLeave(JComponent component)
     {
         if (scrollMouseListener == null)
@@ -338,14 +339,6 @@ public class RCListView extends JScrollPane
      */
     public void notifyItemRangeInserted(int startPosition, int count)
     {
-        /*for (int i = startPosition; i < count; i++)
-        {
-            int viewType = adapter.getItemViewType(i);
-            ViewHolder holder = adapter.onCreateViewHolder(viewType);
-            adapter.onBindViewHolder(holder, i);
-            contentPanel.add(holder, startPosition);
-        }*/
-
         for (int i = count - 1; i >= startPosition; i--)
         {
             int viewType = adapter.getItemViewType(i);
@@ -362,18 +355,10 @@ public class RCListView extends JScrollPane
      */
     public void notifyItemChanged(int position)
     {
-         //List<Component> components = getItems();
-
-        //contentPanel.remove(position);
-        //int viewType = adapter.getItemViewType(position);
-        //ViewHolder holder = adapter.onCreateViewHolder(viewType);
         ViewHolder holder = (ViewHolder) getItem(position);
         adapter.onBindViewHolder(holder, position);
         holder.revalidate();
         holder.repaint();
-
-        /*contentPanel.getComponent(position).setBackground(Color.red);
-        contentPanel.getComponent(position).revalidate();*/
     }
 
     public Component getItem(int n)

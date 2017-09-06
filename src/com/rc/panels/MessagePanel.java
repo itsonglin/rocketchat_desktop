@@ -60,11 +60,12 @@ public class MessagePanel extends ParentAvailablePanel
     private void initComponents()
     {
         listView = new RCListView(0, 15);
-        listView.setScrollBarColor(Colors.WINDOW_BACKGROUND, Colors.WINDOW_BACKGROUND);
+        listView.setScrollBarColor(Colors.SCROLL_BAR_THUMB, Colors.WINDOW_BACKGROUND);
+        //listView.setScrollBarColor(Colors.WINDOW_BACKGROUND, Colors.WINDOW_BACKGROUND);
         listView.setHorizontalScrollBarPolicy(
                 JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
-        listView.setScrollHiddenOnMouseLeave(listView);
+        //listView.setScrollHiddenOnMouseLeave(listView);
     }
 
     private void setListeners()

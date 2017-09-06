@@ -232,9 +232,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         setAttachmentClickListener(holder, item);
         processAttachmentSize(holder, item);
 
-        listView.setScrollHiddenOnMouseLeave(holder.attachmentPanel);
-        listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
-        listView.setScrollHiddenOnMouseLeave(holder.attachmentTitle);
+        //listView.setScrollHiddenOnMouseLeave(holder.attachmentPanel);
+        //listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
+        //listView.setScrollHiddenOnMouseLeave(holder.attachmentTitle);
 
         // 绑定右键菜单
         attachPopupMenu(viewHolder, MessageItem.LEFT_ATTACHMENT);
@@ -330,9 +330,9 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         // 绑定右键菜单
         attachPopupMenu(viewHolder, MessageItem.RIGHT_ATTACHMENT);
 
-        listView.setScrollHiddenOnMouseLeave(holder.attachmentPanel);
-        listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
-        listView.setScrollHiddenOnMouseLeave(holder.attachmentTitle);
+        // listView.setScrollHiddenOnMouseLeave(holder.attachmentPanel);
+        // listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
+        // listView.setScrollHiddenOnMouseLeave(holder.attachmentTitle);
     }
 
     /**
@@ -395,8 +395,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
         processImage(item, holder.image, holder);
 
-        listView.setScrollHiddenOnMouseLeave(holder.image);
-        listView.setScrollHiddenOnMouseLeave(holder.imageBubble);
+        // listView.setScrollHiddenOnMouseLeave(holder.image);
+        // listView.setScrollHiddenOnMouseLeave(holder.imageBubble);
 
         // 绑定右键菜单
         attachPopupMenu(viewHolder, MessageItem.LEFT_IMAGE);
@@ -481,8 +481,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         // 绑定右键菜单
         attachPopupMenu(viewHolder, MessageItem.RIGHT_IMAGE);
 
-        listView.setScrollHiddenOnMouseLeave(holder.image);
-        listView.setScrollHiddenOnMouseLeave(holder.imageBubble);
+        // listView.setScrollHiddenOnMouseLeave(holder.image);
+        // listView.setScrollHiddenOnMouseLeave(holder.imageBubble);
     }
 
     private void processImage(MessageItem item, MessageImageLabel imageLabel, ViewHolder holder)
@@ -680,8 +680,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
         // 绑定右键菜单
         attachPopupMenu(viewHolder, MessageItem.RIGHT_TEXT);
 
-        listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
-        listView.setScrollHiddenOnMouseLeave(holder.text);
+        // listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
+        // listView.setScrollHiddenOnMouseLeave(holder.text);
 
 
     }
@@ -704,8 +704,8 @@ public class MessageAdapter extends BaseAdapter<BaseMessageViewHolder>
 
         holder.sender.setText(item.getSenderUsername());
 
-        listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
-        listView.setScrollHiddenOnMouseLeave(holder.text);
+        // listView.setScrollHiddenOnMouseLeave(holder.messageBubble);
+        // listView.setScrollHiddenOnMouseLeave(holder.text);
         attachPopupMenu(viewHolder, MessageItem.LEFT_TEXT);
     }
 
