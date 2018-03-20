@@ -9,13 +9,20 @@ import com.rc.db.service.RoomService;
 import com.rc.panels.ChatPanel;
 import com.rc.frames.MainFrame;
 import com.rc.panels.RoomsPanel;
-import com.rc.utils.NotificationUtil;
+import com.rc.utils.AvatarUtil;
+import com.rc.utils.MacNotificationUtil;
 import com.rc.utils.OSUtil;
+import com.rc.utils.ShellUtil;
+import com.sun.jna.platform.FileUtils;
 import com.vdurmont.emoji.EmojiParser;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 
 /**
  * Created by song on 27/03/2017.
@@ -264,8 +271,7 @@ public class StreamRoomMessagesHandler implements CollectionHandler
             notifyMainFrame(message, myUploadFile);
 
 
-        }
-        catch (JSONException e)
+        } catch (JSONException e)
         {
             e.printStackTrace();
         }
@@ -286,23 +292,27 @@ public class StreamRoomMessagesHandler implements CollectionHandler
         // 如果主窗口没有显示
         if (!context.isVisible())
         {
-            // 苹果系统
-            if (OSUtil.getOsType() == OSUtil.Mac_OS)
+            // 发送通知
+            if (!message.getSenderId().equals(currentUser.getUserId()))
             {
-                // 发送通知
-                if (!message.getSenderId().equals(currentUser.getUserId()))
+                // 苹果系统
+                if (OSUtil.getOsType() == OSUtil.Mac_OS)
                 {
-                    sendNotification(message);
+                    sendNotification(message, OSUtil.Mac_OS);
                 }
-            }
-            else
-            {
-                if (!context.isTrayFlashing())
+                else if (OSUtil.getOsType() == OSUtil.Linux)
                 {
-                    context.setTrayFlashing();
+                    sendNotification(message, OSUtil.Linux);
                 }
+                else
+                {
+                    if (!context.isTrayFlashing())
+                    {
+                        context.setTrayFlashing();
+                    }
 
-                context.playMessageSound();
+                    context.playMessageSound();
+                }
             }
         }
         // 主窗口已显示
@@ -311,20 +321,24 @@ public class StreamRoomMessagesHandler implements CollectionHandler
             // 窗体打开，但没有被激活
             if (!context.isActive())
             {
-                if (OSUtil.getOsType() == OSUtil.Mac_OS)
+                // 发送通知
+                if (!message.getSenderId().equals(currentUser.getUserId()))
                 {
-                    // 发送通知
-                    if (!message.getSenderId().equals(currentUser.getUserId()))
+                    if (OSUtil.getOsType() == OSUtil.Mac_OS)
                     {
-                        sendNotification(message);
+                        sendNotification(message, OSUtil.Mac_OS);
                     }
-                }
-                else
-                {
-                    // 任务栏图标高亮
-                    context.playMessageSound();
-                    context.setVisible(true);
-                    context.toFront();
+                    else if (OSUtil.getOsType() == OSUtil.Linux)
+                    {
+                        sendNotification(message, OSUtil.Linux);
+                    }
+                    else
+                    {
+                        // 任务栏图标高亮
+                        context.playMessageSound();
+                        context.setVisible(true);
+                        context.toFront();
+                    }
                 }
             }
         }
@@ -347,13 +361,46 @@ public class StreamRoomMessagesHandler implements CollectionHandler
         }
     }
 
-    private void sendNotification(Message message)
+    /**
+     * 发送消息气泡通知
+     *
+     * @param message
+     * @param osType
+     */
+    private void sendNotification(Message message, int osType)
     {
         // 发送通知
         if (!message.getSenderId().equals(currentUser.getUserId()))
         {
             String t = EmojiParser.parseToUnicode(message.getMessageContent());
-            NotificationUtil.sendNotification(message.getSenderUsername(), "", t, 1);
+
+            if (osType == OSUtil.Mac_OS)
+            {
+                MacNotificationUtil.sendNotification(message.getSenderUsername(), "", t, 1);
+            }
+            else if (osType == OSUtil.Linux)
+            {
+                try
+                {
+                    File iconFile;
+                    String iconPath = AvatarUtil.CUSTOM_AVATAR_CACHE_ROOT + "/" + message.getSenderUsername() + ".png";
+                    iconFile = new File(iconPath);
+                    if (!iconFile.exists())
+                    {
+                        iconPath = AvatarUtil.AVATAR_CACHE_ROOT + "/" + message.getSenderUsername() + ".png";
+                        iconFile = new File(iconPath);
+                        if (!iconFile.exists())
+                        {
+                            iconPath = ShellUtil.ICON_PATH;
+                        }
+                    }
+
+                    ShellUtil.executeShell("notify-send " + message.getSenderUsername() + " \"" + t + "\" -i " + iconPath);
+                } catch (IOException e)
+                {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

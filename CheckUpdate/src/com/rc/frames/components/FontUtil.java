@@ -1,5 +1,6 @@
 package com.rc.frames.components;
 
+import javax.swing.*;
 import java.awt.*;
 
 /**
@@ -17,7 +18,7 @@ public class FontUtil
         }
         else
         {
-            font = new Font("微软雅黑", Font.PLAIN, 14);
+            font = new Font("宋体", Font.PLAIN, 14);
         }
     }
 
@@ -37,5 +38,4 @@ public class FontUtil
         //return new Font("YaHei Consolas Hybrid",  style, size);
         //return new Font("微软雅黑", style, size);
     }
-
 }

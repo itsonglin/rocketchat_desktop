@@ -332,7 +332,7 @@ public class MainFrame extends JFrame
         setMinimumSize(new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT));
 
 
-        if (OSUtil.getOsType() != OSUtil.Mac_OS)
+        if (OSUtil.getOsType() == OSUtil.Windows)
         {
             // 隐藏标题栏
             setUndecorated(true);

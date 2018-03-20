@@ -44,8 +44,8 @@ public class AvatarUtil
         };
     }
 
-    private static final String AVATAR_CACHE_ROOT;
-    private static final String CUSTOM_AVATAR_CACHE_ROOT;
+    public static final String AVATAR_CACHE_ROOT;
+    public static final String CUSTOM_AVATAR_CACHE_ROOT;
     private static final int DEFAULT_AVATAR = 0;
     private static final int CUSTOM_AVATAR = 1;
 

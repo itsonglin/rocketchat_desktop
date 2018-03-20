@@ -9,7 +9,7 @@ import java.io.File;
 /**
  * Created by song on 27/07/2017.
  */
-public class NotificationUtil
+public class MacNotificationUtil
 {
     public static void sendNotification(String title, String subtitle, String text, int timeffset)
     {
