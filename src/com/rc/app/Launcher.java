@@ -6,9 +6,6 @@ import com.rc.frames.MainFrame;
 import com.rc.tasks.HttpGetTask;
 import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.DbUtils;
-import com.rc.utils.FontUtil;
-import com.rc.utils.OSUtil;
-import com.rc.utils.WindowUtil;
 import org.apache.ibatis.session.SqlSession;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -39,7 +36,7 @@ public class Launcher
 
     public static final String HOSTNAME = "https://chat1.shls-leasing.com";
     public static final String UPDATE_HOSTNAME = "https://apk.shls-leasing.com";
-    public static final String APP_VERSION = "1.0.13";
+    public static final String APP_VERSION = "1.0.14";
 
 
     public static String userHome;
@@ -94,6 +91,9 @@ public class Launcher
         {
             System.exit(-1);
         }
+
+
+
 
         copyLib();
     }

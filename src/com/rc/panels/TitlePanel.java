@@ -128,7 +128,7 @@ public class TitlePanel extends ParentAvailablePanel
         roomInfoButton.addMouseListener(mouseListener);
 
 
-        if (OSUtil.getOsType() != OSUtil.Mac_OS)
+        if (OSUtil.getOsType() == OSUtil.Windows)
         {
             MouseAdapter mouseAdapter = new MouseAdapter()
             {
@@ -288,7 +288,7 @@ public class TitlePanel extends ParentAvailablePanel
         controlPanel.add(closeLabel);
 
         int margin;
-        if (OSUtil.getOsType() != OSUtil.Mac_OS)
+        if (OSUtil.getOsType() == OSUtil.Windows)
         {
             add(controlPanel);
             add(titlePanel);

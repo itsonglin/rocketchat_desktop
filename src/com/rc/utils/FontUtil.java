@@ -1,5 +1,7 @@
 package com.rc.utils;
 
+import com.rc.db.service.MessageService;
+
 import javax.swing.*;
 import javax.swing.plaf.FontUIResource;
 import java.awt.*;
@@ -18,9 +20,26 @@ public class FontUtil
         {
             font = new Font("微软雅黑", Font.PLAIN, 14);
         }
-        else
+        else if (OSUtil.getOsType() == OSUtil.Mac_OS)
         {
             font = new Font("PingFang SC", Font.PLAIN, 14);
+        }
+        else if (OSUtil.getOsType() == OSUtil.Linux)
+        {
+            String fontName = "宋体";
+            GraphicsEnvironment environment;
+            environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
+            String[] fonts = environment.getAvailableFontFamilyNames();//获得系统字体
+            for (int i = 0; i < fonts.length; i++)
+            {
+                if (fonts[i].equals("YaHei Consolas Hybrid"))
+                {
+                    fontName = "YaHei Consolas Hybrid";
+                    break;
+                }
+            }
+
+            font = new Font(fontName, Font.PLAIN, 14);
         }
     }
 
