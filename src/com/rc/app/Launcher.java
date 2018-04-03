@@ -36,7 +36,7 @@ public class Launcher
 
     public static final String HOSTNAME = "https://chat1.shls-leasing.com";
     public static final String UPDATE_HOSTNAME = "https://apk.shls-leasing.com";
-    public static final String APP_VERSION = "1.0.14";
+    public static final String APP_VERSION = "1.0.15";
 
 
     public static String userHome;
@@ -62,7 +62,7 @@ public class Launcher
         fileAttachmentService = new FileAttachmentService(sqlSession);
 
         hotKeyMap = new HashMap<>();
-        hotKeyMap.put(HOT_KEY_SCREEN_SHOT, KeyStroke.getKeyStroke('Z', InputEvent.CTRL_DOWN_MASK|InputEvent.ALT_DOWN_MASK));
+        hotKeyMap.put(HOT_KEY_SCREEN_SHOT, KeyStroke.getKeyStroke('A', InputEvent.CTRL_DOWN_MASK|InputEvent.ALT_DOWN_MASK));
 
     }
 
