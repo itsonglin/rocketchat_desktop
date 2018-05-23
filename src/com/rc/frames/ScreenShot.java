@@ -649,6 +649,7 @@ public class ScreenShot extends JFrame
         //获取屏幕尺寸
         Dimension d = Toolkit.getDefaultToolkit().getScreenSize();
         this.setBounds(0, 0, d.width, d.height);
+        this.setMinimumSize(d);
 
         //获取屏幕截图
         try
@@ -663,7 +664,6 @@ public class ScreenShot extends JFrame
         {
             e.printStackTrace();
         }
-
     }
 
     private void initControlDialog()
@@ -917,6 +917,7 @@ public class ScreenShot extends JFrame
 
         visible = v;
         super.setVisible(v);
+        fullScreen(this);
     }
 
     private void close()
@@ -924,6 +925,21 @@ public class ScreenShot extends JFrame
         controlDialog.setVisible(false);
         setVisible(false);
         dispose();
+    }
+
+    /**
+     * 跨多显示器全屏显示
+     * @param frame
+     */
+    private static void fullScreen(JFrame frame)
+    {
+        GraphicsEnvironment ge = GraphicsEnvironment
+                .getLocalGraphicsEnvironment();
+        GraphicsDevice[] gs = ge.getScreenDevices();
+        if( gs.length > 0 )
+        {
+            gs[0].setFullScreenWindow( frame );
+        }
     }
 
 }

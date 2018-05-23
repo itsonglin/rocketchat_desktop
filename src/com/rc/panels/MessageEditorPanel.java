@@ -120,7 +120,7 @@ public class MessageEditorPanel extends ParentAvailablePanel
         cutActiveIcon = IconUtil.getIcon(this, "/image/cut_active.png");
         cutLabel.setIcon(cutNormalIcon);
         cutLabel.setCursor(handCursor);
-        cutLabel.setToolTipText("截图(Ctrl + Alt + Z)");
+        cutLabel.setToolTipText("截图(Ctrl + Alt + A)");
 
 
         textEditor = new RCTextEditor();
