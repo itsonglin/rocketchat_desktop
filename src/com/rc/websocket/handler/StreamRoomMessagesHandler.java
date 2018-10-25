@@ -164,8 +164,8 @@ public class StreamRoomMessagesHandler implements CollectionHandler
                             imageAttachment.setDescription(attachment.getString("description"));
                             imageAttachment.setImageUrl(attachment.getString("image_url"));
                             imageAttachment.setImagesize(attachment.getLong("image_size"));
-                            imageAttachment.setWidth(attachment.getJSONObject("image_dimensions").getInt("width"));
-                            imageAttachment.setHeight(attachment.getJSONObject("image_dimensions").getInt("height"));
+                            //imageAttachment.setWidth(attachment.getJSONObject("image_dimensions").getInt("width"));
+                            //imageAttachment.setHeight(attachment.getJSONObject("image_dimensions").getInt("height"));
 
                             //message.getImageAttachments().add(imageAttachment);
                             message.setImageAttachmentId(imageAttachment.getId());

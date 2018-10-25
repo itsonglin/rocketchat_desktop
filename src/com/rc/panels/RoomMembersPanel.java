@@ -15,13 +15,19 @@ import com.rc.frames.MainFrame;
 import com.rc.tasks.HttpPostTask;
 import com.rc.tasks.HttpResponseListener;
 import com.rc.utils.AvatarUtil;
+import com.rc.utils.FontUtil;
+import com.sun.scenario.effect.impl.sw.sse.SSEBlend_SRC_OUTPeer;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -29,11 +35,11 @@ import java.util.List;
 
 /**
  * Created by song on 07/06/2017.
- *
+ * <p>
  * <p>下图 #RoomMembersPanel# 对应的位置</p>
- *
+ * <p>
  * 显示房间成员列表、添加或删除成员按钮、退出或解散群聊按钮等
- *
+ * <p>
  * <P>推荐使用Menlo或Consolas字体</P>
  * ┌────────────────────────┬────────────────────────────────────┬────────────────────┐
  * │ ┌─────┐                │  Room Title                        │                 ≡  │
@@ -67,6 +73,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
     private RCListView listView = new RCListView();
     private JPanel operationPanel = new JPanel();
     private JButton leaveButton;
+    private JCheckBox showNotifyCheckBox;
 
     private List<String> members = new ArrayList<>();
     private String roomId;
@@ -109,15 +116,20 @@ public class RoomMembersPanel extends ParentAvailablePanel
         leaveButton.setForeground(Colors.RED);
         leaveButton.setPreferredSize(new Dimension(180, 30));
 
+        showNotifyCheckBox = new JCheckBox("显示通知消息");
+        showNotifyCheckBox.setBackground(Colors.FONT_WHITE);
+        showNotifyCheckBox.setFont(FontUtil.getDefaultFont(14));
+
     }
 
     private void initView()
     {
+        operationPanel.add(showNotifyCheckBox);
         operationPanel.add(leaveButton);
 
         setLayout(new GridBagLayout());
-        add(listView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 1000));
-        add(operationPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 1).setInsets(10, 0, 5, 0));
+        add(listView, new GBC(0, 0).setFill(GBC.BOTH).setWeight(1, 90));
+        add(operationPanel, new GBC(0, 1).setFill(GBC.BOTH).setWeight(1, 5).setInsets(10, 0, 5, 0));
 
         adapter = new RoomMembersAdapter(members);
         listView.setAdapter(adapter);
@@ -131,6 +143,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
     {
         this.roomId = roomId;
         room = roomService.findById(roomId);
+        showNotifyCheckBox.setSelected(room.isShowNotify());
     }
 
     public void setVisibleAndUpdateUI(boolean aFlag)
@@ -313,6 +326,18 @@ public class RoomMembersPanel extends ParentAvailablePanel
                     }
                 }
                 super.mouseClicked(e);
+            }
+        });
+
+        showNotifyCheckBox.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mouseClicked(MouseEvent e)
+            {
+                room.setShowNotify(showNotifyCheckBox.isSelected());
+                System.out.println(roomService.insertOrUpdate(room));
+                room = roomService.findById(roomId);
+                System.out.println(showNotifyCheckBox.isSelected() + ","  + room.isShowNotify());
             }
         });
     }
@@ -516,8 +541,7 @@ public class RoomMembersPanel extends ParentAvailablePanel
             System.out.println("删除原来群头像: " + room.getName());
             AvatarUtil.deleteGroupAvatar(room.getName());
 
-        }
-        catch (JSONException e)
+        } catch (JSONException e)
         {
             e.printStackTrace();
         }

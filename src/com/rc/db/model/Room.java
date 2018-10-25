@@ -30,6 +30,7 @@ public class Room extends BasicModel implements Comparable<Room>
     private int unreadCount;
     private int totalReadCount;
     private String lastMessage;
+    private boolean showNotify;
 
 
     public int getUnreadCount()
@@ -235,6 +236,7 @@ public class Room extends BasicModel implements Comparable<Room>
                 ", unreadCount=" + unreadCount +
                 ", totalReadCount=" + totalReadCount +
                 ", lastMessage='" + lastMessage + '\'' +
+                ", showNotify='" + showNotify + '\'' +
                 '}';
     }
 
@@ -269,6 +271,16 @@ public class Room extends BasicModel implements Comparable<Room>
     public void setTotalReadCount(int totalReadCount)
     {
         this.totalReadCount = totalReadCount;
+    }
+
+    public boolean isShowNotify()
+    {
+        return showNotify;
+    }
+
+    public void setShowNotify(boolean showNotify)
+    {
+        this.showNotify = showNotify;
     }
 }
 

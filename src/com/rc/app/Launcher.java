@@ -34,9 +34,10 @@ public class Launcher
     public static ImageAttachmentService imageAttachmentService;
     public static FileAttachmentService fileAttachmentService;
 
-    public static final String HOSTNAME = "https://chat1.shls-leasing.com";
-    public static final String UPDATE_HOSTNAME = "https://apk.shls-leasing.com";
-    public static final String APP_VERSION = "1.0.15";
+    //public static final String HOSTNAME = "https://chat1.shls-leasing.com";
+    public static final String HOSTNAME = "http://192.168.1.49:3000";
+    public static final String UPDATE_HOSTNAME = "http://192.168.1.78";
+    public static final String APP_VERSION = "1.0.17";
 
 
     public static String userHome;
